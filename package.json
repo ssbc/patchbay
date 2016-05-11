@@ -1,0 +1,24 @@
+{
+  "name": "patchboard",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dominictarr/patchboard",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dominictarr/patchboard.git"
+  },
+  "dependencies": {
+    "hyperscript": "^1.4.7",
+    "moment": "^2.13.0",
+    "pull-paramap": "^1.1.6",
+    "pull-stream": "^3.3.2",
+    "ssb-client": "^3.0.1",
+    "ssb-markdown": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "set -e; for t in test/*.js; do node $t; done"
+  },
+  "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
+  "license": "MIT"
+}
