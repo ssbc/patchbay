@@ -1,11 +1,11 @@
 {
-  "name": "patchboard",
-  "description": "",
+  "name": "ssb-patchboard",
+  "description": "a pluggable patchwork",
   "version": "0.0.0",
-  "homepage": "https://github.com/dominictarr/patchboard",
+  "homepage": "https://github.com/dominictarr/ssb-patchboard",
   "repository": {
     "type": "git",
-    "url": "git://github.com/dominictarr/patchboard.git"
+    "url": "git://github.com/dominictarr/ssb-patchboard.git"
   },
   "dependencies": {
     "hyperscript": "^1.4.7",

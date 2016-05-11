@@ -1,4 +1,4 @@
-# patchboard
+# ssb-patchboard
 
 Prototype of a pluggable patchwork.
 
@@ -63,8 +63,8 @@ columns, or whatever.
 
 ```
 # assuming that patchwork@2.8 is already running...
-git clone https://github.com/dominictarr/patchboard.git
-cd patchboard
+git clone https://github.com/dominictarr/ssb-patchboard.git
+cd ssb-patchboard
 npm install electro electron-prebuilt -g
 patchwork plugins.install ssb-links # must have patchwork >=2.8
 electro index.js
