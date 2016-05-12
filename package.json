@@ -10,8 +10,11 @@
   "dependencies": {
     "depject": "0.0.2",
     "hyperscript": "^1.4.7",
+    "hypertabs": "^0.1.0",
     "moment": "^2.13.0",
+    "pull-cat": "^1.1.9",
     "pull-paramap": "^1.1.6",
+    "pull-sort": "^1.0.0",
     "pull-stream": "^3.3.2",
     "ssb-client": "^3.0.1",
     "ssb-markdown": "^3.0.0"

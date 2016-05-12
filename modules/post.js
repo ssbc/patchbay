@@ -1,6 +1,8 @@
 var markdown = require('ssb-markdown')
 var h = require('hyperscript')
 var u = require('../util')
+var ref = require('ssb-ref')
+
 //render a message
 
 exports.message_content = function (data, sbot) {
@@ -22,6 +24,8 @@ exports.message_content = function (data, sbot) {
 
   content.innerHTML =
     markdown.block(data.value.content.text, {toUrl: function (id) {
+      if(ref.isBlob(id))
+        return 'http://localhost:7777/'+encodeURIComponent(id)
       return '#'+(mentions[id]?mentions[id]:id)
     }})
   return d
