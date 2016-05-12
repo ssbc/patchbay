@@ -1,4 +1,4 @@
-var tabs = require('tabs')
+var Tabs = require('hypertabs')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('../util')
@@ -17,26 +17,31 @@ exports.app = function (_, sbot) {
     })
   }
 
-  var t = tabs()
+  var tabs = Tabs()
   var main = screen('/')
-  if(main) t.add('main', main, true)
+  if(main) tabs.add('main', main, true)
 
-  t.onclick = function (ev) {
+  tabs.onclick = function (ev) {
     var link = ancestor(ev.target)
-    EV = ev
     var path = link.hash.substring(1)
-    var el = screen(path)
-    if(el) t.add(path, el, !ev.ctrlKey)
 
     ev.preventDefault()
     ev.stopPropagation()
+
+    if(tabs.has(path)) return tabs.select(path)
+
+    var el = screen(path)
+    if(el) tabs.add(path, el, !ev.ctrlKey)
+
   }
 
-  return t
+  return tabs
 }
 
 exports.message_render = []
 exports.screen_view = []
+
+
 
 
 
