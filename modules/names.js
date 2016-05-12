@@ -5,7 +5,7 @@ function all(stream, cb) {
   pull(stream, pull.collect(cb))
 }
 
-exports.avatar = 
+exports.avatar_name = 
 function name (id, sbot) {
   var n = h('span', id.substring(0, 10))
   //choose the most popular name for this person.

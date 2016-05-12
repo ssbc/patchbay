@@ -1,4 +1,5 @@
 var h = require('hyperscript')
+var u = require('./util')
 var pull = require('pull-stream')
 var combine = require('depject')
 var fs = require('fs')
@@ -8,7 +9,8 @@ var modules = fs.readdirSync(path.join(__dirname, 'modules'))
   .map(function (e) { return require('./modules/'+e) })
 
 var renderers = []
-modules.unshift({message_render: renderers})
+var app = []
+modules.unshift({app: app})
 
 combine(modules)
 
@@ -16,22 +18,7 @@ var u = require('./util')
 
 require('ssb-client')(function (err, sbot) {
   if(err) throw err
-  pull(
-    sbot.createLogStream({reverse: true, limit: 100}),
-    pull.drain(function (data) {
-
-      var el = u.first(renderers, function (render) {
-        return render(data, sbot)
-      })
-
-      if('string' === typeof el) el = document.createTextNode(el)
-      if(el) document.body.appendChild(el)
-    })
-  )
+  document.body.appendChild(u.decorate(app, sbot))
 })
-
-
-
-
 
 

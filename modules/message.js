@@ -1,9 +1,10 @@
 var h = require('hyperscript')
 var u = require('../util')
+var pull = require('pull-stream')
 
 exports.message_render = function (msg, sbot) {
   var el = u.first(exports.message_content, function (fn) {
-    return fn(msg)
+    return fn(msg, sbot)
   })
 
   if(el) console.log(el)
@@ -14,6 +15,20 @@ exports.message_render = function (msg, sbot) {
     }).filter(Boolean)
   }
 
+  var backlinks = h('div.backlinks')
+
+  pull(
+    sbot.links({dest: msg.key, rel: 'mentions', keys: true}),
+    pull.collect(function (err, links) {
+      if(links.length)
+        backlinks.appendChild(h('label', 'backlinks:', 
+          h('div', links.map(function (link) {
+            return u.decorate(exports.message_link, link.key, function (d, e, v) { return d(e, v, sbot) })
+          }))
+        ))
+    })
+  )
+
   if(el)
     return h('div.message',
       h('div.title',
@@ -22,8 +37,9 @@ exports.message_render = function (msg, sbot) {
       ),
       h('div.content', el),
       h('div.footer',
-        h('div.actions', map(exports.message_actions))
-      )
+        h('div.actions', map(exports.message_action))
+      ),
+      backlinks
     )
 }
 
@@ -31,4 +47,4 @@ exports.message_content = []
 exports.avatar = []
 exports.message_meta = []
 exports.message_action = []
-
+exports.message_link = []
