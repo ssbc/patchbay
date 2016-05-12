@@ -9,17 +9,23 @@ are loaded and combined using [depject](https://npm.im/depject)
 This makes in very easy to create say, a renderer for a new message type,
 or switch to a different method for choosing user names.
 
-Currently, this is a proof of concept and only renders the 100 most recent
-messages. This should obviously be replaced with a module that can
-scroll properly through a feed, which should plug into another module
-that gives tabs or something like that.
+Currently, this is a proof of concept, there is a basic way to switch
+between tabs, and you can view the main log, user feeds, or threads.
+This should obviously be improved with a module that can
+scroll properly scoll through a feed.
 
+No "write" methods have been implemented yet.
 
 ## overview
 
-Currently, the main module is `message.js` which plugs into
-the `message_render` socket, and provides `message_content`, `avatar`,
-`message_meta` and `message_action` hooks.
+Currently, the main module is `tabs.js` which plugs into
+the `app` socket, and provides the `screen_view` socket.
+when you click a link, `screen_view` socket with the link path,
+which returns a html element which becomes a new tab.
+
+currently, `main.js` `feed.js` and `thread.js` plug into `screen_view`
+and then in turn, call the `message_render` socket, which calls
+`message_content` `avatar` `message_meta` `message_action` and `message_link`.
 
 `avatar.js` plugs into `avatar`, and provides the `avatar_name` socket.
 it just returns a link to the public key, labled with what it gets back
@@ -74,3 +80,6 @@ electro index.js
 ## License
 
 MIT
+
+
+
