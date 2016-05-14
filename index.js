@@ -5,6 +5,8 @@ var combine = require('depject')
 var fs = require('fs')
 var path = require('path')
 
+document.head.appendChild(h('style', fs.readFileSync('./style.css', 'utf8')))
+
 var modules = fs.readdirSync(path.join(__dirname, 'modules'))
   .map(function (e) { return require('./modules/'+e) })
 

@@ -1,0 +1,103 @@
+
+
+.screen {
+  position: absolute;
+  top: 0px; bottom: 0px;
+  background: red;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+//  background: yellow;
+  margin: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.stretch {
+  flex-basis: 0;
+//  flex-grow: 1;
+//  flex-shrink: 1;
+}
+
+
+.fixed {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.scroll-y {
+  overflow-y: auto;
+}
+
+.scroll-x {
+  overflow-x: auto;
+}
+
+.button {
+  border: 2px; margin: 3px;
+  max-width: 50px;
+  overflow-x: hidden;
+}
+
+
+img {
+  max-width: 600px;
+  display: block;
+//  overflow-x: auto;
+}
+
+pre {
+  max-width: 650px;
+  overflow-x: auto;
+}
+
+.content {
+  width: 800px;
+}
+
+.content > div {
+  overflow-x: show;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content > div > * {
+  max-width: 600px;
+}
+
+.tabs > .row {
+  flex-grow: 0; flex-shrink: 0;
+  margin: 10px;
+}
+
+.tabs > .row > * {
+  max-width: 50px;
+  overflow-x: hidden;
+  margin-right: 5px;
+}
+
+.tabs > .row > .selected {
+  max-width: 200px;
+  background: yellow;
+}
+
+.message {
+  border: 1px solid black;
+  padding: 5px;
+  background: white;
+  display: block;
+  flex-basis: 0;
+}
+
+.message > .title > .message_meta {
+  margin-right: 5px;
+}
+.message > .title > .avatar {
+  margin-right: 5px;
+}
+
