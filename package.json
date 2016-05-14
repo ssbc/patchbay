@@ -14,6 +14,7 @@
     "moment": "^2.13.0",
     "pull-cat": "^1.1.9",
     "pull-paramap": "^1.1.6",
+    "pull-scroll": "^0.1.0",
     "pull-sort": "^1.0.0",
     "pull-stream": "^3.3.2",
     "ssb-client": "^3.0.1",
