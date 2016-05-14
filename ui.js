@@ -1,22 +1,14 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('./util')
+var Scroller = require('pull-scroll')
 
 exports.createStream = function createStream (stream, render) {
-  var div = h('div.content')
+  var div = h('div.column', {style: {'overflow-y': 'auto'}})
 
   pull(
     stream,
-    pull.drain(function (data) {
-      var el = render(data)
-      if('string' === typeof el) el = document.createTextNode(el)
-      if(el) {
-        if(div.children.length)
-          div.appendChild(h('hr'))
-        div.appendChild(el)
-      }
-
-    })
+    Scroller(div, div, render, false, false)
   )
 
   return div
@@ -29,3 +21,4 @@ exports.createRenderers = function (renderers, sbot) {
     })
   }
 }
+
