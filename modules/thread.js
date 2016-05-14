@@ -3,6 +3,9 @@ var pull = require('pull-stream')
 var Cat = require('pull-cat')
 var Sort = require('pull-sort')
 var ref = require('ssb-ref')
+var h = require('hyperscript')
+var u = require('../util')
+var Scroller = require('pull-scroll')
 
 function once (cont) {
   var ended = false
@@ -40,14 +43,36 @@ function threadStream (root, sbot ) {
 }
 
 exports.screen_view = function (id, sbot) {
-  if(ref.isMsg(id))
-    return ui.createStream(
+  if(ref.isMsg(id)) {
+    var content = h('div.column')
+    var div = h('div.column', {style: {'overflow':'auto'}},
+      h('div', content),
+      u.decorate(exports.message_compose, {root: id}, function (d, e, v) {
+        return d(e, v, sbot)
+      })
+    )
+    var render = ui.createRenderers(exports.message_render, sbot)
+
+    pull(
       threadStream(id, sbot),
+      Scroller(div, content, render, false, false)
+    )
+
+    return div
+  }
+
+    return ui.createStream(
       ui.createRenderers(exports.message_render, sbot)
     )
 }
 
 exports.message_render = []
+exports.message_compose = []
+
+
+
+
+
 
 
 

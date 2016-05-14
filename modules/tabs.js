@@ -18,6 +18,7 @@ exports.app = function (_, sbot) {
   }
 
   var tabs = Tabs()
+  tabs.classList.add('screen')
   var main = screen('/')
   if(main) tabs.add('main', main, true)
 
@@ -40,11 +41,4 @@ exports.app = function (_, sbot) {
 
 exports.message_render = []
 exports.screen_view = []
-
-
-
-
-
-
-
 

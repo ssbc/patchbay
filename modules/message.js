@@ -30,13 +30,13 @@ exports.message_render = function (msg, sbot) {
   )
 
   if(el)
-    return h('div.message',
-      h('div.title',
+    return h('div.message.column',
+      h('div.title.row',
         h('div.avatar', map(exports.avatar, msg.value.author)),
-        h('div.metadata', map(exports.message_meta, msg))
+        h('div.message_meta.row', map(exports.message_meta, msg))
       ),
-      h('div.content', el),
-      h('div.footer',
+      h('div.message_content', el),
+      h('div.message_actions.row',
         h('div.actions', map(exports.message_action))
       ),
       backlinks
