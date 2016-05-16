@@ -8,6 +8,7 @@
     "url": "git://github.com/dominictarr/ssb-patchboard.git"
   },
   "dependencies": {
+    "cont": "^1.0.3",
     "depject": "^0.1.0",
     "hyperscript": "^1.4.7",
     "moment": "^2.13.0",
@@ -19,6 +20,7 @@
     "ssb-client": "^3.0.1",
     "ssb-keys": "^5.0.2",
     "ssb-markdown": "^3.0.0",
+    "ssb-mentions": "^0.1.0",
     "ssb-sort": "0.0.0",
     "suggest-box": "^2.0.0"
   },
