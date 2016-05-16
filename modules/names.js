@@ -27,7 +27,6 @@ function name (id, sbot) {
     ]}),
     function (err, names) {
       if(err) throw err
-      console.log(names)
       n.textContent = names.reduce(function (max, item) {
         return max.count > item.count ? max : item
       }, {name: id.substring(0, 10), count: 0}).name
@@ -36,4 +35,5 @@ function name (id, sbot) {
   return n
 
 }
+
 
