@@ -3,7 +3,6 @@
 .screen {
   position: absolute;
   top: 0px; bottom: 0px;
-  background: red;
 }
 
 .column {
@@ -53,7 +52,8 @@ img {
 
 pre {
   max-width: 650px;
-  overflow-x: auto;
+//  overflow-x: auto;
+//  overflox-y: none;
 }
 
 .content {
@@ -81,9 +81,12 @@ pre {
   margin-right: 5px;
 }
 
+.selected {
+  background: yellow;
+}
+
 .tabs > .row > .selected {
   max-width: 200px;
-  background: yellow;
 }
 
 .message {
@@ -100,4 +103,26 @@ pre {
 .message > .title > .avatar {
   margin-right: 5px;
 }
+
+
+.suggest-box > * {
+  background: white;
+  margin: 3px;
+}
+
+.suggest-box{
+//  display: flex;
+//  flex-direction: row;
+  width: 200px;
+}
+
+.suggest-box img {
+  width: 50px;
+}
+.suggest-box,.selected img {
+  width: 200px;
+}
+
+
+
 
