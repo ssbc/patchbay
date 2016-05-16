@@ -1,3 +1,6 @@
+var pull = require('pull-stream')
+var Next = require('pull-next')
+
 function first (list, test) {
   for(var i in list) {
     var value = test(list[i], i, list)
@@ -16,3 +19,22 @@ function decorate (list, value, caller) {
 exports.first = first
 
 exports.decorate = decorate
+
+exports.next = function (createStream, opts, range, property) {
+
+  range = range || opts.reverse ? 'lt' : 'gt'
+  property = property || 'timestamp'
+
+  var last = null
+  return Next(function () {
+    if(last) {
+      opts[range] = last[property]
+    }
+    return pull(
+      createStream(opts),
+      pull.through(function (msg) {
+        if(!msg.sync) last = msg
+      })
+    )
+  })
+}

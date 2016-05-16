@@ -1,7 +1,7 @@
 var ui = require('../ui')
 var pull = require('pull-stream')
 var Cat = require('pull-cat')
-var Sort = require('pull-sort')
+var sort = require('ssb-sort')
 var ref = require('ssb-ref')
 var h = require('hyperscript')
 var u = require('../util')
@@ -21,58 +21,68 @@ function once (cont) {
   }
 }
 
-function threadStream (root, sbot ) {
+function getThread (root, sbot, cb) {
   //in this case, it's inconvienent that panel only takes
   //a stream. maybe it would be better to accept an array?
 
-  return pull(
-    Cat([
-      once(function (cb) {
-        sbot.get(root, function (err, value) {
-          cb(err, {key: root, value: value})
-        })
-      }),
-      sbot.links({rel: 'root', dest: root, values: true, keys: true})
-    ]),
-    Sort(function (a, b) {
-      //THIS IS WRONG AND HAS KNOWN BUGS!!!
-      //TODO: sort by cryptographic causal ordering.
-      return a.value.timestamp - b.value.timestamp
-    })
-  )
+  return pull(Cat([
+    once(function (cb) {
+      sbot.get(root, function (err, value) {
+        cb(err, {key: root, value: value})
+      })
+    }),
+    sbot.links({rel: 'root', dest: root, values: true, keys: true})
+  ]), pull.collect(cb))
+}
+
+function unbox(msg) {
+  return u.first(exports.message_unbox, function (fn) {
+    return fn(msg)
+  })
 }
 
 exports.screen_view = function (id, sbot) {
   if(ref.isMsg(id)) {
-    var content = h('div.column')
-    var div = h('div.column', {style: {'overflow':'auto'}},
-      h('div', content),
-      u.decorate(exports.message_compose, {root: id}, function (d, e, v) {
-        return d(e, v, sbot)
-      })
-    )
+    var div = h('div.column', {style: {'overflow-y': 'auto'}})
     var render = ui.createRenderers(exports.message_render, sbot)
 
-    pull(
-      threadStream(id, sbot),
-      Scroller(div, content, render, false, false)
-    )
+    getThread(id, sbot, function (err, thread) {
+      thread = thread.map(function (msg) {
+        return 'string' === typeof msg.value.content ? unbox(msg) : msg
+      })
+
+      if(err) return div.appendChild(h('pre', err.stack))
+      sort(thread).map(render).forEach(function (el) {
+        div.appendChild(el)
+      })
+
+      var branches = sort.heads(thread)
+      var meta = {
+        root: id,
+        branch: branches.length > 1 ? branches : branches[0]
+      }
+      var recps = thread[0].value.content.recps
+      if(recps && thread[0].value.private)
+        meta.recps = recps
+
+      console.log('recipients', thread[0].value.content.recps)
+
+      div.appendChild(
+        h('div',
+        u.decorate(exports.message_compose, meta, function (d, e, v) {
+          return d(e, v, sbot)
+        }))
+      )
+    })
 
     return div
   }
 
-    return ui.createStream(
-      ui.createRenderers(exports.message_render, sbot)
-    )
 }
 
 exports.message_render = []
 exports.message_compose = []
-
-
-
-
-
+exports.message_unbox = []
 
 
 

@@ -9,8 +9,8 @@ function ancestor (el) {
   if(el.tagName !== 'A') return ancestor(el.parentElement)
   return el
 }
-exports.app = function (_, sbot) {
 
+exports.app = function (_, sbot) {
   function screen (path) {
     return u.first(exports.screen_view, function (fn) {
       return fn(path, sbot)
@@ -22,8 +22,13 @@ exports.app = function (_, sbot) {
   var main = screen('/')
   if(main) tabs.add('main', main, true)
 
+  var private = screen('/private')
+  if(private) tabs.add('private', private, true)
+
+
   tabs.onclick = function (ev) {
     var link = ancestor(ev.target)
+    if(!link) return
     var path = link.hash.substring(1)
 
     ev.preventDefault()
@@ -41,4 +46,5 @@ exports.app = function (_, sbot) {
 
 exports.message_render = []
 exports.screen_view = []
+
 

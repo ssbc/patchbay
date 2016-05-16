@@ -6,7 +6,6 @@ var Scroller = require('pull-scroll')
 
 exports.screen_view = function (path, sbot) {
   if(path === '/') {
-
     var content = h('div.column')
     var div = h('div.column', {style: {'overflow':'auto'}},
       u.decorate(exports.message_compose, {}, function (d, e, v) {
@@ -17,7 +16,7 @@ exports.screen_view = function (path, sbot) {
     var render = ui.createRenderers(exports.message_render, sbot)
 
     pull(
-      sbot.createLogStream({reverse: true}),
+      u.next(sbot.createLogStream, {reverse: true, limit: 100}),
       Scroller(div, content, render, false, false)
     )
 
@@ -27,6 +26,7 @@ exports.screen_view = function (path, sbot) {
 
 exports.message_render = []
 exports.message_compose = []
+
 
 
 
