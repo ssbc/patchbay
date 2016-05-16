@@ -7,8 +7,6 @@ exports.message_render = function (msg, sbot) {
     return fn(msg, sbot)
   })
 
-  if(el) console.log(el)
-
   function map (plugs, value) {
     return plugs.map(function (plug) {
       return plug(value, sbot)
@@ -37,7 +35,7 @@ exports.message_render = function (msg, sbot) {
       ),
       h('div.message_content', el),
       h('div.message_actions.row',
-        h('div.actions', map(exports.message_action))
+        h('div.actions', map(exports.message_action, msg))
       ),
       backlinks
     )
@@ -48,3 +46,4 @@ exports.avatar = []
 exports.message_meta = []
 exports.message_action = []
 exports.message_link = []
+
