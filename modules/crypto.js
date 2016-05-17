@@ -1,6 +1,6 @@
-
 var path = require('path')
 var ssbKeys = require('ssb-keys')
+var ref = require('ssb-ref')
 var config = require('ssb-config/inject')(process.env.ssb_appname)
 var keys = ssbKeys
   .loadSync(path.join(config.path, 'secret'))
@@ -31,7 +31,24 @@ exports.message_unbox = function (msg) {
     return unbox_value(msg)
 }
 
+exports.message_box = function (content) {
+  return ssbKeys.box(content, content.recps.map(function (e) {
+    return ref.isFeed(e) ? e : e.link
+  }))
+}
+
 exports.message_meta = function (msg) {
   if(msg.value.private)
     return "PRIVATE"
 }
+
+exports.publish = function (content, id, sbot) {
+  if(content.recps)
+    content = exports.message_box(content)
+  sbot.publish(content, function (err, msg) {
+    if(err) throw err
+    console.log('PUBLISHED', msg)
+  })
+}
+
+

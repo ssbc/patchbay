@@ -1,14 +1,20 @@
 var h = require('hyperscript')
+var u = require('../util')
 var suggest = require('suggest-box')
 var cont = require('cont')
 var mentions = require('ssb-mentions')
+var lightbox = require('hyperlightbox')
+
 exports.suggest = []
+exports.publish = []
+exports.message_content = []
 
 //this decorator expects to be the first
 exports.message_compose = function (el, meta, sbot) {
   if(el) return el
 
   meta = meta || {}
+  if(!meta.type) throw new Error('message must have type')
   var ta = h('textarea')
     //h('pre.editable.fixed', 'HELLO')
   //ta.setAttribute('contenteditable', '')
@@ -32,7 +38,7 @@ exports.message_compose = function (el, meta, sbot) {
     h('button', 'publish', {onclick: function () {
       meta.text = ta.value
       meta.mentions = mentions(ta.value)
-      alert(JSON.stringify(meta, null, 2))
+      u.firstPlug(exports.message_confirm, meta, sbot)
     }})))
 
   suggest(ta, function (word, cb) {
@@ -47,7 +53,6 @@ exports.message_compose = function (el, meta, sbot) {
         return b.rank - a.rank
       }).filter(Boolean)
 
-      console.log('RESULTS', results)
       cb(null, results)
     })
   }, {})
@@ -55,5 +60,6 @@ exports.message_compose = function (el, meta, sbot) {
   return composer
 
 }
+
 
 

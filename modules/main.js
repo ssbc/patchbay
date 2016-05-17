@@ -8,7 +8,7 @@ exports.screen_view = function (path, sbot) {
   if(path === '/') {
     var content = h('div.column')
     var div = h('div.column', {style: {'overflow':'auto'}},
-      u.decorate(exports.message_compose, {}, function (d, e, v) {
+      u.decorate(exports.message_compose, {type: 'post'}, function (d, e, v) {
         return d(e, v, sbot)
       }),
       content

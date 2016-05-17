@@ -12,9 +12,7 @@ function ancestor (el) {
 
 exports.app = function (_, sbot) {
   function screen (path) {
-    return u.first(exports.screen_view, function (fn) {
-      return fn(path, sbot)
-    })
+    return u.firstPlug(exports.screen_view, path, sbot)
   }
 
   var tabs = Tabs()
@@ -46,5 +44,6 @@ exports.app = function (_, sbot) {
 
 exports.message_render = []
 exports.screen_view = []
+
 
 

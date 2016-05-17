@@ -9,12 +9,12 @@ exports.message_content = function (msg, sbot) {
   if(msg.value.content.type == 'contact') {
     return h('div.contact',
       'follows',
-      u.first(exports.avatar, function (plug) {
-        return plug(msg.value.content.contact, sbot)
-      })
+      u.firstPlug(exports.avatar, msg.value.content.contact, sbot)
     )
   }
 }
+
+
 
 
 

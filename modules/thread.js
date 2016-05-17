@@ -36,9 +36,7 @@ function getThread (root, sbot, cb) {
 }
 
 function unbox(msg) {
-  return u.first(exports.message_unbox, function (fn) {
-    return fn(msg)
-  })
+  return u.firstPlug(exports.message_unbox, msg)
 }
 
 exports.screen_view = function (id, sbot) {
@@ -58,14 +56,13 @@ exports.screen_view = function (id, sbot) {
 
       var branches = sort.heads(thread)
       var meta = {
+        type: 'post',
         root: id,
         branch: branches.length > 1 ? branches : branches[0]
       }
       var recps = thread[0].value.content.recps
       if(recps && thread[0].value.private)
         meta.recps = recps
-
-      console.log('recipients', thread[0].value.content.recps)
 
       div.appendChild(
         h('div',
@@ -83,6 +80,8 @@ exports.screen_view = function (id, sbot) {
 exports.message_render = []
 exports.message_compose = []
 exports.message_unbox = []
+
+
 
 
 

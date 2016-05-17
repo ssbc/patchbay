@@ -5,9 +5,7 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 
 function unbox(msg) {
-  return u.first(exports.message_unbox, function (fn) {
-    return fn(msg)
-  })
+  return u.firstPlug(exports.message_unbox, msg)
 }
 
 exports.screen_view = function (path, sbot) {
@@ -45,5 +43,6 @@ exports.screen_view = function (path, sbot) {
 exports.message_render = []
 exports.message_compose = []
 exports.message_unbox = []
+
 
 

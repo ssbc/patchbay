@@ -3,9 +3,7 @@ var u = require('../util')
 var pull = require('pull-stream')
 
 exports.message_render = function (msg, sbot) {
-  var el = u.first(exports.message_content, function (fn) {
-    return fn(msg, sbot)
-  })
+  var el = u.firstPlug(exports.message_content, msg, sbot)
 
   function map (plugs, value) {
     return plugs.map(function (plug) {

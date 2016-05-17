@@ -3,6 +3,7 @@ var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
 
+exports.message_confirm = []
 exports.message_link = []
 
 exports.message_content = function (msg, sbot) {
@@ -27,7 +28,6 @@ exports.message_meta = function (msg, sbot) {
     })
   )
 
-
   return yupps
 }
 
@@ -46,7 +46,7 @@ exports.message_action = function (msg, sbot) {
       }
       //TODO: actually publish...
 
-      alert(JSON.stringify(yup, null, 2))
+      u.firstPlug(exports.message_confirm, yup, sbot)
     }}, 'yup')
 
 }
