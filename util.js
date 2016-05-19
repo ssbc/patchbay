@@ -17,7 +17,6 @@ function decorate (list, value, caller) {
 }
 
 exports.first = first
-
 exports.decorate = decorate
 
 exports.next = function (createStream, opts, range, property) {
@@ -38,3 +37,13 @@ exports.next = function (createStream, opts, range, property) {
     )
   })
 }
+
+exports.firstPlug = function (plugs, fn) {
+  if(!Array.isArray(plugs)) throw new Error('plugs must be an array')
+  var args = [].slice.call(arguments)
+  var plugs = args.shift()
+  return exports.first(plugs, function (fn) {
+    return fn.apply(null, args)
+  })
+}
+
