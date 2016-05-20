@@ -16,7 +16,12 @@ exports.screen_view = function (path, sbot) {
     var render = ui.createRenderers(exports.message_render, sbot)
 
     pull(
-      u.next(sbot.createLogStream, {reverse: true, limit: 100}),
+      sbot.createLogStream({old: false}),
+      Scroller(div, content, render, true, false)
+    )
+
+    pull(
+      u.next(sbot.createLogStream, {reverse: true, limit: 100, live: false}),
       Scroller(div, content, render, false, false)
     )
 
@@ -26,6 +31,8 @@ exports.screen_view = function (path, sbot) {
 
 exports.message_render = []
 exports.message_compose = []
+
+
 
 
 

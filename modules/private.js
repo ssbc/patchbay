@@ -4,8 +4,16 @@ var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 
-function unbox(msg) {
-  return u.firstPlug(exports.message_unbox, msg)
+function unbox () {
+  return pull(
+    pull.filter(function (msg) {
+      return 'string' == typeof msg.value.content
+    }),
+    pull.map(function (msg) {
+      return u.firstPlug(exports.message_unbox, msg)
+    }),
+    pull.filter(Boolean)
+  )
 }
 
 exports.screen_view = function (path, sbot) {
@@ -17,20 +25,14 @@ exports.screen_view = function (path, sbot) {
     var render = ui.createRenderers(exports.message_render, sbot)
 
     pull(
-      u.next(
-        sbot.createLogStream.bind(sbot),
-        {reverse: true, limit: 1000}
-//,
-//        'lt', 'timestamp'
-      ),
-      pull.through(function (e) {
-        console.log('msg')
-      }),
-      pull.filter(function (msg) {
-        return 'string' == typeof msg.value.content
-      }),
-      pull.map(unbox),
-      pull.filter(Boolean),
+      sbot.createLogStream({old: false}),
+      unbox(),
+      Scroller(div, content, render, true, false)
+    )
+
+    pull(
+      u.next(sbot.createLogStream, {reverse: true, limit: 1000}),
+      unbox(),
       Scroller(div, content, render, false, false, function (err) {
         if(err) throw err
       })
@@ -43,6 +45,15 @@ exports.screen_view = function (path, sbot) {
 exports.message_render = []
 exports.message_compose = []
 exports.message_unbox = []
+
+
+
+
+
+
+
+
+
 
 
 
