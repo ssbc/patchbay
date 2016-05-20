@@ -38,7 +38,7 @@ exports.next = function (createStream, opts, range, property) {
   })
 }
 
-exports.firstPlug = function (plugs, fn) {
+exports.firstPlug = function (plugs) {
   if(!Array.isArray(plugs)) throw new Error('plugs must be an array')
   var args = [].slice.call(arguments)
   var plugs = args.shift()
