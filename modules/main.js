@@ -8,9 +8,7 @@ exports.screen_view = function (path, sbot) {
   if(path === '/') {
     var content = h('div.column')
     var div = h('div.column', {style: {'overflow':'auto'}},
-      u.decorate(exports.message_compose, {type: 'post'}, function (d, e, v) {
-        return d(e, v, sbot)
-      }),
+      u.firstPlug(exports.message_compose, {type: 'post'}, sbot),
       content
     )
     var render = ui.createRenderers(exports.message_render, sbot)
@@ -31,6 +29,7 @@ exports.screen_view = function (path, sbot) {
 
 exports.message_render = []
 exports.message_compose = []
+
 
 
 

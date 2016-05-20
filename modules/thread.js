@@ -65,10 +65,7 @@ exports.screen_view = function (id, sbot) {
         meta.recps = recps
 
       div.appendChild(
-        h('div',
-        u.decorate(exports.message_compose, meta, function (d, e, v) {
-          return d(e, v, sbot)
-        }))
+        h('div', u.firstPlug(exports.message_compose, meta, sbot))
       )
     })
 
@@ -80,8 +77,5 @@ exports.screen_view = function (id, sbot) {
 exports.message_render = []
 exports.message_compose = []
 exports.message_unbox = []
-
-
-
 
 

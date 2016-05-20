@@ -11,9 +11,7 @@ exports.message_content = []
 exports.message_confirm = []
 
 //this decorator expects to be the first
-exports.message_compose = function (el, meta, sbot) {
-  if(el) return el
-
+exports.message_compose = function (meta, sbot) {
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
   var ta = h('textarea')
@@ -61,6 +59,7 @@ exports.message_compose = function (el, meta, sbot) {
   return composer
 
 }
+
 
 
 
