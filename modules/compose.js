@@ -8,6 +8,7 @@ var lightbox = require('hyperlightbox')
 exports.suggest = []
 exports.publish = []
 exports.message_content = []
+exports.message_confirm = []
 
 //this decorator expects to be the first
 exports.message_compose = function (el, meta, sbot) {
@@ -60,6 +61,7 @@ exports.message_compose = function (el, meta, sbot) {
   return composer
 
 }
+
 
 
 
