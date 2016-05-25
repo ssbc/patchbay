@@ -1,8 +1,8 @@
-# ssb-patchboard
+# patchbay
 
 Prototype of a pluggable patchwork.
 
-Patchboard uses [depject](https://npm.im/depject) to provide
+Patchbay uses [depject](https://npm.im/depject) to provide
 a highly composable api. all scripts in the `./modules` directory
 are loaded and combined using [depject](https://npm.im/depject)
 
@@ -57,14 +57,6 @@ sockets or plugs if necessary (leaving them unconnected).
 
 Then, that configuration could be shared over ssb!
 
-## higher level ui
-
-Instead of just taking the latest 100 messages, what would actually be useful
-is ways to efficiently view messages, open threads, etc.
-but if we can create a plug for rendering a stream of messages,
-we can provide a socket for that in a module that implements tabs, or
-columns, or whatever.
-
 ## Running
 
 ```
@@ -78,8 +70,8 @@ sbot plugins.install ssb-links ssb-query # must have patchwork >=2.8
 ```
 now clone and run patchboard.
 ```
-git clone https://github.com/dominictarr/patchboard.git
-cd patchboard
+git clone https://github.com/dominictarr/patchbay.git
+cd patchbay
 npm install electro electron-prebuilt -g
 patchwork plugins.install ssb-links # must have patchwork >=2.8
 electro index.js
@@ -88,4 +80,5 @@ electro index.js
 ## License
 
 MIT
+
 
