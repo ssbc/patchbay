@@ -11,7 +11,12 @@ exports.message_content = []
 exports.message_confirm = []
 
 //this decorator expects to be the first
-exports.message_compose = function (meta, sbot) {
+
+function id (e) { return e }
+
+exports.message_compose = function (meta, prepublish, sbot) {
+  if('function' !== typeof prepublish)
+    sbot = prepublish, prepublish = id 
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
   var ta = h('textarea')
@@ -37,6 +42,11 @@ exports.message_compose = function (meta, sbot) {
     h('button', 'publish', {onclick: function () {
       meta.text = ta.value
       meta.mentions = mentions(ta.value)
+      try {
+        meta = prepublish(meta)
+      } catch (err) {
+        return alert(err.message)
+      }
       u.firstPlug(exports.message_confirm, meta, sbot)
     }})))
 

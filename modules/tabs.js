@@ -34,7 +34,9 @@ exports.app = function (_, sbot) {
     ev.preventDefault()
     ev.stopPropagation()
 
-    if(!path)
+    //open external links.
+    //this ought to be made into something more runcible
+    if(/^https?/.test(link.href))
       return require('shell').openExternal(link.href)
 
     if(tabs.has(path)) return tabs.select(path)
@@ -49,6 +51,7 @@ exports.app = function (_, sbot) {
 
 exports.message_render = []
 exports.screen_view = []
+
 
 
 
