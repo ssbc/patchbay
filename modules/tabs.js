@@ -29,11 +29,16 @@ exports.app = function (_, sbot) {
     if(!link) return
     var path = link.hash.substring(1)
 
+    console.log(link)
+
     ev.preventDefault()
     ev.stopPropagation()
 
-    if(tabs.has(path)) return tabs.select(path)
+    if(!path)
+      return require('shell').openExternal(link.href)
 
+    if(tabs.has(path)) return tabs.select(path)
+    
     var el = screen(path)
     if(el) tabs.add(path, el, !ev.ctrlKey)
 
