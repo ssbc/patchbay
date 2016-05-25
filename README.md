@@ -68,7 +68,16 @@ columns, or whatever.
 ## Running
 
 ```
-# assuming that patchwork@2.8 is already running...
+npm install scuttlebot@latest -g
+# make sure you have secure-scuttlebutt@15.2.0
+npm ls secure-scuttlebutt -g
+sbot server
+# then in another tab
+sbot plugins.install ssb-links ssb-query # must have patchwork >=2.8
+# restart sbot server (go back to previous tab and kill it)
+```
+now clone and run patchboard.
+```
 git clone https://github.com/dominictarr/patchboard.git
 cd patchboard
 npm install electro electron-prebuilt -g
@@ -76,10 +85,7 @@ patchwork plugins.install ssb-links # must have patchwork >=2.8
 electro index.js
 ```
 
-
 ## License
 
 MIT
-
-
 
