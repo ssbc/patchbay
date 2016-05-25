@@ -41,33 +41,60 @@ function unbox(msg) {
 
 exports.screen_view = function (id, sbot) {
   if(ref.isMsg(id)) {
-    var div = h('div.column', {style: {'overflow-y': 'auto'}})
+    var meta = {
+      type: 'post',
+      root: id,
+      branch: id //mutated when thread is loaded.
+    }
+
+    var content = h('div')
+    var div = h('div.column',
+      {style: {'overflow-y': 'auto'}},
+      content,
+      h('div.editor', u.firstPlug(exports.message_compose, meta, sbot))
+    )
+
     var render = ui.createRenderers(exports.message_render, sbot)
 
-    getThread(id, sbot, function (err, thread) {
-      thread = thread.map(function (msg) {
-        return 'string' === typeof msg.value.content ? unbox(msg) : msg
+    pull(
+      sbot.links({
+        rel: 'root', dest: id, keys: true, old: false
+      }),
+      pull.drain(function (msg) {
+        console.log('new message in thread', msg)
+        //redraw thread
+        loadThread()
+      }, function () {} )
+    )
+
+
+    function loadThread () {
+      console.log("LOAD THREAD", id)
+      getThread(id, sbot, function (err, thread) {
+        //would probably be better keep an id for each message element
+        //(i.e. message key) and then update it if necessary.
+        //also, it may have moved (say, if you received a missing message)
+        content.innerHTML = ''
+        thread = thread.map(function (msg) {
+          return 'string' === typeof msg.value.content ? unbox(msg) : msg
+        })
+
+        if(err) return content.appendChild(h('pre', err.stack))
+        sort(thread).map(render).forEach(function (el) {
+          content.appendChild(el)
+        })
+
+        var branches = sort.heads(thread)
+        meta.branch = branches.length > 1 ? branches : branches[0]
+
+        var recps = thread[0].value.content.recps
+        if(recps && thread[0].value.private)
+          meta.recps = recps
       })
 
-      if(err) return div.appendChild(h('pre', err.stack))
-      sort(thread).map(render).forEach(function (el) {
-        div.appendChild(el)
-      })
+    }
 
-      var branches = sort.heads(thread)
-      var meta = {
-        type: 'post',
-        root: id,
-        branch: branches.length > 1 ? branches : branches[0]
-      }
-      var recps = thread[0].value.content.recps
-      if(recps && thread[0].value.private)
-        meta.recps = recps
-
-      div.appendChild(
-        h('div', u.firstPlug(exports.message_compose, meta, sbot))
-      )
-    })
+    loadThread()
 
     return div
   }
@@ -77,5 +104,21 @@ exports.screen_view = function (id, sbot) {
 exports.message_render = []
 exports.message_compose = []
 exports.message_unbox = []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
