@@ -2,14 +2,16 @@
 var h = require('hyperscript')
 var u = require('../util')
 
-exports.avatar_name = []
-exports.avatar_image = []
 
-exports.avatar = function (author, sbot) {
+var plugs = require('../plugs')
+var avatar_name = plugs.first(exports.avatar_name = [])
+var avatar_image = plugs.first(exports.avatar_image = [])
+
+exports.avatar = function (author) {
   return h('a.avatar',
     {href:'#'+author},
-    u.firstPlug(exports.avatar_image, author, sbot),
-    u.firstPlug(exports.avatar_name, author, sbot)
+    avatar_image(author),
+    avatar_name(author)
   )
 }
 

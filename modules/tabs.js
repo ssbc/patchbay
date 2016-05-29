@@ -10,17 +10,20 @@ function ancestor (el) {
   return el
 }
 
-exports.app = function (_, sbot) {
-  function screen (path) {
-    return u.firstPlug(exports.screen_view, path, sbot)
-  }
+var plugs = require('../plugs')
+var screen_view = plugs.first(exports.screen_view = [])
 
+exports.message_render = []
+
+
+exports.app = function (_, sbot) {
   var tabs = Tabs()
   tabs.classList.add('screen')
-  var main = screen('/')
+
+  var main = screen_view('/')
   if(main) tabs.add('main', main, true)
 
-  var private = screen('/private')
+  var private = screen_view('/private')
   if(private) tabs.add('private', private, true)
 
 
@@ -28,8 +31,6 @@ exports.app = function (_, sbot) {
     var link = ancestor(ev.target)
     if(!link) return
     var path = link.hash.substring(1)
-
-    console.log(link)
 
     ev.preventDefault()
     ev.stopPropagation()
@@ -41,16 +42,13 @@ exports.app = function (_, sbot) {
 
     if(tabs.has(path)) return tabs.select(path)
     
-    var el = screen(path)
+    var el = screen_view(path)
     if(el) tabs.add(path, el, !ev.ctrlKey)
 
   }
 
   return tabs
 }
-
-exports.message_render = []
-exports.screen_view = []
 
 
 

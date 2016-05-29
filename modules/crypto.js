@@ -19,6 +19,9 @@ function unbox_value(msg) {
   }
 }
 
+
+var sbot_publish = require('../plugs').first(exports.sbot_publish = [])
+
 exports.message_unbox = function (msg) {
   if(msg.value) {
     var value = unbox_value(msg.value)
@@ -37,18 +40,14 @@ exports.message_box = function (content) {
   }))
 }
 
-exports.message_meta = function (msg) {
-  if(msg.value.private)
-    return "PRIVATE"
-}
-
-exports.publish = function (content, id, sbot) {
+exports.publish = function (content, id) {
   if(content.recps)
     content = exports.message_box(content)
-  sbot.publish(content, function (err, msg) {
+  sbot_publish(content, function (err, msg) {
     if(err) throw err
     console.log('PUBLISHED', msg)
   })
 }
+
 
 

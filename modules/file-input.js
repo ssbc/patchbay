@@ -4,15 +4,9 @@ var pull = require('pull-stream')
 var mime = require('mime-types')
 var split = require('split-buffer')
 
-function first(plug) {
-  return function () {
-    var args = [].slice.call(arguments)
-    args.unshift(plug)
-    return u.firstPlug.apply(null, args)
-  }
-}
+var plugs = require('../plugs')
 
-var add = first(exports.sbot_blobs_add = [])
+var add = plugs.first(exports.sbot_blobs_add = [])
 
 exports.file_input = function FileInput(onAdded) {
 
@@ -39,6 +33,7 @@ exports.file_input = function FileInput(onAdded) {
     }
   })
 }
+
 
 
 

@@ -3,8 +3,10 @@ var h = require('hyperscript')
 var u = require('../util')
 //publish or add
 
-exports.publish = []
-exports.message_content = []
+var plugs = require('../plugs')
+
+var publish = plugs.first(exports.publish = [])
+var message_content = plugs.first(exports.message_content = [])
 
 exports.message_confirm = function (content, sbot) {
 
@@ -12,33 +14,29 @@ exports.message_confirm = function (content, sbot) {
   document.body.appendChild(lb)
 
   var okay = h('button', 'okay', {onclick: function () {
-    u.firstPlug(exports.publish, content, null, sbot)
-    lb.remove()
+    publish(content); lb.remove()
   }})
 
   var cancel = h('button', 'cancel', {onclick: function () {
     lb.remove()
   }})
 
-  var hidden = h('input', {style: {visible: 'hidden'}})
-
-
   okay.addEventListener('keydown', function (ev) {
     if(ev.keyCode === 27) cancel.click() //escape
   })
 
   lb.show(h('div.column',
-    u.firstPlug(exports.message_content,
-      {key: "DRAFT", value: {content: content}}, sbot
-    ) || h('pre', JSON.stringify(content, null, 2)),
+    message_content({key: "DRAFT", value: {content: content}})
+      || h('pre', JSON.stringify(content, null, 2)),
     h('div.row', okay, cancel)
   ))
 
   okay.focus()
 
-//  hidden.focus()
-
 }
+
+
+
 
 
 

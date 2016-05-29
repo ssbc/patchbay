@@ -21,22 +21,27 @@ function once (cont) {
   }
 }
 
+var plugs = require('../plugs')
+
+var message_render = plugs.first(exports.message_render = [])
+var message_compose = plugs.first(exports.message_compose = [])
+var message_unbox = plugs.first(exports.message_unbox = [])
+
+var sbot_get = plugs.first(exports.sbot_get = [])
+var sbot_links = plugs.first(exports.sbot_links = [])
+
 function getThread (root, sbot, cb) {
   //in this case, it's inconvienent that panel only takes
   //a stream. maybe it would be better to accept an array?
 
   return pull(Cat([
     once(function (cb) {
-      sbot.get(root, function (err, value) {
+      sbot_get(root, function (err, value) {
         cb(err, {key: root, value: value})
       })
     }),
-    sbot.links({rel: 'root', dest: root, values: true, keys: true})
+    sbot_links({rel: 'root', dest: root, values: true, keys: true})
   ]), pull.collect(cb))
-}
-
-function unbox(msg) {
-  return u.firstPlug(exports.message_unbox, msg)
 }
 
 exports.screen_view = function (id, sbot) {
@@ -51,36 +56,31 @@ exports.screen_view = function (id, sbot) {
     var div = h('div.column',
       {style: {'overflow-y': 'auto'}},
       content,
-      h('div.editor', u.firstPlug(exports.message_compose, meta, sbot))
+      h('div.editor', message_compose(meta))
     )
 
-    var render = ui.createRenderers(exports.message_render, sbot)
-
     pull(
-      sbot.links({
+      sbot_links({
         rel: 'root', dest: id, keys: true, old: false
       }),
       pull.drain(function (msg) {
-        console.log('new message in thread', msg)
-        //redraw thread
-        loadThread()
+        loadThread() //redraw thread
       }, function () {} )
     )
 
 
     function loadThread () {
-      console.log("LOAD THREAD", id)
       getThread(id, sbot, function (err, thread) {
         //would probably be better keep an id for each message element
         //(i.e. message key) and then update it if necessary.
         //also, it may have moved (say, if you received a missing message)
         content.innerHTML = ''
         thread = thread.map(function (msg) {
-          return 'string' === typeof msg.value.content ? unbox(msg) : msg
+          return 'string' === typeof msg.value.content ? message_unbox(msg) : msg
         })
 
         if(err) return content.appendChild(h('pre', err.stack))
-        sort(thread).map(render).forEach(function (el) {
+        sort(thread).map(message_render).forEach(function (el) {
           content.appendChild(el)
         })
 
@@ -91,34 +91,11 @@ exports.screen_view = function (id, sbot) {
         if(recps && thread[0].value.private)
           meta.recps = recps
       })
-
     }
 
     loadThread()
-
     return div
   }
-
 }
-
-exports.message_render = []
-exports.message_compose = []
-exports.message_unbox = []
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

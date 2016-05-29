@@ -3,14 +3,18 @@ var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
 
-exports.message_confirm = []
-exports.message_link = []
+var plugs = require('../plugs')
+
+var message_confirm = plugs.first(exports.message_confirm = [])
+var message_link = plugs.first(exports.message_link = [])
+var sbot_links = plugs.first(exports.sbot_links = [])
 
 exports.message_content = function (msg, sbot) {
   if(msg.value.content.type !== 'vote') return
   var link = msg.value.content.vote.link
-  return h('div', msg.value.content.vote.value > 0 ? 'yup' : 'nah',
-      u.decorate(exports.message_link, link, function (d, e, v) { return d(e, v, sbot) })
+  return h('div',
+      msg.value.content.vote.value > 0 ? 'yup' : 'nah',
+      ' ', message_link(link)
     )
 }
 
@@ -19,7 +23,7 @@ exports.message_meta = function (msg, sbot) {
   var yupps = h('a')
 
   pull(
-    sbot.links({dest: msg.key, rel: 'vote'}),
+    sbot_links({dest: msg.key, rel: 'vote'}),
     pull.collect(function (err, votes) {
       if(votes.length === 1)
         yupps.textContent = ' 1 yup'
@@ -46,9 +50,13 @@ exports.message_action = function (msg, sbot) {
       }
       //TODO: actually publish...
 
-      u.firstPlug(exports.message_confirm, yup, sbot)
+      message_confirm(yup)
     }}, 'yup')
 
 }
+
+
+
+
 
 

@@ -5,13 +5,14 @@ var ref = require('ssb-ref')
 
 //render a message
 
+var plugs = require('../plugs')
+var message_link = plugs.first(exports.message_link = [])
+
 exports.message_content = function (data, sbot) {
   if(!data.value.content || !data.value.content.text) return
 
   var root = data.value.content.root
-  var re = !root ? null : h('span', 're:',
-    u.decorate(exports.message_link, root, function (d, e, v) { return d(e, v, sbot) })
-  )
+  var re = !root ? null : h('span', 're:', message_link(root))
 
   var content = h('div')
   var d = h('div', re, content)
@@ -31,7 +32,8 @@ exports.message_content = function (data, sbot) {
   return d
 }
 
-exports.message_link = []
+
+
 
 
 

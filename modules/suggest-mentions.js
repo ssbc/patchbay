@@ -1,11 +1,12 @@
 var pull = require('pull-stream')
-
+var cont = require('cont')
 function isImage (filename) {
   return /\.(gif|jpg|png|svg)$/i.test(filename)
 }
 
-exports.suggest = function (word, sbot, cb) {
+var sbot_links2 = require('../plugs').first(exports.sbot_links2 = [])
 
+exports.suggest = cont.to(function (word, cb) {
   if(!/^[@%&!]/.test(word[0])) return cb()
   if(word.length < 2) return cb()
 
@@ -15,7 +16,7 @@ exports.suggest = function (word, sbot, cb) {
   if(word[0] !== '@') word = word.substring(1)
 
   pull(
-    sbot.links2.read({query: [
+    sbot_links2({query: [
       {$filter: {rel: ['mentions', {$prefix: word}], dest: {$prefix: sigil}}},
       {$reduce: {id: 'dest', name: ['rel', 1], rank: {$count: true}}}
     ]}),
@@ -35,10 +36,8 @@ exports.suggest = function (word, sbot, cb) {
           image: isImage(e.name) ? 'http://localhost:7777/'+e.id : undefined
         }
       })
-      console.log(ary)
       cb(null, ary)
     })
   )
-}
-
+})
 

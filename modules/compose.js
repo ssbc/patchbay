@@ -5,17 +5,21 @@ var cont = require('cont')
 var mentions = require('ssb-mentions')
 var lightbox = require('hyperlightbox')
 
+var plugs = require('../plugs')
+
+//var suggest         = plugs.map(exports.suggest = [])
+var publish         = plugs.first(exports.publish = [])
+var message_content = plugs.first(exports.message_content = [])
+var message_confirm = plugs.first(exports.message_confirm = [])
+var file_input      = plugs.first(exports.file_input = [])
+
 exports.suggest = []
-exports.publish = []
-exports.message_content = []
-exports.message_confirm = []
-exports.file_input = []
 
 //this decorator expects to be the first
 
 function id (e) { return e }
 
-exports.message_compose = function (meta, prepublish, sbot) {
+exports.message_compose = function (meta, prepublish) {
   if('function' !== typeof prepublish)
     sbot = prepublish, prepublish = id
   meta = meta || {}
@@ -50,14 +54,14 @@ exports.message_compose = function (meta, prepublish, sbot) {
     } catch (err) {
       return alert(err.message)
     }
-    u.firstPlug(exports.message_confirm, meta, sbot)
+    message_confirm(meta)
   }
 
 
   var composer =
   h('div', h('div.column', ta,
     h('div.row',
-      u.firstPlug(exports.file_input, function (file) {
+      file_input(function (file) {
         files.push(file)
 
         var embed = file.type.indexOf('image/') === 0 ? '!' : ''
@@ -70,7 +74,7 @@ exports.message_compose = function (meta, prepublish, sbot) {
 
   suggest(ta, function (word, cb) {
     cont.para(exports.suggest.map(function (fn) {
-      return function (cb) { fn(word, sbot, cb) }
+      return function (cb) { fn(word, cb) }
     }))
     (function (err, results) {
       if(err) console.error(err)
@@ -87,4 +91,6 @@ exports.message_compose = function (meta, prepublish, sbot) {
   return composer
 
 }
+
+
 
