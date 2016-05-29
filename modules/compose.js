@@ -9,6 +9,7 @@ exports.suggest = []
 exports.publish = []
 exports.message_content = []
 exports.message_confirm = []
+exports.file_input = []
 
 //this decorator expects to be the first
 
@@ -16,12 +17,10 @@ function id (e) { return e }
 
 exports.message_compose = function (meta, prepublish, sbot) {
   if('function' !== typeof prepublish)
-    sbot = prepublish, prepublish = id 
+    sbot = prepublish, prepublish = id
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
   var ta = h('textarea')
-    //h('pre.editable.fixed', 'HELLO')
-  //ta.setAttribute('contenteditable', '')
 
   var blur
   ta.addEventListener('focus', function () {
@@ -37,18 +36,37 @@ exports.message_compose = function (meta, prepublish, sbot) {
     }, 200)
   })
 
+  ta.addEventListener('keydown', function (ev) {
+    if(ev.keyCode === 13 && ev.ctrlKey) publish()
+  })
+
+  var files = []
+
+  function publish() {
+    meta.text = ta.value
+    meta.mentions = mentions(ta.value).concat(files)
+    try {
+      meta = prepublish(meta)
+    } catch (err) {
+      return alert(err.message)
+    }
+    u.firstPlug(exports.message_confirm, meta, sbot)
+  }
+
+
   var composer =
   h('div', h('div.column', ta,
-    h('button', 'publish', {onclick: function () {
-      meta.text = ta.value
-      meta.mentions = mentions(ta.value)
-      try {
-        meta = prepublish(meta)
-      } catch (err) {
-        return alert(err.message)
-      }
-      u.firstPlug(exports.message_confirm, meta, sbot)
-    }})))
+    h('div.row',
+      u.firstPlug(exports.file_input, function (file) {
+        files.push(file)
+
+        var embed = file.type.indexOf('image/') === 0 ? '!' : ''
+        ta.value += embed + '['+file.name+']('+file.link+')'
+        console.log('added:', file)
+      }),
+      h('button', 'publish', {onclick: publish}))
+    )
+  )
 
   suggest(ta, function (word, cb) {
     cont.para(exports.suggest.map(function (fn) {
@@ -69,8 +87,4 @@ exports.message_compose = function (meta, prepublish, sbot) {
   return composer
 
 }
-
-
-
-
 
