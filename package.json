@@ -19,7 +19,7 @@
     "pull-scroll": "^0.1.0",
     "pull-stream": "^3.3.2",
     "split-buffer": "^1.0.0",
-    "ssb-avatar": "0.0.0",
+    "ssb-avatar": "0.0.2",
     "ssb-client": "^3.0.1",
     "ssb-keys": "^5.0.2",
     "ssb-markdown": "^3.0.0",
