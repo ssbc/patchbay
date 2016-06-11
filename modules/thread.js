@@ -30,18 +30,32 @@ var message_unbox = plugs.first(exports.message_unbox = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 
-function getThread (root, sbot, cb) {
+function getThread (root, cb) {
   //in this case, it's inconvienent that panel only takes
   //a stream. maybe it would be better to accept an array?
 
-  return pull(Cat([
-    once(function (cb) {
-      sbot_get(root, function (err, value) {
-        cb(err, {key: root, value: value})
+  sbot_get(root, function (err, value) {
+    var msg = {key: root, value: value}
+    if(value.content.root) return getThread(value.content.root, cb)
+
+    pull(
+      sbot_links({rel: 'root', dest: root, values: true, keys: true}),
+      pull.collect(function (err, ary) {
+        if(err) return cb(err)
+        ary.unshift(msg)
+        cb(null, ary)
       })
-    }),
-    sbot_links({rel: 'root', dest: root, values: true, keys: true})
-  ]), pull.collect(cb))
+    )
+  })
+
+//  return pull(Cat([
+//    once(function (cb) {
+//      sbot_get(root, function (err, value) {
+//        cb(err, {key: root, value: value})
+//      })
+//    }),
+//    sbot_links({rel: 'root', dest: root, values: true, keys: true})
+//  ]), pull.collect(cb))
 }
 
 exports.screen_view = function (id, sbot) {
@@ -70,7 +84,7 @@ exports.screen_view = function (id, sbot) {
 
 
     function loadThread () {
-      getThread(id, sbot, function (err, thread) {
+      getThread(id, function (err, thread) {
         //would probably be better keep an id for each message element
         //(i.e. message key) and then update it if necessary.
         //also, it may have moved (say, if you received a missing message)
@@ -86,6 +100,7 @@ exports.screen_view = function (id, sbot) {
 
         var branches = sort.heads(thread)
         meta.branch = branches.length > 1 ? branches : branches[0]
+        meta.root = thread[0].key
 
         var recps = thread[0].value.content.recps
         if(recps && thread[0].value.private)
@@ -97,5 +112,8 @@ exports.screen_view = function (id, sbot) {
     return div
   }
 }
+
+
+
 
 
