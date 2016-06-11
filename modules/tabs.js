@@ -26,6 +26,8 @@ exports.app = function (_, sbot) {
   var private = screen_view('/private')
   if(private) tabs.add('private', private, true)
 
+  tabs.select('public')
+
 
   tabs.onclick = function (ev) {
     var link = ancestor(ev.target)
