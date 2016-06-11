@@ -10,7 +10,7 @@ var message_compose = plugs.first(exports.message_compose = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 
 exports.screen_view = function (path, sbot) {
-  if(path === '/') {
+  if(path === '/public') {
     var content = h('div.column')
     var div = h('div.column',
       {style: {'overflow':'auto'}},

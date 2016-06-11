@@ -20,8 +20,8 @@ exports.app = function (_, sbot) {
   var tabs = Tabs()
   tabs.classList.add('screen')
 
-  var main = screen_view('/')
-  if(main) tabs.add('main', main, true)
+  var public = screen_view('/public')
+  if(public) tabs.add('public', public, true)
 
   var private = screen_view('/private')
   if(private) tabs.add('private', private, true)
