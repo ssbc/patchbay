@@ -31,7 +31,7 @@ exports.message_render = function (msg, sbot) {
     })
   )
 
-  return h('div.message.column',
+  var msg = h('div.message.column',
     h('div.title.row',
       h('div.avatar', avatar(msg.value.author)),
       h('div.message_meta.row', message_meta(msg))
@@ -40,9 +40,21 @@ exports.message_render = function (msg, sbot) {
     h('div.message_actions.row',
       h('div.actions', message_action(msg))
     ),
-    backlinks
+    backlinks,
+    {onkeydown: function (ev) {
+      //on enter, hit first meta.
+      if(ev.keyCode == 13) {
+        msg.querySelector('.enter').click()
+      }
+    }}
   )
+
+  // ); hyperscript does not seem to set attributes correctly.
+  msg.setAttribute('tabindex', '0')
+
+  return msg
 }
+
 
 
 
