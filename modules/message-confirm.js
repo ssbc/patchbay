@@ -8,13 +8,15 @@ var plugs = require('../plugs')
 var publish = plugs.first(exports.publish = [])
 var message_content = plugs.first(exports.message_content = [])
 
-exports.message_confirm = function (content, sbot) {
+exports.message_confirm = function (content, cb) {
+
+  cb = cb || function () {}
 
   var lb = lightbox()
   document.body.appendChild(lb)
 
   var okay = h('button', 'okay', {onclick: function () {
-    publish(content); lb.remove()
+    publish(content); lb.remove(); cb(null, content)
   }})
 
   var cancel = h('button', 'cancel', {onclick: function () {
@@ -34,6 +36,7 @@ exports.message_confirm = function (content, sbot) {
   okay.focus()
 
 }
+
 
 
 
