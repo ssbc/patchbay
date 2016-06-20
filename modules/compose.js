@@ -15,13 +15,12 @@ var file_input      = plugs.first(exports.file_input = [])
 
 exports.suggest = []
 
-//this decorator expects to be the first
-
 function id (e) { return e }
 
 exports.message_compose = function (meta, prepublish, cb) {
   if('function' !== typeof prepublish)
     sbot = prepublish, prepublish = id
+  var accessories
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
   var ta = h('textarea')
@@ -30,6 +29,7 @@ exports.message_compose = function (meta, prepublish, cb) {
   ta.addEventListener('focus', function () {
     clearTimeout(blur)
     ta.style.height = '200px'
+    accessories.style.display = 'block'
   })
   ta.addEventListener('blur', function () {
     //don't shrink right away, so there is time
@@ -37,6 +37,7 @@ exports.message_compose = function (meta, prepublish, cb) {
     clearTimeout(blur)
     blur = setTimeout(function () {
       ta.style.height = '50px'
+      accessories.style.display = 'none'
     }, 200)
   })
 
@@ -63,7 +64,9 @@ exports.message_compose = function (meta, prepublish, cb) {
 
   var composer =
     h('div', h('div.column', ta,
-      h('div.row',
+      accessories = h('div.row',
+        //hidden until you focus the textarea
+        {style: {display: 'none'}},
         file_input(function (file) {
           files.push(file)
 
@@ -94,4 +97,5 @@ exports.message_compose = function (meta, prepublish, cb) {
   return composer
 
 }
+
 
