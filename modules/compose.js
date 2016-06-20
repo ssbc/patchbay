@@ -19,7 +19,7 @@ exports.suggest = []
 
 function id (e) { return e }
 
-exports.message_compose = function (meta, prepublish) {
+exports.message_compose = function (meta, prepublish, cb) {
   if('function' !== typeof prepublish)
     sbot = prepublish, prepublish = id
   meta = meta || {}
@@ -54,23 +54,26 @@ exports.message_compose = function (meta, prepublish) {
     } catch (err) {
       return alert(err.message)
     }
-    message_confirm(meta)
+    message_confirm(meta, function (err, msg) {
+      ta.value = ''
+      cb(err, msg)
+    })
   }
 
 
   var composer =
-  h('div', h('div.column', ta,
-    h('div.row',
-      file_input(function (file) {
-        files.push(file)
+    h('div', h('div.column', ta,
+      h('div.row',
+        file_input(function (file) {
+          files.push(file)
 
-        var embed = file.type.indexOf('image/') === 0 ? '!' : ''
-        ta.value += embed + '['+file.name+']('+file.link+')'
-        console.log('added:', file)
-      }),
-      h('button', 'publish', {onclick: publish}))
+          var embed = file.type.indexOf('image/') === 0 ? '!' : ''
+          ta.value += embed + '['+file.name+']('+file.link+')'
+          console.log('added:', file)
+        }),
+        h('button', 'publish', {onclick: publish}))
+      )
     )
-  )
 
   suggest(ta, function (word, cb) {
     cont.para(exports.suggest.map(function (fn) {
@@ -91,6 +94,4 @@ exports.message_compose = function (meta, prepublish) {
   return composer
 
 }
-
-
 
