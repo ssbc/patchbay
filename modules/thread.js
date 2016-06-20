@@ -36,7 +36,7 @@ function getThread (root, cb) {
 
   sbot_get(root, function (err, value) {
     var msg = {key: root, value: value}
-    if(value.content.root) return getThread(value.content.root, cb)
+//    if(value.content.root) return getThread(value.content.root, cb)
 
     pull(
       sbot_links({rel: 'root', dest: root, values: true, keys: true}),
@@ -48,14 +48,6 @@ function getThread (root, cb) {
     )
   })
 
-//  return pull(Cat([
-//    once(function (cb) {
-//      sbot_get(root, function (err, value) {
-//        cb(err, {key: root, value: value})
-//      })
-//    }),
-//    sbot_links({rel: 'root', dest: root, values: true, keys: true})
-//  ]), pull.collect(cb))
 }
 
 exports.screen_view = function (id, sbot) {
@@ -89,6 +81,7 @@ exports.screen_view = function (id, sbot) {
         //(i.e. message key) and then update it if necessary.
         //also, it may have moved (say, if you received a missing message)
         content.innerHTML = ''
+        //decrypt
         thread = thread.map(function (msg) {
           return 'string' === typeof msg.value.content ? message_unbox(msg) : msg
         })
@@ -100,7 +93,7 @@ exports.screen_view = function (id, sbot) {
 
         var branches = sort.heads(thread)
         meta.branch = branches.length > 1 ? branches : branches[0]
-        meta.root = thread[0].key
+        meta.root = thread[0].value.content.root || thread[0].key
 
         var recps = thread[0].value.content.recps
         if(recps && thread[0].value.private)
@@ -112,8 +105,4 @@ exports.screen_view = function (id, sbot) {
     return div
   }
 }
-
-
-
-
 
