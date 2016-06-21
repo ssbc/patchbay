@@ -40,7 +40,7 @@ exports.app = function (_, sbot) {
     //open external links.
     //this ought to be made into something more runcible
     if(/^https?/.test(link.href))
-      return require('shell').openExternal(link.href)
+      return require('electron').shell.openExternal(link.href)
 
     if(tabs.has(path)) return tabs.select(path)
     
