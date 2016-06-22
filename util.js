@@ -16,23 +16,40 @@ function decorate (list, value, caller) {
   }, null)
 }
 
+function get(obj, path) {
+  if(obj == null) return obj
+  if('string' === typeof path) return obj[path]
+  for(var i = 0; i < path.length; i++) {
+    obj = obj[path[i]]
+    if(obj == null) return
+  }
+  return obj
+
+}
+
 exports.first = first
 exports.decorate = decorate
 
-exports.next = function (createStream, opts, range, property) {
+exports.next = function (createStream, opts, property, range) {
 
   range = range || opts.reverse ? 'lt' : 'gt'
   property = property || 'timestamp'
 
-  var last = null
+  var last = null, count = -1
   return Next(function () {
     if(last) {
-      opts[range] = last[property]
+      if(count === 0) return
+      var value = opts[range] = get(last, property)
+      if(value === stop) return null
     }
     return pull(
       createStream(opts),
       pull.through(function (msg) {
+        count ++
         if(!msg.sync) last = msg
+      }, function (err) {
+        //retry on errors...
+        if(err) count = -1
       })
     )
   })
