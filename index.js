@@ -13,19 +13,16 @@ var modules = fs.readdirSync(path.join(__dirname, 'modules'))
 
 var renderers = []
 var app = []
-
+var App = require('./plugs').first(app)
 
 var u = require('./util')
 
-require('ssb-client')(function (err, sbot) {
-  if(err) throw err
+modules.unshift(SbotApi())
+modules.unshift({app: app})
+combine(modules)
 
-  modules.unshift(SbotApi(sbot))
-  modules.unshift({app: app})
-  combine(modules)
+document.body.appendChild(App())
 
-  document.body.appendChild(u.decorate(app, sbot))
-})
 
 
 
