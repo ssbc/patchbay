@@ -18,6 +18,7 @@
     "pull-cat": "^1.1.9",
     "pull-next": "0.0.0",
     "pull-paramap": "^1.1.6",
+    "pull-reconnect": "0.0.1",
     "pull-scroll": "^0.2.0",
     "pull-stream": "^3.3.2",
     "split-buffer": "^1.0.0",
