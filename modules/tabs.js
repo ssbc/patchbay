@@ -16,7 +16,7 @@ var screen_view = plugs.first(exports.screen_view = [])
 exports.message_render = []
 
 
-exports.app = function (_, sbot) {
+exports.app = function () {
   var tabs = Tabs()
   tabs.classList.add('screen')
 
