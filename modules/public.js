@@ -11,10 +11,14 @@ var sbot_log = plugs.first(exports.sbot_log = [])
 
 exports.screen_view = function (path, sbot) {
   if(path === '/public') {
-    var content = h('div.column')
-    var div = h('div.column',
+
+    var content = h('div.column.scroller__content')
+    var div = h('div.column.scroller',
       {style: {'overflow':'auto'}},
-      message_compose({type: 'post'}), content
+      h('div.scroller__wrapper',
+        message_compose({type: 'post'}), //header
+        content
+      )
     )
 
     pull(
@@ -30,6 +34,9 @@ exports.screen_view = function (path, sbot) {
     return div
   }
 }
+
+
+
 
 
 

@@ -27,14 +27,21 @@ function unbox () {
 
 exports.screen_view = function (path) {
   if(path === '/private') {
-    var content = h('div.column')
     var id = null
     sbot_whoami(function (err, me) {
       id = me.id
     })
 
-    var div = h('div.column', {style: {'overflow':'auto'}},
-      message_compose({type: 'post', recps: [], private: true}, 
+    var div = h('div.column.scroller',
+      {style: {'overflow':'auto'}},
+      h('div.scroller__wrapper',
+        message_compose({type: 'post'}), //header
+        content
+      )
+    )
+
+    var compose = message_compose(
+      {type: 'post', recps: [], private: true}, 
       function (msg) {
         msg.recps = [id].concat(msg.mentions).filter(function (e) {
           return ref.isFeed('string' === typeof e ? e : e.link)
@@ -42,8 +49,13 @@ exports.screen_view = function (path) {
         if(!msg.recps.length)
           throw new Error('cannot make private message without recipients - just mention them in the message')
         return msg
-      }),
-      content)
+      })
+
+    var content = h('div.column.scroller__content')
+    var div = h('div.column.scroller',
+      {style: {'overflow':'auto'}},
+      h('div.scroller__wrapper', compose, content)
+    )
 
     pull(
       sbot_log({old: false}),
@@ -67,5 +79,13 @@ exports.message_meta = function (msg) {
   if(msg.value.private)
     return "PRIVATE"
 }
+
+
+
+
+
+
+
+
 
 

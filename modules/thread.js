@@ -58,11 +58,13 @@ exports.screen_view = function (id, sbot) {
       branch: id //mutated when thread is loaded.
     }
 
-    var content = h('div')
-    var div = h('div.column',
+    var content = h('div.column.scroller__content')
+    var div = h('div.column.scroller',
       {style: {'overflow-y': 'auto'}},
-      content,
-      h('div.editor', message_compose(meta))
+      h('div.scroller__wrapper',
+        content,
+        message_compose(meta)
+      )
     )
 
     pull(

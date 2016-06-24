@@ -63,8 +63,8 @@ exports.message_compose = function (meta, prepublish, cb) {
 
 
   var composer =
-    h('div', h('div.column', ta,
-      accessories = h('div.row',
+    h('div.compose', h('div.column', ta,
+      accessories = h('div.row.compose__controls',
         //hidden until you focus the textarea
         {style: {display: 'none'}},
         file_input(function (file) {
@@ -97,5 +97,4 @@ exports.message_compose = function (meta, prepublish, cb) {
   return composer
 
 }
-
 
