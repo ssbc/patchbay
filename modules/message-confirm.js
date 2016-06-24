@@ -27,10 +27,10 @@ exports.message_confirm = function (content, cb) {
     if(ev.keyCode === 27) cancel.click() //escape
   })
 
-  lb.show(h('div.column',
+  lb.show(h('div.column.message-confirm',
     message_content({key: "DRAFT", value: {content: content}})
       || h('pre', JSON.stringify(content, null, 2)),
-    h('div.row', okay, cancel)
+    h('div.row.message-confirm__controls', okay, cancel)
   ))
 
   okay.focus()
