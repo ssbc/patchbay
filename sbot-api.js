@@ -15,8 +15,6 @@ function Hash (onHash) {
     onHash && onHash(err, '&'+hash.digest('base64')+'.sha256')
   })
 }
-
-
 var createClient = require('ssb-client')
 
 module.exports = function () {
@@ -26,6 +24,7 @@ module.exports = function () {
       if(err) return isConn(err)
       sbot = _sbot
       sbot.on('closed', function () {
+        sbot = null
         isConn(new Error('closed'))
       })
       isConn()
@@ -62,6 +61,4 @@ module.exports = function () {
     })
   }
 }
-
-
 

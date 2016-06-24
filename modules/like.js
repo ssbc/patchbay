@@ -55,8 +55,3 @@ exports.message_action = function (msg, sbot) {
 
 }
 
-
-
-
-
-

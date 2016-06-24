@@ -1,4 +1,3 @@
-
 var h = require('hyperscript')
 var u = require('../util')
 
