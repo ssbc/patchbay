@@ -1,8 +1,7 @@
-
-
 .screen {
   position: absolute;
   top: 0px; bottom: 0px;
+  left: 0px; right: 0px;
 }
 
 .column {
@@ -56,38 +55,52 @@ pre {
 //  overflox-y: none;
 }
 
-.content {
-  width: 800px;
+/* scrolling feeds, threads */\
+
+.scroller {
+  width: 100%
 }
 
-.content > div {
-  overflow-x: show;
+.scroller > * {
   margin-left: auto;
   margin-right: auto;
 }
 
-.content > div > * {
-  max-width: 600px;
+/* --- hypertabs ------- */
+
+.hypertabs__tabs {
+//  width: 1200px
+  overflow-y: hide;
 }
 
-.tabs > .row {
+.hypertabs > .row {
   flex-grow: 0; flex-shrink: 0;
   margin: 10px;
 }
 
-.tabs > .row > * {
+.hypertabs__tabs > * {
   max-width: 50px;
   overflow-x: hidden;
   margin-right: 5px;
 }
 
-.selected {
+.hypertabs__tab, .hypertabs--selected {
   background: yellow;
-}
-
-.tabs > .row > .selected {
   max-width: 200px;
 }
+
+/* message id */
+
+input {
+  width: 100px;
+}
+/* compose */
+
+.compose {
+  width: 100%;
+}
+
+/* messages */
 
 .message {
   border: 1px solid black;
@@ -95,6 +108,8 @@ pre {
   background: white;
   display: block;
   flex-basis: 0;
+  max-width: 600px;
+  min-width: 300px;
 }
 
 .message > .title > .message_meta {
@@ -103,6 +118,8 @@ pre {
 .message > .title > .avatar {
   margin-right: 5px;
 }
+
+/* -- suggest box */
 
 
 .suggest-box > * {
@@ -122,6 +139,7 @@ pre {
 .suggest-box,.selected img {
   width: 200px;
 }
+/* avatar */
 
 .avatar {
   display: flex;
@@ -132,4 +150,5 @@ pre {
   height: 40px;
   //display: inline-block;
 }
+
 
