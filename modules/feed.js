@@ -15,11 +15,13 @@ exports.screen_view = function (id, sbot) {
 
   if(ref.isFeed(id)) {
 
-    var content = h('div.column')
-    var div = h('div.column',
+    var content = h('div.column.scroller__content')
+    var div = h('div.column.scroller',
       {style: {'overflow':'auto'}},
-      h('div', avatar_profile(id)),
-      content
+      h('div.scroller__wrapper',
+        h('div', avatar_profile(id)),
+        content
+      )
     )
 
     pull(
