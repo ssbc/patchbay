@@ -3,7 +3,6 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('../util')
 
-
 function ancestor (el) {
   if(!el) return
   if(el.tagName !== 'A') return ancestor(el.parentElement)
@@ -12,6 +11,21 @@ function ancestor (el) {
 
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports.screen_view = [])
+
+function openExternal (url) {
+  var _r = require //fool browserify
+
+  //electron@1
+  try {return _r('electron').shell.openExternal(url) }
+  catch (err) { }
+
+  //electron@0
+  try { return _r('shell').openExternal(url) }
+  catch (err) { }
+
+  //browser
+  window.open(url, '_blank')
+}
 
 exports.message_render = []
 
@@ -22,13 +36,7 @@ exports.app = function () {
   var saved
   try { saved = JSON.parse(localStorage.openTabs) }
   catch (_) { saved = ['/public', '/private'] }
-  
-//  var public = screen_view('/public')
-//  if(public) tabs.add('public', public, true)
-//
-//  var private = screen_view('/private')
-//  if(private) tabs.add('private', private, true)
-//
+
   saved.forEach(function (path) {
     var el = screen_view(path)
     if(el) tabs.add(path, el, true)
@@ -46,8 +54,7 @@ exports.app = function () {
 
     //open external links.
     //this ought to be made into something more runcible
-//    if(/^https?/.test(link.href))
-//      return require('electron').shell.openExternal(link.href)
+    if(/^https?/.test(link.href)) return openExternal(link.href)
 
     if(tabs.has(path)) return tabs.select(path)
     
@@ -60,5 +67,15 @@ exports.app = function () {
 
   return tabs
 }
+
+
+
+
+
+
+
+
+
+
 
 
