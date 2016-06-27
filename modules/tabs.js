@@ -2,6 +2,7 @@ var Tabs = require('hypertabs')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('../util')
+var keyscroll = require('../keyscroll')
 
 function ancestor (el) {
   if(!el) return
@@ -39,6 +40,7 @@ exports.app = function () {
 
   saved.forEach(function (path) {
     var el = screen_view(path)
+    el.scroll = keyscroll(el.querySelector('.scroller__content'))
     if(el) tabs.add(path, el, true)
   })
 
@@ -60,6 +62,7 @@ exports.app = function () {
     
     var el = screen_view(path)
     if(el) {
+      el.scroll = keyscroll(el.querySelector('.scroller__content'))
       tabs.add(path, el, !ev.ctrlKey)
       localStorage.openTabs = JSON.stringify(tabs.tabs)
     }

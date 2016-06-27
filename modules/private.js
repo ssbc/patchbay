@@ -3,7 +3,6 @@ var ui = require('../ui')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
-var keyscroll = require('../keyscroll')
 var ref = require('ssb-ref')
 
 var plugs = require('../plugs')
@@ -63,8 +62,6 @@ exports.screen_view = function (path) {
         if(err) throw err
       })
     )
-
-    div.scroll = keyscroll(content)
 
     return div
   }

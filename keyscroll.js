@@ -1,6 +1,9 @@
 module.exports = function (container) {
   var curMsgEl
 
+  if (!container)
+    return function() {}
+
   container.addEventListener('click', onActivateChild, false)
   container.addEventListener('focus', onActivateChild, true)
 

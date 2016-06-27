@@ -3,7 +3,6 @@ var ui = require('../ui')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
-var keyscroll = require('../keyscroll')
 
 var plugs = require('../plugs')
 var message_render = plugs.first(exports.message_render = [])
@@ -31,8 +30,6 @@ exports.screen_view = function (path, sbot) {
       u.next(sbot_log, {reverse: true, limit: 100, live: false}),
       Scroller(div, content, message_render, false, false)
     )
-
-    div.scroll = keyscroll(content)
 
     return div
   }
