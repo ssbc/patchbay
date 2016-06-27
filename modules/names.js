@@ -43,7 +43,6 @@ function name (id) {
           getAvatar({links: sbot_links}, me.id, id,
             function (err, avatar) {
               if (err) return console.error(err)
-              console.log(avatar)
               n.textContent = avatar.name
             })
         })
