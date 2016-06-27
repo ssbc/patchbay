@@ -4,6 +4,7 @@ var Scroller = require('pull-scroll')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('../util')
+var keyscroll = require('../keyscroll')
 
 var plugs = require('../plugs')
 var sbot_user_feed = plugs.first(exports.sbot_user_feed = [])
@@ -38,6 +39,8 @@ exports.screen_view = function (id, sbot) {
       }, ['value', 'sequence']),
       Scroller(div, content, message_render, false, false)
     )
+
+    div.scroll = keyscroll(content)
 
     return div
 

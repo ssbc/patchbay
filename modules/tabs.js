@@ -65,6 +65,27 @@ exports.app = function () {
     }
   }
 
+  window.addEventListener('keydown', function (ev) {
+    if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA')
+      return
+    switch(ev.keyCode) {
+      // scroll through tabs
+      case 72: // h
+        return tabs.selectRelative(-1)
+      case 76: // l
+        return tabs.selectRelative(1)
+      // scroll through messages
+      case 74: // j
+        return tabs.selectedTab.scroll(1)
+      case 75: // k
+        return tabs.selectedTab.scroll(-1)
+      // close a tab
+      case 88: // x
+        if (tabs.selected !== '/public' && tabs.selected !== '/private')
+          return tabs.remove(tabs.selected)
+    }
+  })
+
   return tabs
 }
 
