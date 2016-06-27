@@ -156,3 +156,13 @@ input {
 .lightbox {
   overflow: auto;
 }
+
+/* searchprompt */
+
+.searchprompt {
+  position: absolute;
+}
+
+.searchprompt:not(:focus) {
+  opacity: 0;
+}
