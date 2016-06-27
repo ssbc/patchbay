@@ -33,14 +33,6 @@ exports.screen_view = function (path) {
       id = me.id
     })
 
-    var div = h('div.column.scroller',
-      {style: {'overflow':'auto'}},
-      h('div.scroller__wrapper',
-        message_compose({type: 'post'}), //header
-        content
-      )
-    )
-
     var compose = message_compose(
       {type: 'post', recps: [], private: true}, 
       function (msg) {
