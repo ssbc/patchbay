@@ -52,23 +52,6 @@ module.exports = function () {
     sbot_user_feed: rec.source(function (opts) {
       return sbot.createUserStream(opts)
     }),
-    sbot_search: rec.source(function (opts) {
-      var search = new RegExp(opts.query, 'i')
-      var limit = opts.limit || Infinity
-      delete opts.limit
-      return pull(
-        sbot.createLogStream(opts),
-        pull.filter(function (msg) {
-          var c = msg && msg.value && msg.value.content
-          return c && (
-            msg.key == opts.query ||
-            c.text && search.test(c.text) ||
-            c.name && search.test(c.name) ||
-            c.title && search.test(c.title))
-        }),
-        pull.take(limit)
-      )
-    }),
     sbot_get: rec.async(function (key, cb) {
       sbot.get(key, cb)
     }),
