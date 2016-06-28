@@ -41,7 +41,7 @@ exports.screen_view = function (path) {
     )
 
     pull(
-      sbot_query({query: [
+      sbot_query({reverse: true, query: [
         {$filter: {value: {content: {channel: channel}}}}
       ]}),
       Scroller(div, content, message_render, false, false)
