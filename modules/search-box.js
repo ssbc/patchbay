@@ -6,11 +6,16 @@ var sbot_query = plugs.first(exports.sbot_query = [])
 
 exports.search_box = function (go) {
 
+  var suggestBox
   var search = h('input.searchprompt', {
     type: 'search',
     onkeydown: function (ev) {
       switch (ev.keyCode) {
         case 13: // enter
+          if (suggestBox && suggestBox.active) {
+            suggestBox.complete()
+            ev.stopPropagation()
+          }
           if (go(search.value.trim(), !ev.ctrlKey))
             search.blur()
           return
@@ -33,26 +38,24 @@ exports.search_box = function (go) {
     }
   }
 
-  /*
-  var suggestions = []
-
   pull(
     sbot_query({query: [
-      {$map: ['value', 'content', 'channel']},
-      {$filter: {$prefix: ''}}
+      {$map: {channel: ['value', 'content', 'channel']}},
+      {$reduce: {channel: 'channel', posts: {$count: true}}}
     ]}),
-    pull.unique(),
-    pull.drain(function (chan) {
-      console.log('chan', chan)
-      suggestions.push({title: '#'+chan, value: '#'+chan})
+    pull.collect(function (err, chans) {
+      if (err) return console.error(err)
+      var suggestions = chans.map(function (chan) {
+        var name = '#' + chan.channel
+        if (name) return {
+          title: name,
+          value: name,
+          subtitle: chan.posts
+        }
+      }).filter(Boolean)
+      suggestBox = suggest(search, {'#': suggestions})
     })
   )
-
-  // delay until the element has a parent
-  setTimeout(function () {
-    suggest(search, {'#': suggestions})
-  }, 10)
-  */
 
   return search
 }

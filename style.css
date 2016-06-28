@@ -133,6 +133,10 @@ input {
   width: 200px;
 }
 
+.suggest-box .selected {
+  background: yellow;
+}
+
 .suggest-box img {
   width: 50px;
 }
