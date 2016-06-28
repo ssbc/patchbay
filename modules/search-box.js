@@ -1,4 +1,8 @@
 var h = require('hyperscript')
+var suggest = require('suggest-box')
+var pull = require('pull-stream')
+var plugs = require('../plugs')
+var sbot_query = plugs.first(exports.sbot_query = [])
 
 exports.search_box = function (go) {
 
@@ -7,7 +11,7 @@ exports.search_box = function (go) {
     onkeydown: function (ev) {
       switch (ev.keyCode) {
         case 13: // enter
-          if (go(search.value, !ev.ctrlKey))
+          if (go(search.value.trim(), !ev.ctrlKey))
             search.blur()
           return
         case 27: // escape
@@ -28,6 +32,27 @@ exports.search_box = function (go) {
       search.value = sigil
     }
   }
+
+  /*
+  var suggestions = []
+
+  pull(
+    sbot_query({query: [
+      {$map: ['value', 'content', 'channel']},
+      {$filter: {$prefix: ''}}
+    ]}),
+    pull.unique(),
+    pull.drain(function (chan) {
+      console.log('chan', chan)
+      suggestions.push({title: '#'+chan, value: '#'+chan})
+    })
+  )
+
+  // delay until the element has a parent
+  setTimeout(function () {
+    suggest(search, {'#': suggestions})
+  }, 10)
+  */
 
   return search
 }
