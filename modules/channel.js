@@ -7,6 +7,7 @@ var plugs = require('../plugs')
 var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
+var sbot_query = plugs.first(exports.sbot_query = [])
 
 exports.message_meta = function (msg) {
   var chan = msg.value.content.channel
@@ -40,13 +41,9 @@ exports.screen_view = function (path) {
     )
 
     pull(
-      /*
       sbot_query({query: [
         {$filter: {value: {content: {channel: channel}}}}
       ]}),
-      */
-      u.next(sbot_log, {reverse: true, limit: 100, live: false}),
-      pull.filter(matchesChannel),
       Scroller(div, content, message_render, false, false)
     )
 
