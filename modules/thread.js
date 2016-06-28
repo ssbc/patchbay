@@ -6,7 +6,6 @@ var ref = require('ssb-ref')
 var h = require('hyperscript')
 var u = require('../util')
 var Scroller = require('pull-scroll')
-var keyscroll = require('../keyscroll')
 
 function once (cont) {
   var ended = false
@@ -105,7 +104,6 @@ exports.screen_view = function (id, sbot) {
     }
 
     loadThread()
-    div.scroll = keyscroll(content)
     return div
   }
 }

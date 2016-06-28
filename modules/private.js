@@ -3,7 +3,6 @@ var ui = require('../ui')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
-var keyscroll = require('../keyscroll')
 var ref = require('ssb-ref')
 
 var plugs = require('../plugs')
@@ -32,14 +31,6 @@ exports.screen_view = function (path) {
     sbot_whoami(function (err, me) {
       id = me.id
     })
-
-    var div = h('div.column.scroller',
-      {style: {'overflow':'auto'}},
-      h('div.scroller__wrapper',
-        message_compose({type: 'post'}), //header
-        content
-      )
-    )
 
     var compose = message_compose(
       {type: 'post', recps: [], private: true}, 
@@ -71,8 +62,6 @@ exports.screen_view = function (path) {
         if(err) throw err
       })
     )
-
-    div.scroll = keyscroll(content)
 
     return div
   }

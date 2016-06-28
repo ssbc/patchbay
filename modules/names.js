@@ -39,9 +39,10 @@ function name (id) {
       //to patchwork style naming (i.e. self id)
       if(!names.length)
         return sbot_whoami(function (err, me) {
+          if (err) return console.error(err)
           getAvatar({links: sbot_links}, me.id, id,
             function (err, avatar) {
-              console.log(avatar)
+              if (err) return console.error(err)
               n.textContent = avatar.name
             })
         })
