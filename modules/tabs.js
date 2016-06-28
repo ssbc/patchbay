@@ -40,12 +40,12 @@ exports.app = function () {
     onkeydown: function (ev) {
       switch (ev.keyCode) {
         case 13: // enter
-          var path = '?' + search.value
+          var path = search.value
           if(tabs.has(path)) return tabs.select(path)
           var el = screen_view(path)
           if(el) {
             el.scroll = keyscroll(el.querySelector('.scroller__content'))
-            tabs.add('?' + search.value, el, !ev.ctrlKey)
+            tabs.add(path, el, !ev.ctrlKey)
             localStorage.openTabs = JSON.stringify(tabs.tabs)
             search.blur()
           }
@@ -58,6 +58,17 @@ exports.app = function () {
     }
   })
   tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
+
+  function activateSearch(sigil, ev) {
+    search.focus()
+    ev.preventDefault()
+    if (search.value[0] === sigil) {
+      search.selectionStart = 1
+      search.selectionEnd = search.value.length
+    } else {
+      search.value = sigil
+    }
+  }
 
   var saved
   try { saved = JSON.parse(localStorage.openTabs) }
@@ -121,10 +132,13 @@ exports.app = function () {
 
       // activate the search field
       case 191: // /
-        ev.preventDefault()
-        search.focus()
-        search.selectionStart = 0
-        search.selectionEnd = search.value.length
+        activateSearch('?', ev)
+        return
+
+      // navigate to a channel
+      case 51: // 3
+        if (ev.shiftKey)
+          activateSearch('#', ev)
         return
     }
   })
