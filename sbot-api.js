@@ -20,10 +20,12 @@ var createClient = require('ssb-client')
 module.exports = function () {
   var sbot = null
   var rec = Reconnect(function (isConn) {
+    console.log("RECONNECT", isConn)
     createClient(function (err, _sbot) {
       if(err) {console.error(err.stack); isConn(err)}
       sbot = _sbot
       sbot.on('closed', function () {
+        console.log("DISCONNECT")
         sbot = null
         isConn(new Error('closed'))
       })
