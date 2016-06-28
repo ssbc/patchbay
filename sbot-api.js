@@ -46,6 +46,9 @@ module.exports = function () {
     sbot_links2: rec.source(function (query) {
       return sbot.links2.read(query)
     }),
+    sbot_query: rec.source(function (query) {
+      return sbot.query.read(query)
+    }),
     sbot_log: rec.source(function (opts) {
       return sbot.createLogStream(opts)
     }),
