@@ -12,6 +12,7 @@ function ancestor (el) {
 
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports.screen_view = [])
+var search_box = plugs.first(exports.search_box = [])
 
 function openExternal (url) {
   var _r = require //fool browserify
@@ -34,41 +35,20 @@ exports.app = function () {
   var tabs = Tabs()
   tabs.classList.add('screen')
 
-  var search = h('input.searchprompt', {
-    type: 'search',
-    style: {'float': 'right'},
-    onkeydown: function (ev) {
-      switch (ev.keyCode) {
-        case 13: // enter
-          var path = search.value
-          if(tabs.has(path)) return tabs.select(path)
-          var el = screen_view(path)
-          if(el) {
-            el.scroll = keyscroll(el.querySelector('.scroller__content'))
-            tabs.add(path, el, !ev.ctrlKey)
-            localStorage.openTabs = JSON.stringify(tabs.tabs)
-            search.blur()
-          }
-          return
-        case 27: // escape
-          ev.preventDefault()
-          search.blur()
-          return
-      }
+  var search = search_box(function (path, change) {
+    if(tabs.has(path)) {
+      tabs.select(path)
+      return true
+    }
+    var el = screen_view(path)
+    if(el) {
+      el.scroll = keyscroll(el.querySelector('.scroller__content'))
+      tabs.add(path, el, change)
+      localStorage.openTabs = JSON.stringify(tabs.tabs)
+      return change
     }
   })
   tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
-
-  function activateSearch(sigil, ev) {
-    search.focus()
-    ev.preventDefault()
-    if (search.value[0] === sigil) {
-      search.selectionStart = 1
-      search.selectionEnd = search.value.length
-    } else {
-      search.value = sigil
-    }
-  }
 
   var saved
   try { saved = JSON.parse(localStorage.openTabs) }
@@ -132,13 +112,13 @@ exports.app = function () {
 
       // activate the search field
       case 191: // /
-        activateSearch('?', ev)
+        search.activate('?', ev)
         return
 
       // navigate to a channel
       case 51: // 3
         if (ev.shiftKey)
-          activateSearch('#', ev)
+          search.activate('#', ev)
         return
     }
   })

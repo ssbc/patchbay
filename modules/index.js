@@ -21,6 +21,7 @@ module.exports = [
   require('./private.js'),
   require('./public.js'),
   require('./search.js'),
+  require('./search-box.js'),
   require('./suggest-mentions.js'),
   require('./suggest.js'),
   require('./tabs.js'),
