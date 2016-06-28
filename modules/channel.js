@@ -23,7 +23,7 @@ exports.screen_view = function (path) {
     var div = h('div.column.scroller',
       {style: {'overflow':'auto'}},
       h('div.scroller__wrapper',
-        message_compose({type: 'post'}), //header
+        message_compose({type: 'post', channel: channel}),
         content
       )
     )
