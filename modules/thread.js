@@ -96,6 +96,7 @@ exports.screen_view = function (id, sbot) {
         var branches = sort.heads(thread)
         meta.branch = branches.length > 1 ? branches : branches[0]
         meta.root = thread[0].value.content.root || thread[0].key
+        meta.channel = thread[0].value.content.channel
 
         var recps = thread[0].value.content.recps
         if(recps && thread[0].value.private)
