@@ -40,8 +40,11 @@ exports.search_box = function (go) {
 
   pull(
     sbot_query({query: [
-      {$map: {channel: ['value', 'content', 'channel']}},
-      {$reduce: {channel: 'channel', posts: {$count: true}}}
+      {$filter: {value: {content: {channel: {$gt: ''}}}}},
+      {$reduce: {
+        channel: ['value', 'content', 'channel'],
+        posts: {$count: true}
+      }}
     ]}),
     pull.collect(function (err, chans) {
       if (err) return console.error(err)
