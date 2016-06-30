@@ -105,7 +105,9 @@ exports.app = function () {
       // close a tab
       case 88: // x
         if (tabs.selected !== '/public' && tabs.selected !== '/private') {
-          tabs.remove(tabs.selected)
+          var sel = tabs.selected
+          tabs.selectRelative(-1)
+          tabs.remove(sel)
           localStorage.openTabs = JSON.stringify(tabs.tabs)
         }
         return
@@ -125,6 +127,7 @@ exports.app = function () {
 
   return tabs
 }
+
 
 
 
