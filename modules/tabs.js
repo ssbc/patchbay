@@ -12,6 +12,7 @@ function ancestor (el) {
 
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports.screen_view = [])
+var search_box = plugs.first(exports.search_box = [])
 
 function openExternal (url) {
   var _r = require //fool browserify
@@ -34,12 +35,28 @@ exports.app = function () {
   var tabs = Tabs()
   tabs.classList.add('screen')
 
+  var search = search_box(function (path, change) {
+    if(tabs.has(path)) {
+      tabs.select(path)
+      return true
+    }
+    var el = screen_view(path)
+    if(el) {
+      el.scroll = keyscroll(el.querySelector('.scroller__content'))
+      tabs.add(path, el, change)
+      localStorage.openTabs = JSON.stringify(tabs.tabs)
+      return change
+    }
+  })
+  tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
+
   var saved
   try { saved = JSON.parse(localStorage.openTabs) }
   catch (_) { saved = ['/public', '/private'] }
 
   saved.forEach(function (path) {
     var el = screen_view(path)
+    if (!el) return
     el.scroll = keyscroll(el.querySelector('.scroller__content'))
     if(el) tabs.add(path, el, true)
   })
@@ -72,22 +89,36 @@ exports.app = function () {
     if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA')
       return
     switch(ev.keyCode) {
+
       // scroll through tabs
       case 72: // h
         return tabs.selectRelative(-1)
       case 76: // l
         return tabs.selectRelative(1)
+
       // scroll through messages
       case 74: // j
         return tabs.selectedTab.scroll(1)
       case 75: // k
         return tabs.selectedTab.scroll(-1)
+
       // close a tab
       case 88: // x
         if (tabs.selected !== '/public' && tabs.selected !== '/private') {
           tabs.remove(tabs.selected)
           localStorage.openTabs = JSON.stringify(tabs.tabs)
         }
+        return
+
+      // activate the search field
+      case 191: // /
+        search.activate('?', ev)
+        return
+
+      // navigate to a channel
+      case 51: // 3
+        if (ev.shiftKey)
+          search.activate('#', ev)
         return
     }
   })

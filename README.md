@@ -73,7 +73,7 @@ now clone and run patchboard.
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
 npm install electro electron-prebuilt -g
-patchwork plugins.install ssb-links # must have patchwork >=2.8
+patchwork plugins.install ssb-links ssb-query # must have patchwork >=2.8
 electro index.js
 ```
 
