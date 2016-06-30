@@ -2,6 +2,7 @@ var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
+var TextNodeSearcher = require('text-node-searcher')
 
 var plugs = require('../plugs')
 var message_render = plugs.first(exports.message_render = [])
@@ -32,16 +33,24 @@ exports.screen_view = function (path) {
       )
     )
 
+    function renderMsg(msg) {
+      var el = message_render(msg)
+      var searcher = new TextNodeSearcher({container: el})
+      searcher.setQuery(query)
+      searcher.highlight()
+      return el
+    }
+
     pull(
       sbot_log({old: false}),
       pull.filter(matchesQuery),
-      Scroller(div, content, message_render, true, false)
+      Scroller(div, content, renderMsg, true, false)
     )
 
     pull(
       u.next(sbot_log, {reverse: true, limit: 500, live: false}),
       pull.filter(matchesQuery),
-      Scroller(div, content, message_render, false, false)
+      Scroller(div, content, renderMsg, false, false)
     )
 
     return div

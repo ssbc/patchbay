@@ -206,4 +206,8 @@ a:hover {
   color: #000;
 }
 
+/* TextNodeSearcher highlights */
 
+highlight {
+  background: yellow;
+}

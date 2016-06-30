@@ -40,7 +40,8 @@ exports.next = function (createStream, opts, property, range) {
     if(last) {
       if(count === 0) return
       var value = opts[range] = get(last, property)
-      if(value === stop) return null
+      if(value == null) return
+      last = null
     }
     return pull(
       createStream(opts),
@@ -49,7 +50,9 @@ exports.next = function (createStream, opts, property, range) {
         if(!msg.sync) last = msg
       }, function (err) {
         //retry on errors...
-        if(err) count = -1
+        if(err) return count = -1
+        //end stream if there were no results
+        if(last == null) last = {}
       })
     )
   })
