@@ -9,7 +9,7 @@ var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 
 function searchFilter(query) {
-  var search = new RegExp(query, 'i')
+  var search = new RegExp('\\b('+query+')\\b', 'i')
   return function (msg) {
     var c = msg && msg.value && msg.value.content
     return c && (
