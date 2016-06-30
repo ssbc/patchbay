@@ -117,6 +117,12 @@ exports.app = function () {
         search.activate('?', ev)
         return
 
+      // navigate to a feed
+      case 50: // 2
+        if (ev.shiftKey)
+          search.activate('@', ev)
+        return
+
       // navigate to a channel
       case 51: // 3
         if (ev.shiftKey)

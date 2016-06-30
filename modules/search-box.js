@@ -3,6 +3,7 @@ var suggest = require('suggest-box')
 var pull = require('pull-stream')
 var plugs = require('../plugs')
 var sbot_query = plugs.first(exports.sbot_query = [])
+var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 
 exports.search_box = function (go) {
 
@@ -38,6 +39,13 @@ exports.search_box = function (go) {
     }
   }
 
+  var suggestions = {}
+
+  // delay until the element has a parent
+  setTimeout(function () {
+    suggestBox = suggest(search, suggestions)
+  }, 10)
+
   pull(
     sbot_query({query: [
       {$filter: {value: {content: {channel: {$gt: ''}}}}},
@@ -48,15 +56,38 @@ exports.search_box = function (go) {
     ]}),
     pull.collect(function (err, chans) {
       if (err) return console.error(err)
-      var suggestions = chans.map(function (chan) {
+      suggestions['#'] = chans.map(function (chan) {
         var name = '#' + chan.channel
-        if (name) return {
+        return {
           title: name,
           value: name,
           subtitle: chan.posts
         }
-      }).filter(Boolean)
-      suggestBox = suggest(search, {'#': suggestions})
+      })
+    })
+  )
+
+  pull(
+    sbot_links2({query: [
+      {$filter: {
+        dest: {$prefix: '@'},
+        rel: ['mentions', {$gt: '@'}]}
+      },
+      {$reduce: {
+        id: 'dest',
+        name: ['rel', 1],
+        rank: {$count: true}}
+      }
+    ]}),
+    pull.collect(function (err, links) {
+      if (err) return console.error(err)
+      suggestions['@'] = links.map(function (e) {
+        return {
+          title: e.name,
+          value: e.id,
+          subtitle: e.id + ' (' + e.rank + ')'
+        }
+      })
     })
   )
 
