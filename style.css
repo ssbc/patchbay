@@ -1,3 +1,7 @@
+body {
+  font-family: "Source Sans Pro", sans-serif;
+}
+
 .screen {
   position: absolute;
   top: 0px; bottom: 0px;
@@ -7,8 +11,7 @@
 .column {
   display: flex;
   flex-direction: column;
-//  background: yellow;
-  margin: 10px;
+  background: #f5f5f5;
 }
 
 .row {
@@ -85,7 +88,10 @@ pre {
 }
 
 .hypertabs__tab, .hypertabs--selected {
-  background: yellow;
+  background: white;
+  border: 1px solid #ccc;
+  padding-left: 5px;
+  padding-right: 5px;
   max-width: 200px;
 }
 
@@ -93,7 +99,10 @@ pre {
 
 input {
   width: 100px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
+
 /* compose */
 
 .compose {
@@ -103,20 +112,34 @@ input {
 /* messages */
 
 .message {
-  border: 1px solid black;
+  border: 1px solid #ccc;
   padding: 5px;
+  margin-bottom: 1em;
   background: white;
   display: block;
   flex-basis: 0;
-  max-width: 600px;
+  max-width: 100%;
   min-width: 300px;
 }
 
+.message_meta input {
+  border: none;
+  font-size: .8em;
+  color: #666;
+  background: #ddd;
+}
+
 .message > .title > .message_meta {
-  margin-right: 5px;
+  margin-left: 5px;
 }
 .message > .title > .avatar {
-  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.message_content {
+  margin-top: 5px;
+  border-top: 1px solid #ccc;
+  padding-top: 3px;
 }
 
 /* -- suggest box */
@@ -152,7 +175,9 @@ input {
 .avatar img {
   width: 40px;
   height: 40px;
+  margin-right: 3px;
   //display: inline-block;
+  border: 1px solid #ccc;
 }
 
 /* lightbox - used in message-confirm */
@@ -165,8 +190,20 @@ input {
 
 .searchprompt {
   position: absolute;
+  top: 10px;
+  right: 15px;
 }
 
 .searchprompt:not(:focus) {
-  opacity: 0;
+  opacity: 1;
 }
+
+a {
+  color: #333;
+}
+
+a:hover {
+  color: #000;
+}
+
+
