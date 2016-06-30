@@ -85,8 +85,11 @@ exports.search_box = function (go) {
         return {
           title: e.name,
           value: e.id,
-          subtitle: e.id + ' (' + e.rank + ')'
+          subtitle: e.id + ' (' + e.rank + ')',
+          rank: e.rank
         }
+      }).sort(function (a, b) {
+        return b.rank - a.rank
       })
     })
   )
