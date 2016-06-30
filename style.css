@@ -170,3 +170,9 @@ input {
 .searchprompt:not(:focus) {
   opacity: 0;
 }
+
+/* TextNodeSearcher highlights */
+
+highlight {
+  background: yellow;
+}

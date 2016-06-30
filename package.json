@@ -28,7 +28,8 @@
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "^0.1.0",
     "ssb-sort": "0.0.0",
-    "suggest-box": "^2.0.0"
+    "suggest-box": "^2.0.0",
+    "text-node-searcher": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
