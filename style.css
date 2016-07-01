@@ -143,8 +143,8 @@ input {
   background: #ddd;
 }
 
-.message > .title > .message_meta {
-  margin-left: 5px;
+.message_meta {
+  margin-left: auto;
 }
 .message > .title > .avatar {
   margin-left: 0;
