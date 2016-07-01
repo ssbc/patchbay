@@ -27,15 +27,21 @@ function searchFilter(terms) {
     return c && (
       msg.key == terms[0] ||
       andSearch(terms.map(function (term) {
-        return new RegExp(term, 'i')
+        return new RegExp('\\b'+term+'\\b', 'i')
       }), [c.text, c.name, c.title])
     )
   }
 }
 
+function createOrRegExp(ary) {
+  return new RegExp(ary.map(function (e) {
+    return '\\b'+e+'\\b'
+  }).join('|'), 'i')
+}
+
 function highlight(el, query) {
   var searcher = new TextNodeSearcher({container: el})
-  searcher.setQuery(query)
+  searcher.query = query
   searcher.highlight()
   return el
 }
@@ -55,9 +61,7 @@ exports.screen_view = function (path) {
 
     function renderMsg(msg) {
       var el = message_render(msg)
-      query.forEach(function (term) {
-        highlight(el, term)
-      })
+      highlight(el, createOrRegExp(query))
       return el
     }
 
@@ -76,18 +80,4 @@ exports.screen_view = function (path) {
     return div
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
