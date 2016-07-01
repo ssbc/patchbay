@@ -57,7 +57,7 @@ exports.message_compose = function (meta, prepublish, cb) {
     }
     message_confirm(meta, function (err, msg) {
       ta.value = ''
-      cb(err, msg)
+      if (cb) cb(err, msg)
     })
   }
 
