@@ -54,6 +54,7 @@ img {
 
 pre {
   max-width: 650px;
+  white-space: pre-wrap;
 //  overflow-x: auto;
 //  overflox-y: none;
 }
@@ -131,6 +132,8 @@ input {
   flex-basis: 0;
   max-width: 100%;
   min-width: 300px;
+  word-wrap:break-word; 
+  display:inline-block;
 }
 
 .message_meta input {
@@ -144,7 +147,7 @@ input {
   margin-left: 5px;
 }
 .message > .title > .avatar {
-  margin-left: 5px;
+  margin-left: 0;
 }
 
 .message_content {
@@ -157,22 +160,29 @@ input {
 
 
 .suggest-box > * {
-  background: white;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
   margin: 3px;
 }
 
-.suggest-box{
+.suggest-box {
 //  display: flex;
 //  flex-direction: row;
   width: 200px;
+  margin-left: -7em;
+}
+
+.suggest-box ul {
+  list-style-type: none;
+  padding-left: -20px;
 }
 
 .suggest-box .selected {
-  background: yellow;
+  background: #ccc;
 }
 
 .suggest-box img {
-  width: 50px;
+  width: 40px;
 }
 .suggest-box,.selected img {
   width: 200px;
@@ -191,18 +201,34 @@ input {
   border: 1px solid #ccc;
 }
 
+.profile {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.profile img {
+  width: 150px;
+  height: 150px;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+}
+
 /* lightbox - used in message-confirm */
 
 .lightbox {
   overflow: auto;
+  width: 80%;
+  border: 1px solid #ccc; // this is being overwritten in hyperlightbox module
 }
 
 /* searchprompt */
 
 .searchprompt {
   position: absolute;
+  right: 10px;
   top: 10px;
-  right: 15px;
+  width: 200px;
 }
 
 .searchprompt:not(:focus) {
@@ -219,6 +245,6 @@ a:hover {
 
 /* TextNodeSearcher highlights */
 
-highlight {
+.highlight {
   background: yellow;
 }
