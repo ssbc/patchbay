@@ -218,6 +218,8 @@ input {
 
 .lightbox {
   overflow: auto;
+  width: 80%;
+  border: 1px solid #ccc; // this is being overwritten in hyperlightbox module
 }
 
 /* searchprompt */
