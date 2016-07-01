@@ -6,7 +6,7 @@ var avatar_action = plugs.map(exports.avatar_action = [])
 
 exports.avatar_profile = function (id) {
 
-  return h('div.row',
+  return h('div.row.profile',
     avatar_image(id),
     h('div.column', avatar_action(id))
   )
