@@ -7,22 +7,48 @@ var TextNodeSearcher = require('text-node-searcher')
 var plugs = require('../plugs')
 var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
+var whitespace = /\s+/
 
-function searchFilter(query) {
-  var search = new RegExp(query, 'i')
+function andSearch(terms, inputs) {
+  for(var i = 0; i < terms.length; i++) {
+    var match = false
+    for(var j = 0; j < inputs.length; j++) {
+      if(terms[i].test(inputs[j])) match = true
+    }
+    //if a term was not matched by anything, filter this one
+    if(!match) return false
+  }
+  return true
+}
+
+function searchFilter(terms) {
   return function (msg) {
     var c = msg && msg.value && msg.value.content
     return c && (
-      msg.key == query ||
-      c.text && search.test(c.text) ||
-      c.name && search.test(c.name) ||
-      c.title && search.test(c.title))
+      msg.key == terms[0] ||
+      andSearch(terms.map(function (term) {
+        return new RegExp('\\b'+term+'\\b', 'i')
+      }), [c.text, c.name, c.title])
+    )
   }
+}
+
+function createOrRegExp(ary) {
+  return new RegExp(ary.map(function (e) {
+    return '\\b'+e+'\\b'
+  }).join('|'), 'i')
+}
+
+function highlight(el, query) {
+  var searcher = new TextNodeSearcher({container: el})
+  searcher.query = query
+  searcher.highlight()
+  return el
 }
 
 exports.screen_view = function (path) {
   if(path[0] === '?') {
-    var query = path.substr(1)
+    var query = path.substr(1).trim().split(whitespace)
     var matchesQuery = searchFilter(query)
 
     var content = h('div.column.scroller__content')
@@ -35,9 +61,7 @@ exports.screen_view = function (path) {
 
     function renderMsg(msg) {
       var el = message_render(msg)
-      var searcher = new TextNodeSearcher({container: el})
-      searcher.setQuery(query)
-      searcher.highlight()
+      highlight(el, createOrRegExp(query))
       return el
     }
 
@@ -56,3 +80,4 @@ exports.screen_view = function (path) {
     return div
   }
 }
+
