@@ -131,6 +131,8 @@ input {
   flex-basis: 0;
   max-width: 100%;
   min-width: 300px;
+  word-wrap:break-word; 
+  display:inline-block;
 }
 
 .message_meta input {
