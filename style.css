@@ -69,6 +69,17 @@ pre {
   margin-right: auto;
 }
 
+.scroller__wrapper {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .scroller__wrapper {
+    width: 600px; 
+  }
+}
+
+
 /* --- hypertabs ------- */
 
 .hypertabs__tabs {
