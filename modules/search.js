@@ -49,15 +49,29 @@ function highlight(el, query) {
 exports.screen_view = function (path) {
   if(path[0] === '?') {
     var query = path.substr(1).trim().split(whitespace)
-    var matchesQuery = searchFilter(query)
+    var _matches = searchFilter(query)
 
+    var total = 0, matches = 0
+
+    var header = h('div.search_header', '')
     var content = h('div.column.scroller__content')
     var div = h('div.column.scroller',
       {style: {'overflow':'auto'}},
       h('div.scroller__wrapper',
+        header,
         content
       )
     )
+
+    function matchesQuery (data) {
+      total++
+      var m = _matches(data)
+      if(m) matches++
+      header.textContent = 'searched:'+total+', found:'+matches
+      return m
+    }
+
+
 
     function renderMsg(msg) {
       var el = message_render(msg)
@@ -80,4 +94,12 @@ exports.screen_view = function (path) {
     return div
   }
 }
+
+
+
+
+
+
+
+
 

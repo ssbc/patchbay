@@ -36,6 +36,7 @@ exports.message_compose = function (meta, prepublish, cb) {
     //to click the publish button.
     clearTimeout(blur)
     blur = setTimeout(function () {
+      if(ta.value) return
       ta.style.height = '50px'
       accessories.style.display = 'none'
     }, 200)
