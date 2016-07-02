@@ -10,7 +10,13 @@ exports.message_link = function (id) {
   var link = h('a', {href: '#'+id}, id.substring(0, 10)+'...')
 
   sbot_get(id, function (err, value) {
-    if(err) return console.error(err)
+    if(err) {
+      if (err.name == 'NotFoundError')
+        link.textContent += ' (missing)'
+      else
+        console.error(err)
+      return
+    }
     if(value.content.text)
       link.textContent = value.content.text.substring(0, 40)+'...'
   })

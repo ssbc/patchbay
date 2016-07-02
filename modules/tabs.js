@@ -131,6 +131,29 @@ exports.app = function () {
     }
   })
 
+  // errors tab
+  var errorsContent = h('div.column.scroller__content')
+  var errors = h('div.column.scroller',
+    {style: {'overflow':'auto'}},
+    h('div.scroller__wrapper',
+      errorsContent
+    )
+  )
+
+  window.addEventListener('error', function (ev) {
+    var err = ev.error || ev
+    ev.preventDefault()
+    if(!tabs.has('errors'))
+      tabs.add('errors', errors, false)
+    var el = h('div.message.column',
+      h('strong', err.message),
+      h('pre', err.stack))
+    if (errorsContent.firstChild)
+      errorsContent.insertBefore(el, errorsContent.firstChild)
+    else
+      errorsContent.appendChild(el)
+  })
+
   return tabs
 }
 

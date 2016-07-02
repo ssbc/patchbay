@@ -44,7 +44,7 @@ exports.message_action = function (msg, sbot) {
       }
       if(msg.value.content.recps) {
         yup.recps = msg.value.content.recps.map(function (e) {
-          return e.link || e
+          return e && typeof e !== 'string' ? e.link : e
         })
         yup.private = true
       }
