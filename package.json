@@ -10,7 +10,7 @@
   "dependencies": {
     "cont": "^1.0.3",
     "depject": "^0.1.0",
-    "hyperlightbox": "0.0.0",
+    "hyperlightbox": "^0.1.0",
     "hyperscript": "^1.4.7",
     "hypertabs": "^1.1.0",
     "mime-types": "^2.1.11",
