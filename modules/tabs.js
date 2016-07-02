@@ -131,6 +131,7 @@ exports.app = function () {
     }
   })
 
+  // errors tab
   var errorsContent = h('div.column.scroller__content')
   var errors = h('div.column.scroller',
     {style: {'overflow':'auto'}},
