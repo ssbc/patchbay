@@ -166,8 +166,6 @@ input {
 }
 
 .suggest-box {
-//  display: flex;
-//  flex-direction: row;
   width: 200px;
   margin-left: -7em;
 }
@@ -197,7 +195,6 @@ input {
   width: 40px;
   height: 40px;
   margin-right: 3px;
-  //display: inline-block;
   border: 1px solid #ccc;
 }
 
@@ -245,6 +242,8 @@ a:hover {
 
 /* TextNodeSearcher highlights */
 
-.highlight {
+highlight {
   background: yellow;
 }
+
+
