@@ -15,23 +15,40 @@ function Hash (onHash) {
     onHash && onHash(err, '&'+hash.digest('base64')+'.sha256')
   })
 }
-var createClient = require('ssb-client')
+var createClient = require('ssb-lite')
+//var createClient = require('ssb-client')
+var createConfig = require('ssb-config/inject')
+//var createClient = require('./lite')
+var createFeed   = require('ssb-feed')
+var keys = require('./keys')
+
 
 module.exports = function () {
+  var opts = createConfig()
   var sbot = null
+
   var rec = Reconnect(function (isConn) {
-    console.log("RECONNECT", isConn)
-    createClient(function (err, _sbot) {
+    createClient(keys, opts, function (err, _sbot) {
       if(err) {console.error(err.stack); isConn(err)}
       sbot = _sbot
       sbot.on('closed', function () {
-        console.log("DISCONNECT")
         sbot = null
         isConn(new Error('closed'))
       })
       isConn()
     })
   })
+
+  var internal = {
+    getLatest: rec.async(function (id, cb) {
+      sbot.getLatest(id, cb)
+    }),
+    add: rec.async(function (msg, cb) {
+      sbot.add(msg, cb)
+    })
+  }
+
+  var feed = createFeed(internal, keys)
 
   return {
     sbot_blobs_add: rec.sink(function (cb) {
@@ -59,12 +76,26 @@ module.exports = function () {
       sbot.get(key, cb)
     }),
     sbot_publish: rec.async(function (msg, cb) {
-      sbot.publish(msg, cb)
+      feed.add(msg, function (err, msg) {
+        cb(err, msg)
+      })
     }),
     sbot_whoami: rec.async(function (cb) {
       sbot.whoami(cb)
     })
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 

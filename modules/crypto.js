@@ -1,9 +1,6 @@
-var path = require('path')
-var ssbKeys = require('ssb-keys')
 var ref = require('ssb-ref')
-var config = require('ssb-config/inject')(process.env.ssb_appname)
-var keys = ssbKeys
-  .loadSync(path.join(config.path, 'secret'))
+var keys = require('../keys')
+var ssbKeys = require('ssb-keys')
 
 function unbox_value(msg) {
   var plaintext = ssbKeys.unbox(msg.content, keys)
@@ -48,6 +45,8 @@ exports.publish = function (content, id) {
     console.log('PUBLISHED', msg)
   })
 }
+
+
 
 
 
