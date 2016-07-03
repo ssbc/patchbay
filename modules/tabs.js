@@ -50,15 +50,18 @@ exports.app = function () {
   })
   tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
 
-  var saved
+  var saved = []
   try { saved = JSON.parse(localStorage.openTabs) }
-  catch (_) { saved = ['/public', '/private'] }
+  catch (_) { }
+
+  if(!saved || saved.length < 2)
+    saved = ['/public', '/private']
 
   saved.forEach(function (path) {
     var el = screen_view(path)
     if (!el) return
     el.scroll = keyscroll(el.querySelector('.scroller__content'))
-    if(el) tabs.add(path, el, true)
+    if(el) tabs.add(path, el, false)
   })
 
   tabs.select(saved[0] || '/public')
@@ -156,13 +159,6 @@ exports.app = function () {
 
   return tabs
 }
-
-
-
-
-
-
-
 
 
 
