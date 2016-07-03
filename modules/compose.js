@@ -49,17 +49,27 @@ exports.message_compose = function (meta, prepublish, cb) {
   var files = []
 
   function publish() {
-    meta.text = ta.value
-    meta.mentions = mentions(ta.value).concat(files)
+    var content
     try {
-      meta = prepublish(meta)
+      content = JSON.parse(ta.value)
     } catch (err) {
-      return alert(err.message)
+      meta.text = ta.value
+      meta.mentions = mentions(ta.value).concat(files)
+      try {
+        meta = prepublish(meta)
+      } catch (err) {
+        return alert(err.message)
+      }
+      return message_confirm(meta, done)
     }
-    message_confirm(meta, function (err, msg) {
-      ta.value = ''
+    message_confirm(content, done)
+
+    function done (err, msg) {
+      if(err) return alert(err.stack)
+      else ta.value = ''
+
       if (cb) cb(err, msg)
-    })
+    }
   }
 
 
@@ -98,4 +108,8 @@ exports.message_compose = function (meta, prepublish, cb) {
   return composer
 
 }
+
+
+
+
 
