@@ -12,6 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
+  min-height: 0px;
 }
 
 .row {
@@ -21,10 +22,7 @@ body {
 
 .stretch {
   flex-basis: 0;
-//  flex-grow: 1;
-//  flex-shrink: 1;
 }
-
 
 .fixed {
   flex-grow: 1;
@@ -49,20 +47,17 @@ body {
 img {
   max-width: 600px;
   display: block;
-//  overflow-x: auto;
 }
 
 pre {
   max-width: 650px;
   white-space: pre-wrap;
-//  overflow-x: auto;
-//  overflox-y: none;
 }
 
-/* scrolling feeds, threads */\
+/* scrolling feeds, threads */
 
 .scroller {
-  width: 100%
+  width: 100%;
 }
 
 .scroller > * {
@@ -76,7 +71,7 @@ pre {
 
 @media (min-width: 600px) {
   .scroller__wrapper {
-    width: 600px; 
+    width: 600px;
   }
 }
 
@@ -84,7 +79,6 @@ pre {
 /* --- hypertabs ------- */
 
 .hypertabs__tabs {
-//  width: 1200px
   overflow-y: hide;
 }
 
@@ -245,5 +239,4 @@ a:hover {
 highlight {
   background: yellow;
 }
-
 
