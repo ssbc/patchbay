@@ -15,10 +15,13 @@ function Hash (onHash) {
     onHash && onHash(err, '&'+hash.digest('base64')+'.sha256')
   })
 }
-var createClient = require('ssb-lite')
-//var createClient = require('ssb-client')
+//uncomment this to use from browser...
+//also depends on having ssb-ws installed.
+//var createClient = require('ssb-lite')
+var createClient = require('ssb-client')
+
 var createConfig = require('ssb-config/inject')
-//var createClient = require('./lite')
+
 var createFeed   = require('ssb-feed')
 var keys = require('./keys')
 
@@ -85,6 +88,7 @@ module.exports = function () {
     })
   }
 }
+
 
 
 
