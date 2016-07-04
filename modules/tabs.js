@@ -145,10 +145,9 @@ exports.app = function () {
 
   window.addEventListener('error', function (ev) {
     var err = ev.error || ev
-    ev.preventDefault()
     if(!tabs.has('errors'))
       tabs.add('errors', errors, false)
-    var el = h('div.message.column',
+    var el = h('div.message',
       h('strong', err.message),
       h('pre', err.stack))
     if (errorsContent.firstChild)
@@ -159,6 +158,7 @@ exports.app = function () {
 
   return tabs
 }
+
 
 
 
