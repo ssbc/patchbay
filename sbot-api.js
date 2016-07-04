@@ -31,8 +31,12 @@ module.exports = function () {
   var sbot = null
 
   var rec = Reconnect(function (isConn) {
-    createClient(keys, opts, function (err, _sbot) {
-      if(err) {console.error(err.stack); isConn(err)}
+    createClient(function (err, _sbot) {
+      if(err) {
+        console.error(err.stack)
+        isConn(err)
+        return
+      }
       sbot = _sbot
       sbot.on('closed', function () {
         sbot = null
@@ -88,6 +92,8 @@ module.exports = function () {
     })
   }
 }
+
+
 
 
 
