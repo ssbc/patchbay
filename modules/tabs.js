@@ -32,10 +32,13 @@ function openExternal (url) {
 exports.message_render = []
 
 exports.app = function () {
-  var tabs = Tabs()
+  var search
+  var tabs = Tabs(function (name) {
+    search.value = name
+  })
   tabs.classList.add('screen')
 
-  var search = search_box(function (path, change) {
+  search = search_box(function (path, change) {
     if(tabs.has(path)) {
       tabs.select(path)
       return true
@@ -48,6 +51,7 @@ exports.app = function () {
       return change
     }
   })
+
   tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
 
   var saved = []
@@ -71,8 +75,8 @@ exports.app = function () {
     if(!link) return
     var path = link.hash.substring(1)
 
-    ev.preventDefault()
     ev.stopPropagation()
+    ev.preventDefault()
 
     //open external links.
     //this ought to be made into something more runcible
@@ -158,10 +162,5 @@ exports.app = function () {
 
   return tabs
 }
-
-
-
-
-
 
 
