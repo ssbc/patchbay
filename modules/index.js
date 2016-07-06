@@ -12,7 +12,6 @@ module.exports = [
   require('./like.js'),
   require('./markdown.js'),
   require('./message-confirm.js'),
-  require('./message-id.js'),
   require('./message-link.js'),
   require('./message-name.js'),
   require('./message.js'),
@@ -28,3 +27,4 @@ module.exports = [
   require('./thread.js'),
   require('./timestamp.js') 
 ]
+
