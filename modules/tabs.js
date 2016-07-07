@@ -54,8 +54,8 @@ exports.app = function () {
   try { saved = JSON.parse(localStorage.openTabs) }
   catch (_) { }
 
-  if(!saved || saved.length < 2)
-    saved = ['/public', '/private']
+  if(!saved || saved.length < 3)
+    saved = ['/public', '/private', '/notifications']
 
   saved.forEach(function (path) {
     var el = screen_view(path)
@@ -107,7 +107,7 @@ exports.app = function () {
 
       // close a tab
       case 88: // x
-        if (tabs.selected !== '/public' && tabs.selected !== '/private') {
+        if (tabs.selected && tabs.selected[0] !== '/') {
           var sel = tabs.selected
           tabs.selectRelative(-1)
           tabs.remove(sel)

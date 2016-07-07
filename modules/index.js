@@ -17,6 +17,7 @@ module.exports = [
   require('./message-name.js'),
   require('./message.js'),
   require('./names.js'),
+  require('./notifications.js'),
   require('./post.js'),
   require('./private.js'),
   require('./public.js'),
