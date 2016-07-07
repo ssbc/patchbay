@@ -34,7 +34,7 @@ function name (id) {
       }}
     ]}),
     function (err, names) {
-      if(err) throw err
+      if(err) console.error(err), names = []
       //if they have not been mentioned, fallback
       //to patchwork style naming (i.e. self id)
       if(!names.length)
