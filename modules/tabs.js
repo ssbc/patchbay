@@ -35,6 +35,7 @@ exports.app = function () {
   var search
   var tabs = Tabs(function (name) {
     search.value = name
+    sessionStorage.selectedTab = tabs.selected
   })
   tabs.classList.add('screen')
 
@@ -68,7 +69,7 @@ exports.app = function () {
     if(el) tabs.add(path, el, false)
   })
 
-  tabs.select(saved[0] || '/public')
+  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
 
   tabs.onclick = function (ev) {
     var link = ancestor(ev.target)
