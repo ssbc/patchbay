@@ -26,6 +26,7 @@ module.exports = [
   require('./suggest.js'),
   require('./tabs.js'),
   require('./thread.js'),
-  require('./timestamp.js') 
+  require('./timestamp.js'),
+  require('./invite.js')
 ]
 
