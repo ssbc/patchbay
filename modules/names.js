@@ -43,12 +43,12 @@ function name (id) {
           getAvatar({links: sbot_links}, me.id, id,
             function (err, avatar) {
               if (err) return console.error(err)
-              n.textContent = avatar.name
+              n.textContent = (avatar.name[0] == '@' ? '' : '@') + avatar.name
             })
         })
 
       n.textContent = names.reduce(function (max, item) {
-        return max.count > item.count ? max : item
+        return max.count > item.count || item.name == '@' ? max : item
       }, {name: id.substring(0, 10), count: 0}).name
     })
 
