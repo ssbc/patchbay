@@ -16,7 +16,7 @@ exports.message_content = function (msg, sbot) {
   return h('p', 
     about.about === msg.value.author
       ? h('span', 'self-identifies') 
-      : h('span', 'identifies', idLink(id)),
+      : h('span', 'identifies ', idLink(id)),
     ' as ',
     h('a', {href:"#/"+about.about},
       about.name || null,
