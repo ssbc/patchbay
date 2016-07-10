@@ -95,7 +95,7 @@ pre {
   padding-top: 1px;
 }
 
-.hypertabs__tab, .hypertabs--selected {
+.hypertabs--selected {
   background: white;
   border: 1px solid #ccc;
   padding-top: 0;
@@ -226,10 +226,6 @@ input {
   right: 10px;
   top: 10px;
   width: 200px;
-}
-
-.searchprompt:not(:focus) {
-  opacity: 1;
 }
 
 a {
