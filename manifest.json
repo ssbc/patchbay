@@ -1,0 +1,116 @@
+{
+  "auth": "async",
+  "address": "sync",
+  "manifest": "sync",
+  "get": "async",
+  "createFeedStream": "source",
+  "createLogStream": "source",
+  "messagesByType": "source",
+  "createHistoryStream": "source",
+  "createUserStream": "source",
+  "links": "source",
+  "relatedMessages": "async",
+  "add": "async",
+  "publish": "async",
+  "getAddress": "sync",
+  "getLatest": "async",
+  "latest": "source",
+  "latestSequence": "async",
+  "whoami": "sync",
+  "usage": "sync",
+  "gossip": {
+    "peers": "sync",
+    "add": "sync",
+    "ping": "duplex",
+    "connect": "async",
+    "changes": "source",
+    "reconnect": "sync"
+  },
+  "friends": {
+    "all": "async",
+    "hops": "async",
+    "createFriendStream": "source",
+    "get": "sync"
+  },
+  "replicate": {
+    "changes": "source"
+  },
+  "invite": {
+    "create": "async",
+    "accept": "async",
+    "use": "async"
+  },
+  "block": {
+    "isBlocked": "sync"
+  },
+  "private": {
+    "publish": "async",
+    "unbox": "sync"
+  },
+  "plugins": {
+    "install": "source",
+    "uninstall": "source",
+    "enable": "async",
+    "disable": "async"
+  },
+  "notifier": {},
+  "patchwork": {
+    "createEventStream": "source",
+    "getIndexCounts": "async",
+    "createInboxStream": "source",
+    "createBookmarkStream": "source",
+    "createMentionStream": "source",
+    "createNoticeStream": "source",
+    "createPrivatePostStream": "source",
+    "createPublicPostStream": "source",
+    "createChannelStream": "source",
+    "createSearchStream": "source",
+    "markRead": "async",
+    "markUnread": "async",
+    "markAllRead": "async",
+    "toggleRead": "async",
+    "isRead": "async",
+    "bookmark": "async",
+    "unbookmark": "async",
+    "toggleBookmark": "async",
+    "isBookmarked": "async",
+    "getChannels": "async",
+    "pinChannel": "async",
+    "unpinChannel": "async",
+    "toggleChannelPinned": "async",
+    "watchChannel": "async",
+    "unwatchChannel": "async",
+    "toggleChannelWatched": "async",
+    "addFileToBlobs": "async",
+    "saveBlobToFile": "async",
+    "useLookupCode": "source",
+    "getMyProfile": "async",
+    "getProfile": "async",
+    "getAllProfiles": "async",
+    "getNamesById": "async",
+    "getIdsByName": "async",
+    "getName": "async",
+    "getActionItems": "async"
+  },
+  "blobs": {
+    "get": "source",
+    "add": "sink",
+    "ls": "source",
+    "has": "async",
+    "size": "async",
+    "meta": "async",
+    "want": "async",
+    "push": "async",
+    "changes": "source",
+    "createWants": "source"
+  },
+  "links2": {
+    "read": "source",
+    "dump": "source"
+  },
+  "query": {
+    "read": "source",
+    "dump": "source"
+  },
+  "ws": {}
+}
