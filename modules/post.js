@@ -12,7 +12,7 @@ exports.message_content = function (data, sbot) {
   if(!data.value.content || !data.value.content.text) return
 
   var root = data.value.content.root
-  var re = !root ? null : h('span', 're:', message_link(root))
+  var re = !root ? null : h('span', 're: ', message_link(root))
 
   var content = h('div')
   var d = h('div', re, content)

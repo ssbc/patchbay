@@ -92,11 +92,13 @@ pre {
   max-width: 50px;
   overflow-x: hidden;
   margin-right: 5px;
+  padding-top: 1px;
 }
 
-.hypertabs__tab, .hypertabs--selected {
+.hypertabs--selected {
   background: white;
   border: 1px solid #ccc;
+  padding-top: 0;
   padding-left: 5px;
   padding-right: 5px;
   max-width: 200px;
@@ -121,7 +123,7 @@ input {
 .message {
   border: 1px solid #ccc;
   padding: 5px;
-  margin-bottom: 1em;
+  margin-top: 1em;
   background: white;
   display: block;
   flex-basis: 0;
@@ -140,6 +142,9 @@ input {
 
 .message_meta {
   margin-left: auto;
+}
+.message_meta > * {
+  margin-left: 5px;
 }
 .message > .title > .avatar {
   margin-left: 0;
@@ -221,10 +226,6 @@ input {
   right: 10px;
   top: 10px;
   width: 200px;
-}
-
-.searchprompt:not(:focus) {
-  opacity: 1;
 }
 
 a {

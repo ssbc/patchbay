@@ -8,7 +8,7 @@ var plugs = require('../plugs')
 //so you see new users
 exports.message_content = function (msg) {
 
-  if(msg.value.content.type == 'contact') {
+  if(msg.value.content.type == 'contact' && msg.value.content.contact) {
     return h('div.contact',
       'follows',
       avatar(msg.value.content.contact)
@@ -80,7 +80,7 @@ exports.avatar_action = function (id) {
       }, function (err) {
         //TODO: update after following.
       })
-    }}, label)
+    }}, h('br'), label)
   )
 }
 
