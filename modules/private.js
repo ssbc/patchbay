@@ -69,7 +69,7 @@ exports.screen_view = function (path) {
 
 exports.message_meta = function (msg) {
   if(msg.value.private)
-    return "PRIVATE"
+    return h('span', 'PRIVATE')
 }
 
 

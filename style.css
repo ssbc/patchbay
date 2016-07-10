@@ -141,6 +141,9 @@ input {
 .message_meta {
   margin-left: auto;
 }
+.message_meta > * {
+  margin-left: 5px;
+}
 .message > .title > .avatar {
   margin-left: 0;
 }
