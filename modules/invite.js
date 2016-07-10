@@ -4,6 +4,10 @@ var ssbClient = require('ssb-client')
 var id = require('../keys').id
 var h = require('hyperscript')
 
+var plugs = require('../plugs')
+var sbot_publish = plugs.first(exports.sbot_publish = [])
+
+
 exports.screen_view = function (invite) {
 
   //check that invite is 
@@ -25,8 +29,11 @@ exports.screen_view = function (invite) {
   var status = h('pre')
   var div = h('div',
     progress, status,
-    h('a', 'accept', {href: '#', onclick: function () {
+    h('a', 'accept', {href: '#', onclick: function (ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
       attempt()
+      return false
     }})
   )
 
@@ -59,9 +66,13 @@ exports.screen_view = function (invite) {
           
         //remove the seed from the shs address.
         //then it's correct address.
-        var p2 = invite.split(':')
-        p2.pop()
-        localStorage.remote = p2.join(':')
+        //this should make the browser connect to this as remote.
+        //we don't want to do this if when using this locally, though.
+        if(process.title === 'browser') {
+          var p2 = invite.split(':')
+          p2.pop()
+          localStorage.remote = p2.join(':')
+        }
 
         sbot_publish({
           type: 'contact',
@@ -84,6 +95,5 @@ exports.screen_view = function (invite) {
 
   return div
 }
-
 
 
