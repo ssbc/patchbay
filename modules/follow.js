@@ -80,7 +80,7 @@ exports.avatar_action = function (id) {
       }, function (err) {
         //TODO: update after following.
       })
-    }}, label)
+    }}, h('br'), label)
   )
 }
 
