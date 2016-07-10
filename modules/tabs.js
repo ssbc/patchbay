@@ -76,8 +76,8 @@ exports.app = function () {
     if(!link) return
     var path = link.hash.substring(1)
 
-    ev.stopPropagation()
     ev.preventDefault()
+    ev.stopPropagation()
 
     //open external links.
     //this ought to be made into something more runcible
@@ -91,6 +91,8 @@ exports.app = function () {
       tabs.add(path, el, !ev.ctrlKey)
       localStorage.openTabs = JSON.stringify(tabs.tabs)
     }
+
+    return false
   }
 
   window.addEventListener('keydown', function (ev) {
@@ -163,5 +165,6 @@ exports.app = function () {
 
   return tabs
 }
+
 
 
