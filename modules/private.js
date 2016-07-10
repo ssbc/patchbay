@@ -26,7 +26,12 @@ function unbox () {
 }
 
 exports.screen_view = function (path) {
+
   if(path === '/private') {
+    if(process.title === 'browser')
+      return h('div', h('h1', 'private messages not currently supported'))
+
+
     var id = null
     sbot_whoami(function (err, me) {
       id = me.id
@@ -71,6 +76,8 @@ exports.message_meta = function (msg) {
   if(msg.value.private)
     return "PRIVATE"
 }
+
+
 
 
 
