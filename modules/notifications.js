@@ -4,6 +4,7 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var paramap = require('pull-paramap')
 var plugs = require('../plugs')
+var cont = require('cont')
 
 var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
@@ -49,15 +50,14 @@ function notifications(ourIds) {
 
     switch (c.type) {
       case 'post':
-        if (c.branch)
-          return isOurMsg(c.branch, function (err, isOurs) {
+        if (c.branch || c.root)
+          cont.para([].concat(c.branch, c.root).map(function (id) {
+            return function (cb) { isOurMsg(id, cb) }
+          }))
+          (function (err, results) {
             if (err) cb(err)
-            else if (isOurs) cb(null, msg)
-            else if (c.root) isOurMsg(c.root, function (err, isOurs) {
-              if (err) cb(err)
-              else if (isOurs) cb(null, msg)
-              else cb()
-            })
+            else if (results.some(Boolean)) cb(null, msg)
+            else cb()
           })
         else return cb()
 
