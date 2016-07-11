@@ -9,6 +9,7 @@ var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
+var sbot_user_feed = plugs.first(exports.sbot_user_feed = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 
 function unbox() {
@@ -76,12 +77,24 @@ function notifications(ourIds) {
   }, 4)
 }
 
+function getFirstMessage(feedId, cb) {
+  sbot_user_feed({id: feedId, gte: 0, limit: 1})(null, cb)
+}
+
 exports.screen_view = function (path) {
   if(path === '/notifications') {
     var ids = {}
+    var oldest
+
     sbot_whoami(function (err, me) {
       if (err) return console.error(err)
       ids[me.id] = true
+      getFirstMessage(me.id, function (err, msg) {
+        if (err) return console.error(err)
+        if (!oldest || msg.value.timestamp < oldest) {
+          oldest = msg.value.timestamp
+        }
+      })
     })
 
     var content = h('div.column.scroller__content')
@@ -105,6 +118,10 @@ exports.screen_view = function (path) {
       unbox(),
       notifications(ids),
       pull.filter(),
+      pull.take(function (msg) {
+        // abort stream after we pass the oldest messages of our feeds
+        return !oldest || msg.value.timestamp > oldest
+      }),
       Scroller(div, content, message_render, false, false)
     )
 
