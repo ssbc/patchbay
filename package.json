@@ -33,10 +33,11 @@
     "text-node-searcher": "^1.1.0"
   },
   "devDependencies": {
-    "brfs": "^1.4.3"
+    "brfs": "^1.4.3",
+    "indexhtmlify": "^1.2.1"
   },
   "scripts": {
-    "build": "node build.js > modules/index.js; noderify index.js > bundle.js",
+    "build": "node build.js > modules/index.js; browserify -t brfs index.js | indexhtmlify > test.html",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
