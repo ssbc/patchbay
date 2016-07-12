@@ -107,9 +107,13 @@ pre {
 /* message id */
 
 input {
-  width: 100px;
   margin-left: 3px;
   margin-right: 3px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  border: 1px solid #ccc;
 }
 
 /* compose */
@@ -222,10 +226,9 @@ input {
 /* searchprompt */
 
 .searchprompt {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 200px;
+  width: 250px;
+  margin-left: 10px;
+  margin-bottom: 5px;
 }
 
 a {
