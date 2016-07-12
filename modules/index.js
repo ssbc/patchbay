@@ -9,6 +9,7 @@ module.exports = [
   require('./feed.js'),
   require('./file-input.js'),
   require('./follow.js'),
+  require('./invite.js'),
   require('./like.js'),
   require('./markdown.js'),
   require('./message-confirm.js'),
@@ -20,13 +21,11 @@ module.exports = [
   require('./post.js'),
   require('./private.js'),
   require('./public.js'),
-  require('./search.js'),
   require('./search-box.js'),
+  require('./search.js'),
   require('./suggest-mentions.js'),
   require('./suggest.js'),
   require('./tabs.js'),
   require('./thread.js'),
-  require('./timestamp.js'),
-  require('./invite.js')
+  require('./timestamp.js') 
 ]
-
