@@ -64,8 +64,11 @@ npm install scuttlebot@latest -g
 # make sure you have secure-scuttlebutt@15.2.0
 npm ls secure-scuttlebutt -g
 sbot server
-# then in another tab
-sbot plugins.install ssb-links ssb-query # must have patchwork >=2.8
+# OR, install and run patchwork. (must have at least >= 2.8)
+
+# then in another tab (these must be two separate commands)
+sbot plugins.install ssb-links
+sbot plugins.install ssb-query
 # restart sbot server (go back to previous tab and kill it)
 ```
 now clone and run patchboard.
@@ -73,12 +76,17 @@ now clone and run patchboard.
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
 npm install electro electron-prebuilt -g
-patchwork plugins.install ssb-links ssb-query # must have patchwork >=2.8
+# for node@6, you'll currently need to use js crypto.
+CHLORIDE_JS=1 electro index.js
+
+# otherwise
 electro index.js
 ```
+
 
 ## License
 
 MIT
+
 
 
