@@ -83,6 +83,14 @@ CHLORIDE_JS=1 electro index.js
 electro index.js
 ```
 
+## modules
+
+patchbay uses [depject](http://github.com/dominictarr/depject) to manage it's modules.
+here is a graph of the current connections between them. (round shows module,
+square shows api, arrow direction points from user to provider)
+
+![module graph](./graph.svg)
+
 
 ## License
 
