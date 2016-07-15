@@ -89,7 +89,7 @@ patchbay uses [depject](http://github.com/dominictarr/depject) to manage it's mo
 here is a graph of the current connections between them. (round shows module,
 square shows api, arrow direction points from user to provider)
 
-![module graph](./graph.svg)
+[module graph](./graph.svg)
 
 
 ## License
