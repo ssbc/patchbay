@@ -46,7 +46,3 @@ exports.publish = function (content, id) {
   })
 }
 
-
-
-
-

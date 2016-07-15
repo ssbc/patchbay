@@ -1,6 +1,8 @@
 var pull = require('pull-stream')
 var crypto = require('crypto')
+var ref = require('ssb-ref')
 var Reconnect = require('pull-reconnect')
+
 
 function Hash (onHash) {
   var hash = crypto.createHash('sha256')
@@ -24,7 +26,7 @@ var createConfig = require('ssb-config/inject')
 
 var createFeed   = require('ssb-feed')
 var keys = require('./keys')
-
+var ssbKeys = require('ssb-keys')
 
 module.exports = function () {
   var opts = createConfig()
@@ -89,9 +91,16 @@ module.exports = function () {
     sbot_get: rec.async(function (key, cb) {
       sbot.get(key, cb)
     }),
-    sbot_publish: rec.async(function (msg, cb) {
-      feed.add(msg, function (err, msg) {
-        cb(err, msg)
+    sbot_publish: rec.async(function (content, cb) {
+      if(content.recps)
+        content = ssbKeys.box(content, content.recps.map(function (e) {
+          return ref.isFeed(e) ? e : e.link
+        }))
+
+      feed.add(content, function (err, msg) {
+        if(err) console.error(err)
+        else if(!cb) console.log(msg)
+        cb && cb(err, msg)
       })
     }),
     sbot_whoami: rec.async(function (cb) {
@@ -99,5 +108,7 @@ module.exports = function () {
     })
   }
 }
+
+
 
 

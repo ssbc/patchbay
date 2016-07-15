@@ -5,7 +5,7 @@ var u = require('../util')
 
 var plugs = require('../plugs')
 
-var publish = plugs.first(exports.publish = [])
+var publish = plugs.first(exports.sbot_publish = [])
 var message_content = plugs.first(exports.message_content = [])
 
 exports.message_confirm = function (content, cb) {

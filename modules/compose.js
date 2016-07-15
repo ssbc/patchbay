@@ -8,7 +8,7 @@ var lightbox = require('hyperlightbox')
 var plugs = require('../plugs')
 
 //var suggest         = plugs.map(exports.suggest = [])
-var publish         = plugs.first(exports.publish = [])
+var publish         = plugs.first(exports.sbot_publish = [])
 var message_content = plugs.first(exports.message_content = [])
 var message_confirm = plugs.first(exports.message_confirm = [])
 var file_input      = plugs.first(exports.file_input = [])
@@ -108,8 +108,4 @@ exports.message_compose = function (meta, prepublish, cb) {
   return composer
 
 }
-
-
-
-
 
