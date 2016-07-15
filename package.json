@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "cont": "^1.0.3",
-    "depject": "^0.1.0",
+    "depject": "^1.0.1",
     "hyperlightbox": "^0.1.0",
     "hyperscript": "^1.4.7",
     "hypertabs": "^1.2.0",
@@ -39,6 +39,7 @@
   },
   "scripts": {
     "build": "node build.js > modules/index.js; browserify -t brfs index.js | indexhtmlify > test.html",
+    "graph": "node index.js | dot -Tsvg > graph.svg",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
