@@ -109,6 +109,14 @@ module.exports = function () {
         content = ssbKeys.box(content, content.recps.map(function (e) {
           return ref.isFeed(e) ? e : e.link
         }))
+      else if(content.mentions)
+        content.mentions.forEach(function (mention) {
+          if(ref.isBlob(mention.link)) {
+            sbot.blobs.push(mention.link, function (err) {
+              if(err) console.error(err)
+            })
+          }
+        })
 
       feed.add(content, function (err, msg) {
         if(err) console.error(err)
