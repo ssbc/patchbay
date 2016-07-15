@@ -2,7 +2,7 @@
 var h = require('hyperscript')
 
 function idLink (id) {
-  return h('a', {href:'#/'+id}, id)
+  return h('a', {href:'#'+id}, id)
 }
 
 exports.message_content = function (msg, sbot) {
@@ -15,10 +15,10 @@ exports.message_content = function (msg, sbot) {
   var id = msg.value.content.about
   return h('p', 
     about.about === msg.value.author
-      ? h('span', 'self-identifies') 
+      ? h('span', 'self-identifies ')
       : h('span', 'identifies ', idLink(id)),
     ' as ',
-    h('a', {href:"#/"+about.about},
+    h('a', {href:"#"+about.about},
       about.name || null,
       about.image
       ? h('img', {src:'http://localhost:7777/'+ encodeURIComponent(about.image.link)})
