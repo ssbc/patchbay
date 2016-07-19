@@ -24,6 +24,7 @@ module.exports = {
   "post.js":  require('./post.js'),
   "private.js":  require('./private.js'),
   "public.js":  require('./public.js'),
+  "raw.js":  require('./raw.js'),
   "search-box.js":  require('./search-box.js'),
   "search.js":  require('./search.js'),
   "split.js":  require('./split.js'),
