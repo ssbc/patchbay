@@ -150,6 +150,10 @@ textarea {
 .message_meta > * {
   margin-left: 5px;
 }
+.message_actions {
+  float: right;
+}
+
 .message > .title > .avatar {
   margin-left: 0;
 }
@@ -244,3 +248,4 @@ highlight {
   background: yellow;
 }
 
+.vote { float: right; }
