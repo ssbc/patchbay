@@ -10,7 +10,7 @@ exports.screen_view = function (path) {
 
   return h('div.row',
     m[1].split(',').map(function (e) {
-      return screen_view(e)
+      return screen_view(e.trim())
     }).filter(Boolean)
   )
 }
