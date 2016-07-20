@@ -39,7 +39,7 @@
     "indexhtmlify": "^1.2.1"
   },
   "scripts": {
-    "build": "node build.js > modules/index.js; browserify -t brfs index.js | indexhtmlify > index.html",
+    "build": "node build.js > modules/index.js && browserify -t brfs index.js > bundle.js &&  indexhtmlify < bundle.js > index.html",
     "graph": "node index.js | dot -Tsvg > graph.svg",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
