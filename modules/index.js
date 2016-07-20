@@ -1,4 +1,5 @@
 module.exports = {
+  "_screen_view.js":  require('./_screen_view.js'),
   "about.js":  require('./about.js'),
   "avatar-image.js":  require('./avatar-image.js'),
   "avatar-profile.js":  require('./avatar-profile.js'),
@@ -23,6 +24,7 @@ module.exports = {
   "public.js":  require('./public.js'),
   "search-box.js":  require('./search-box.js'),
   "search.js":  require('./search.js'),
+  "split.js":  require('./split.js'),
   "suggest-mentions.js":  require('./suggest-mentions.js'),
   "suggest.js":  require('./suggest.js'),
   "tabs.js":  require('./tabs.js'),
