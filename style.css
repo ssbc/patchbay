@@ -109,11 +109,11 @@ pre {
 input {
   margin-left: 3px;
   margin-right: 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 textarea {
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 /* compose */
@@ -125,9 +125,9 @@ textarea {
 /* messages */
 
 .message {
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
   padding: 5px;
-  margin-top: 1em;
+  margin-top: .5em;
   background: white;
   display: block;
   flex-basis: 0;
@@ -160,7 +160,7 @@ textarea {
 
 .message_content {
   margin-top: 5px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #eee;
   padding-top: 3px;
 }
 
@@ -207,7 +207,7 @@ textarea {
 
 .profile {
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 .profile img {
