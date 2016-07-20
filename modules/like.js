@@ -13,45 +13,45 @@ exports.message_content = function (msg, sbot) {
   if(msg.value.content.type !== 'vote') return
   var link = msg.value.content.vote.link
   return h('div',
-      msg.value.content.vote.value > 0 ? 'yup' : 'nah',
+      msg.value.content.vote.value > 0 ? 'Dug' : 'Undug',
       ' ', message_link(link)
     )
 }
 
 exports.message_meta = function (msg, sbot) {
 
-  var yupps = h('a')
+  var digs = h('a')
 
   pull(
     sbot_links({dest: msg.key, rel: 'vote'}),
     pull.collect(function (err, votes) {
       if(votes.length === 1)
-        yupps.textContent = ' 1 yup'
-      if(votes.length)
-        yupps.textContent = ' ' + votes.length + ' yupps'
+        digs.textContent = ' 1 Dig'
+      if(votes.length > 1)
+        digs.textContent = ' ' + votes.length + ' Digs'
     })
   )
 
-  return yupps
+  return digs
 }
 
 exports.message_action = function (msg, sbot) {
   if(msg.value.content.type !== 'vote')
     return h('a', {href: '#', onclick: function () {
-      var yup = {
+      var dig = {
         type: 'vote',
-        vote: { link: msg.key, value: 1, expression: 'yup' }
+        vote: { link: msg.key, value: 1, expression: 'Dig' }
       }
       if(msg.value.content.recps) {
-        yup.recps = msg.value.content.recps.map(function (e) {
+        dig.recps = msg.value.content.recps.map(function (e) {
           return e && typeof e !== 'string' ? e.link : e
         })
-        yup.private = true
+        dig.private = true
       }
       //TODO: actually publish...
 
-      message_confirm(yup)
-    }}, 'yup')
+      message_confirm(dig)
+    }}, 'Dig')
 
 }
 

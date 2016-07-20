@@ -109,11 +109,11 @@ pre {
 input {
   margin-left: 3px;
   margin-right: 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 textarea {
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 /* compose */
@@ -125,9 +125,9 @@ textarea {
 /* messages */
 
 .message {
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
   padding: 5px;
-  margin-top: 1em;
+  margin-top: .5em;
   background: white;
   display: block;
   flex-basis: 0;
@@ -150,13 +150,17 @@ textarea {
 .message_meta > * {
   margin-left: 5px;
 }
+.message_actions {
+  float: right;
+}
+
 .message > .title > .avatar {
   margin-left: 0;
 }
 
 .message_content {
   margin-top: 5px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #eee;
   padding-top: 3px;
 }
 
@@ -203,7 +207,7 @@ textarea {
 
 .profile {
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
 }
 
 .profile img {
@@ -218,9 +222,19 @@ textarea {
 
 .lightbox {
   overflow: auto;
-  width: 80%;
-  border: 1px solid #ccc; // this is being overwritten in hyperlightbox module
+  background: #fff;
+  width: 600px;
+  border: 1px solid #eee;
+  top: 2em;
+  bottom: 2em;
+  left: 2em;
+  right: 2em;
+  padding: 1em;
 }
+
+.message-confirm {
+  background: #fff;
+} 
 
 /* searchprompt */
 
