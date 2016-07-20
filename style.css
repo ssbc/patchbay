@@ -222,9 +222,19 @@ textarea {
 
 .lightbox {
   overflow: auto;
-  width: 80%;
-  border: 1px solid #ccc; // this is being overwritten in hyperlightbox module
+  background: #fff;
+  width: 600px;
+  border: 1px solid #eee;
+  top: 2em;
+  bottom: 2em;
+  left: 2em;
+  right: 2em;
+  padding: 1em;
 }
+
+.message-confirm {
+  background: #fff;
+} 
 
 /* searchprompt */
 
