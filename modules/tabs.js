@@ -23,7 +23,7 @@ exports.app = function () {
     search.value = name
     sessionStorage.selectedTab = tabs.selected
   })
-  tabs.classList.add('screen')
+//  tabs.classList.add('screen')
 
   search = search_box(function (path, change) {
     if(tabs.has(path)) {

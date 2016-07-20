@@ -21,8 +21,22 @@ var u = require('./util')
 //var i = indexes.indexOf('index.js')
 //indexes.splice(i, 1)
 
-modules['app.js' ] = {app: app}
+//var sv = [], screen_view = require('./plugs').first(sv)
+//modules['main.js' ] = {
+//  screen_view: sv,
+//  app: function () {
+//    return h('div.row',
+//      screen_view('/public'),
+//      screen_view('/private')
+//    )
+//  }
+//}
+
+modules['app.js'] = {app: []}
+
 modules['sbot-api.js'] = SbotApi()
+
+modules['tabs.js']
 
 combine(modules) //, ['app', 'sbot'].concat(indexes) )
 
@@ -35,5 +49,6 @@ document.head.appendChild(
   h('style', fs.readFileSync('./style.css', 'utf8')
 ))
 
-document.body.appendChild(modules['app.js'].app[0]())
+console.log(modules['app.js'])
+document.body.appendChild(h('div.screen.column', modules['app.js'].app[0]()))
 
