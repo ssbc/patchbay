@@ -27,7 +27,7 @@ exports.message_meta = function (msg, sbot) {
     pull.collect(function (err, votes) {
       if(votes.length === 1)
         digs.textContent = ' 1 Dig'
-      if(votes.length)
+      if(votes.length > 1)
         digs.textContent = ' ' + votes.length + ' Digs'
     })
   )
