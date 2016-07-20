@@ -3,6 +3,7 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 var u = require('../util')
 var keyscroll = require('../keyscroll')
+var open = require('open-external')
 
 function ancestor (el) {
   if(!el) return
@@ -13,21 +14,6 @@ function ancestor (el) {
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports.screen_view = [])
 var search_box = plugs.first(exports.search_box = [])
-
-function openExternal (url) {
-  var _r = require //fool browserify
-
-  //electron@1
-  try {return _r('electron').shell.openExternal(url) }
-  catch (err) { }
-
-  //electron@0
-  try { return _r('shell').openExternal(url) }
-  catch (err) { }
-
-  //browser
-  window.open(url, '_blank')
-}
 
 exports.message_render = []
 
@@ -81,7 +67,7 @@ exports.app = function () {
 
     //open external links.
     //this ought to be made into something more runcible
-    if(/^https?/.test(link.href)) return openExternal(link.href)
+    if(open.isExternal(link.href)) return open(link.href)
 
     if(tabs.has(path)) return tabs.select(path)
     
@@ -165,6 +151,4 @@ exports.app = function () {
 
   return tabs
 }
-
-
 
