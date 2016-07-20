@@ -18,7 +18,7 @@ module.exports = function (container) {
 
   function selectChild(el) {
     if (!el) return
-    el.scrollIntoViewIfNeeded()
+    (el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
     el.focus()
     curMsgEl = el
   }
