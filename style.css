@@ -154,6 +154,12 @@ textarea {
   float: right;
 }
 
+.dig {
+  border-right: 2px solid #eee;
+  padding-right: .6ex;
+  margin-right: .1ex;
+}
+
 .message > .title > .avatar {
   margin-left: 0;
 }
