@@ -85,7 +85,7 @@ exports.message_compose = function (meta, prepublish, cb) {
           ta.value += embed + '['+file.name+']('+file.link+')'
           console.log('added:', file)
         }),
-        h('button', 'publish', {onclick: publish}))
+        h('button', 'Publish', {onclick: publish}))
       )
     )
 

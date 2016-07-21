@@ -29,7 +29,7 @@ exports.screen_view = function (path) {
 
   if(path === '/private') {
     if(process.title === 'browser')
-      return h('div', h('h1', 'private messages not currently supported'))
+      return h('div', h('h4', 'Private messages are not supported in the lite client.'))
 
 
     var id = null
@@ -44,7 +44,7 @@ exports.screen_view = function (path) {
           return ref.isFeed('string' === typeof e ? e : e.link)
         })
         if(!msg.recps.length)
-          throw new Error('cannot make private message without recipients - just mention them in the message')
+          throw new Error('cannot make private message without recipients - just mention the user in an at reply in the message you send')
         return msg
       })
 
