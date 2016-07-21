@@ -9,13 +9,6 @@ are loaded and combined using [depject](https://npm.im/depject)
 This makes in very easy to create say, a renderer for a new message type,
 or switch to a different method for choosing user names.
 
-Currently, this is a proof of concept, there is a basic way to switch
-between tabs, and you can view the main log, user feeds, or threads.
-This should obviously be improved with a module that can
-scroll properly scoll through a feed.
-
-No "write" methods have been implemented yet.
-
 ## overview
 
 Currently, the main module is `tabs.js` which plugs into
@@ -64,11 +57,13 @@ npm install scuttlebot@latest -g
 # make sure you have secure-scuttlebutt@15.2.0
 npm ls secure-scuttlebutt -g
 sbot server
-# OR, install and run patchwork. (must have at least >= 2.8)
+# if you are already running patchwork, that also works.
+# (must have at least >= 2.8)
 
-# then in another tab (these must be two separate commands)
+# then in another tab (these must be 3 separate commands)
 sbot plugins.install ssb-links
 sbot plugins.install ssb-query
+sbot plugins.install ssb-ws
 # restart sbot server (go back to previous tab and kill it)
 ```
 now clone and run patchboard.
@@ -76,10 +71,6 @@ now clone and run patchboard.
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
 npm install electro electron-prebuilt -g
-# for node@6, you'll currently need to use js crypto.
-CHLORIDE_JS=1 electro index.js
-
-# otherwise
 electro index.js
 ```
 
@@ -91,10 +82,7 @@ square shows api, arrow direction points from user to provider)
 
 [module graph](./graph.svg)
 
-
 ## License
 
 MIT
-
-
 
