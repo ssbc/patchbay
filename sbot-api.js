@@ -33,13 +33,13 @@ module.exports = function () {
   var sbot = null
 
   var rec = Reconnect(function (isConn) {
-    var remote
-    if('undefined' !== typeof localStorage)
-      remote = localStorage.remote
+//    var remote
+//    if('undefined' !== typeof localStorage)
+//      remote = localStorage.remote
 
     createClient(keys, {
       manifest: require('./manifest.json'),
-      remote: remote
+      remote: require('./config')().remote
     }, function (err, _sbot) {
       if(err) {
         console.error(err.stack)
@@ -108,7 +108,4 @@ module.exports = function () {
     })
   }
 }
-
-
-
 
