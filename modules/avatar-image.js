@@ -4,20 +4,27 @@ var h = require('hyperscript')
 var ref = require('ssb-ref')
 
 var plugs = require('../plugs')
-var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
+var blob_url = require('../plugs').first(exports.blob_url = [])
+
+var id = require('../keys').id
+
+var default_avatar = '&qjeAs8+uMXLlyovT4JnEpMwTNDx/QXHfOl2nv2u0VCM=.sha256'
 
 exports.avatar_image = function (author) {
-  var img = h('img', {src: 'http://localhost:7777/img/fallback.png'})
-  sbot_whoami(function (err, me) {
+  var img = h('img', {src: blob_url(default_avatar)})
+  getAvatar({links: sbot_links}, id, author, function (err, avatar) {
     if (err) return console.error(err)
-    getAvatar({links: sbot_links}, me.id, author, function (err, avatar) {
-      if (err) return console.error(err)
-      if(ref.isBlob(avatar.image))
-        img.src = 'http://localhost:7777/'+encodeURIComponent(avatar.image)
-    })
+    if(ref.isBlob(avatar.image))
+      img.src = blob_url(avatar.image)
   })
   return img
 }
+
+
+
+
+
+
 
 

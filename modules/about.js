@@ -5,7 +5,13 @@ function idLink (id) {
   return h('a', {href:'#'+id}, id)
 }
 
-exports.message_content = function (msg, sbot) {
+function asLink (ln) {
+  return 'string' === typeof ln ? ln : ln.link
+}
+
+var blob_url = require('../plugs').first(exports.blob_url = [])
+
+exports.message_content = function (msg) {
   if(msg.value.content.type !== 'about') return
 
   if(!msg.value.content.image && !msg.value.content.name)
@@ -21,12 +27,13 @@ exports.message_content = function (msg, sbot) {
     h('a', {href:"#"+about.about},
       about.name || null,
       about.image
-      ? h('img', {src:'http://localhost:7777/'+ encodeURIComponent(about.image.link)})
+      ? h('img', {src: blob_url(about.image)})
       : null
     )
   )
 
 }
+
 
 
 
