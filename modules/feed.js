@@ -10,7 +10,7 @@ var sbot_user_feed = plugs.first(exports.sbot_user_feed = [])
 var message_render = plugs.first(exports.message_render = [])
 var avatar_profile = plugs.first(exports.avatar_profile = [])
 
-exports.screen_view = function (id, sbot) {
+exports.screen_view = function (id) {
   //TODO: header of user info, avatars, names, follows.
 
   if(ref.isFeed(id)) {

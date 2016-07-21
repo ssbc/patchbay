@@ -17,7 +17,6 @@ exports.message_content = function (msg) {
 }
 
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
-var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var message_confirm = plugs.first(exports.message_confirm = [])
 
 function follows (source, dest, cb) {
@@ -46,15 +45,14 @@ function follows (source, dest, cb) {
 exports.avatar_action = function (id) {
   var follows_you, you_follow
 
-  sbot_whoami(function (err, me) {
-    follows(me.id, id, function (err, f) {
-      you_follow = f
-      update()
-    })
-    follows(id, me.id, function (err, f) {
-      follows_you = f
-      update()
-    })
+  var self_id = require('../keys').id
+  follows(self_id, id, function (err, f) {
+    you_follow = f
+    update()
+  })
+  follows(id, self_id, function (err, f) {
+    follows_you = f
+    update()
   })
 
   var state = h('label')
@@ -83,6 +81,4 @@ exports.avatar_action = function (id) {
     }}, h('br'), label)
   )
 }
-
-
 

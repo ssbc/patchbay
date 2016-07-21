@@ -9,7 +9,6 @@ var plugs = require('../plugs')
 var getAvatar = require('ssb-avatar')
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
-var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 
 exports.avatar_name =
 function name (id) {
@@ -27,6 +26,8 @@ function name (id) {
       .reduce(name: rel[1], value: count())
   */
 
+  var self_id = require('../keys').id
+
   all(
     sbot_links2({query: [
       {$filter: {rel: ['mentions', {$prefix: '@'}], dest: id}},
@@ -38,14 +39,11 @@ function name (id) {
       //if they have not been mentioned, fallback
       //to patchwork style naming (i.e. self id)
       if(!names.length)
-        return sbot_whoami(function (err, me) {
-          if (err) return console.error(err)
-          getAvatar({links: sbot_links}, me.id, id,
-            function (err, avatar) {
-              if (err) return console.error(err)
-              n.textContent = (avatar.name[0] == '@' ? '' : '@') + avatar.name
-            })
-        })
+        return getAvatar({links: sbot_links}, self_id, id,
+          function (err, avatar) {
+            if (err) return console.error(err)
+            n.textContent = (avatar.name[0] == '@' ? '' : '@') + avatar.name
+          })
 
       n.textContent = names.reduce(function (max, item) {
         return max.count > item.count || item.name == '@' ? max : item
@@ -55,5 +53,8 @@ function name (id) {
   return n
 
 }
+
+
+
 
 

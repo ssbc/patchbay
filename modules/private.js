@@ -11,7 +11,6 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
-var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 
 function unbox () {
   return pull(
@@ -32,11 +31,7 @@ exports.screen_view = function (path) {
       return h('div', h('h1', 'private messages not currently supported'))
 
 
-    var id = null
-    sbot_whoami(function (err, me) {
-      id = me.id
-    })
-
+    var id = require('../keys').id
     var compose = message_compose(
       {type: 'post', recps: [], private: true}, 
       function (msg) {
@@ -76,15 +71,4 @@ exports.message_meta = function (msg) {
   if(msg.value.private)
     return h('span', 'PRIVATE')
 }
-
-
-
-
-
-
-
-
-
-
-
 

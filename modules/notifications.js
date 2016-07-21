@@ -8,7 +8,6 @@ var cont = require('cont')
 
 var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
-var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
 var sbot_user_feed = plugs.first(exports.sbot_user_feed = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
@@ -86,15 +85,13 @@ exports.screen_view = function (path) {
     var ids = {}
     var oldest
 
-    sbot_whoami(function (err, me) {
+    var id = require('../keys').id
+    ids[id] = true
+    getFirstMessage(id, function (err, msg) {
       if (err) return console.error(err)
-      ids[me.id] = true
-      getFirstMessage(me.id, function (err, msg) {
-        if (err) return console.error(err)
-        if (!oldest || msg.value.timestamp < oldest) {
-          oldest = msg.value.timestamp
-        }
-      })
+      if (!oldest || msg.value.timestamp < oldest) {
+        oldest = msg.value.timestamp
+      }
     })
 
     var content = h('div.column.scroller__content')
@@ -128,4 +125,7 @@ exports.screen_view = function (path) {
     return div
   }
 }
+
+
+
 
