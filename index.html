@@ -23991,11 +23991,30 @@ module.exports = require('sodium-browserify')
 if(process.env.CHLORIDE_JS)
   return module.exports = require('./browser')
 
+function isElectron () {
+  try {
+    require('electron')
+    return true
+  } catch (_) { return false }
+}
+
 try {
-  module.exports = require('./bindings')
-  if(process.title == 'electro') {
-    //workaround for electron@1 ???
-    //I don't understand.
+  var cl = module.exports = require('./bindings')
+
+  if(isElectron()) {
+    //there is a weird problem with electro.
+    //where detached signatures do not work, but other
+    //signatures do...
+
+    var keys = cl.crypto_sign_keypair()
+    var msg = cl.crypto_hash(new Buffer('test signature'))
+    var sig = cl.crypto_sign_detached(msg, keys.secretKey)
+
+    if(cl.crypto_sign_verify_detached(sig, msg, keys.publicKey))
+      return
+
+    console.error('detached signatures broken in electron, using workaround')
+
     var verify = module.exports.crypto_sign_verify_detached
     module.exports.crypto_sign_verify_detached = function (sig, msg, pk) {
       //return verify(copy(sig), copy(msg), copy(pk))
@@ -24014,8 +24033,13 @@ try {
 
 
 
+
+
+
+
+
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./bindings":153,"./browser":154,"_process":108,"buffer":47}],156:[function(require,module,exports){
+},{"./bindings":153,"./browser":154,"_process":108,"buffer":47,"electron":20}],156:[function(require,module,exports){
 
 var URL = require('url')
 
@@ -44979,7 +45003,6 @@ module.exports = function (keys, opts, cb) {
     config = createConfig(typeof opts === 'string' ? opts : null)
   else
     config = {}
-
   keys = keys || ssbKeys.loadOrCreateSync(path.join(config.path, 'secret'))
   opts = opts || {}
 
@@ -45010,7 +45033,7 @@ module.exports = function (keys, opts, cb) {
 
     //no client auth. we can't receive connections anyway.
     auth: function (cb) { cb(null, false) },
-    timeout: 1000
+    timeout: config.timers && config.timers.handshake || 3000
   })
 
   var ms = MultiServer([
