@@ -23,11 +23,10 @@ module.exports = function () {
   else
     blobsUrl = 'http://localhost:8989/blobs/get'
 
-  console.log('CONFIG', remote, blobsUrl)
-
   return {
     remote: remote,
     blobsUrl: blobsUrl
   }
 }
+
 
