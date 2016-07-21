@@ -37,7 +37,7 @@ exports.message_meta = function (msg, sbot) {
 
 exports.message_action = function (msg, sbot) {
   if(msg.value.content.type !== 'vote')
-    return h('a', {href: '#', onclick: function () {
+    return h('a.dig', {href: '#', onclick: function () {
       var dig = {
         type: 'vote',
         vote: { link: msg.key, value: 1, expression: 'Dig' }
