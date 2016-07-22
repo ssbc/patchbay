@@ -42,7 +42,7 @@ exports.screen_view = function (path) {
     }
   })
 
-  tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
+  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 
   var saved = []
 //  try { saved = JSON.parse(localStorage.openTabs) }
