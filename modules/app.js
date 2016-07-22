@@ -6,15 +6,8 @@ var screen_view = plugs.first(exports.screen_view = [])
 var status = h('div.status')
 
 exports.connection_status = function (err) {
-  console.log('STATUS', err)
-  if(err) {
-    status.classList.remove('ready')
-    status.classList.add('error')
-  }
-  else {
-    status.classList.remove('error')
-    status.classList.add('ready')
-  }
+  if(err) status.classList.add('error')
+  else    status.classList.remove('error')
 }
 
 exports.app = function () {
@@ -34,6 +27,14 @@ exports.app = function () {
   return screen
 
 }
+
+
+
+
+
+
+
+
 
 
 
