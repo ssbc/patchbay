@@ -1,6 +1,7 @@
 module.exports = {
   "_screen_view.js":  require('./_screen_view.js'),
   "about.js":  require('./about.js'),
+  "app.js":  require('./app.js'),
   "avatar-image.js":  require('./avatar-image.js'),
   "avatar-profile.js":  require('./avatar-profile.js'),
   "avatar.js":  require('./avatar.js'),

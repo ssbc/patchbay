@@ -12,16 +12,19 @@ function ancestor (el) {
 }
 
 var plugs = require('../plugs')
-var screen_view = plugs.first(exports.screen_view = [])
+var screen_view = plugs.first(exports._screen_view = [])
 var search_box = plugs.first(exports.search_box = [])
 
 exports.message_render = []
 
-exports.app = function () {
+exports.screen_view = function (path) {
+  if(path !== 'tabs')
+    return
+
   var search
   var tabs = Tabs(function (name) {
     search.value = name
-    sessionStorage.selectedTab = tabs.selected
+//    sessionStorage.selectedTab = tabs.selected
   })
 //  tabs.classList.add('screen')
 
@@ -34,7 +37,7 @@ exports.app = function () {
     if(el) {
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
       tabs.add(path, el, change)
-      localStorage.openTabs = JSON.stringify(tabs.tabs)
+//      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
     }
   })
@@ -42,8 +45,8 @@ exports.app = function () {
   tabs.insertBefore(search, tabs.querySelector('.hypertabs__content'))
 
   var saved = []
-  try { saved = JSON.parse(localStorage.openTabs) }
-  catch (_) { }
+//  try { saved = JSON.parse(localStorage.openTabs) }
+//  catch (_) { }
 
   if(!saved || saved.length < 3)
     saved = ['/public', '/private', '/notifications']
@@ -55,7 +58,8 @@ exports.app = function () {
     if(el) tabs.add(path, el, false)
   })
 
-  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
+//  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
+  tabs.select('/public')
 
   tabs.onclick = function (ev) {
     var link = ancestor(ev.target)
@@ -75,7 +79,7 @@ exports.app = function () {
     if(el) {
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
       tabs.add(path, el, !ev.ctrlKey)
-      localStorage.openTabs = JSON.stringify(tabs.tabs)
+//      localStorage.openTabs = JSON.stringify(tabs.tabs)
     }
 
     return false
@@ -104,7 +108,7 @@ exports.app = function () {
           var sel = tabs.selected
           tabs.selectRelative(-1)
           tabs.remove(sel)
-          localStorage.openTabs = JSON.stringify(tabs.tabs)
+//          localStorage.openTabs = JSON.stringify(tabs.tabs)
         }
         return
 
@@ -151,4 +155,3 @@ exports.app = function () {
 
   return tabs
 }
-
