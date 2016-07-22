@@ -24,11 +24,3 @@ document.head.appendChild(
 
 document.body.appendChild(modules['app.js'].app())
 
-
-
-
-
-
-
-
-
