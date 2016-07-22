@@ -1,4 +1,12 @@
 var h = require('hyperscript')
+
+window.addEventListener('error', function onError(e) {
+  document.body.appendChild(h('div.error',
+    h('h1', e.message),
+    h('big', h('code', e.filename + ':' + e.lineno)),
+    h('pre', e.error ? (e.error.stack || e.error.toString()) : e.toString())))
+})
+
 var u = require('./util')
 var pull = require('pull-stream')
 var combine = require('depject')
