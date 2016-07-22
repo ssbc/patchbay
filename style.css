@@ -264,3 +264,20 @@ highlight {
   background: yellow;
 }
 
+/* --- network status --- */
+
+.status {
+  width: 20px;
+  height: 20px;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  background: green;
+}
+
+.error {
+  background: red;
+}
+
+
+

@@ -31,27 +31,33 @@ var ssbKeys = require('ssb-keys')
 module.exports = function () {
   var opts = createConfig()
   var sbot = null
+  var connection_status = []
+
 
   var rec = Reconnect(function (isConn) {
 //    var remote
 //    if('undefined' !== typeof localStorage)
 //      remote = localStorage.remote
 
+    function notify (value) {
+      console.log('connection_status', value, connection_status)
+      isConn(value); connection_status.forEach(function (fn) { fn(value) })
+    }
+
     createClient(keys, {
       manifest: require('./manifest.json'),
       remote: require('./config')().remote
     }, function (err, _sbot) {
-      if(err) {
-        console.error(err.stack)
-        isConn(err)
-        return
-      }
+      if(err)
+        return notify(err)
+
       sbot = _sbot
       sbot.on('closed', function () {
         sbot = null
-        isConn(new Error('closed'))
+        notify(new Error('closed'))
       })
-      isConn()
+
+      notify()
     })
   })
 
@@ -67,6 +73,7 @@ module.exports = function () {
   var feed = createFeed(internal, keys)
 
   return {
+    connection_status: connection_status,
     sbot_blobs_add: rec.sink(function (cb) {
       return pull(
         Hash(cb),
@@ -108,4 +115,5 @@ module.exports = function () {
     })
   }
 }
+
 
