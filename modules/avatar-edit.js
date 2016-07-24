@@ -21,10 +21,10 @@ function crop (d, cb) {
   var data
   var canvas = hypercrop(h('img', {src: d}))
 
-  return h('div.row.avatar_pic',
+  return h('div.column.avatar_pic',
     canvas,
     //canvas.selection,
-    h('div.avatar_pic__controls',
+    h('div.row.avatar_pic__controls',
       h('button', 'okay', {onclick: function () {
         cb(null, canvas.selection.toDataURL())
       }}),
@@ -107,5 +107,4 @@ exports.avatar_edit = function (id) {
     )
   )
 }
-
 
