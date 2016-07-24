@@ -9,6 +9,8 @@ var sbot_links = plugs.first(exports.sbot_links = [])
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
 var getAvatar = require('ssb-avatar')
+var avatar_name = plugs.first(exports.avatar_name = [])
+var markdown = plugs.first(exports.markdown = [])
 
 var self_id = require('../keys').id
 
@@ -58,26 +60,75 @@ function getIssueState(id, cb) {
   )
 }
 
+function messageTimestampLink(msg) {
+  var m = moment(msg.value.timestamp)
+  return h('a.timestamp', {
+    timestamp: m,
+    title: m.format('LLLL'),
+    href: '#'+msg.key
+  }, m.fromNow())
+}
+
+function tableRows(headerRow) {
+  var thead = h('thead'), tbody = h('tbody')
+  var first = true
+  var t = [thead, tbody]
+  t.append = function (row) {
+    if (first) {
+      first = false
+      thead.appendChild(headerRow)
+    }
+    tbody.appendChild(row)
+  }
+  return t
+}
+
+function repoName(id, link) {
+  var el = link
+    ? h('a', {href: '#'+id}, id.substr(0, 8) + '…')
+    : h('ins', id.substr(0, 8) + '…')
+  getAvatar({links: sbot_links}, self_id, id, function (err, avatar) {
+    if(err) return console.error(err)
+    el.textContent = avatar.name
+  })
+  return el
+}
+
 exports.message_content = function (msg, sbot) {
   var c = msg.value.content
 
   if(c.type === 'git-repo') {
-    var nameEl, refsTable
+    var nameEl
+    var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
     var div = h('div',
-      h('p', 'git repo ', nameEl = h('ins')),
+      h('p', 'git repo ', repoName(msg.key)),
+      c.upstream ? h('p', 'fork of ', repoName(c.upstream, true)) : '',
       h('p', h('code', 'ssb://' + msg.key)),
-      refsTable = h('table')
-    )
-
-    // show repo name
-    getAvatar({links: sbot_links}, self_id, msg.key, function (err, avatar) {
-      if(err) return console.error(err)
-      nameEl.textContent = avatar.name
-    })
+      h('div.git-table-wrapper', {style: {'max-height': '12em'}},
+        h('table',
+          branchesT = tableRows(h('tr',
+            h('th', 'branch'),
+            h('th', 'commit'),
+            h('th', 'last update'))),
+          tagsT = tableRows(h('tr',
+            h('th', 'tag'),
+            h('th', 'commit'),
+            h('th', 'last update'))))),
+      h('div.git-table-wrapper', {style: {'max-height': '16em'}},
+        h('table',
+          openIssuesT = tableRows(h('tr',
+            h('th', 'open issues'))),
+          closedIssuesT = tableRows(h('tr',
+            h('th', 'closed issues'))))),
+      h('div.git-table-wrapper', {style: {'max-height': '16em'}},
+        h('table',
+          openPRsT = tableRows(h('tr',
+            h('th', 'open pull requests'))),
+          closedPRsT = tableRows(h('tr',
+            h('th', 'closed pull requests'))))))
 
     // compute refs
     var refs = {}
-    var first = true
     pull(
       sbot_links({
         reverse: true,
@@ -88,27 +139,56 @@ exports.message_content = function (msg, sbot) {
       }),
       pull.drain(function (link) {
         var refUpdates = link.value.content.refs
-        if (first) {
-          first = false
-          refsTable.appendChild(h('tr',
-            h('th', 'branch'),
-            h('th', 'commit'),
-            h('th', 'last update')))
-        }
         for (var ref in refUpdates) {
           if (refs[ref]) continue
           refs[ref] = true
           var rev = refUpdates[ref]
-          var m = moment(link.value.timestamp)
-          refsTable.appendChild(h('tr',
-            h('td', shortRefName(ref)),
+          if (!rev) continue
+          var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref) || []
+          var t
+          if (parts[1] === 'heads') t = branchesT
+          else if (parts[1] === 'tags') t = tagsT
+          if (t) t.append(h('tr',
+            h('td', parts[2]),
             h('td', h('code', rev)),
-            h('td', h('a.timestamp', {
-              timestamp: m,
-              title: m.format('LLLL'),
-              href: '#'+link.key
-            }, m.fromNow()))))
+            h('td', messageTimestampLink(link))))
         }
+      }, function (err) {
+        if (err) console.error(err)
+      })
+    )
+
+    // list issues and pull requests
+    pull(
+      sbot_links({
+        reverse: true,
+        dest: msg.key,
+        rel: 'project',
+        values: true
+      }),
+      paramap(function (link, cb) {
+        getIssueState(link.key, function (err, state) {
+          if(err) return cb(err)
+          link.state = state
+          cb(null, link)
+        })
+      }),
+      pull.drain(function (link) {
+        var c = link.value.content
+        // TODO: support renamed issues
+        var title = c.title || (c.text ? c.text.length > 30
+          ? c.text.substr(0, 30) + '…'
+          : c.text : link.key)
+        var author = link.value.author
+        var t = c.type === 'pull-request'
+          ? link.state === 'open' ? openPRsT : closedPRsT
+          : link.state === 'open' ? openIssuesT : closedIssuesT
+        t.append(h('tr',
+          h('td',
+            h('a', {href: '#'+link.key}, title), h('br'),
+            h('small',
+              'opened ', messageTimestampLink(link),
+              ' by ', h('a', {href: '#'+author}, avatar_name(author))))))
       }, function (err) {
         if (err) console.error(err)
       })
@@ -135,6 +215,24 @@ exports.message_content = function (msg, sbot) {
           return ['Closed ', message_link(issue.link), ' in ',
             h('code', issue.object), ' ', h('q', issue.label)]
       }) : null
+    )
+  }
+
+  if (c.type === 'issue') {
+    return h('div',
+      h('p', 'opened issue on ', repoLink(c.project)),
+      c.title ? h('h4', c.title) : '',
+      markdown(c)
+    )
+  }
+
+  if (c.type === 'pull-request') {
+    return h('div',
+      h('p', 'opened pull-request ',
+        'to ', repoLink(c.repo), ':', c.branch, ' ',
+        'from ', repoLink(c.head_repo), ':', c.head_branch),
+      c.title ? h('h4', c.title) : '',
+      markdown(c)
     )
   }
 }
