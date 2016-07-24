@@ -274,3 +274,8 @@ highlight {
 .hypercrop__canvas {
   width: 100%;
 }
+
+.hyperprogress__liquid {
+  height: 1px;
+  background: blue;
+}
