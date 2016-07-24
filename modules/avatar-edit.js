@@ -1,10 +1,20 @@
 var dataurl = require('dataurl')
-
 var hyperfile = require('hyperfile')
-
 var hypercrop = require('hypercrop')
 var hyperlightbox = require('hyperlightbox')
 var h = require('hyperscript')
+var pull = require('pull-stream')
+var getAvatar = require('ssb-avatar')
+var plugs = require('../plugs')
+var ref = require('ssb-ref')
+
+var self_id = require('../keys').id
+var default_avatar = '&qjeAs8+uMXLlyovT4JnEpMwTNDx/QXHfOl2nv2u0VCM=.sha256'
+
+var confirm = plugs.first(exports.message_confirm = [])
+var sbot_blobs_add = plugs.first(exports.sbot_blobs_add = [])
+var blob_url = plugs.first(exports.blob_url = [])
+var sbot_links = plugs.first(exports.sbot_links = [])
 
 function crop (d, cb) {
   var data
@@ -24,23 +34,29 @@ function crop (d, cb) {
   )
 }
 
-var plugs = require('../plugs')
-var confirm = plugs.first(exports.message_confirm = [])
-var sbot_blobs_add = plugs.first(exports.sbot_blobs_add = [])
-
-var pull = require('pull-stream')
-
 exports.avatar_edit = function (id) {
-  var lb = hyperlightbox()
-  var img = h('img', {src: ''}) //TODO, show current image.
-  var name = h('input', {placeholder: 'rename'})
 
+  var img = h('img', {src: blob_url(default_avatar)})
+  var lb = hyperlightbox()
+  var name_input = h('input', {placeholder: 'rename'})
+  var name = h('h2.avatar__name')
   var selected = null
+
+  getAvatar({links: sbot_links}, self_id, id, function (err, avatar) {
+    if (err) return console.error(err)
+    //don't show user has already selected an avatar.
+    if(selected) return
+    if(ref.isBlob(avatar.image))
+      img.src = blob_url(avatar.image)
+    name.textContent = avatar.name
+  })
+
 
   return h('div',
     lb,
-    img,
     name,
+    img,
+    name_input,
     hyperfile.asDataURL(function (data) {
       var el = crop(data, function (err, data) {
         if(data) {
@@ -52,6 +68,9 @@ exports.avatar_edit = function (id) {
       lb.show(el)
     }),
     h('button', 'update', {onclick: function () {
+      if(name_input.value)
+        name.textContent = name_input.value
+
       if(selected) {
         pull(
           pull.once(selected.data),
@@ -62,7 +81,7 @@ exports.avatar_edit = function (id) {
             confirm({
               type: 'about',
               about: id,
-              name: name.value || undefined,
+              name: name_input.value || undefined,
               image: {
                 link: hash,
                 size: selected.data.length,
@@ -78,7 +97,7 @@ exports.avatar_edit = function (id) {
         confirm({
           type: 'about',
           about: id,
-          name: name.value || undefined,
+          name: name_input.value || undefined,
         })
       else
         //another moment of weakness
@@ -86,11 +105,4 @@ exports.avatar_edit = function (id) {
     }})
   )
 }
-
-
-
-
-
-
-
 
