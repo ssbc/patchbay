@@ -11,7 +11,8 @@ function crop (d, cb) {
   var canvas = hypercrop(h('img', {src: d}))
 
   return h('div.avatar_pic',
-    canvas, canvas.selection,
+    canvas,
+    //canvas.selection,
     h('div.avatar_pic__controls',
       h('button', 'okay', {onclick: function () {
         cb(null, canvas.selection.toDataURL())
