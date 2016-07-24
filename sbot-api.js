@@ -69,7 +69,20 @@ module.exports = function () {
   return {
     sbot_blobs_add: rec.sink(function (cb) {
       return pull(
-        Hash(cb),
+        Hash(function (err, id) {
+          if(err) return cb(err)
+          //completely UGLY hack to tell when the blob has been sucessfully written...
+          var start = Date.now(), n = 5
+          ;(function next () {
+            setTimeout(function () {
+              sbot.blobs.has(id, function (err, has) {
+                if(has) return cb(null, id)
+                if(n--) next()
+                else cb(new Error('write failed'))
+              })
+            }, Date.now() - start)
+          })()
+        }),
         sbot.blobs.add()
       )
     }),
@@ -108,4 +121,6 @@ module.exports = function () {
     })
   }
 }
+
+
 

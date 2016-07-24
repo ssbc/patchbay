@@ -2,6 +2,8 @@ body {
   font-family: "Source Sans Pro", sans-serif;
 }
 
+p { margin-top: .35ex;}
+
 .screen {
   position: absolute;
   top: 0px; bottom: 0px;
@@ -126,7 +128,7 @@ textarea {
 
 .message {
   border: 1px solid #eee;
-  padding: 5px;
+  padding: 7px;
   margin-top: .5em;
   background: white;
   display: block;
@@ -213,15 +215,18 @@ textarea {
 
 .profile {
   background: #fff;
+  padding: .5em;
   border: 1px solid #eee;
 }
 
 .profile img {
-  width: 150px;
-  height: 150px;
-  margin-right: 1em;
-  margin-bottom: 1em;
-  border: 1px solid #ccc;
+  width: 256px;
+  height: 256px;
+  border: 1px solid #eee;
+}
+
+.profile__info {
+  margin-left: .5em;
 }
 
 /* lightbox - used in message-confirm */
@@ -264,3 +269,8 @@ highlight {
   background: yellow;
 }
 
+/* avatar editor */
+
+.hypercrop__canvas {
+  width: 100%;
+}
