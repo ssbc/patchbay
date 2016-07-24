@@ -4,8 +4,11 @@ var ssbClient = require('ssb-client')
 var id = require('../keys').id
 var h = require('hyperscript')
 
+var Progress = require('hyperprogress')
+
 var plugs = require('../plugs')
 var sbot_publish = plugs.first(exports.sbot_publish = [])
+
 
 
 exports.screen_view = function (invite) {
@@ -21,14 +24,14 @@ exports.screen_view = function (invite) {
   if(parts[1][0] !== 'shs') return null
   if(parts[1].length !== 3) return null
 
+  var progress = Progress(4)
+
   //connect to server
   //request follow
   //post pub announce
   //post follow pub
-  var progress = h('h1')
-  var status = h('pre')
   var div = h('div',
-    progress, status,
+    progress,
     h('a', 'accept', {href: '#', onclick: function (ev) {
       ev.preventDefault()
       ev.stopPropagation()
@@ -38,31 +41,18 @@ exports.screen_view = function (invite) {
   )
 
   function attempt  () {
-    progress.textContent = '*'
-    status.textContent = 'connecting...'
-
-    console.log("CONNECT", invite)
+    progress.next('connecting...')
     ssbClient(null, {
       remote: invite,
       manifest: { invite: {use: 'async'}, getAddress: 'async' }
     }, function (err, sbot) {
-      console.log("ERR?", err, sbot)
-      if(err) {
-        progress.textContent = '*!'
-        status.textContent = err.stack
-        return
-      }
-      progress.textContent = '**'
-      status.textContent = 'requesting follow...' + id
+      if(err) return progress.fail(err)
+      else progress.next('requesting follow...')
 
       sbot.invite.use({feed: id}, function (err, msg) {
-        if(err) {
-          progress.textContent = '**!'
-          status.textContent = err.stack
-          return
-        }
-        progress.textContent = '***'
-        status.textContent = 'following...'
+        if(err) return progres.fail(err)
+
+        progress.next('following...')
           
         //remove the seed from the shs address.
         //then it's correct address.
@@ -77,16 +67,10 @@ exports.screen_view = function (invite) {
         sbot_publish({
           type: 'contact',
           contact: sbot.id,
-          following: true
+          following: true,
         }, function (err) {
-          if(err) {
-            progress.textContent = '***!'
-            status.textContent = err.stack
-            return
-          }
-          progress.textContent = '****'
-          status.textContent = 'READY!'
-
+          if(err) return progress.fail(err)
+          progress.complete()
         })
 
       })
