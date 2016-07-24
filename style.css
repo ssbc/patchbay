@@ -264,3 +264,8 @@ highlight {
   background: yellow;
 }
 
+/* avatar editor */
+
+.hypercrop__canvas {
+  width: 100%;
+}
