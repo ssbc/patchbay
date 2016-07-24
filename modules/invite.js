@@ -10,12 +10,9 @@ var plugs = require('../plugs')
 var sbot_publish = plugs.first(exports.sbot_publish = [])
 
 
-
-exports.screen_view = function (invite) {
-
-  //check that invite is 
-  // ws:...~shs:key:seed
-
+//check that invite is 
+// ws:...~shs:key:seed
+function parseMultiServerInvite (invite) {
   var parts = invite.split('~')
   .map(function (e) { return e.split(':') })
 
@@ -23,6 +20,19 @@ exports.screen_view = function (invite) {
   if(!/^(net|wss?)$/.test(parts[0][0])) return null
   if(parts[1][0] !== 'shs') return null
   if(parts[1].length !== 3) return null
+  var p2 = invite.split(':')
+  p2.pop()
+
+  return {
+    invite: invite,
+    remote: p2.join(':'),
+  }
+}
+
+exports.screen_view = function (invite) {
+
+  var data = parseMultiServerInvite(invite)
+  if(!data) return
 
   var progress = Progress(4)
 
@@ -30,18 +40,19 @@ exports.screen_view = function (invite) {
   //request follow
   //post pub announce
   //post follow pub
-  var div = h('div',
-    progress,
-    h('a', 'accept', {href: '#', onclick: function (ev) {
-      ev.preventDefault()
-      ev.stopPropagation()
-      attempt()
-      return false
-    }})
+  var div = h('div.column',
+    h('div',
+      "invite to:", h('br'),
+      h('code', invite),
+      h('button', 'accept', {onclick: function (ev) {
+        attempt()
+      }})
+    ),
+    progress
   )
 
   function attempt  () {
-    progress.next('connecting...')
+    progress.reset().next('connecting...')
     ssbClient(null, {
       remote: invite,
       manifest: { invite: {use: 'async'}, getAddress: 'async' }
@@ -50,18 +61,16 @@ exports.screen_view = function (invite) {
       else progress.next('requesting follow...')
 
       sbot.invite.use({feed: id}, function (err, msg) {
-        if(err) return progres.fail(err)
+        if(err) return progress.fail(err)
 
         progress.next('following...')
-          
+
         //remove the seed from the shs address.
         //then it's correct address.
         //this should make the browser connect to this as remote.
         //we don't want to do this if when using this locally, though.
         if(process.title === 'browser') {
-          var p2 = invite.split(':')
-          p2.pop()
-          localStorage.remote = p2.join(':')
+          localStorage.remote = data.remote
         }
 
         sbot_publish({
@@ -79,5 +88,4 @@ exports.screen_view = function (invite) {
 
   return div
 }
-
 
