@@ -70,7 +70,7 @@ now clone and run patchboard.
 ```
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
-npm intsall
+npm install
 npm install electro electron-prebuilt -g
 electro index.js
 ```
