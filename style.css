@@ -23,6 +23,12 @@ p { margin-top: .35ex;}
   flex-direction: row;
 }
 
+.wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .stretch {
   flex-basis: 0;
 }
@@ -274,3 +280,12 @@ highlight {
 .hypercrop__canvas {
   width: 100%;
 }
+
+.profile__follows img, .profile__followers img {
+  width: 40px;
+  height: 40px;
+  margin-right: 3px;
+  border: 1px solid #ccc;
+}
+
+
