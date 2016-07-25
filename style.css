@@ -286,7 +286,7 @@ highlight {
   width: 100%;
 }
 
-
+/* gitssb */
 
 .git-table-wrapper {
   max-height: 12em;
@@ -298,5 +298,14 @@ highlight {
 .git-table-wrapper table {
   width: 100%;
 }
+
+/* invite codes */
+
+.hyperprogress__liquid {
+  height: 1px;
+  background: blue;
+}
+
+
 
 
