@@ -32,6 +32,8 @@ function notifications(ourIds) {
     sbot_get(id, function (err, msg) {
       if (err && err.name == 'NotFoundError') cb(null, false)
       else if (err) cb(err)
+      else if (msg.content.type === 'issue' || msg.content.type === 'project')
+        isOurMsg(msg.content.repo || msg.content.project, cb)
       else cb(err, msg.author in ourIds)
     })
   }
