@@ -5,6 +5,7 @@ function isImage (filename) {
 }
 
 var sbot_links2 = require('../plugs').first(exports.sbot_links2 = [])
+var blob_url = require('../plugs').first(exports.blob_url = [])
 
 exports.suggest = cont.to(function (word, cb) {
   if(!/^[@%&!]/.test(word[0])) return cb()
@@ -33,11 +34,12 @@ exports.suggest = cont.to(function (word, cb) {
           title: e.name + ': ' + e.id.substring(0,10)+' ('+e.rank+')',
           value: embed+'['+e.name+']('+e.id+')',
           rank: e.rank,
-          image: isImage(e.name) ? 'http://localhost:7777/'+e.id : undefined
+          image: isImage(e.name) ? blob_url(e.id) : undefined
         }
       })
       cb(null, ary)
     })
   )
 })
+
 

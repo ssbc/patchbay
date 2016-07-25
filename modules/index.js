@@ -2,6 +2,7 @@ module.exports = {
   "_screen_view.js":  require('./_screen_view.js'),
   "about.js":  require('./about.js'),
   "avatar-edit.js":  require('./avatar-edit.js'),
+  "audio-mp3.js":  require('./audio-mp3.js'),
   "avatar-image.js":  require('./avatar-image.js'),
   "avatar-profile.js":  require('./avatar-profile.js'),
   "avatar.js":  require('./avatar.js'),
@@ -21,6 +22,9 @@ module.exports = {
   "message-link.js":  require('./message-link.js'),
   "message-name.js":  require('./message-name.js'),
   "message.js":  require('./message.js'),
+  "meta-image.js":  require('./meta-image.js'),
+  "music-release-cc.js":  require('./music-release-cc.js'),
+  "music-release.js":  require('./music-release.js'),
   "names.js":  require('./names.js'),
   "notifications.js":  require('./notifications.js'),
   "post.js":  require('./post.js'),
@@ -35,6 +39,9 @@ module.exports = {
   "thread.js":  require('./thread.js'),
   "timestamp.js":  require('./timestamp.js')
 }
+
+
+
 
 
 
