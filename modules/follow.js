@@ -11,7 +11,7 @@ exports.message_content = function (msg) {
   if(msg.value.content.type == 'contact' && msg.value.content.contact) {
     return h('div.contact',
       'follows',
-      avatar(msg.value.content.contact)
+      avatar(msg.value.content.contact, 'thumbnail')
     )
   }
 }

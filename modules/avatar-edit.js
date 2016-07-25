@@ -37,11 +37,11 @@ function crop (d, cb) {
 
 exports.avatar_edit = function (id) {
 
-  var img = h('img', {src: blob_url(default_avatar)})
+  var img = h('img.avatar--large', {src: blob_url(default_avatar)})
   var lb = hyperlightbox()
   var name_input = h('input', {placeholder: 'rename'})
   var name = avatar_name(id)
-  var selected = null
+  var selected = null, selected_data = null
 
   getAvatar({links: sbot_links}, self_id, id, function (err, avatar) {
     if (err) return console.error(err)
@@ -50,6 +50,31 @@ exports.avatar_edit = function (id) {
     if(ref.isBlob(avatar.image))
       img.src = blob_url(avatar.image)
   })
+
+  var also_pictured = h('div.profile__alsopicturedas.wrap')
+
+  pull(
+    sbot_links({dest: id, rel: 'about', values: true}),
+    pull.map(function (e) {
+      return e.value.content.image
+    }),
+    pull.filter(function (e) {
+      return e && 'string' == typeof e.link
+    }),
+    pull.unique('link'),
+    pull.drain(function (image) {
+      also_pictured.appendChild(
+        h('a', {href:'#', onclick: function (ev) {
+            ev.stopPropagation()
+            ev.preventDefault()
+            selected = image
+            img.src = blob_url(image.link || image)
+          }},
+          h('img.avatar--thumbnail', {src: blob_url(image)})
+        )
+      )
+    })
+  )
 
   return h('div.row.profile',
     lb,
@@ -62,7 +87,23 @@ exports.avatar_edit = function (id) {
         var el = crop(data, function (err, data) {
           if(data) {
             img.src = data
-            selected = dataurl.parse(data)
+            pull(
+              pull.once(dataurl.parse(data)),
+              sbot_blobs_add(function (err, hash) {
+                //TODO. Alerts are EVIL.
+                //I use them only in a moment of weakness.
+
+                if(err) return alert(err.stack)
+                selected = {
+                  link: hash,
+                  size: selected.data.length,
+                  type: selected.mimetype,
+                  width: 512,
+                  height: 512
+                }
+
+              })
+            )
           }
           lb.close()
         })
@@ -72,28 +113,13 @@ exports.avatar_edit = function (id) {
         if(name_input.value)
           name.textContent = name_input.value
 
-        if(selected) {
-          pull(
-            pull.once(selected.data),
-            sbot_blobs_add(function (err, hash) {
-              //TODO. Alerts are EVIL.
-              //I use them only in a moment of weakness.
-              if(err) return alert(err.stack)
-              confirm({
-                type: 'about',
-                about: id,
-                name: name_input.value || undefined,
-                image: {
-                  link: hash,
-                  size: selected.data.length,
-                  type: selected.mimetype,
-                  width: 512,
-                  height: 512
-                }
-              })
-            })
-          )
-        }
+        if(selected)
+          confirm({
+            type: 'about',
+            about: id,
+            name: name_input.value || undefined,
+            image: selected
+          })
         else if(input.value) //name only
           confirm({
             type: 'about',
@@ -103,8 +129,19 @@ exports.avatar_edit = function (id) {
         else
           //another moment of weakness
           alert('must select a name or image')
-      }})
+      }}),
+    also_pictured
     )
   )
 }
+
+
+
+
+
+
+
+
+
+
 

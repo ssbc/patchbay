@@ -53,7 +53,7 @@ p { margin-top: .35ex;}
 }
 
 
-img {
+.message img {
   max-width: 100%;
   display: block;
 }
@@ -212,22 +212,27 @@ textarea {
   display: flex;
   flex-direction: row;
 }
-.avatar img {
+
+.avatar--large {
+  width: 256px;
+  height: 256px;
+  border: 1px solid #eee;
+}
+
+.avatar--thumbnail {
   width: 40px;
   height: 40px;
   margin-right: 3px;
   border: 1px solid #ccc;
 }
 
+.avatar--fullsize {
+  width: 100%;
+}
+
 .profile {
   background: #fff;
   padding: .5em;
-  border: 1px solid #eee;
-}
-
-.profile img {
-  width: 256px;
-  height: 256px;
   border: 1px solid #eee;
 }
 
@@ -281,11 +286,5 @@ highlight {
   width: 100%;
 }
 
-.profile__follows img, .profile__followers img {
-  width: 40px;
-  height: 40px;
-  margin-right: 3px;
-  border: 1px solid #ccc;
-}
 
 

@@ -13,7 +13,6 @@ var followers = plugs.first(exports.followers = [])
 function streamToList(stream, el) {
   pull(
     stream,
-//    pull.unique(function (e) { return e }),
     pull.drain(function (item) {
       if(item) el.appendChild(item)
     })
@@ -22,7 +21,7 @@ function streamToList(stream, el) {
 }
 
 function image_link (id) {
-  return h('a', {href:'#'+id}, avatar_image(id))
+  return h('a', {href:'#'+id}, avatar_image(id, 'thumbnail'))
 }
 
 exports.avatar_profile = function (id) {
@@ -48,12 +47,4 @@ exports.avatar_profile = function (id) {
       )
   )
 }
-
-
-
-
-
-
-
-
 
