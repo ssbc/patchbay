@@ -76,7 +76,20 @@ module.exports = function () {
     connection_status: connection_status,
     sbot_blobs_add: rec.sink(function (cb) {
       return pull(
-        Hash(cb),
+        Hash(function (err, id) {
+          if(err) return cb(err)
+          //completely UGLY hack to tell when the blob has been sucessfully written...
+          var start = Date.now(), n = 5
+          ;(function next () {
+            setTimeout(function () {
+              sbot.blobs.has(id, function (err, has) {
+                if(has) return cb(null, id)
+                if(n--) next()
+                else cb(new Error('write failed'))
+              })
+            }, Date.now() - start)
+          })()
+        }),
         sbot.blobs.add()
       )
     }),
@@ -103,6 +116,14 @@ module.exports = function () {
         content = ssbKeys.box(content, content.recps.map(function (e) {
           return ref.isFeed(e) ? e : e.link
         }))
+      else if(content.mentions)
+        content.mentions.forEach(function (mention) {
+          if(ref.isBlob(mention.link)) {
+            sbot.blobs.push(mention.link, function (err) {
+              if(err) console.error(err)
+            })
+          }
+        })
 
       feed.add(content, function (err, msg) {
         if(err) console.error(err)

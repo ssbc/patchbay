@@ -6,13 +6,17 @@ var plugs = require('../plugs')
 
 //render a message when someone follows someone,
 //so you see new users
+function isRelated(value, name) {
+  return value ? name : value === false ? 'un'+name : ''
+}
+
 exports.message_content = function (msg) {
 
-  if(msg.value.content.type == 'contact' && msg.value.content.contact) {
-    return h('div.contact',
-      'follows',
-      avatar(msg.value.content.contact)
-    )
+  var content = msg.value.content
+  if(content.type == 'contact' && content.contact) {
+    var relation = isRelated(content.following, 'follows')
+    if(content.blocking) relation = 'blocks'
+    return h('div.contact', relation, avatar(msg.value.content.contact, 'thumbnail'))
   }
 }
 
@@ -81,4 +85,26 @@ exports.avatar_action = function (id) {
     }}, h('br'), label)
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
