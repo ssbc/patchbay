@@ -175,9 +175,8 @@ exports.message_content = function (msg, sbot) {
       }),
       pull.drain(function (link) {
         var c = link.value.content
-        // TODO: support renamed issues
-        var title = c.title || (c.text ? c.text.length > 30
-          ? c.text.substr(0, 30) + '…'
+        var title = c.title || (c.text ? c.text.length > 70
+          ? c.text.substr(0, 70) + '…'
           : c.text : link.key)
         var author = link.value.author
         var t = c.type === 'pull-request'
