@@ -33,7 +33,7 @@ exports.message_render = function (msg, sbot) {
 
   var msg = h('div.message',
     h('div.title.row',
-      h('div.avatar', avatar(msg.value.author)),
+      h('div.avatar', avatar(msg.value.author, 'thumbnail')),
       h('div.message_meta.row', message_meta(msg))
     ),
     h('div.message_content', el),

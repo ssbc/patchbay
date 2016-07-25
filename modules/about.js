@@ -27,7 +27,7 @@ exports.message_content = function (msg) {
     h('a', {href:"#"+about.about},
       about.name || null,
       about.image
-      ? h('img', {src: blob_url(about.image)})
+      ? h('img.avatar--fullsize', {src: blob_url(about.image)})
       : null
     )
   )
