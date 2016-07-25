@@ -70,6 +70,12 @@ function notifications(ourIds) {
           })
           else return cb()
 
+      case 'issue':
+      case 'pull-request':
+        return isOurMsg(c.project || c.repo, function (err, isOurs) {
+          cb(err, isOurs ? msg : null)
+        })
+
       default:
         cb()
     }
