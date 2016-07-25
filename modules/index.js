@@ -12,6 +12,7 @@ module.exports = {
   "feed.js":  require('./feed.js'),
   "file-input.js":  require('./file-input.js'),
   "follow.js":  require('./follow.js'),
+  "relationships.js":  require('./relationships.js'),
   "invite.js":  require('./invite.js'),
   "like.js":  require('./like.js'),
   "markdown.js":  require('./markdown.js'),
