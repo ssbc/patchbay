@@ -16,7 +16,8 @@ exports.message_confirm = function (content, cb) {
   document.body.appendChild(lb)
 
   var okay = h('button', 'okay', {onclick: function () {
-    publish(content); lb.remove(); cb(null, content)
+    lb.remove()
+    publish(content, cb)
   }})
 
   var cancel = h('button', 'cancel', {onclick: function () {
