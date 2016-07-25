@@ -14,13 +14,9 @@ exports.message_content = function (msg) {
 
   var content = msg.value.content
   if(content.type == 'contact' && content.contact) {
-    var relation = content.following ? 'follows' : 'unfollows'
-    return h('div.contact', [
-        isRelated(content.following, 'follows'),
-        isRelated(content.blocking, 'blocks')
-      ].filter(Boolean).join(' and ')
-      , avatar(msg.value.content.contact, 'thumbnail')
-    )
+    var relation = isRelated(content.following, 'follows')
+    if(content.blocking) relation = 'blocks'
+    return h('div.contact', relation, avatar(msg.value.content.contact, 'thumbnail'))
   }
 }
 
@@ -89,6 +85,14 @@ exports.avatar_action = function (id) {
     }}, h('br'), label)
   )
 }
+
+
+
+
+
+
+
+
 
 
 
