@@ -120,7 +120,7 @@ exports.avatar_edit = function (id) {
             name: name_input.value || undefined,
             image: selected
           })
-        else if(input.value) //name only
+        else if(name_input.value) //name only
           confirm({
             type: 'about',
             about: id,
