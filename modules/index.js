@@ -13,6 +13,7 @@ module.exports = {
   "file-input.js":  require('./file-input.js'),
   "follow.js":  require('./follow.js'),
   "relationships.js":  require('./relationships.js'),
+  "git.js":  require('./git.js'),
   "invite.js":  require('./invite.js'),
   "like.js":  require('./like.js'),
   "markdown.js":  require('./markdown.js'),
@@ -34,3 +35,6 @@ module.exports = {
   "thread.js":  require('./thread.js'),
   "timestamp.js":  require('./timestamp.js')
 }
+
+
+

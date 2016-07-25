@@ -289,3 +289,15 @@ highlight {
 }
 
 
+.git-table-wrapper {
+  max-height: 12em;
+  overflow: auto;
+  word-break: break-all;
+  margin: 1em 0;
+}
+
+.git-table-wrapper table {
+  width: 100%;
+}
+
+
