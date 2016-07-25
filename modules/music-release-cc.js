@@ -9,6 +9,7 @@ var plugs = require('../plugs');
 var message_link = plugs.first(exports.message_link = []);
 var message_confirm = plugs.first(exports.message_confirm = []);
 var sbot_links = plugs.first(exports.sbot_links = []);
+var blob_url = plugs.first(exports.blob_url = []);
 
 exports.message_content = function(msg, sbot) {
     if (msg.value.content.type !== 'music-release-cc')
@@ -16,7 +17,7 @@ exports.message_content = function(msg, sbot) {
 
     var tracks = msg.value.content.tracks;
     return h('div',
-        h('img', { "src" : "http://localhost:7777/" + encodeURIComponent(msg.value.content.cover) }),
+        h('img', { "src" : blob_url(msg.value.content.cover) }),
         h('h1', msg.value.content.title),
         h('ol',
                  Object.keys(tracks).map(function(k) {
@@ -25,7 +26,7 @@ exports.message_content = function(msg, sbot) {
                          h("br"),
                          h('audio', {
                                   "controls" : true,
-                                  "src" : "http://localhost:7777/" + encodeURIComponent(t.link)
+                                  "src" : blob_url(t.link)
                               }))
                  })),
         h('p',
@@ -76,3 +77,4 @@ exports.message_content = function(msg, sbot) {
 //     }}, 'yup')
 
 // }
+
