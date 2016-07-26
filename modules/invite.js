@@ -42,12 +42,10 @@ exports.screen_view = function (invite) {
   //post follow pub
   var div = h('div.column',
     h('div',
-      "invite to:", h('br'),
-      h('code', invite),
-      h('button', 'accept', {onclick: function (ev) {
-        attempt()
-      }})
+      "you have been invited to join:", h('br'),
+      h('code', invite)
     ),
+    h('button', 'accept', {onclick: attempt}),
     progress
   )
 
@@ -79,12 +77,25 @@ exports.screen_view = function (invite) {
         }, function (err) {
           if(err) return progress.fail(err)
           progress.complete()
+          //check for redirect
+          var parts = location.hash.substring(1).split('#')
+          //TODO: handle in a consistent way with either hashrouting
+          //or with tabs...
+          if(parts[0] === invite) location.hash = '#'
         })
-
       })
     })
   }
 
+  // If we are in the browser,
+  // and do not already have a remote set, automatically trigger the invite.
+
+  if(process.title == 'browser' && !localStorage.remote) attempt()
+
   return div
 }
+
+
+
+
 
