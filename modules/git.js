@@ -29,33 +29,21 @@ function repoLink(id) {
 
 function getIssueState(id, cb) {
   pull(
-    sbot_links({dest: id, rel: 'issues', values: true}),
+    sbot_links({dest: id, rel: 'issues', values: true, reverse: true}),
     pull.map(function (msg) {
       var issues = msg.value.content.issues
       if (!Array.isArray(issues)) return
       return issues.filter(function (issue) {
         return issue.link === id
-      }).map(function (issue) {
-        return {
-          ts: msg.value.timestamp,
-          open: issue.open,
-          merged: issue.merged,
-        }
       })
     }),
     pull.flatten(),
+    pull.map(function (issue) {
+      return issue.merged ? 'merged' : issue.open ? 'open' : 'closed'
+    }),
+    pull.take(1),
     pull.collect(function (err, updates) {
-      if (err) return cb(err)
-      var open = true, merged = false
-      updates.sort(function (a, b) {
-        return b.ts - a.ts
-      }).forEach(function (update) {
-        if (update.open != null)
-          open = update.open
-        if (update.merged != null)
-          merged = update.merged
-      })
-      cb(null, open ? 'open' : merged ? 'merged' : 'closed')
+      cb(err, updates && updates[0] || 'open')
     })
   )
 }
