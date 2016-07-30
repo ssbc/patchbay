@@ -1,7 +1,7 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var paramap = require('pull-paramap')
-var moment = require('moment')
+var human = require('human-time')
 
 var plugs = require('../plugs')
 var message_link = plugs.first(exports.message_link = [])
@@ -60,11 +60,12 @@ function getIssueState(id, cb) {
   )
 }
 
+//todo: 
 function messageTimestampLink(msg) {
-  var m = moment(msg.value.timestamp)
+  var m = human(msg.value.timestamp)
   return h('a.timestamp', {
-    timestamp: m,
-    title: m.format('LLLL'),
+    timestamp: msg.value.timestamp,
+    title: new Date(msg.value.timestamp),
     href: '#'+msg.key
   }, m.fromNow())
 }
@@ -248,3 +249,4 @@ exports.message_meta = function (msg, sbot) {
     return el
   }
 }
+

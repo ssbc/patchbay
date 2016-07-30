@@ -1,8 +1,8 @@
 var h = require('hyperscript')
-var moment = require('moment')
+var human = require('human-time')
 
 function updateTimestampEl(el) {
-  el.firstChild.nodeValue = el.timestamp.fromNow()
+  el.firstChild.nodeValue = human(new Date(el.timestamp))
   return el
 }
 
@@ -12,10 +12,10 @@ setInterval(function () {
 }, 60e3)
 
 exports.message_meta = function (msg) {
-  var m = moment(msg.value.timestamp)
   return updateTimestampEl(h('a.enter.timestamp', {
     href: '#'+msg.key,
-    timestamp: m,
-    title: m.format('LLLL')
+    timestamp: msg.value.timestamp,
+    title: new Date(msg.value.timestamp)
   }, ''))
 }
+
