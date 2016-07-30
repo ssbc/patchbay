@@ -1,7 +1,7 @@
 var u = require('../util')
 var h = require('hyperscript')
 var pull = require('pull-stream')
-var mime = require('mime-types')
+var mime = require('simple-mime')('application/octect-stream')
 var split = require('split-buffer')
 
 var plugs = require('../plugs')
@@ -23,7 +23,7 @@ exports.file_input = function FileInput(onAdded) {
               link: blob,
               name: file.name,
               size: reader.result.length || reader.result.byteLength,
-              type: mime.contentType(file.name)
+              type: mime(file.name)
             })
 
           })
@@ -33,8 +33,4 @@ exports.file_input = function FileInput(onAdded) {
     }
   })
 }
-
-
-
-
 
