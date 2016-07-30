@@ -1,4 +1,4 @@
-var dataurl = require('dataurl')
+var dataurl = require('dataurl-')
 var hyperfile = require('hyperfile')
 var hypercrop = require('hypercrop')
 var hyperlightbox = require('hyperlightbox')
@@ -87,8 +87,9 @@ exports.avatar_edit = function (id) {
         var el = crop(data, function (err, data) {
           if(data) {
             img.src = data
+            var _data = dataurl.parse(data)
             pull(
-              pull.once(dataurl.parse(data)),
+              pull.once(_data.data),
               sbot_blobs_add(function (err, hash) {
                 //TODO. Alerts are EVIL.
                 //I use them only in a moment of weakness.
@@ -96,8 +97,8 @@ exports.avatar_edit = function (id) {
                 if(err) return alert(err.stack)
                 selected = {
                   link: hash,
-                  size: selected.data.length,
-                  type: selected.mimetype,
+                  size: _data.data.length,
+                  type: _data.mimetype,
                   width: 512,
                   height: 512
                 }
@@ -134,6 +135,8 @@ exports.avatar_edit = function (id) {
     )
   )
 }
+
+
 
 
 
