@@ -13,7 +13,10 @@ var sbot_publish = plugs.first(exports.sbot_publish = [])
 //check that invite is 
 // ws:...~shs:key:seed
 function parseMultiServerInvite (invite) {
-  var parts = invite.split('~')
+  var redirect = invite.split('#')
+  if(!redirect.length) return null
+
+  var parts = redirect[0].split('~')
   .map(function (e) { return e.split(':') })
 
   if(parts.length !== 2) return null
@@ -24,8 +27,9 @@ function parseMultiServerInvite (invite) {
   p2.pop()
 
   return {
-    invite: invite,
+    invite: redirect[0],
     remote: p2.join(':'),
+    redirect: '#' + redirect.slice(1).join('#')
   }
 }
 
@@ -43,7 +47,7 @@ exports.screen_view = function (invite) {
   var div = h('div.column',
     h('div',
       "you have been invited to join:", h('br'),
-      h('code', invite)
+      h('code', data.invite)
     ),
     h('button', 'accept', {onclick: attempt}),
     progress
@@ -53,7 +57,7 @@ exports.screen_view = function (invite) {
     progress.reset().next('connecting...')
 
     ssbClient(null, {
-      remote: invite,
+      remote: data.invite,
       manifest: { invite: {use: 'async'}, getAddress: 'async' }
     }, function (err, sbot) {
       if(err) return progress.fail(err)
@@ -79,9 +83,13 @@ exports.screen_view = function (invite) {
           progress.complete()
           //check for redirect
           var parts = location.hash.substring(1).split('#')
+
           //TODO: handle in a consistent way with either hashrouting
           //or with tabs...
-          if(parts[0] === invite) location.hash = '#'
+          if(parts[0] === data.invite)
+            location.hash = data.redirect
+          else
+            console.log("NO REDIRECT")
         })
       })
     })
@@ -89,13 +97,9 @@ exports.screen_view = function (invite) {
 
   // If we are in the browser,
   // and do not already have a remote set, automatically trigger the invite.
-
   if(process.title == 'browser' && !localStorage.remote) attempt()
 
   return div
 }
-
-
-
 
 
