@@ -84,7 +84,6 @@ pre {
   }
 }
 
-
 /* --- hypertabs ------- */
 
 .hypertabs__tabs {
@@ -242,16 +241,24 @@ textarea {
 
 /* lightbox - used in message-confirm */
 
-.lightbox {
+.lightbox__content {
   overflow: auto;
   background: #fff;
-  width: 600px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   border: 1px solid #eee;
   top: 2em;
   bottom: 2em;
   left: 2em;
   right: 2em;
   padding: 1em;
+}
+
+@media (min-width: 600px) {
+  .lightbox__content {
+    width: 600px;
+  }
 }
 
 .message-confirm {
@@ -320,9 +327,4 @@ highlight {
   height: 1px;
   background: blue;
 }
-
-
-
-
-
 
