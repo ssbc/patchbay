@@ -3,7 +3,7 @@ var h = require('hyperscript')
 
 var screen_view = plugs.first(exports.screen_view = [])
 
-var status = h('div.status')
+var status = h('div.status.error') //start off disconnected
 
 exports.connection_status = function (err) {
   if(err) status.classList.add('error')
@@ -21,12 +21,17 @@ exports.app = function () {
 
   window.onhashchange = function (ev) {
     var _view = view
-    screen.replaceChild(view = screen_view(hash()), _view)
+    view = screen_view(hash() || 'tabs')
+
+    if(_view) screen.replaceChild(view, _view)
+    else      document.body.appendChild(view)
   }
 
   return screen
 
 }
+
+
 
 
 
