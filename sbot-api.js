@@ -1,20 +1,20 @@
 var pull = require('pull-stream')
-var crypto = require('crypto')
+var ssbKeys = require('ssb-keys')
 var ref = require('ssb-ref')
 var Reconnect = require('pull-reconnect')
 
-
 function Hash (onHash) {
-  var hash = crypto.createHash('sha256')
+  var buffers = []
   return pull.through(function (data) {
-    hash.update(
-        'string' === typeof data
+    buffers.push('string' === typeof data
       ? new Buffer(data, 'utf8')
       : data
     )
   }, function (err) {
     if(err && !onHash) throw err
-    onHash && onHash(err, '&'+hash.digest('base64')+'.sha256')
+    var b = buffers.length > 1 ? Buffer.concat(b) : b
+    var h = '&'+ssbKeys.hash(b)
+    onHash && onHash(err, h)
   })
 }
 //uncomment this to use from browser...
@@ -70,7 +70,7 @@ module.exports = function () {
     })
   }
 
-  var feed = createFeed(internal, keys)
+  var feed = createFeed(internal, keys, {remote: true})
 
   return {
     connection_status: connection_status,
@@ -136,5 +136,4 @@ module.exports = function () {
     })
   }
 }
-
 
