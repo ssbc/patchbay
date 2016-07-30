@@ -126,12 +126,12 @@ exports.message_content = function (msg, sbot) {
         values: true
       }),
       pull.drain(function (link) {
-        var refUpdates = link.value.content.refs
-        for (var ref in refUpdates) {
-          if (refs[ref]) continue
+        var refUpdates = link.value.content.refs || {}
+        Object.keys(refUpdates).reverse().filter(function (ref) {
+          if (refs[ref]) return
           refs[ref] = true
           var rev = refUpdates[ref]
-          if (!rev) continue
+          if (!rev) return
           var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref) || []
           var t
           if (parts[1] === 'heads') t = branchesT
@@ -140,7 +140,7 @@ exports.message_content = function (msg, sbot) {
             h('td', parts[2]),
             h('td', h('code', rev)),
             h('td', messageTimestampLink(link))))
-        }
+        })
       }, function (err) {
         if (err) console.error(err)
       })
