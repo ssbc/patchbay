@@ -12,7 +12,7 @@ function Hash (onHash) {
     )
   }, function (err) {
     if(err && !onHash) throw err
-    var b = buffers.length > 1 ? Buffer.concat(b) : b
+    var b = buffers.length > 1 ? Buffer.concat(buffers) : buffers[0]
     var h = '&'+ssbKeys.hash(b)
     onHash && onHash(err, h)
   })
