@@ -62,12 +62,11 @@ function getIssueState(id, cb) {
 
 //todo: 
 function messageTimestampLink(msg) {
-  var m = human(msg.value.timestamp)
   return h('a.timestamp', {
     timestamp: msg.value.timestamp,
     title: new Date(msg.value.timestamp),
     href: '#'+msg.key
-  }, m.fromNow())
+  }, human(msg.value.timestamp))
 }
 
 function tableRows(headerRow) {
@@ -249,4 +248,5 @@ exports.message_meta = function (msg, sbot) {
     return el
   }
 }
+
 
