@@ -5,6 +5,11 @@ var plugs = require('../plugs')
 var sbot_query = plugs.first(exports.sbot_query = [])
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 
+var channels = []
+
+var signified = require('../plugs').first(exports.signified = [])
+
+
 exports.search_box = function (go) {
 
   var suggestBox
@@ -43,8 +48,33 @@ exports.search_box = function (go) {
 
   // delay until the element has a parent
   setTimeout(function () {
-    suggestBox = suggest(search, suggestions)
+    suggestBox = suggest(search, function (word, cb) {
+      if(/^#\w/.test(word))
+        cb(null, channels.filter(function (chan) {
+          return ('#'+chan.name).substring(0, word.length) === word
+        })
+        .map(function (e) {
+          var name = '#'+e.name
+          return {
+            title: name,
+            value: name,
+            subtitle: chan.posts
+          }
+        }))
+      else if(/^@\w/.test(word)) {
+        signified(word, function (_, names) {
+          cb(null, names.map(function (e) {
+            return {
+              title: e.name + ':'+e.id.substring(0, 10),
+              value: e.id,
+              subtitle: e.rank
+            }
+          }))
+        })
+      }
+    })
   }, 10)
+
 
   pull(
     sbot_query({query: [
@@ -56,43 +86,12 @@ exports.search_box = function (go) {
     ]}),
     pull.collect(function (err, chans) {
       if (err) return console.error(err)
-      suggestions['#'] = chans.map(function (chan) {
-        var name = '#' + chan.channel
-        return {
-          title: name,
-          value: name,
-          subtitle: chan.posts
-        }
-      })
-    })
-  )
-
-  pull(
-    sbot_links2({query: [
-      {$filter: {
-        dest: {$prefix: '@'},
-        rel: ['mentions', {$gt: '@'}]}
-      },
-      {$reduce: {
-        id: 'dest',
-        name: ['rel', 1],
-        rank: {$count: true}}
-      }
-    ]}),
-    pull.collect(function (err, links) {
-      if (err) return console.error(err)
-      suggestions['@'] = links.map(function (e) {
-        return {
-          title: e.name,
-          value: e.id,
-          subtitle: e.id + ' (' + e.rank + ')',
-          rank: e.rank
-        }
-      }).sort(function (a, b) {
-        return b.rank - a.rank
-      })
+      channels = chans
     })
   )
 
   return search
 }
+
+
+
