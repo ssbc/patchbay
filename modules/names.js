@@ -10,51 +10,82 @@ var getAvatar = require('ssb-avatar')
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 
-exports.avatar_name =
-function name (id) {
-  var n = h('span', id.substring(0, 10))
+/*
+  filter(rel: ['mentions', prefix('@')]) | reduce(name: rel[1], value: count())
+*/
 
-  //choose the most popular name for this person.
-  //for anything like this you'll see I have used sbot.links2
-  //which is the ssb-links plugin. as you'll see the query interface
-  //is pretty powerful!
-  //TODO: "most popular" name is easily gameable.
-  //must come up with something better than this.
-
-  /*
-    filter(rel: ['mentions', prefix('@')])
-      .reduce(name: rel[1], value: count())
-  */
-
-  var self_id = require('../keys').id
-
-  all(
-    sbot_links2({query: [
-      {$filter: {rel: ['mentions', {$prefix: '@'}], dest: id}},
-      {$reduce: { name: ['rel', 1], count: {$count: true}
-      }}
-    ]}),
-    function (err, names) {
-      if(err) console.error(err), names = []
-      //if they have not been mentioned, fallback
-      //to patchwork style naming (i.e. self id)
-      if(!names.length)
-        return getAvatar({links: sbot_links}, self_id, id,
-          function (err, avatar) {
-            if (err) return console.error(err)
-            n.textContent = (avatar.name[0] == '@' ? '' : '@') + avatar.name
-          })
-
-      n.textContent = names.reduce(function (max, item) {
-        return max.count > item.count || item.name == '@' ? max : item
-      }, {name: id.substring(0, 10), count: 0}).name
-    })
-
-  return n
-
+var filter = {
+  $filter: {
+    rel: ["mentions", {$prefix: "@"}]
+  }
+}
+var map = {
+  $map: {
+    id: 'dest', name: ['rel', 1], ts: 'ts',
+  }
 }
 
+var reduce = {
+  $reduce: {
+    id: "dest",
+    name: ["rel", 1],
+    rank: {$count: true}
+  }
+}
 
+var names = []
+function update(name) {
+  var n = names.find(function (e) {
+    return e.id == name.id && e.name == e.name
+  })
+  if(!n) {
+    name.rank = 1
+    //this should be inserted at the right place...
+    names.push(name)
+  }
+  else
+    n.rank = n.rank += (name.rank || 1)
+}
 
+var ready = false, waiting = []
+
+exports.connection_status = function (err) {
+  if(!err) {
+    pull(
+      sbot_links2({query: [filter, reduce]}),
+      pull.collect(function (err, ary) {
+          console.log(err, ary)
+        if(!err) {
+          names = ary
+          ready = true
+          while(waiting.length) waiting.shift()()
+        }
+      })
+    )
+
+    pull(sbot_links2({query: [filter, map], old: false}), pull.drain(update))
+  }
+}
+
+function async(fn) {
+  return function (value, cb) {
+    function go () { cb(null, fn(value)) }
+    if(ready) go()
+    else waiting.push(go)
+  }
+}
+
+function rank(ary) {
+  return ary.sort(function (a, b) { return b.rank - a.rank })
+}
+
+exports.signifiers = async(function (id) {
+  return rank(names.filter(function (e) { return e.id == id}))
+})
+
+exports.signified = async(function (name) {
+  var rx = new RegExp('^'+name)
+  return rank(names.filter(function (e) { return rx.test(e.name) }))
+})
 
 
