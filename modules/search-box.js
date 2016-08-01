@@ -53,8 +53,8 @@ exports.search_box = function (go) {
         cb(null, channels.filter(function (chan) {
           return ('#'+chan.name).substring(0, word.length) === word
         })
-        .map(function (e) {
-          var name = '#'+e.name
+        .map(function (chan) {
+          var name = '#'+chan.name
           return {
             title: name,
             value: name,
