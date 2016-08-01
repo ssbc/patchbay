@@ -31,7 +31,8 @@ var reduce = {
   $reduce: {
     name: 'name',
     id: 'id',
-    rank: {$count: true}
+    rank: {$count: true},
+    ts: {$max: 'ts'}
   }
 }
 
@@ -97,6 +98,8 @@ exports.connection_status = function (err) {
         sbot_links2({query: [filter, map, reduce]}),
         add_at(sbot_query({query: [filter2, map2, reduce]}))
       ]),
+      //reducing also ensures order by the lookup properties
+      //in this case: [name, id]
       mfr.reduce(merge),
       pull.collect(function (err, ary) {
         if(!err) {
@@ -124,8 +127,15 @@ function async(fn) {
 }
 
 function rank(ary) {
-  return ary.sort(function (a, b) { return b.rank - a.rank })
+  //sort by most used, or most recently used
+  return ary.sort(function (a, b) { return b.rank - a.rank || b.ts - a.ts })
 }
+
+//we are just iterating over the entire array.
+//if this becomes a problem, maintain two arrays
+//one of each sort order, but do not duplicate the objects.
+//that should mean the space required is just 2x object references,
+//not 2x objects, and we can use binary search to find matches.
 
 exports.signifier = async(function (id) {
   return rank(names.filter(function (e) { return e.id == id}))
@@ -135,8 +145,4 @@ exports.signified = async(function (name) {
   var rx = new RegExp('^'+name)
   return rank(names.filter(function (e) { return rx.test(e.name) }))
 })
-
-
-
-
 
