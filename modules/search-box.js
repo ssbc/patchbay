@@ -58,7 +58,7 @@ exports.search_box = function (go) {
           return {
             title: name,
             value: name,
-            subtitle: chan.posts
+            subtitle: chan.rank
           }
         }))
       else if(/^@\w/.test(word)) {
@@ -80,8 +80,8 @@ exports.search_box = function (go) {
     sbot_query({query: [
       {$filter: {value: {content: {channel: {$gt: ''}}}}},
       {$reduce: {
-        channel: ['value', 'content', 'channel'],
-        posts: {$count: true}
+        name: ['value', 'content', 'channel'],
+        rank: {$count: true}
       }}
     ]}),
     pull.collect(function (err, chans) {
