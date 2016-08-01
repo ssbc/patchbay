@@ -18,6 +18,7 @@
     "hyperprogress": "0.1.0",
     "hyperscript": "^1.4.7",
     "hypertabs": "^1.2.0",
+    "map-filter-reduce": "^3.0.1",
     "mime-types": "^2.1.11",
     "moment": "^2.13.0",
     "open-external": "^0.1.1",
