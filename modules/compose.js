@@ -68,7 +68,8 @@ exports.message_compose = function (meta, prepublish, cb) {
 
     function done (err, msg) {
       publishBtn.disabled = false
-      if(err) return alert(err.stack)
+      if(err === 'cancelled') return
+      else if(err) return alert(err.stack)
       else ta.value = ''
 
       if (cb) cb(err, msg)
