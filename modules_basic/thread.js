@@ -97,7 +97,7 @@ exports.screen_view = function (id) {
         })
 
         if(err) return content.appendChild(h('pre', err.stack))
-        sort(thread).map(message_render).forEach(function (el) {
+        sort(thread).map(message_render).filter(Boolean).forEach(function (el) {
           content.appendChild(el)
         })
 
