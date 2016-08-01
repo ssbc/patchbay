@@ -2,7 +2,8 @@ var fs = require('fs')
 
 fs.readdirSync(__dirname).forEach(function (e) {
   if(e !== '_index.js')
-    exports[e] = require(path.join('./'+e))
+    exports[e] = require('./'+e)
 })
+
 
 
