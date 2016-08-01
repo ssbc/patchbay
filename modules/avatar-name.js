@@ -1,5 +1,6 @@
 
-var signifers = require('../plugs').first(exports.signifers = [])
+var signifier = require('../plugs').first(exports.signifier = [])
+var h = require('hyperscript')
 
 exports.avatar_name =
 function name (id) {
@@ -12,7 +13,7 @@ function name (id) {
   //TODO: "most popular" name is easily gameable.
   //must come up with something better than this.
 
-  exports.signifiers(id, function (_, names) {
+  signifier(id, function (_, names) {
     if(names.length) n.textContent = names[0].name
   })
 

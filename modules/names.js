@@ -1,4 +1,3 @@
-var h = require('hyperscript')
 var pull = require('pull-stream')
 
 function all(stream, cb) {
@@ -6,9 +5,7 @@ function all(stream, cb) {
 }
 
 var plugs = require('../plugs')
-var getAvatar = require('ssb-avatar')
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
-var sbot_links = plugs.first(exports.sbot_links = [])
 
 /*
   filter(rel: ['mentions', prefix('@')]) | reduce(name: rel[1], value: count())
@@ -79,7 +76,7 @@ function rank(ary) {
   return ary.sort(function (a, b) { return b.rank - a.rank })
 }
 
-exports.signifiers = async(function (id) {
+exports.signifier = async(function (id) {
   return rank(names.filter(function (e) { return e.id == id}))
 })
 
@@ -87,5 +84,4 @@ exports.signified = async(function (name) {
   var rx = new RegExp('^'+name)
   return rank(names.filter(function (e) { return rx.test(e.name) }))
 })
-
 
