@@ -1,4 +1,6 @@
 var pull = require('pull-stream')
+var many = require('pull-many')
+var mfr = require('map-filter-reduce')
 
 function all(stream, cb) {
   pull(stream, pull.collect(cb))
@@ -6,6 +8,7 @@ function all(stream, cb) {
 
 var plugs = require('../plugs')
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
+var sbot_query = plugs.first(exports.sbot_query = [])
 
 /*
   filter(rel: ['mentions', prefix('@')]) | reduce(name: rel[1], value: count())
@@ -18,17 +21,41 @@ var filter = {
 }
 var map = {
   $map: {
-    id: 'dest', name: ['rel', 1], ts: 'ts',
+    name: ['rel', 1],
+    id: 'dest',
+    ts: 'ts',
   }
 }
 
 var reduce = {
   $reduce: {
-    id: "dest",
-    name: ["rel", 1],
+    name: 'name',
+    id: 'id',
     rank: {$count: true}
   }
 }
+
+var filter2 = {
+  $filter: {
+    value: {
+      content: {
+        type: "about",
+        name: {"$prefix": ""},
+        about: {"$prefix": "@"} //better: match regexp.
+      }
+    }
+  }
+}
+
+var map2 = {
+ $map: {
+    name: ["value", "content", "name"],
+    id: ['value', 'content', 'about'],
+    ts: "timestamp"
+  }
+}
+
+//union with this query...
 
 var names = []
 function update(name) {
@@ -46,12 +73,32 @@ function update(name) {
 
 var ready = false, waiting = []
 
+var merge = {
+  $reduce: {
+    name: 'name',
+    id: 'id',
+    rank: {$sum: 'rank'},
+    ts: {$max: 'ts'}
+  }
+}
+
+function add_at(stream) {
+  return pull(stream, pull.map(function (e) {
+      if(!/^@/.test(e.name)) e.name = '@'+e.name
+      return e
+    })
+  )
+}
+
 exports.connection_status = function (err) {
   if(!err) {
     pull(
-      sbot_links2({query: [filter, reduce]}),
+      many([
+        sbot_links2({query: [filter, map, reduce]}),
+        add_at(sbot_query({query: [filter2, map2, reduce]}))
+      ]),
+      mfr.reduce(merge),
       pull.collect(function (err, ary) {
-          console.log(err, ary)
         if(!err) {
           names = ary
           ready = true
@@ -60,7 +107,11 @@ exports.connection_status = function (err) {
       })
     )
 
-    pull(sbot_links2({query: [filter, map], old: false}), pull.drain(update))
+    pull(many([
+      sbot_links2({query: [filter, map], old: false}),
+      add_at(sbot_query({query: [filter2, map2], old: false}))
+    ]),
+    pull.drain(update))
   }
 }
 
@@ -84,4 +135,8 @@ exports.signified = async(function (name) {
   var rx = new RegExp('^'+name)
   return rank(names.filter(function (e) { return rx.test(e.name) }))
 })
+
+
+
+
 
