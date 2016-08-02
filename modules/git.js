@@ -57,6 +57,7 @@ function messageTimestampLink(msg) {
   }, human(msg.value.timestamp))
 }
 
+// a thead+tbody where the thead only is added when the first row is added
 function tableRows(headerRow) {
   var thead = h('thead'), tbody = h('tbody')
   var first = true
@@ -236,7 +237,7 @@ exports.message_content = function (msg, sbot) {
     )
   }
 
-  if (c.type === 'issue') {
+  if(c.type === 'issue') {
     return h('div',
       h('p', 'opened issue on ', repoLink(c.project)),
       c.title ? h('h4', c.title) : '',
@@ -244,7 +245,7 @@ exports.message_content = function (msg, sbot) {
     )
   }
 
-  if (c.type === 'pull-request') {
+  if(c.type === 'pull-request') {
     return h('div',
       h('p', 'opened pull-request ',
         'to ', repoLink(c.repo), ':', c.branch, ' ',
