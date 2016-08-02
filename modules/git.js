@@ -32,13 +32,12 @@ function getIssueState(id, cb) {
   pull(
     sbot_links({dest: id, rel: 'issues', values: true, reverse: true}),
     pull.map(function (msg) {
-      var issues = msg.value.content.issues
-      if (!Array.isArray(issues)) return
-      return issues.filter(function (issue) {
-        return issue.link === id
-      })
+      return msg.value.content.issues
     }),
     pull.flatten(),
+    pull.filter(function (issue) {
+      return issue.link === id
+    }),
     pull.map(function (issue) {
       return issue.merged ? 'merged' : issue.open ? 'open' : 'closed'
     }),
