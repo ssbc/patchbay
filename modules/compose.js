@@ -60,7 +60,8 @@ exports.message_compose = function (meta, prepublish, cb) {
         meta = prepublish(meta)
       } catch (err) {
         publishBtn.disabled = false
-        return alert(err.message)
+        if (cb) cb(err)
+        else alert(err.message)
       }
       return message_confirm(meta, done)
     }
@@ -68,9 +69,8 @@ exports.message_compose = function (meta, prepublish, cb) {
 
     function done (err, msg) {
       publishBtn.disabled = false
-      if(err === 'cancelled') return
-      else if(err) return alert(err.stack)
-      else ta.value = ''
+      if(err) return alert(err.stack)
+      else if (msg) ta.value = ''
 
       if (cb) cb(err, msg)
     }

@@ -22,7 +22,7 @@ exports.message_confirm = function (content, cb) {
 
   var cancel = h('button', 'cancel', {onclick: function () {
     lb.remove()
-    cb('cancelled')
+    cb(null)
   }})
 
   okay.addEventListener('keydown', function (ev) {
