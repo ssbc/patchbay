@@ -181,6 +181,23 @@ exports.screen_view = function (path) {
       errorsContent.appendChild(el)
   })
 
+  if (process.versions.electron) {
+    window.addEventListener('contextmenu', function (ev) {
+      ev.preventDefault()
+      var remote = require('remote')
+      var Menu = remote.require('menu')
+      var MenuItem = remote.require('menu-item')
+      var menu = new Menu()
+      menu.append(new MenuItem({
+        label: 'Inspect Element',
+        click: function () {
+          remote.getCurrentWindow().inspectElement(ev.x, ev.y)
+        }
+      }))
+      menu.popup(remote.getCurrentWindow())
+    })
+  }
+
   return tabs
 }
 
