@@ -83,6 +83,15 @@ function repoName(id, link) {
   return el
 }
 
+function renderIssueEdit(c) {
+  var id = c.issue || c.link
+  return [
+    c.title ? h('p', 'renamed issue ', message_link(id),
+      ' to ', h('ins', c.title)) : null,
+    c.open === false ? h('p', 'closed issue ', message_link(id)) : null,
+    c.open === true ? h('p', 'reopened issue ', message_link(id)) : null]
+}
+
 exports.message_content = function (msg, sbot) {
   var c = msg.value.content
 
@@ -228,13 +237,8 @@ exports.message_content = function (msg, sbot) {
 
   if(c.type === 'issue-edit') {
     return h('div',
-      0, false, null, undefined, '', 'ok',
-      c.title ? h('p', 'renamed issue ', message_link(c.issue),
-        ' to ', h('ins', c.title)) : null,
-      c.open === false ? h('p', 'closed issue ', message_link(c.issue)) : null,
-      c.open === true ? h('p', 'reopened issue ', message_link(c.issue)) : '',
-      c.issues ? c.issues : null
-    )
+      c.issue ? renderIssueEdit(c) : null,
+      c.issues ? c.issues.map(renderIssueEdit) : null)
   }
 
   if(c.type === 'issue') {
@@ -258,8 +262,9 @@ exports.message_content = function (msg, sbot) {
 
 exports.message_meta = function (msg, sbot) {
   var type = msg.value.content.type
-  if (type == 'issue' || type == 'pull-request') {
+  if (type === 'issue' || type === 'pull-request') {
     var el = h('em', '...')
+    // TODO: update if issue is changed
     getIssueState(msg.key, function (err, state) {
       if (err) return console.error(err)
       el.textContent = state
@@ -275,19 +280,28 @@ exports.message_action = function (msg, sbot) {
     var a = h('a', {href: '#', onclick: function () {
       message_confirm({
         type: 'issue-edit',
+        root: msg.key,
         issues: [{
           link: msg.key,
           open: !isOpen
         }]
+      }, function (err, msg) {
+        if(err) return alert(err)
+        if(!msg) return
+        isOpen = msg.value.content.open
+        update()
       })
     }})
     getIssueState(msg.key, function (err, state) {
       if (err) return console.error(err)
       isOpen = state === 'open'
+      update()
+    })
+    function update() {
       a.textContent = c.type === 'pull-request'
         ? isOpen ? 'Close Pull Request' : 'Reopen Pull Request'
         : isOpen ? 'Close Issue' : 'Reopen Issue'
-    })
+    }
     return a
   }
 }
