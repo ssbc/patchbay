@@ -284,7 +284,9 @@ exports.message_action = function (msg, sbot) {
     getIssueState(msg.key, function (err, state) {
       if (err) return console.error(err)
       isOpen = state === 'open'
-      a.textContent = isOpen ? 'Close' : 'Reopen'
+      a.textContent = c.type === 'pull-request'
+        ? isOpen ? 'Close Pull Request' : 'Reopen Pull Request'
+        : isOpen ? 'Close Issue' : 'Reopen Issue'
     })
     return a
   }
