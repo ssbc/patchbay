@@ -86,8 +86,8 @@ exports.message_content = function (msg, sbot) {
   var c = msg.value.content
 
   if(c.type === 'git-repo') {
-    var nameEl
     var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
+    var forksT
     var div = h('div',
       h('p', 'git repo ', repoName(msg.key)),
       c.upstream ? h('p', 'fork of ', repoName(c.upstream, true)) : '',
@@ -113,7 +113,11 @@ exports.message_content = function (msg, sbot) {
           openPRsT = tableRows(h('tr',
             h('th', 'open pull requests'))),
           closedPRsT = tableRows(h('tr',
-            h('th', 'closed pull requests'))))))
+            h('th', 'closed pull requests'))))),
+      h('div.git-table-wrapper',
+        h('table',
+          forksT = tableRows(h('tr',
+            h('th', 'forks'))))))
 
     // compute refs
     var refs = {}
@@ -176,6 +180,22 @@ exports.message_content = function (msg, sbot) {
             h('small',
               'opened ', messageTimestampLink(link),
               ' by ', h('a', {href: '#'+author}, avatar_name(author))))))
+      }, function (err) {
+        if (err) console.error(err)
+      })
+    )
+
+    // list forks
+    pull(
+      sbot_links({
+        reverse: true,
+        dest: msg.key,
+        rel: 'upstream'
+      }),
+      pull.drain(function (link) {
+        forksT.append(h('tr', h('td',
+          repoName(link.key, true),
+          ' by ', h('a', {href: '#'+link.source}, avatar_name(link.source)))))
       }, function (err) {
         if (err) console.error(err)
       })
