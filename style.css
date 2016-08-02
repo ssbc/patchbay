@@ -161,10 +161,13 @@ textarea {
   float: right;
 }
 
-.dig {
+.actions > * {
+  padding-left: 5px;
+  margin-left: 1px;
+}
+.actions > :not(:last-child) {
   border-right: 2px solid #eee;
-  padding-right: .6ex;
-  margin-right: .1ex;
+  padding-right: 5px;
 }
 
 .message > .title > .avatar {

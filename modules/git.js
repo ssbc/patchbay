@@ -5,6 +5,7 @@ var human = require('human-time')
 
 var plugs = require('../plugs')
 var message_link = plugs.first(exports.message_link = [])
+var message_confirm = plugs.first(exports.message_confirm = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
@@ -225,6 +226,17 @@ exports.message_content = function (msg, sbot) {
     )
   }
 
+  if(c.type === 'issue-edit') {
+    return h('div',
+      0, false, null, undefined, '', 'ok',
+      c.title ? h('p', 'renamed issue ', message_link(c.issue),
+        ' to ', h('ins', c.title)) : null,
+      c.open === false ? h('p', 'closed issue ', message_link(c.issue)) : null,
+      c.open === true ? h('p', 'reopened issue ', message_link(c.issue)) : '',
+      c.issues ? c.issues : null
+    )
+  }
+
   if (c.type === 'issue') {
     return h('div',
       h('p', 'opened issue on ', repoLink(c.project)),
@@ -256,4 +268,25 @@ exports.message_meta = function (msg, sbot) {
   }
 }
 
+exports.message_action = function (msg, sbot) {
+  var c = msg.value.content
+  if(c.type === 'issue' || c.type === 'pull-request') {
+    var isOpen
+    var a = h('a', {href: '#', onclick: function () {
+      message_confirm({
+        type: 'issue-edit',
+        issues: [{
+          link: msg.key,
+          open: !isOpen
+        }]
+      })
+    }})
+    getIssueState(msg.key, function (err, state) {
+      if (err) return console.error(err)
+      isOpen = state === 'open'
+      a.textContent = isOpen ? 'Close' : 'Reopen'
+    })
+    return a
+  }
+}
 

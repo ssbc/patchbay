@@ -38,7 +38,7 @@ exports.message_render = function (msg, sbot) {
     ),
     h('div.message_content', el),
     h('div.message_actions.row',
-      h('div.actions', message_action(msg), ' ',
+      h('div.actions', message_action(msg),
         h('a', {href: '#' + msg.key}, 'Reply')
       )
     ),
