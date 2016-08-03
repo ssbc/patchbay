@@ -50,11 +50,12 @@ function getIssueState(id, cb) {
 
 //todo: 
 function messageTimestampLink(msg) {
+  var date = new Date(msg.value.timestamp)
   return h('a.timestamp', {
     timestamp: msg.value.timestamp,
-    title: new Date(msg.value.timestamp),
+    title: date,
     href: '#'+msg.key
-  }, human(msg.value.timestamp))
+  }, human(date)
 }
 
 // a thead+tbody where the thead only is added when the first row is added
