@@ -29,12 +29,25 @@ function notifications(ourIds) {
   }
 
   function isOurMsg(id, cb) {
+    if (!id) return cb(null, false)
+    if (typeof id === 'object' && typeof id.link === 'string') id = id.link
     sbot_get(id, function (err, msg) {
       if (err && err.name == 'NotFoundError') cb(null, false)
       else if (err) cb(err)
       else if (msg.content.type === 'issue' || msg.content.type === 'project')
         isOurMsg(msg.content.repo || msg.content.project, cb)
       else cb(err, msg.author in ourIds)
+    })
+  }
+
+  function isAnyOurMessage(msg, ids, cb) {
+    cont.para(ids.map(function (id) {
+      return function (cb) { isOurMsg(id, cb) }
+    }))
+    (function (err, results) {
+      if (err) cb(err)
+      else if (results.some(Boolean)) cb(null, msg)
+      else cb()
     })
   }
 
@@ -52,14 +65,7 @@ function notifications(ourIds) {
     switch (c.type) {
       case 'post':
         if (c.branch || c.root)
-          cont.para([].concat(c.branch, c.root).map(function (id) {
-            return function (cb) { isOurMsg(id, cb) }
-          }))
-          (function (err, results) {
-            if (err) cb(err)
-            else if (results.some(Boolean)) cb(null, msg)
-            else cb()
-          })
+          return isAnyOurMessage(msg, [].concat(c.branch, c.root), cb)
         else return cb()
 
       case 'contact':
@@ -77,6 +83,9 @@ function notifications(ourIds) {
         return isOurMsg(c.project || c.repo, function (err, isOurs) {
           cb(err, isOurs ? msg : null)
         })
+
+      case 'issue-edit':
+        return isAnyOurMessage(msg, [c.issue].concat(c.issues), cb)
 
       default:
         cb()
