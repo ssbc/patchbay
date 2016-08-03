@@ -55,7 +55,7 @@ function messageTimestampLink(msg) {
     timestamp: msg.value.timestamp,
     title: date,
     href: '#'+msg.key
-  }, human(date)
+  }, human(date))
 }
 
 // a thead+tbody where the thead only is added when the first row is added
