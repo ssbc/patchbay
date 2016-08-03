@@ -9,6 +9,8 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 
+var HighWatermark = require('pull-high-watermark')
+
 exports.screen_view = function (path, sbot) {
   if(path === '/public') {
 
@@ -28,6 +30,7 @@ exports.screen_view = function (path, sbot) {
 
     pull(
       u.next(sbot_log, {reverse: true, limit: 100, live: false}),
+//      HighWatermark(100),
       Scroller(div, content, message_render, false, false)
     )
 
