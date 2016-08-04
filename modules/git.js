@@ -5,6 +5,7 @@ var human = require('human-time')
 
 var plugs = require('../plugs')
 var message_link = plugs.first(exports.message_link = [])
+var message_confirm = plugs.first(exports.message_confirm = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
@@ -29,46 +30,35 @@ function repoLink(id) {
 
 function getIssueState(id, cb) {
   pull(
-    sbot_links({dest: id, rel: 'issues', values: true}),
+    sbot_links({dest: id, rel: 'issues', values: true, reverse: true}),
     pull.map(function (msg) {
-      var issues = msg.value.content.issues
-      if (!Array.isArray(issues)) return
-      return issues.filter(function (issue) {
-        return issue.link === id
-      }).map(function (issue) {
-        return {
-          ts: msg.value.timestamp,
-          open: issue.open,
-          merged: issue.merged,
-        }
-      })
+      return msg.value.content.issues
     }),
     pull.flatten(),
+    pull.filter(function (issue) {
+      return issue.link === id
+    }),
+    pull.map(function (issue) {
+      return issue.merged ? 'merged' : issue.open ? 'open' : 'closed'
+    }),
+    pull.take(1),
     pull.collect(function (err, updates) {
-      if (err) return cb(err)
-      var open = true, merged = false
-      updates.sort(function (a, b) {
-        return b.ts - a.ts
-      }).forEach(function (update) {
-        if (update.open != null)
-          open = update.open
-        if (update.merged != null)
-          merged = update.merged
-      })
-      cb(null, open ? 'open' : merged ? 'merged' : 'closed')
+      cb(err, updates && updates[0] || 'open')
     })
   )
 }
 
 //todo: 
 function messageTimestampLink(msg) {
+  var date = new Date(msg.value.timestamp)
   return h('a.timestamp', {
     timestamp: msg.value.timestamp,
-    title: new Date(msg.value.timestamp),
+    title: date,
     href: '#'+msg.key
-  }, human(msg.value.timestamp))
+  }, human(date))
 }
 
+// a thead+tbody where the thead only is added when the first row is added
 function tableRows(headerRow) {
   var thead = h('thead'), tbody = h('tbody')
   var first = true
@@ -94,12 +84,21 @@ function repoName(id, link) {
   return el
 }
 
+function renderIssueEdit(c) {
+  var id = c.issue || c.link
+  return [
+    c.title ? h('p', 'renamed issue ', message_link(id),
+      ' to ', h('ins', c.title)) : null,
+    c.open === false ? h('p', 'closed issue ', message_link(id)) : null,
+    c.open === true ? h('p', 'reopened issue ', message_link(id)) : null]
+}
+
 exports.message_content = function (msg, sbot) {
   var c = msg.value.content
 
   if(c.type === 'git-repo') {
-    var nameEl
     var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
+    var forksT
     var div = h('div',
       h('p', 'git repo ', repoName(msg.key)),
       c.upstream ? h('p', 'fork of ', repoName(c.upstream, true)) : '',
@@ -125,7 +124,11 @@ exports.message_content = function (msg, sbot) {
           openPRsT = tableRows(h('tr',
             h('th', 'open pull requests'))),
           closedPRsT = tableRows(h('tr',
-            h('th', 'closed pull requests'))))))
+            h('th', 'closed pull requests'))))),
+      h('div.git-table-wrapper',
+        h('table',
+          forksT = tableRows(h('tr',
+            h('th', 'forks'))))))
 
     // compute refs
     var refs = {}
@@ -138,12 +141,12 @@ exports.message_content = function (msg, sbot) {
         values: true
       }),
       pull.drain(function (link) {
-        var refUpdates = link.value.content.refs
-        for (var ref in refUpdates) {
-          if (refs[ref]) continue
+        var refUpdates = link.value.content.refs || {}
+        Object.keys(refUpdates).reverse().filter(function (ref) {
+          if (refs[ref]) return
           refs[ref] = true
           var rev = refUpdates[ref]
-          if (!rev) continue
+          if (!rev) return
           var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref) || []
           var t
           if (parts[1] === 'heads') t = branchesT
@@ -152,7 +155,7 @@ exports.message_content = function (msg, sbot) {
             h('td', parts[2]),
             h('td', h('code', rev)),
             h('td', messageTimestampLink(link))))
-        }
+        })
       }, function (err) {
         if (err) console.error(err)
       })
@@ -175,9 +178,8 @@ exports.message_content = function (msg, sbot) {
       }),
       pull.drain(function (link) {
         var c = link.value.content
-        // TODO: support renamed issues
-        var title = c.title || (c.text ? c.text.length > 30
-          ? c.text.substr(0, 30) + '…'
+        var title = c.title || (c.text ? c.text.length > 70
+          ? c.text.substr(0, 70) + '…'
           : c.text : link.key)
         var author = link.value.author
         var t = c.type === 'pull-request'
@@ -189,6 +191,22 @@ exports.message_content = function (msg, sbot) {
             h('small',
               'opened ', messageTimestampLink(link),
               ' by ', h('a', {href: '#'+author}, avatar_name(author))))))
+      }, function (err) {
+        if (err) console.error(err)
+      })
+    )
+
+    // list forks
+    pull(
+      sbot_links({
+        reverse: true,
+        dest: msg.key,
+        rel: 'upstream'
+      }),
+      pull.drain(function (link) {
+        forksT.append(h('tr', h('td',
+          repoName(link.key, true),
+          ' by ', h('a', {href: '#'+link.source}, avatar_name(link.source)))))
       }, function (err) {
         if (err) console.error(err)
       })
@@ -218,7 +236,13 @@ exports.message_content = function (msg, sbot) {
     )
   }
 
-  if (c.type === 'issue') {
+  if(c.type === 'issue-edit') {
+    return h('div',
+      c.issue ? renderIssueEdit(c) : null,
+      c.issues ? c.issues.map(renderIssueEdit) : null)
+  }
+
+  if(c.type === 'issue') {
     return h('div',
       h('p', 'opened issue on ', repoLink(c.project)),
       c.title ? h('h4', c.title) : '',
@@ -226,7 +250,7 @@ exports.message_content = function (msg, sbot) {
     )
   }
 
-  if (c.type === 'pull-request') {
+  if(c.type === 'pull-request') {
     return h('div',
       h('p', 'opened pull-request ',
         'to ', repoLink(c.repo), ':', c.branch, ' ',
@@ -239,8 +263,9 @@ exports.message_content = function (msg, sbot) {
 
 exports.message_meta = function (msg, sbot) {
   var type = msg.value.content.type
-  if (type == 'issue' || type == 'pull-request') {
+  if (type === 'issue' || type === 'pull-request') {
     var el = h('em', '...')
+    // TODO: update if issue is changed
     getIssueState(msg.key, function (err, state) {
       if (err) return console.error(err)
       el.textContent = state
@@ -249,4 +274,36 @@ exports.message_meta = function (msg, sbot) {
   }
 }
 
+exports.message_action = function (msg, sbot) {
+  var c = msg.value.content
+  if(c.type === 'issue' || c.type === 'pull-request') {
+    var isOpen
+    var a = h('a', {href: '#', onclick: function () {
+      message_confirm({
+        type: 'issue-edit',
+        root: msg.key,
+        issues: [{
+          link: msg.key,
+          open: !isOpen
+        }]
+      }, function (err, msg) {
+        if(err) return alert(err)
+        if(!msg) return
+        isOpen = msg.value.content.open
+        update()
+      })
+    }})
+    getIssueState(msg.key, function (err, state) {
+      if (err) return console.error(err)
+      isOpen = state === 'open'
+      update()
+    })
+    function update() {
+      a.textContent = c.type === 'pull-request'
+        ? isOpen ? 'Close Pull Request' : 'Reopen Pull Request'
+        : isOpen ? 'Close Issue' : 'Reopen Issue'
+    }
+    return a
+  }
+}
 
