@@ -1,8 +1,16 @@
+var fs = require('fs')
+var path = require('path')
 
-console.log(
+fs.writeFileSync(
+  path.join(__dirname, 'style.css.json'),
+  JSON.stringify(fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8'))
+)
+
+
+fs.writeFileSync(path.join(__dirname, 'modules', '_index.js'),
   'module.exports = {\n'
   +
-  require('fs').readdirSync(require('path').join(__dirname, 'modules'))
+  fs.readdirSync(path.join(__dirname, 'modules'))
   .filter(function (file) {
     return file !== '_index.js' && /\.js$/.test(file)
   })
@@ -12,4 +20,3 @@ console.log(
   +
   '\n}'
 )
-

@@ -26,9 +26,8 @@ if(process.title === 'node') {
   process.exit(0)
 }
 
-document.head.appendChild(
-  h('style', fs.readFileSync('./style.css', 'utf8')
-))
+document.head.appendChild(h('style', require('./style.css.json')))
 
 document.body.appendChild(modules['app.js'].app())
+
 
