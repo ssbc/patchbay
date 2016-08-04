@@ -49,6 +49,7 @@ exports.message_compose = function (meta, prepublish, cb) {
   var files = []
 
   function publish() {
+    publishBtn.disabled = true
     var content
     try {
       content = JSON.parse(ta.value)
@@ -58,21 +59,25 @@ exports.message_compose = function (meta, prepublish, cb) {
       try {
         meta = prepublish(meta)
       } catch (err) {
-        return alert(err.message)
+        publishBtn.disabled = false
+        if (cb) cb(err)
+        else alert(err.message)
       }
       return message_confirm(meta, done)
     }
     message_confirm(content, done)
 
     function done (err, msg) {
+      publishBtn.disabled = false
       if(err) return alert(err.stack)
-      else ta.value = ''
+      else if (msg) ta.value = ''
 
       if (cb) cb(err, msg)
     }
   }
 
 
+  var publishBtn = h('button', 'Publish', {onclick: publish})
   var composer =
     h('div.compose', h('div.column', ta,
       accessories = h('div.row.compose__controls',
@@ -85,7 +90,7 @@ exports.message_compose = function (meta, prepublish, cb) {
           ta.value += embed + '['+file.name+']('+file.link+')'
           console.log('added:', file)
         }),
-        h('button', 'Publish', {onclick: publish}))
+        publishBtn)
       )
     )
 
