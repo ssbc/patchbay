@@ -39,21 +39,21 @@
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "^0.1.0",
     "ssb-sort": "0.0.0",
-    "suggest-box": "^2.0.0",
+    "suggest-box": "^2.2.1",
     "text-node-searcher": "^1.1.0"
   },
   "devDependencies": {
-    "brfs": "^1.4.3",
-    "indexhtmlify": "^1.2.1"
+    "browselectrify": "^1.0.1"
   },
   "browser": {
     "./modules/index.js": "./modules/_index.js"
   },
   "scripts": {
-    "build": "node build.js > modules/_index.js && mkdir -p build && browserify -t brfs index.js > build/bundle.js &&  indexhtmlify < build/bundle.js > build/index.html",
+    "build": "node build.js > modules/_index.js && mkdir -p build && browselectrify index.js > build/bundle.js",
     "graph": "node index.js | dot -Tsvg > graph.svg",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
+
