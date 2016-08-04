@@ -19,18 +19,21 @@ exports.message_content = function (msg, sbot) {
 }
 
 exports.message_meta = function (msg, sbot) {
-
   var digs = h('a')
 
-  pull(
-    sbot_links({dest: msg.key, rel: 'vote'}),
-    pull.collect(function (err, votes) {
-      if(votes.length === 1)
-        digs.textContent = ' 1 Dig'
-      if(votes.length > 1)
-        digs.textContent = ' ' + votes.length + ' Digs'
-    })
-  )
+  var votes = []
+  for(var k in CACHE) {
+    if(CACHE[k].content.type == 'vote' &&
+      (CACHE[k].content.vote == msg.key ||
+      CACHE[k].content.vote.link == msg.key
+      ))
+      votes.push({source: CACHE[k].author, dest: k, rel: 'vote'})
+  }
+
+  if(votes.length === 1)
+    digs.textContent = ' 1 Dig'
+  if(votes.length > 1)
+    digs.textContent = ' ' + votes.length + ' Digs'
 
   return digs
 }

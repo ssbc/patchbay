@@ -58,7 +58,7 @@ var map2 = {
 
 //union with this query...
 
-var names = []
+var names = NAMES = []
 function update(name) {
   var n = names.find(function (e) {
     return e.id == name.id && e.name == e.name
@@ -103,7 +103,7 @@ exports.connection_status = function (err) {
       mfr.reduce(merge),
       pull.collect(function (err, ary) {
         if(!err) {
-          names = ary
+          NAMES = names = ary
           ready = true
           while(waiting.length) waiting.shift()()
         }

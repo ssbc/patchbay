@@ -72,7 +72,7 @@ exports.search_box = function (go) {
           }))
         })
       }
-    })
+    }, {})
   }, 10)
 
 
