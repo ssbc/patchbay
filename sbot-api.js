@@ -28,6 +28,9 @@ var createFeed   = require('ssb-feed')
 var keys = require('./keys')
 var ssbKeys = require('ssb-keys')
 
+
+var cache = CACHE = {}
+
 module.exports = function () {
   var opts = createConfig()
   var sbot = null
@@ -103,13 +106,22 @@ module.exports = function () {
       return sbot.query.read(query)
     }),
     sbot_log: rec.source(function (opts) {
-      return sbot.createLogStream(opts)
+      return pull(
+        sbot.createLogStream(opts),
+        pull.through(function (e) {
+          CACHE[e.key] = CACHE[e.key] || e.value
+        })
+      )
     }),
     sbot_user_feed: rec.source(function (opts) {
       return sbot.createUserStream(opts)
     }),
     sbot_get: rec.async(function (key, cb) {
-      sbot.get(key, cb)
+      if(CACHE[key]) cb(null, CACHE[key])
+      sbot.get(key, function (err, value) {
+        if(err) return cb(err)
+        cb(null, CACHE[key] = value)
+      })
     }),
     sbot_publish: rec.async(function (content, cb) {
       if(content.recps)
@@ -136,4 +148,6 @@ module.exports = function () {
     })
   }
 }
+
+
 
