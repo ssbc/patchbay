@@ -24,9 +24,10 @@
   overflow-x: auto;
 }
 
-pre {
+pre, li, p {
   max-width: 100%;
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 p {
