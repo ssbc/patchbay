@@ -39,7 +39,7 @@
     "ssb-keys": "^6.1.0",
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "^0.1.0",
-    "ssb-sort": "0.0.0",
+    "ssb-sort": "^1.0.0",
     "suggest-box": "^2.2.1",
     "text-node-searcher": "^1.1.0"
   },
