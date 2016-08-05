@@ -2,8 +2,7 @@ var h = require('hyperscript')
 var plugs = require('../plugs')
 var pull = require('pull-stream')
 
-var avatar_image = plugs.first(exports.avatar_image = [])
-var avatar_name = plugs.first(exports.avatar_name = [])
+var avatar_image_link = plugs.first(exports.avatar_image_link = [])
 var avatar_action = plugs.map(exports.avatar_action = [])
 var avatar_edit = plugs.first(exports.avatar_edit = [])
 
@@ -21,7 +20,7 @@ function streamToList(stream, el) {
 }
 
 function image_link (id) {
-  return h('a', {href:'#'+id}, avatar_image(id, 'thumbnail'))
+  return avatar_image_link(id, 'thumbnail')
 }
 
 exports.avatar_profile = function (id) {
@@ -47,4 +46,8 @@ exports.avatar_profile = function (id) {
       )
   )
 }
+
+
+
+
 
