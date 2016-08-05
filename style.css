@@ -36,17 +36,17 @@ p {
 /* scrolling feeds, threads */
 
 .scroller {
-  max-width: 600px;
   width: 100%;
 }
 
 .scroller {
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .scroller__wrapper {
   flex: 1;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- hypertabs ------- */
