@@ -11,6 +11,7 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
+var avatar_image_link = plugs.first(exports.avatar_image_link = [])
 
 function unbox () {
   return pull(
@@ -67,8 +68,14 @@ exports.screen_view = function (path) {
   }
 }
 
+function map(ary, iter) {
+  if(Array.isArray(ary)) return ary.map(iter)
+}
+
 exports.message_meta = function (msg) {
   if(msg.value.private)
-    return h('span', 'PRIVATE')
+    return h('span.row', 'PRIVATE', map(msg.value.content.recps, function (id) {
+      return avatar_image_link('string' == typeof id ? id : id.link, 'thumbnail')
+    }))
 }
 
