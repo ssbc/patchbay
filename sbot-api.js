@@ -118,7 +118,7 @@ module.exports = function () {
     }),
     sbot_get: rec.async(function (key, cb) {
       if(CACHE[key]) cb(null, CACHE[key])
-      sbot.get(key, function (err, value) {
+      else sbot.get(key, function (err, value) {
         if(err) return cb(err)
         cb(null, CACHE[key] = value)
       })
