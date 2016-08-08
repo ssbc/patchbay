@@ -123,6 +123,9 @@ module.exports = function () {
         cb(null, CACHE[key] = value)
       })
     }),
+    sbot_gossip_peers: rec.async(function (cb) {
+      sbot.gossip.peers(cb)
+    }),
     sbot_publish: rec.async(function (content, cb) {
       if(content.recps)
         content = ssbKeys.box(content, content.recps.map(function (e) {
@@ -148,6 +151,11 @@ module.exports = function () {
     })
   }
 }
+
+
+
+
+
 
 
 
