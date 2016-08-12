@@ -271,3 +271,13 @@ input, textarea {
   height: 1ex;
   background: blue;
 }
+
+/* themes */
+
+.theme {
+  margin-left: 1ex;
+}
+
+.themes__form {
+  margin: 1ex;
+}
