@@ -96,7 +96,11 @@ function theme_view() {
         value: link.href}), ' ',
       h('input.themes__reset', {type: 'reset'}), ' ',
       h('input.themes__submit', {type: 'submit', value: 'Save'}))),
-      hPull('form.themes__list', pull(themes(), pull.map(renderTheme)))
+      hPull('form.themes__list', pull(
+        themes(),
+        pull.unique('id'), // TODO: update existing items with new data
+        pull.map(renderTheme)
+      ))
   ))
 
   function onsubmit(e) {
