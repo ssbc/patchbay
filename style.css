@@ -1,4 +1,6 @@
-body { font-family: sans-serif;}
+body {
+  font-family: sans-serif;
+}
 
 .screen {
   position: absolute;
@@ -18,6 +20,12 @@ body { font-family: sans-serif;}
   flex-direction: row;
 }
 
+.wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .scroll-y {
   overflow-y: auto;
 }
@@ -26,23 +34,31 @@ body { font-family: sans-serif;}
   overflow-x: auto;
 }
 
-pre, li, p {
-  max-width: 100%;
+pre {
   white-space: pre-wrap;
-  word-break: break-word;
+  word-wrap: break-word;
 }
 
 p {
   margin-top: .35ex;
 }
 
+hr {
+  border: solid #eee;
+  clear: both;
+  border-width: 1px 0 0;
+  height: 0;
+  margin-bottom: .9em;
+}
+
+input, textarea {
+  border: 1px solid #eee;
+}
+
 /* scrolling feeds, threads */
 
 .scroller {
   width: 100%;
-}
-
-.scroller {
 }
 
 .scroller__wrapper {
@@ -61,20 +77,19 @@ p {
 .hypertabs > .row {
   flex-grow: 0; 
   flex-shrink: 0;
-  margin: .5ex;
+  margin: 0;
 }
 
 .hypertabs__tabs > * {
-  max-width: 3em;
+  max-width: 4em;
   overflow-x: hidden;
   margin-right: .5ex;
   padding-top: .1ex;
 }
 
 .hypertabs--selected {
-  max-width: 3em;
+  max-width: 4em;
   background: yellow;
-  padding-top: 0;
   padding-left: .5ex;
   padding-right: .5ex;
 }
@@ -237,11 +252,11 @@ p {
 /* --- network status --- */
 
 .status {
-  width: 1em;
-  height: 1em;
+  width: .7em;
+  height: .7em;
   position: fixed;
-  right: .5em;
-  top: .5em;
+  right: .8em;
+  top: .8em;
   border-radius: 100%;
   background: green;
 }
@@ -249,7 +264,6 @@ p {
 .error {
   background: red;
 }
-
 
 /* invite codes */
 
