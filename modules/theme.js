@@ -75,20 +75,20 @@ function renderTheme(link) {
   )
 }
 
-function hPull() {
-  var args = [].slice.call(arguments)
-  var stream = args.pop()
-  var parent = h.apply(this, args)
-  pull(stream, pull.drain(function (el) {
-    parent.appendChild(el)
-  }, function (err) {
-    if (err) console.error(err)
-  }))
-  return parent
-}
-
 function theme_view() {
   var themeInput
+  var themesList = h('form.themes__list')
+
+  pull(
+    themes(),
+    pull.unique('id'),
+    pull.map(renderTheme),
+    pull.drain(function (el) {
+      themesList.appendChild(el)
+    }, function (err) {
+      if (err) console.error(err)
+    })
+  )
 
   return h('div.column.scroll-y', h('div',
     updateForm(h('form.themes__form', {onsubmit: onsubmit, onreset: onreset},
@@ -96,11 +96,7 @@ function theme_view() {
         value: link.href}), ' ',
       h('input.themes__reset', {type: 'reset'}), ' ',
       h('input.themes__submit', {type: 'submit', value: 'Save'}))),
-      hPull('form.themes__list', pull(
-        themes(),
-        pull.unique('id'), // TODO: update existing items with new data
-        pull.map(renderTheme)
-      ))
+      themesList
   ))
 
   function onsubmit(e) {
