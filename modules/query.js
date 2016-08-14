@@ -4,6 +4,10 @@ var HJSON = require('hjson')
 
 var sbot_query = require('../plugs').first(exports.sbot_query = [])
 
+exports.menu_items = function () {
+  return h('a', {href:'#/query'}, '/query')
+}
+
 exports.screen_view = function (path) {
   if(path != '/query') return
   var output, status, editor, stream, query

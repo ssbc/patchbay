@@ -61,7 +61,7 @@ exports.screen_view = function (path) {
 //  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
   tabs.select('/public')
 
-  tabs.onclick = function (ev) {
+  window.onclick = function (ev) {
     var link = ancestor(ev.target)
     if(!link) return
     var path = link.hash.substring(1)
@@ -104,7 +104,7 @@ exports.screen_view = function (path) {
 
       // close a tab
       case 88: // x
-        if (tabs.selected && tabs.selected[0] !== '/') {
+        if (tabs.selected/* && tabs.selected[0] !== '/'*/) {
           var sel = tabs.selected
           tabs.selectRelative(-1)
           tabs.remove(sel)

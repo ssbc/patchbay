@@ -13,6 +13,10 @@ function legacyToMultiServer(addr) {
   return 'net:'+addr.host + ':'+addr.port + '~shs:'+addr.key.substring(1).replace('.ed25519','')
 }
 
+exports.menu_items = function () {
+  return h('a', {href: '#/network'}, '/network')
+}
+
 exports.screen_view = function (path) {
 
   if(path !== '/network') return
