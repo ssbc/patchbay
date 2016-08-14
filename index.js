@@ -14,11 +14,11 @@ var fs = require('fs')
 var path = require('path')
 var SbotApi = require('./sbot-api')
 
+document.head.appendChild(h('style', require('./style.css.json')))
+
 var modules = require('./modules')
 
 var u = require('./util')
-
-document.head.appendChild(h('style', require('./style.css.json')))
 
 modules['sbot-api.js'] = SbotApi()
 combine(modules)
