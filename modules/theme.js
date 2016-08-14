@@ -86,13 +86,27 @@ function renderTheme(link) {
 function theme_view() {
   var themeInput
   var themesList = h('form.themes__list')
+  var themesByKey = {}
 
   pull(
     themes(),
     pull.unique('id'),
-    pull.map(renderTheme),
-    pull.drain(function (el) {
-      themesList.appendChild(el)
+    pull.drain(function (theme) {
+      // replace old versions of themes in the list
+      var key = theme.feed + theme.name
+      var oldTheme = themesByKey[key]
+      theme.el = renderTheme(theme)
+      themesByKey[key] = theme
+      if (!oldTheme) {
+        themesList.appendChild(theme.el)
+      } else if (oldTheme.id === localStorage.themeId
+              || oldTheme.id === activeTheme) {
+        // show old version because the user is still using it
+        oldTheme.el.appendChild(document.createTextNode(' (old)'))
+        themesList.appendChild(theme.el)
+      } else {
+        themesList.replaceChild(theme.el, oldTheme.el)
+      }
     }, function (err) {
       if (err) console.error(err)
     })
