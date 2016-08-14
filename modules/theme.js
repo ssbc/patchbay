@@ -114,6 +114,10 @@ function theme_view() {
   }
 }
 
+exports.menu_items = function () {
+  return h('a', {href:'#/theme'}, '/theme')
+}
+
 exports.screen_view = function (path) {
   if(path === '/theme') return theme_view()
 }
