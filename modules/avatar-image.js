@@ -27,7 +27,8 @@ var waiting = []
 var last = 0
 
 //blah blah
-setTimeout(function () {
+exports.connection_status = function (err) {
+  if (err) return
 pull(
   sbot_query({
     query: [{
@@ -71,7 +72,7 @@ pull(
 
   })
 )
-})
+}
 
 exports.avatar_image = function (author, classes) {
   classes = classes || ''
