@@ -18,6 +18,8 @@ var modules = require('./modules')
 
 var u = require('./util')
 
+document.head.appendChild(h('style', require('./style.css.json')))
+
 modules['sbot-api.js'] = SbotApi()
 combine(modules)
 
@@ -25,8 +27,6 @@ if(process.title === 'node') {
   console.log(require('depject/graph')(modules))
   process.exit(0)
 }
-
-document.head.appendChild(h('style', require('./style.css.json')))
 
 document.body.appendChild(modules['app.js'].app())
 
