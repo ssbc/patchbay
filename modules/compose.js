@@ -47,6 +47,7 @@ exports.message_compose = function (meta, prepublish, cb) {
   })
 
   var files = []
+  var filesById = {}
 
   function publish() {
     publishBtn.disabled = true
@@ -55,7 +56,15 @@ exports.message_compose = function (meta, prepublish, cb) {
       content = JSON.parse(ta.value)
     } catch (err) {
       meta.text = ta.value
-      meta.mentions = mentions(ta.value).concat(files)
+      meta.mentions = mentions(ta.value).map(function (mention) {
+        // merge markdown-detected mention with file info
+        var file = filesById[mention.link]
+        if (file) {
+          if (file.type) mention.type = file.type
+          if (file.size) mention.size = file.size
+        }
+        return mention
+      })
       try {
         meta = prepublish(meta)
       } catch (err) {
@@ -85,6 +94,7 @@ exports.message_compose = function (meta, prepublish, cb) {
         {style: {display: 'none'}},
         file_input(function (file) {
           files.push(file)
+          filesById[file.link] = file
 
           var embed = file.type.indexOf('image/') === 0 ? '!' : ''
           ta.value += embed + '['+file.name+']('+file.link+')'
