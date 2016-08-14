@@ -7,6 +7,11 @@ var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var avatar_name = plugs.first(exports.avatar_name = [])
 var blob_url = require('../plugs').first(exports.blob_url = [])
 
+var defaultTheme = {
+  id: '&JFa42U6HtPm9k+s+AmpDIAoTJJI/PzoRC/J/WCfduDY=.sha256',
+  name: 'patchbay-minimal.css'
+}
+
 var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
 var activeTheme
 
@@ -22,9 +27,11 @@ function useTheme(id) {
   })
 }
 
-setImmediate(function () {
-  useTheme(localStorage.themeId || '')
-})
+function useSavedTheme() {
+  useTheme(localStorage.themeId || defaultTheme.id)
+}
+
+setImmediate(useSavedTheme)
 
 function themes() {
   return cat([
@@ -33,7 +40,8 @@ function themes() {
         id: '',
         name: 'none',
         feed: ''
-      }
+      },
+      defaultTheme,
     ]),
     pull(
       sbot_links2({
@@ -106,7 +114,7 @@ function theme_view() {
 
   function onreset(e) {
     e.preventDefault()
-    useTheme(localStorage.themeId || '')
+    useSavedTheme()
   }
 }
 
