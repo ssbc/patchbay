@@ -7,6 +7,11 @@ var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var avatar_name = plugs.first(exports.avatar_name = [])
 var blob_url = require('../plugs').first(exports.blob_url = [])
 
+var defaultTheme = {
+  id: '&JFa42U6HtPm9k+s+AmpDIAoTJJI/PzoRC/J/WCfduDY=.sha256',
+  name: 'patchbay-minimal.css'
+}
+
 var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
 var activeTheme
 
@@ -22,9 +27,11 @@ function useTheme(id) {
   })
 }
 
-setImmediate(function () {
-  useTheme(localStorage.themeId || '')
-})
+function useSavedTheme() {
+  useTheme(localStorage.themeId || defaultTheme.id)
+}
+
+setImmediate(useSavedTheme)
 
 function themes() {
   return cat([
@@ -33,7 +40,8 @@ function themes() {
         id: '',
         name: 'none',
         feed: ''
-      }
+      },
+      defaultTheme,
     ]),
     pull(
       sbot_links2({
@@ -75,20 +83,34 @@ function renderTheme(link) {
   )
 }
 
-function hPull() {
-  var args = [].slice.call(arguments)
-  var stream = args.pop()
-  var parent = h.apply(this, args)
-  pull(stream, pull.drain(function (el) {
-    parent.appendChild(el)
-  }, function (err) {
-    if (err) console.error(err)
-  }))
-  return parent
-}
-
 function theme_view() {
   var themeInput
+  var themesList = h('form.themes__list')
+  var themesByKey = {}
+
+  pull(
+    themes(),
+    pull.unique('id'),
+    pull.drain(function (theme) {
+      // replace old versions of themes in the list
+      var key = theme.feed + theme.name
+      var oldTheme = themesByKey[key]
+      theme.el = renderTheme(theme)
+      themesByKey[key] = theme
+      if (!oldTheme) {
+        themesList.appendChild(theme.el)
+      } else if (oldTheme.id === localStorage.themeId
+              || oldTheme.id === activeTheme) {
+        // show old version because the user is still using it
+        oldTheme.el.appendChild(document.createTextNode(' (old)'))
+        themesList.appendChild(theme.el)
+      } else {
+        themesList.replaceChild(theme.el, oldTheme.el)
+      }
+    }, function (err) {
+      if (err) console.error(err)
+    })
+  )
 
   return h('div.column.scroll-y', h('div',
     updateForm(h('form.themes__form', {onsubmit: onsubmit, onreset: onreset},
@@ -96,11 +118,7 @@ function theme_view() {
         value: link.href}), ' ',
       h('input.themes__reset', {type: 'reset'}), ' ',
       h('input.themes__submit', {type: 'submit', value: 'Save'}))),
-      hPull('form.themes__list', pull(
-        themes(),
-        pull.unique('id'), // TODO: update existing items with new data
-        pull.map(renderTheme)
-      ))
+      themesList
   ))
 
   function onsubmit(e) {
@@ -110,7 +128,7 @@ function theme_view() {
 
   function onreset(e) {
     e.preventDefault()
-    useTheme(localStorage.themeId || '')
+    useSavedTheme()
   }
 }
 
