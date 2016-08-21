@@ -12,6 +12,8 @@ var defaultTheme = {
   name: 'patchbay-minimal.css'
 }
 
+var next = 'undefined' === typeof setImmediate ? setTimeout : setImmediate
+
 var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
 var activeTheme
 
@@ -31,7 +33,7 @@ function useSavedTheme() {
   useTheme(localStorage.themeId || defaultTheme.id)
 }
 
-setImmediate(useSavedTheme)
+next(useSavedTheme)
 
 function themes() {
   return cat([
