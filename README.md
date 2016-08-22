@@ -66,12 +66,13 @@ sbot plugins.install ssb-query
 sbot plugins.install ssb-ws
 # restart sbot server (go back to previous tab and kill it)
 ```
-now clone and run patchboard.
+now clone and run patchbay.
 ```
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
 npm install
 npm install electro electron-prebuilt -g
+npm run build
 electro index.js
 ```
 
@@ -86,4 +87,3 @@ square shows api, arrow direction points from user to provider)
 ## License
 
 MIT
-
