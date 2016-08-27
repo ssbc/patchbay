@@ -225,6 +225,16 @@ exports.message_content = function (msg, sbot) {
           shortRefName(ref) + ': ',
           rev ? h('code', rev) : h('em', 'deleted'))
       })) : null,
+      Array.isArray(c.commits) ? [
+        h('ul', c.commits.map(function (commit) {
+          return h('li',
+            typeof commit.sha1 === 'string' ?
+              [h('code', commit.sha1.substr(0, 8)), ' '] : null,
+            commit.title ?
+              h('q', commit.title) : null)
+        }),
+        c.commits_more ? h('li', '+ ' + c.commits_more + ' more') : null)
+      ] : null,
       Array.isArray(c.issues) ? c.issues.map(function (issue) {
         if (issue.merged === true)
           return ['Merged ', message_link(issue.link), ' in ',
