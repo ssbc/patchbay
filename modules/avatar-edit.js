@@ -136,15 +136,3 @@ exports.avatar_edit = function (id) {
   )
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
