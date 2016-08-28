@@ -85,6 +85,12 @@ function renderTheme(link) {
   )
 }
 
+function insertAfter(parentNode, newNode, referenceNode) {
+  var nextSibling = referenceNode && referenceNode.nextSibling
+  if (nextSibling) parentNode.insertBefore(newNode, nextSibling)
+  else parentNode.appendChild(newNode)
+}
+
 function theme_view() {
   var themeInput
   var themesList = h('form.themes__list')
@@ -94,20 +100,21 @@ function theme_view() {
     themes(),
     pull.unique('id'),
     pull.drain(function (theme) {
-      // replace old versions of themes in the list
+      // don't show old versions of theme
       var key = theme.feed + theme.name
-      var oldTheme = themesByKey[key]
+      var newerTheme = themesByKey[key]
       theme.el = renderTheme(theme)
       themesByKey[key] = theme
-      if (!oldTheme) {
+      if (!newerTheme) {
+        // show latest theme
         themesList.appendChild(theme.el)
-      } else if (oldTheme.id === localStorage.themeId
-              || oldTheme.id === activeTheme) {
+      } else if (theme.id === localStorage.themeId
+              || theme.id === activeTheme) {
         // show old version because the user is still using it
-        oldTheme.el.appendChild(document.createTextNode(' (old)'))
-        themesList.appendChild(theme.el)
+        theme.el.appendChild(document.createTextNode(' (old)'))
+        insertAfter(themesList, theme.el, newerTheme.el)
       } else {
-        themesList.replaceChild(theme.el, oldTheme.el)
+        // ignore old version of theme
       }
     }, function (err) {
       if (err) console.error(err)
