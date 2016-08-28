@@ -20,41 +20,18 @@ exports.message_content = function (msg) {
   }
 }
 
-var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var message_confirm = plugs.first(exports.message_confirm = [])
-
-function follows (source, dest, cb) {
-  pull(
-    sbot_links2({query:[
-      {$filter: {
-        source: source,
-        dest: dest,
-        rel: ['contact', {$gt: null}]
-      }},
-      {$map: {
-        timestamp: 'timestamp', follows: ["rel", 1]
-      }}
-    ]}),
-    pull.collect(function (err, ary) {
-      if(err) return cb(err)
-      cb(null,
-        ary.length ? ary.sort(function (a, b) {
-          return a.timestamp - b.timestamp
-        }).pop().follows : false
-      )
-    })
-  )
-}
+var follower_of = plugs.first(exports.follower_of = [])
 
 exports.avatar_action = function (id) {
   var follows_you, you_follow
 
   var self_id = require('../keys').id
-  follows(self_id, id, function (err, f) {
+  follower_of(self_id, id, function (err, f) {
     you_follow = f
     update()
   })
-  follows(id, self_id, function (err, f) {
+  follower_of(id, self_id, function (err, f) {
     follows_you = f
     update()
   })
@@ -85,25 +62,6 @@ exports.avatar_action = function (id) {
     }}, h('br'), label)
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
