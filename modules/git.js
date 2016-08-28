@@ -1,11 +1,14 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var paramap = require('pull-paramap')
+var cat = require('pull-cat')
 var human = require('human-time')
+var combobox = require('hypercombo')
 
 var plugs = require('../plugs')
 var message_link = plugs.first(exports.message_link = [])
 var message_confirm = plugs.first(exports.message_confirm = [])
+var message_compose = plugs.first(exports.message_compose = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 var sbot_links2 = plugs.first(exports.sbot_links2 = [])
 var sbot_get = plugs.first(exports.sbot_get = [])
@@ -17,6 +20,61 @@ var self_id = require('../keys').id
 
 function shortRefName(ref) {
   return ref.replace(/^refs\/(heads|tags)\//, '')
+}
+
+function getRefs(msg) {
+  var refs = {}
+  var commitTitles = {}
+  return pull(
+    sbot_links({
+      reverse: true,
+      source: msg.value.author,
+      dest: msg.key,
+      rel: 'repo',
+      values: true
+    }),
+    pull.map(function (link) {
+      var refUpdates = link.value.content.refs || {}
+      var commits = link.value.content.commits
+      if(commits) {
+        for(var i = 0; i < commits.length; i++) {
+          var commit = commits[i]
+          if(commit && commit.sha1 && commit.title) {
+            commitTitles[commit.sha1] = commit.title
+          }
+        }
+      }
+      return Object.keys(refUpdates).reverse().map(function (ref) {
+        if(refs[ref]) return
+        refs[ref] = true
+        var rev = refUpdates[ref]
+        if(!rev) return
+        return {
+          name: ref,
+          rev: rev,
+          link: link,
+          title: commitTitles[rev],
+        }
+      }).filter(Boolean)
+    }),
+    pull.flatten()
+  )
+}
+
+function getForks(id) {
+  return pull(
+    sbot_links({
+      reverse: true,
+      dest: id,
+      rel: 'upstream'
+    }),
+    pull.map(function (link) {
+      return {
+        id: link.key,
+        author: link.source
+      }
+    })
+  )
 }
 
 function repoLink(id) {
@@ -128,38 +186,26 @@ exports.message_content = function (msg, sbot) {
       h('div.git-table-wrapper',
         h('table',
           forksT = tableRows(h('tr',
-            h('th', 'forks'))))))
+            h('th', 'forks'))))),
+      h('div', h('a', {href: '#', onclick: function () {
+        this.parentNode.replaceChild(issueForm(msg), this)
+      }}, 'New Issue…')),
+      h('div', h('a', {href: '#', onclick: function () {
+        this.parentNode.replaceChild(pullRequestForm(msg), this)
+      }}, 'New Pull Request…')))
 
-    // compute refs
-    var refs = {}
-    pull(
-      sbot_links({
-        reverse: true,
-        source: msg.value.author,
-        dest: msg.key,
-        rel: 'repo',
-        values: true
-      }),
-      pull.drain(function (link) {
-        var refUpdates = link.value.content.refs || {}
-        Object.keys(refUpdates).reverse().filter(function (ref) {
-          if (refs[ref]) return
-          refs[ref] = true
-          var rev = refUpdates[ref]
-          if (!rev) return
-          var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref) || []
-          var t
-          if (parts[1] === 'heads') t = branchesT
-          else if (parts[1] === 'tags') t = tagsT
-          if (t) t.append(h('tr',
-            h('td', parts[2]),
-            h('td', h('code', rev)),
-            h('td', messageTimestampLink(link))))
-        })
-      }, function (err) {
-        if (err) console.error(err)
-      })
-    )
+    pull(getRefs(msg), pull.drain(function (ref) {
+      var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref.name) || []
+      var t
+      if(parts[1] === 'heads') t = branchesT
+      else if(parts[1] === 'tags') t = tagsT
+      if(t) t.append(h('tr',
+        h('td', parts[2]),
+        h('td', h('code', ref.rev)),
+        h('td', messageTimestampLink(ref.link))))
+    }, function (err) {
+      if(err) console.error(err)
+    }))
 
     // list issues and pull requests
     pull(
@@ -198,15 +244,11 @@ exports.message_content = function (msg, sbot) {
 
     // list forks
     pull(
-      sbot_links({
-        reverse: true,
-        dest: msg.key,
-        rel: 'upstream'
-      }),
-      pull.drain(function (link) {
+      getForks(msg.key),
+      pull.drain(function (fork) {
         forksT.append(h('tr', h('td',
-          repoName(link.key, true),
-          ' by ', h('a', {href: '#'+link.source}, avatar_name(link.source)))))
+          repoName(fork.id, true),
+          ' by ', h('a', {href: '#'+fork.author}, avatar_name(fork.author)))))
       }, function (err) {
         if (err) console.error(err)
       })
@@ -284,6 +326,115 @@ exports.message_meta = function (msg, sbot) {
     })
     return el
   }
+}
+
+function findMessageContent(el) {
+  for(; el; el = el.parentNode) {
+    if(el.classList.contains('message')) {
+      return el.querySelector('.message_content')
+    }
+  }
+}
+
+function issueForm(msg, contentEl) {
+  return h('form',
+    h('strong', 'New Issue:'),
+    message_compose(
+      {type: 'issue', project: msg.key},
+      function (value) { return value },
+      function (err, issue) {
+        if(err) return alert(err)
+        if(!issue) return
+        var title = issue.value.content.text
+        if(title.length > 70) title = title.substr(0, 70) + '…'
+        form.appendChild(h('div',
+          h('a', {href: '#'+issue.key}, title)
+        ))
+      }
+    )
+  )
+}
+
+function branchMenu(msg, full) {
+  return combobox({
+    style: {'max-width': '14ex'},
+    placeholder: 'branch…',
+    default: 'master',
+    read: msg && pull(getRefs(msg), pull.map(function (ref) {
+      var m = /^refs\/heads\/(.*)$/.exec(ref.name)
+      if(!m) return
+      var branch = m[1]
+      var label = branch
+      if(full) {
+        var updated = new Date(ref.link.value.timestamp)
+        label = branch +
+          ' · ' + human(updated) +
+          ' · ' + ref.rev.substr(1, 8) +
+          (ref.title ? ' · "' + ref.title + '"' : '')
+      }
+      return h('option', {value: branch}, label)
+    }))
+  })
+}
+
+function pullRequestForm(msg) {
+  var headRepoInput
+  var headBranchInput = branchMenu()
+  var branchInput = branchMenu(msg)
+  var form = h('form',
+    h('strong', 'New Pull Request:'),
+    h('div',
+      'from ',
+      headRepoInput = combobox({
+        style: {'max-width': '26ex'},
+        onchange: function () {
+          // list branches for selected repo
+          var repoId = this.value
+          if(repoId) sbot_get(repoId, function (err, value) {
+            if(err) console.error(err)
+            var msg = value && {key: repoId, value: value}
+            headBranchInput = headBranchInput.swap(branchMenu(msg, true))
+          })
+          else headBranchInput = headBranchInput.swap(branchMenu())
+        },
+        read: pull(cat([
+          pull.once({id: msg.key, author: msg.value.author}),
+          getForks(msg.key)
+        ]), pull.map(function (fork) {
+          return h('option', {value: fork.id},
+            repoName(fork.id), ' by ', avatar_name(fork.author))
+        }))
+      }),
+      ':',
+      headBranchInput,
+      ' to ',
+      repoName(msg.key),
+      ':',
+      branchInput),
+    message_compose(
+      {
+        type: 'pull-request',
+        project: msg.key,
+        repo: msg.key,
+      },
+      function (value) {
+        value.branch = branchInput.value
+        value.head_repo = headRepoInput.value
+        value.head_branch = headBranchInput.value
+        return value
+      },
+      function (err, issue) {
+        if(err) return alert(err)
+        if(!issue) return
+        var title = issue.value.content.text
+        if(title.length > 70) title = title.substr(0, 70) + '…'
+        form.appendChild(h('div',
+          h('a', {href: '#'+issue.key}, title)
+        ))
+      }
+    )
+  )
+  return form
 }
 
 exports.message_action = function (msg, sbot) {
