@@ -13,6 +13,7 @@ exports.file_input = function FileInput(onAdded) {
   return h('input', { type: 'file',
     onchange: function (ev) {
       var file = ev.target.files[0]
+      if (!file) return
       var reader = new FileReader()
       reader.onload = function () {
         pull(
