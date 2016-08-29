@@ -258,9 +258,8 @@ exports.message_content = function (msg, sbot) {
   }
 
   if(c.type === 'git-update') {
-    return h('p',
-      'pushed to ',
-      repoLink(c.repo),
+    return [
+      h('p', 'pushed to ', repoLink(c.repo)),
       c.refs ? h('ul', Object.keys(c.refs).map(function (ref) {
         var rev = c.refs[ref]
         return h('li',
@@ -281,13 +280,13 @@ exports.message_content = function (msg, sbot) {
       ] : null,
       Array.isArray(c.issues) ? c.issues.map(function (issue) {
         if (issue.merged === true)
-          return ['Merged ', message_link(issue.link), ' in ',
-            h('code', issue.object), ' ', h('q', issue.label)]
+          return h('p', 'Merged ', message_link(issue.link), ' in ',
+            h('code', issue.object), ' ', h('q', issue.label))
         if (issue.open === false)
-          return ['Closed ', message_link(issue.link), ' in ',
-            h('code', issue.object), ' ', h('q', issue.label)]
+          return h('p', 'Closed ', message_link(issue.link), ' in ',
+            h('code', issue.object), ' ', h('q', issue.label))
       }) : null
-    )
+    ]
   }
 
   if(c.type === 'issue-edit') {
