@@ -28,7 +28,9 @@ exports.message_compose = function (meta, prepublish, cb) {
   var blur
   ta.addEventListener('focus', function () {
     clearTimeout(blur)
-    ta.style.height = '200px'
+    if(!ta.value) {
+      ta.style.height = '200px'
+    }
     accessories.style.display = 'block'
   })
   ta.addEventListener('blur', function () {
