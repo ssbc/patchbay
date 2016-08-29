@@ -132,7 +132,10 @@ exports.screen_view = function (path) {
 
       // activate the search field
       case 191: // /
-        search.activate('?', ev)
+        if (ev.shiftKey)
+          search.activate('?', ev)
+        else
+          search.activate('/', ev)
         return
 
       // navigate to a feed
