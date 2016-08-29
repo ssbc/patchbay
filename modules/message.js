@@ -20,7 +20,7 @@ exports.message_render = function (msg, sbot) {
   var links = []
   for(var k in CACHE) {
     var _msg = CACHE[k]
-    if(_msg.content.type == 'post' && Array.isArray(_msg.content.mentions)) {
+    if(Array.isArray(_msg.content.mentions)) {
       for(var i = 0; i < _msg.content.mentions.length; i++)
         if(_msg.content.mentions[i].link == msg.key)
         links.push(k)
