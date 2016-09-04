@@ -9,6 +9,7 @@ var plugs = require('../plugs')
 var sbot_user_feed = plugs.first(exports.sbot_user_feed = [])
 var message_render = plugs.first(exports.message_render = [])
 var avatar_profile = plugs.first(exports.avatar_profile = [])
+var signifier      = plugs.first(exports.signifier = [])
 
 exports.screen_view = function (id) {
   //TODO: header of user info, avatars, names, follows.
@@ -23,6 +24,11 @@ exports.screen_view = function (id) {
         content
       )
     )
+
+    signifier(id, function (_, names) {
+      if(names.length) div.title = names[0].name
+    })
+
 
     pull(
       sbot_user_feed({id: id, old: false, live: true}),
@@ -43,8 +49,6 @@ exports.screen_view = function (id) {
 
   }
 }
-
-
 
 
 
