@@ -22,7 +22,7 @@ exports.screen_view = function (path, sbot) {
     )
 
     pull(
-      sbot_log({old: false}),
+      u.next(sbot_log, {old: false, limit: 100}),
       Scroller(div, content, message_render, true, false)
     )
 
