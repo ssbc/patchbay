@@ -21,11 +21,18 @@ exports.screen_view = function (path) {
   if(path !== 'tabs')
     return
 
+  function setSelected (indexes) {
+    var ids = indexes.map(function (index) {
+      return tabs.get(index).id
+    })
+    if(ids.length > 1)
+      search.value = 'split('+ids.join(',')+')'
+    else
+      search.value = ids[0]
+  }
+
   var search
-  var tabs = Tabs(function (name) {
-    search.value = name
-//    sessionStorage.selectedTab = tabs.selected
-  })
+  var tabs = Tabs(setSelected)
 //  tabs.classList.add('screen')
 
   search = search_box(function (path, change) {
@@ -36,7 +43,7 @@ exports.screen_view = function (path) {
     var el = screen_view(path)
     if(el) {
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
-      tabs.add(path, el, change)
+      tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
     }
@@ -53,14 +60,15 @@ exports.screen_view = function (path) {
 
   saved.forEach(function (path) {
     var el = screen_view(path)
+    el.id = el.id || path
     if (!el) return
     el.scroll = keyscroll(el.querySelector('.scroller__content'))
-    if(el) tabs.add(path, el, false)
+    if(el) tabs.add(el, false, false)
   })
 
-//  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
-  tabs.select('/public')
+  tabs.select(0)
 
+  //handle link clicks
   window.onclick = function (ev) {
     var link = ancestor(ev.target)
     if(!link) return
@@ -73,12 +81,14 @@ exports.screen_view = function (path) {
     //this ought to be made into something more runcible
     if(open.isExternal(link.href)) return open(link.href)
 
-    if(tabs.has(path)) return tabs.select(path)
-    
+    if(tabs.has(path))
+      return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
+
     var el = screen_view(path)
     if(el) {
+      el.id = el.id || path
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
-      tabs.add(path, el, !ev.ctrlKey)
+      tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
     }
 
@@ -98,17 +108,17 @@ exports.screen_view = function (path) {
 
       // scroll through messages
       case 74: // j
-        return tabs.selectedTab.scroll(1)
+        return tabs.get(tabs.selected[0]).scroll(1)
       case 75: // k
-        return tabs.selectedTab.scroll(-1)
+        return tabs.get(tabs.selected[0]).scroll(-1)
 
       // close a tab
       case 88: // x
-        if (tabs.selected/* && tabs.selected[0] !== '/'*/) {
+        if (tabs.selected) {
           var sel = tabs.selected
-          tabs.selectRelative(-1)
+          var i = sel.reduce(function (a, b) { return Math.min(a, b) })
           tabs.remove(sel)
-//          localStorage.openTabs = JSON.stringify(tabs.tabs)
+          tabs.select(Math.max(i-1, 0))
         }
         return
 
@@ -155,3 +165,4 @@ exports.screen_view = function (path) {
 
   return tabs
 }
+
