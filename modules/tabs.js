@@ -14,6 +14,7 @@ function ancestor (el) {
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports._screen_view = [])
 var search_box = plugs.first(exports.search_box = [])
+var menu = plugs.first(exports.menu = [])
 
 exports.message_render = []
 
@@ -33,15 +34,17 @@ exports.screen_view = function (path) {
 
   var search
   var tabs = Tabs(setSelected)
-//  tabs.classList.add('screen')
 
   search = search_box(function (path, change) {
+
     if(tabs.has(path)) {
       tabs.select(path)
       return true
     }
     var el = screen_view(path)
+
     if(el) {
+      if(!el.title) el.title = path
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
       tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
@@ -49,7 +52,12 @@ exports.screen_view = function (path) {
     }
   })
 
-  tabs.insertBefore(search, tabs.firstChild.nextSibling)
+  //reposition hypertabs menu to inside a container...
+  tabs.insertBefore(h('div.header.row',
+      h('div.header__tabs.row', tabs.firstChild), //tabs
+      h('div.header__search.row.end', h('div', search), menu())
+  ), tabs.firstChild)
+//  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 
   var saved = []
 //  try { saved = JSON.parse(localStorage.openTabs) }
@@ -165,4 +173,12 @@ exports.screen_view = function (path) {
 
   return tabs
 }
+
+
+
+
+
+
+
+
 
