@@ -211,27 +211,14 @@ input, textarea {
 /* searchprompt */
 
 .searchprompt {
-  width: 17em;
-  margin-left: .5ex;
-  margin-bottom: .5ex;
+  width: 100%;
+  height: 2.55em;
 }
 
 /* TextNodeSearcher highlights */
 
 .highlight {
   background: yellow;
-}
-
-/* --- network status --- */
-
-.status {
-  width: 20px;
-  height: 20px;
-  background: green;
-}
-
-.error {
-  background: red;
 }
 
 /* avatar editor */
@@ -258,6 +245,7 @@ input, textarea {
 .status {
   width: .7em;
   height: .7em;
+  margin: .7em;
   border-radius: 100%;
   background: green;
 }
@@ -289,11 +277,12 @@ input, textarea {
 .header {
   background: lightgray;
   border-bottom: 2px inset;
-  flex-shrink: 0; //I don't understand why this is needed, but it breaks without this.
+  flex-shrink: 0;
 }
 
 .header__tabs {
-  width: 100%; min-width: 0px;
+  width: 100%; 
+  min-width: 0px;
 }
 
 /* --- hypertabs ------- */
@@ -323,8 +312,9 @@ input, textarea {
   border-top-left-radius: 5px;
   margin-left: -3px;
   border-bottom: none;
-  padding: 0.5em;
-  width: 100%; //stretch tabs to fill the space
+  padding-top: .35em;
+  padding-left: .5em;
+  width: 100%; 
 }
 
 .hypertabs__tab > a {
@@ -343,7 +333,7 @@ input, textarea {
   display: none; //hide x on unselected tabs, like in firefox.
   //margin-right: -5px;
   //margin-top: -5px;
-  transform: translate(5px, -5px);
+  transform: translate(-5px, -3px);
 }
 
 .hypertabs--selected .hypertabs__x {
