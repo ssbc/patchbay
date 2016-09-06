@@ -2,6 +2,10 @@ body {
   font-family: sans-serif;
 }
 
+* {
+  word-break: break-word;
+}
+
 .screen {
   position: absolute;
   top: 0px; bottom: 0px;
@@ -12,12 +16,15 @@ body {
 .column {
   display: flex;
   flex-direction: column;
-  min-height: 0px;
 }
 
 .row {
   display: flex;
   flex-direction: row;
+}
+
+.end {
+  justify-content: flex-end;
 }
 
 .wrap {
@@ -26,12 +33,22 @@ body {
   flex-wrap: wrap;
 }
 
+.no-shrink {
+  flex-shrink: 0;
+}
+
+.expand {
+  justify-content: space-between;
+}
+
 .scroll-y {
   overflow-y: auto;
+  min-height: 0px;
 }
 
 .scroll-x {
   overflow-x: auto;
+  min-width: 0px;
 }
 
 pre {
@@ -66,32 +83,6 @@ input, textarea {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* --- hypertabs ------- */
-
-.hypertabs__tabs {
-  overflow-y: hide;
-}
-
-.hypertabs > .row {
-  flex-grow: 0; 
-  flex-shrink: 0;
-  margin: 0;
-}
-
-.hypertabs__tabs > * {
-  max-width: 4em;
-  overflow-x: hidden;
-  margin-right: .5ex;
-  padding-top: .1ex;
-}
-
-.hypertabs--selected {
-  max-width: 4em;
-  background: yellow;
-  padding-left: .5ex;
-  padding-right: .5ex;
 }
 
 /* compose */
@@ -157,11 +148,7 @@ input, textarea {
 /* -- suggest box */
 
 .suggest-box > * {
-  margin: .5ex;
-}
-
-.suggest-box {
-  width: 5em;
+  display: block;
 }
 
 .suggest-box ul {
@@ -171,6 +158,11 @@ input, textarea {
 
 .suggest-box .selected {
   background: yellow;
+}
+
+.suggest-box {
+  width: max-content;
+  background: white;
 }
 
 /* avatar */
@@ -238,12 +230,6 @@ input, textarea {
   background: green;
 }
 
-.menu {
-  position: fixed;
-  right: 10px;
-  top: 10px;
-}
-
 .error {
   background: red;
 }
@@ -272,9 +258,6 @@ input, textarea {
 .status {
   width: .7em;
   height: .7em;
-  position: fixed;
-  right: .8em;
-  top: .8em;
   border-radius: 100%;
   background: green;
 }
@@ -301,5 +284,69 @@ input, textarea {
 }
 
 
+/* tabs */
 
+.header {
+  background: lightgray;
+  border-bottom: 2px inset;
+  flex-shrink: 0; //I don't understand why this is needed, but it breaks without this.
+}
+
+.header__tabs {
+  width: 100%; min-width: 0px;
+}
+
+/* --- hypertabs ------- */
+
+.hypertabs__tabs {
+  min-width: 0px;
+  width: 100%;
+}
+
+.hypertabs__tab {
+  overflow-x: hidden;
+  min-width: 0px;
+  width: 100%;
+}
+
+.hypertabs__button {
+  overflow-x: hidden;
+  min-width: 0px;
+  width: 100%;
+}
+
+.hypertabs__tab {
+  color: black;
+  background: lightgray;
+  border: 1px ridge;
+  //border-top-right-radius: 3px;
+  border-top-left-radius: 5px;
+  margin-left: -3px;
+  border-bottom: none;
+  padding: 0.5em;
+  width: 100%; //stretch tabs to fill the space
+}
+
+.hypertabs__tab > a {
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hypertabs--selected {
+  background: #E7E7E7;
+  border-top-right-radius: 3px;
+  z-index: 1;
+}
+
+.hypertabs__x  {
+  display: none; //hide x on unselected tabs, like in firefox.
+  //margin-right: -5px;
+  //margin-top: -5px;
+  transform: translate(5px, -5px);
+}
+
+.hypertabs--selected .hypertabs__x {
+  display: block;
+}
 
