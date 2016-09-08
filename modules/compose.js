@@ -23,7 +23,7 @@ exports.message_compose = function (meta, prepublish, cb) {
   var accessories
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
-  var ta = h('textarea')
+  var ta = h('textarea', {placeholder: 'Write a message'})
 
   var blur
   ta.addEventListener('focus', function () {
