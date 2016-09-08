@@ -2,23 +2,7 @@ var plugs = require('../plugs')
 var h = require('hyperscript')
 
 var screen_view = plugs.first(exports.screen_view = [])
-var menu_items = plugs.map(exports.menu_items = [])
 
-var status = h('div.status.error') //start off disconnected
-var list = h('div.column', {style: 'display: none;'})
-
-var menu = h('div.menu.row', list, status, {
-  onmouseover: function (e) {
-    list.style.display = 'flex'
-  }, onmouseout: function () {
-    list.style.display = 'none'
-  }
-})
-
-exports.connection_status = function (err) {
-  if(err) status.classList.add('error')
-  else    status.classList.remove('error')
-}
 
 exports.app = function () {
   function hash() {
@@ -27,11 +11,7 @@ exports.app = function () {
 
   var view = screen_view(hash() || 'tabs')
 
-  var screen = h('div.screen.column', menu, view)
-
-  menu_items().forEach(function (el) {
-    list.appendChild(el)
-  })
+  var screen = h('div.screen.column', view)
 
   window.onhashchange = function (ev) {
     var _view = view
@@ -45,6 +25,11 @@ exports.app = function () {
   return screen
 
 }
+
+
+
+
+
 
 
 
