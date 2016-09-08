@@ -307,8 +307,7 @@ input, textarea {
 .hypertabs__tab {
   color: black;
   background: lightgray;
-  border: 1px ridge;
-  //border-top-right-radius: 3px;
+  border-right: 1px solid #ccc;
   border-top-left-radius: 5px;
   margin-left: -3px;
   border-bottom: none;
@@ -330,9 +329,7 @@ input, textarea {
 }
 
 .hypertabs__x  {
-  display: none; //hide x on unselected tabs, like in firefox.
-  //margin-right: -5px;
-  //margin-top: -5px;
+  display: none; 
   transform: translate(-5px, -3px);
 }
 
