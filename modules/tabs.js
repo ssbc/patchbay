@@ -161,6 +161,13 @@ exports.screen_view = function (path) {
     )
   )
 
+  // remove loader error handler
+  if (window.onError) {
+    window.removeEventListener('error', window.onError)
+    delete window.onError
+  }
+
+  // put errors in a tab
   window.addEventListener('error', function (ev) {
     var err = ev.error || ev
     if(!tabs.has('errors'))

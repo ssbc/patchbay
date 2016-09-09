@@ -1,6 +1,6 @@
 var h = require('hyperscript')
 
-window.addEventListener('error', function onError(e) {
+window.addEventListener('error', window.onError = function (e) {
   document.body.appendChild(h('div.error',
     h('h1', e.message),
     h('big', h('code', e.filename + ':' + e.lineno)),
