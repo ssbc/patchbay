@@ -14,6 +14,7 @@ function ancestor (el) {
 var plugs = require('../plugs')
 var screen_view = plugs.first(exports._screen_view = [])
 var search_box = plugs.first(exports.search_box = [])
+var menu = plugs.first(exports.menu = [])
 
 exports.message_render = []
 
@@ -21,28 +22,42 @@ exports.screen_view = function (path) {
   if(path !== 'tabs')
     return
 
+  function setSelected (indexes) {
+    var ids = indexes.map(function (index) {
+      return tabs.get(index).id
+    })
+    if(ids.length > 1)
+      search.value = 'split('+ids.join(',')+')'
+    else
+      search.value = ids[0]
+  }
+
   var search
-  var tabs = Tabs(function (name) {
-    search.value = name
-//    sessionStorage.selectedTab = tabs.selected
-  })
-//  tabs.classList.add('screen')
+  var tabs = Tabs(setSelected)
 
   search = search_box(function (path, change) {
+
     if(tabs.has(path)) {
       tabs.select(path)
       return true
     }
     var el = screen_view(path)
+
     if(el) {
+      if(!el.title) el.title = path
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
-      tabs.add(path, el, change)
+      tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
     }
   })
 
-  tabs.insertBefore(search, tabs.firstChild.nextSibling)
+  //reposition hypertabs menu to inside a container...
+  tabs.insertBefore(h('div.header.row',
+      h('div.header__tabs.row', tabs.firstChild), //tabs
+      h('div.header__search.row.end', h('div', search), menu())
+  ), tabs.firstChild)
+//  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 
   var saved = []
 //  try { saved = JSON.parse(localStorage.openTabs) }
@@ -53,14 +68,15 @@ exports.screen_view = function (path) {
 
   saved.forEach(function (path) {
     var el = screen_view(path)
+    el.id = el.id || path
     if (!el) return
     el.scroll = keyscroll(el.querySelector('.scroller__content'))
-    if(el) tabs.add(path, el, false)
+    if(el) tabs.add(el, false, false)
   })
 
-//  tabs.select(sessionStorage.selectedTab || saved[0] || '/public')
-  tabs.select('/public')
+  tabs.select(0)
 
+  //handle link clicks
   window.onclick = function (ev) {
     var link = ancestor(ev.target)
     if(!link) return
@@ -73,12 +89,14 @@ exports.screen_view = function (path) {
     //this ought to be made into something more runcible
     if(open.isExternal(link.href)) return open(link.href)
 
-    if(tabs.has(path)) return tabs.select(path)
-    
+    if(tabs.has(path))
+      return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
+
     var el = screen_view(path)
     if(el) {
+      el.id = el.id || path
       el.scroll = keyscroll(el.querySelector('.scroller__content'))
-      tabs.add(path, el, !ev.ctrlKey)
+      tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
     }
 
@@ -98,17 +116,17 @@ exports.screen_view = function (path) {
 
       // scroll through messages
       case 74: // j
-        return tabs.selectedTab.scroll(1)
+        return tabs.get(tabs.selected[0]).scroll(1)
       case 75: // k
-        return tabs.selectedTab.scroll(-1)
+        return tabs.get(tabs.selected[0]).scroll(-1)
 
       // close a tab
       case 88: // x
-        if (tabs.selected/* && tabs.selected[0] !== '/'*/) {
+        if (tabs.selected) {
           var sel = tabs.selected
-          tabs.selectRelative(-1)
+          var i = sel.reduce(function (a, b) { return Math.min(a, b) })
           tabs.remove(sel)
-//          localStorage.openTabs = JSON.stringify(tabs.tabs)
+          tabs.select(Math.max(i-1, 0))
         }
         return
 
@@ -155,3 +173,12 @@ exports.screen_view = function (path) {
 
   return tabs
 }
+
+
+
+
+
+
+
+
+
