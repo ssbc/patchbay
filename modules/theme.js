@@ -48,7 +48,7 @@ function themes() {
     pull(
       sbot_links2({
         query: [
-          {$filter: {rel: ['mentions', {$prefix: 'patchbay-'}, {$gt: null}]}},
+          {$filter: {rel: ['mentions', {$prefix: 'patchbay-'}]}},
           {$filter: {dest: {$prefix: '&'}}},
           {$map: {id: 'dest', feed: 'source', name: ['rel', 1]}}
         ],
