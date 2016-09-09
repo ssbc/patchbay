@@ -9,6 +9,15 @@ var channels = []
 
 var signified = require('../plugs').first(exports.signified = [])
 
+var builtinTabs = [
+  '/public', '/private', '/notifications',
+  '/network', '/query', '/theme', '/versions'
+].map(function (name) {
+  return {
+    title: name,
+    value: name,
+  }
+})
 
 exports.search_box = function (go) {
 
@@ -72,6 +81,10 @@ exports.search_box = function (go) {
             }
           }))
         })
+      } else if(/^\//.test(word)) {
+        cb(null, builtinTabs.filter(function (name) {
+          return name.value.substr(0, word.length) === word
+        }))
       }
     }, {})
   }, 10)
