@@ -3,6 +3,7 @@ var getAvatar = require('ssb-avatar')
 var h = require('hyperscript')
 var ref = require('ssb-ref')
 var path = require('path')
+var visualize = require('visualize-buffer')
 
 var plugs = require('../plugs')
 var sbot_query = plugs.first(exports.sbot_query = [])
@@ -11,8 +12,6 @@ var blob_url = require('../plugs').first(exports.blob_url = [])
 var pull = require('pull-stream')
 
 var id = require('../keys').id
-
-var default_avatar = path.join(__dirname, 'avatar_fallback.png')
 
 var avatars = AVATARS = {}
 
@@ -79,12 +78,10 @@ exports.avatar_image = function (author, classes) {
   classes = classes || ''
   if(classes && 'string' === typeof classes) classes = '.avatar--'+classes
 
-  var img = h('img'+classes, {src: default_avatar})
-//  getAvatar({links: sbot_links}, id, author, function (err, avatar) {
-//    if (err) return console.error(err)
-//    if(ref.isBlob(avatar.image))
-//      img.src = blob_url(avatar.image)
-//  })
+  var img = visualize(new Buffer(author.substring(1), 'base64'), 256)
+  ;(classes || '').split('.').filter(Boolean).forEach(function (c) {
+    img.classList.add(c)
+  })
 
   function go () {
     if(avatars[author]) img.src = blob_url(avatars[author].image)
@@ -96,6 +93,11 @@ exports.avatar_image = function (author, classes) {
 
   return img
 }
+
+
+
+
+
 
 
 

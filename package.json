@@ -44,7 +44,8 @@
     "ssb-mentions": "^0.1.0",
     "ssb-sort": "^1.0.0",
     "suggest-box": "^2.2.1",
-    "text-node-searcher": "^1.1.0"
+    "text-node-searcher": "^1.1.0",
+    "visualize-buffer": "0.0.0"
   },
   "devDependencies": {
     "browselectrify": "^1.0.1"

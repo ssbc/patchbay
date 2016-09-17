@@ -7,9 +7,8 @@ var pull = require('pull-stream')
 var getAvatar = require('ssb-avatar')
 var plugs = require('../plugs')
 var ref = require('ssb-ref')
-
+var visualize = require('visualize-buffer')
 var self_id = require('../keys').id
-var default_avatar = '&qjeAs8+uMXLlyovT4JnEpMwTNDx/QXHfOl2nv2u0VCM=.sha256'
 
 var confirm = plugs.first(exports.message_confirm = [])
 var sbot_blobs_add = plugs.first(exports.sbot_blobs_add = [])
@@ -37,7 +36,9 @@ function crop (d, cb) {
 
 exports.avatar_edit = function (id) {
 
-  var img = h('img.avatar--large', {src: blob_url(default_avatar)})
+  var img = visualize(new Buffer(id.substring(1), 'base64'), 256)
+  img.classList.add('avatar--large')
+
   var lb = hyperlightbox()
   var name_input = h('input', {placeholder: 'rename'})
   var name = avatar_name(id)
@@ -135,4 +136,6 @@ exports.avatar_edit = function (id) {
     )
   )
 }
+
+
 
