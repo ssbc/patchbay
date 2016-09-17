@@ -50,7 +50,7 @@ function getThread (root, cb) {
 
 }
 
-exports.screen_view = function (id, sbot) {
+exports.screen_view = function (id) {
   if(ref.isMsg(id)) {
     var meta = {
       type: 'post',
@@ -63,7 +63,7 @@ exports.screen_view = function (id, sbot) {
       {style: {'overflow-y': 'auto'}},
       h('div.scroller__wrapper',
         content,
-        message_compose(meta)
+        message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
       )
     )
 
