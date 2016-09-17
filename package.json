@@ -1,7 +1,7 @@
 {
   "name": "patchbay",
   "description": "a pluggable patchwork",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "homepage": "https://github.com/dominictarr/patchbay",
   "repository": {
     "type": "git",
