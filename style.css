@@ -16,11 +16,13 @@ body {
 .column {
   display: flex;
   flex-direction: column;
+  min-height:0px;
 }
 
 .row {
   display: flex;
   flex-direction: row;
+  min-height:0px;
 }
 
 .end {
