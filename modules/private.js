@@ -34,15 +34,19 @@ exports.screen_view = function (path) {
 
     var id = require('../keys').id
     var compose = message_compose(
-      {type: 'post', recps: [], private: true}, 
-      function (msg) {
-        msg.recps = [id].concat(msg.mentions).filter(function (e) {
-          return ref.isFeed('string' === typeof e ? e : e.link)
-        })
-        if(!msg.recps.length)
-          throw new Error('cannot make private message without recipients - just mention the user in an at reply in the message you send')
-        return msg
-      })
+      {type: 'post', recps: [], private: true},
+      {
+        prepublish: function (msg) {
+          msg.recps = [id].concat(msg.mentions).filter(function (e) {
+            return ref.isFeed('string' === typeof e ? e : e.link)
+          })
+          if(!msg.recps.length)
+            throw new Error('cannot make private message without recipients - just mention the user in an at reply in the message you send')
+          return msg
+        },
+        placeholder: 'Write a private message'
+      }
+      )
 
     var content = h('div.column.scroller__content')
     var div = h('div.column.scroller',
@@ -78,4 +82,6 @@ exports.message_meta = function (msg) {
       return avatar_image_link('string' == typeof id ? id : id.link, 'thumbnail')
     }))
 }
+
+
 

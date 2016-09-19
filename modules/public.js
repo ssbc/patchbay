@@ -16,7 +16,7 @@ exports.screen_view = function (path, sbot) {
     var div = h('div.column.scroller',
       {style: {'overflow':'auto'}},
       h('div.scroller__wrapper',
-        message_compose({type: 'post'}), //header
+        message_compose({type: 'post'}, {placeholder: 'Write a public message'}),
         content
       )
     )

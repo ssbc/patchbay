@@ -1,3 +1,4 @@
+'use strict'
 var h = require('hyperscript')
 var u = require('../util')
 var suggest = require('suggest-box')
@@ -17,32 +18,51 @@ exports.suggest = []
 
 function id (e) { return e }
 
-exports.message_compose = function (meta, prepublish, cb) {
-  if('function' !== typeof prepublish)
-    sbot = prepublish, prepublish = id
+/*
+  opts can take
+
+    placeholder: string. placeholder text, defaults to "Write a message"
+    prepublish: function. called before publishing a message.
+    shrink: boolean. set to false, to make composer not shrink (or hide controls) when unfocused.
+*/
+
+exports.message_compose = function (meta, opts, cb) {
+  if('function' === typeof cb) {
+    if('function' === typeof opts)
+      opts = {prepublish: opts}
+    }
+
+  if(!opts) opts = {}
+  opts.prepublish = opts.prepublish || id
+
   var accessories
   meta = meta || {}
   if(!meta.type) throw new Error('message must have type')
-  var ta = h('textarea', {placeholder: 'Write a message'})
+  var ta = h('textarea', {
+    placeholder: opts.placeholder || 'Write a message',
+    style: {height: opts.shrink === false ? '200px' : ''}
+  })
 
-  var blur
-  ta.addEventListener('focus', function () {
-    clearTimeout(blur)
-    if(!ta.value) {
-      ta.style.height = '200px'
-    }
-    accessories.style.display = 'block'
-  })
-  ta.addEventListener('blur', function () {
-    //don't shrink right away, so there is time
-    //to click the publish button.
-    clearTimeout(blur)
-    blur = setTimeout(function () {
-      if(ta.value) return
-      ta.style.height = '50px'
-      accessories.style.display = 'none'
-    }, 200)
-  })
+  if(opts.shrink !== false) {
+    var blur
+    ta.addEventListener('focus', function () {
+      clearTimeout(blur)
+      if(!ta.value) {
+        ta.style.height = '200px'
+      }
+      accessories.style.display = 'block'
+    })
+    ta.addEventListener('blur', function () {
+      //don't shrink right away, so there is time
+      //to click the publish button.
+      clearTimeout(blur)
+      blur = setTimeout(function () {
+        if(ta.value) return
+        ta.style.height = '50px'
+        accessories.style.display = 'none'
+      }, 200)
+    })
+  }
 
   ta.addEventListener('keydown', function (ev) {
     if(ev.keyCode === 13 && ev.ctrlKey) publish()
@@ -68,7 +88,7 @@ exports.message_compose = function (meta, prepublish, cb) {
         return mention
       })
       try {
-        meta = prepublish(meta)
+        meta = opts.prepublish(meta)
       } catch (err) {
         publishBtn.disabled = false
         if (cb) cb(err)
@@ -93,7 +113,7 @@ exports.message_compose = function (meta, prepublish, cb) {
     h('div.compose', h('div.column', ta,
       accessories = h('div.row.compose__controls',
         //hidden until you focus the textarea
-        {style: {display: 'none'}},
+        {style: {display: opts.shrink === false ? '' : 'none'}},
         file_input(function (file) {
           files.push(file)
           filesById[file.link] = file
@@ -125,4 +145,6 @@ exports.message_compose = function (meta, prepublish, cb) {
   return composer
 
 }
+
+
 
