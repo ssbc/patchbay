@@ -15,12 +15,12 @@ exports.message_confirm = function (content, cb) {
   var lb = lightbox()
   document.body.appendChild(lb)
 
-  var okay = h('button', 'okay', {onclick: function () {
+  var okay = h('button', 'Publish', {onclick: function () {
     lb.remove()
     publish(content, cb)
   }})
 
-  var cancel = h('button', 'cancel', {onclick: function () {
+  var cancel = h('button', 'Cancel', {onclick: function () {
     lb.remove()
     cb(null)
   }})
