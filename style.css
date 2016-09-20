@@ -251,8 +251,15 @@ button:hover {
 
 .lightbox {
   overflow: auto;
-  padding: 1em;
-  background: white;
+  padding: 1.5em;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #f5f5f5;
+  border: 1px solid #eee;
+  border-radius: .2em;
 }
 
 /* searchprompt */
@@ -271,7 +278,7 @@ button:hover {
 /* TextNodeSearcher highlights */
 
 .highlight {
-  background: yellow;
+  background: #f5f5f5;
 }
 
 /* avatar editor */
