@@ -74,8 +74,20 @@ input, textarea {
   font-family: sans-serif;
 }
 
+input:focus, .compose:focus, .message:focus, button:focus {
+  outline: none;
+  border-color: #0088cc; 
+  box-shadow: 0 0 4px #0088cc;
+}
+
 textarea {
   padding: .5em;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: none;
+  box-shadow: none;
 }
 
 button {
