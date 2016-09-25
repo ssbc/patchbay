@@ -336,7 +336,7 @@ function findMessageContent(el) {
 }
 
 function issueForm(msg, contentEl) {
-  return h('form',
+  var form = h('form',
     h('strong', 'New Issue:'),
     message_compose(
       {type: 'issue', project: msg.key},
@@ -352,6 +352,7 @@ function issueForm(msg, contentEl) {
       }
     )
   )
+  return form
 }
 
 function branchMenu(msg, full) {
