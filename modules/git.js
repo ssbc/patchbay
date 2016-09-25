@@ -77,14 +77,22 @@ function getForks(id) {
   )
 }
 
-function repoLink(id) {
-  var el = h('a', {href: '#'+id}, id.substr(0, 10) + '…')
+function repoText(id) {
+  var text = document.createTextNode(id.substr(0, 10) + '…')
   getAvatar({links: sbot_links, get: sbot_get}, self_id, id,
-    function (err, avatar) {
+      function (err, avatar) {
     if(err) return console.error(err)
-    el.textContent = avatar.name
+    text.nodeValue = avatar.name
   })
-  return el
+  return text
+}
+
+function repoLink(id) {
+  return h('a', {href: '#'+id}, repoText(id))
+}
+
+function repoName(id) {
+  return h('ins', repoText(id))
 }
 
 function getIssueState(id, cb) {
@@ -132,17 +140,6 @@ function tableRows(headerRow) {
   return t
 }
 
-function repoName(id, link) {
-  var el = link
-    ? h('a', {href: '#'+id}, id.substr(0, 8) + '…')
-    : h('ins', id.substr(0, 8) + '…')
-  getAvatar({links: sbot_links}, self_id, id, function (err, avatar) {
-    if(err) return console.error(err)
-    el.textContent = avatar.name
-  })
-  return el
-}
-
 function renderIssueEdit(c) {
   var id = c.issue || c.link
   return [
@@ -160,7 +157,7 @@ exports.message_content = function (msg, sbot) {
     var forksT
     var div = h('div',
       h('p', 'git repo ', repoName(msg.key)),
-      c.upstream ? h('p', 'fork of ', repoName(c.upstream, true)) : '',
+      c.upstream ? h('p', 'fork of ', repoLink(c.upstream)) : '',
       h('p', h('code', 'ssb://' + msg.key)),
       h('div.git-table-wrapper', {style: {'max-height': '12em'}},
         h('table',
@@ -248,7 +245,7 @@ exports.message_content = function (msg, sbot) {
       getForks(msg.key),
       pull.drain(function (fork) {
         forksT.append(h('tr', h('td',
-          repoName(fork.id, true),
+          repoLink(fork.id),
           ' by ', h('a', {href: '#'+fork.author}, avatar_name(fork.author)))))
       }, function (err) {
         if (err) console.error(err)
@@ -402,7 +399,7 @@ function pullRequestForm(msg) {
           getForks(msg.key)
         ]), pull.map(function (fork) {
           return h('option', {value: fork.id},
-            repoName(fork.id), ' by ', avatar_name(fork.author))
+            repoLink(fork.id), ' by ', avatar_name(fork.author))
         }))
       }),
       ':',
