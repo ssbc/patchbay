@@ -79,7 +79,8 @@ function getForks(id) {
 
 function repoLink(id) {
   var el = h('a', {href: '#'+id}, id.substr(0, 10) + '…')
-  getAvatar({links: sbot_links}, self_id, id, function (err, avatar) {
+  getAvatar({links: sbot_links, get: sbot_get}, self_id, id,
+    function (err, avatar) {
     if(err) return console.error(err)
     el.textContent = avatar.name
   })
