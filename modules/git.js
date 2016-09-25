@@ -185,10 +185,12 @@ exports.message_content = function (msg, sbot) {
         h('table',
           forksT = tableRows(h('tr',
             h('th', 'forks'))))),
-      h('div', h('a', {href: '#', onclick: function () {
+      h('div', h('a', {href: '#', onclick: function (e) {
+        e.preventDefault()
         this.parentNode.replaceChild(issueForm(msg), this)
       }}, 'New Issue…')),
-      h('div', h('a', {href: '#', onclick: function () {
+      h('div', h('a', {href: '#', onclick: function (e) {
+        e.preventDefault()
         this.parentNode.replaceChild(pullRequestForm(msg), this)
       }}, 'New Pull Request…')))
 
@@ -438,7 +440,8 @@ exports.message_action = function (msg, sbot) {
   var c = msg.value.content
   if(c.type === 'issue' || c.type === 'pull-request') {
     var isOpen
-    var a = h('a', {href: '#', onclick: function () {
+    var a = h('a', {href: '#', onclick: function (e) {
+      e.preventDefault()
       message_confirm({
         type: 'issue-edit',
         root: msg.key,
