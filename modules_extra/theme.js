@@ -14,7 +14,7 @@ var defaultTheme = {
 
 var next = 'undefined' === typeof setImmediate ? setTimeout : setImmediate
 
-if('undefined' === typeof document)
+if('undefined' !== typeof document)
   var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
 
 var activeTheme

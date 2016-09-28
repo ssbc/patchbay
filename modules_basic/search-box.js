@@ -9,6 +9,7 @@ var channels = []
 
 var signified = require('../plugs').first(exports.signified = [])
 
+//TODO: this list should be generated from plugs
 var builtinTabs = [
   '/public', '/private', '/notifications',
   '/network', '/query', '/theme', '/versions'

@@ -39,20 +39,3 @@ exports.message_confirm = function (content, cb) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
