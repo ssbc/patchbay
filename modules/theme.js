@@ -14,7 +14,9 @@ var defaultTheme = {
 
 var next = 'undefined' === typeof setImmediate ? setTimeout : setImmediate
 
-var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
+if('undefined' === typeof document)
+  var link = document.head.appendChild(h('link', {rel: 'stylesheet'}))
+
 var activeTheme
 
 function useTheme(id) {
@@ -148,3 +150,4 @@ exports.menu_items = function () {
 exports.screen_view = function (path) {
   if(path === '/theme') return theme_view()
 }
+
