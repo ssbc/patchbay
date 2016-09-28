@@ -1,4 +1,3 @@
-var ui = require('../ui')
 var pull = require('pull-stream')
 var Cat = require('pull-cat')
 var sort = require('ssb-sort')
@@ -108,4 +107,5 @@ exports.screen_view = function (id) {
     return div
   }
 }
+
 

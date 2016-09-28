@@ -1,5 +1,4 @@
 var h = require('hyperscript')
-var ui = require('../ui')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
@@ -82,6 +81,7 @@ exports.message_meta = function (msg) {
       return avatar_image_link('string' == typeof id ? id : id.link, 'thumbnail')
     }))
 }
+
 
 
 
