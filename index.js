@@ -1,33 +1,7 @@
-var h = require('hyperscript')
+require('depject')(
+  require('./modules'),
+  {'sbot-api.js': require('./sbot-api')()}
+).plugs.app[0]()
 
-window.addEventListener('error', window.onError = function (e) {
-  document.body.appendChild(h('div.error',
-    h('h1', e.message),
-    h('big', h('code', e.filename + ':' + e.lineno)),
-    h('pre', e.error ? (e.error.stack || e.error.toString()) : e.toString())))
-})
-
-var u = require('./util')
-var pull = require('pull-stream')
-var combine = require('depject')
-var fs = require('fs')
-var path = require('path')
-var SbotApi = require('./sbot-api')
-
-document.head.appendChild(h('style', require('./style.css.json')))
-
-var modules = require('./modules')
-
-var u = require('./util')
-
-modules['sbot-api.js'] = SbotApi()
-combine(modules)
-
-if(process.title === 'node') {
-  console.log(require('depject/graph')(modules))
-  process.exit(0)
-}
-
-document.body.appendChild(modules['app.js'].app())
 
 
