@@ -10,7 +10,7 @@
   "dependencies": {
     "cont": "^1.0.3",
     "dataurl-": "^0.1.0",
-    "depject": "^1.0.1",
+    "depject": "^2.0.0",
     "hjson": "^2.0.3",
     "human-time": "0.0.1",
     "hypercombo": "0.1.0",
@@ -61,3 +61,5 @@
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
+
+
