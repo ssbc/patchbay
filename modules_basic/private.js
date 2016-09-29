@@ -54,7 +54,7 @@ exports.screen_view = function (path) {
     )
 
     pull(
-      sbot_log({old: false}),
+      u.next(sbot_log, {old: false, limit: 100}),
       unbox(),
       Scroller(div, content, message_render, true, false)
     )
@@ -81,7 +81,5 @@ exports.message_meta = function (msg) {
       return avatar_image_link('string' == typeof id ? id : id.link, 'thumbnail')
     }))
 }
-
-
 
 

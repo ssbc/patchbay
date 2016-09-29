@@ -38,31 +38,11 @@ var opts = createConfig()
 var sbot = null
 var connection_status = []
 
-//  var createSbot = require('scuttlebot')
-//    .use(require('scuttlebot/plugins/gossip'))
-//    .use(require('scuttlebot/plugins/friends'))
-//    .use(require('scuttlebot/plugins/replicate'))
-//    .use(require('ssb-blobs'))
-//    .use(require('scuttlebot/plugins/invite'))
-//    .use(require('scuttlebot/plugins/block'))
-//    .use(require('scuttlebot/plugins/local'))
-//    .use(require('ssb-ws'))
-//    .use(require('ssb-query'))
-//    .use(require('ssb-links'))
-//  var sbot = createSbot(config)
-//
-
 var rec = Reconnect(function (isConn) {
-//    var remote
-//    if('undefined' !== typeof localStorage)
-//      remote = localStorage.remote
-
   function notify (value) {
     console.log('connection_status', value, connection_status)
     isConn(value); connection_status.forEach(function (fn) { fn(value) })
   }
-
-//    return setTimeout(notify)
 
   createClient(keys, {
     manifest: require('../manifest.json'),
@@ -146,6 +126,9 @@ module.exports = {
   //liteclient won't have permissions for this
   sbot_gossip_connect: rec.async(function (opts, cb) {
     sbot.gossip.connect(opts, cb)
+  }),
+  sbot_progress: rec.source(function () {
+    return sbot.replicate.changes()
   }),
   sbot_publish: rec.async(function (content, cb) {
     if(content.recps)

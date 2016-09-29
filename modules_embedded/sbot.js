@@ -111,6 +111,7 @@ module.exports = {
   },
   sbot_gossip_peers: sbot.gossip.peers,
   sbot_gossip_connect: sbot.gossip.connect,
+  sbot_progress: sbot.gossip.change,
   sbot_publish: function (content, cb) {
     if(content.recps)
       content = ssbKeys.box(content, content.recps.map(function (e) {

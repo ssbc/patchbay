@@ -21,6 +21,7 @@ module.exports = {
   "public.js":  require('./public.js'),
   "relationships.js":  require('./relationships.js'),
   "search-box.js":  require('./search-box.js'),
+  "setup.js": require('./setup'),
   "suggest-mentions.js":  require('./suggest-mentions.js'),
   "suggest.js":  require('./suggest.js'),
   "thread.js":  require('./thread.js'),
