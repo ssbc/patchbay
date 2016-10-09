@@ -8,7 +8,9 @@ module.exports = {
   "music-release.js":  require('./music-release.js'),
   "network.js":  require('./network.js'),
   "query.js":  require('./query.js'),
+  "search.js": require('./search'),
   "split.js":  require('./split.js'),
   "theme.js":  require('./theme.js'),
   "versions.js":  require('./versions.js')
 }
+
