@@ -1,6 +1,16 @@
 var pull = require('pull-stream')
 var Next = require('pull-next')
 
+function get (obj, path) {
+  if(!obj) return undefined
+  if('string' === typeof path) return obj[path]
+  if(Array.isArray(path)) {
+    for(var i = 0; i < path.length; i++)
+      obj = obj[path[i]]
+    return obj
+  }
+}
+
 exports.next = function (createStream, opts, property, range) {
 
   range = range || (opts.reverse ? 'lt' : 'gt')
