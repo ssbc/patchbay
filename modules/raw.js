@@ -10,7 +10,7 @@ var message_compose = plugs.first(exports.message_compose = [])
 // from ssb-ref
 var refRegex = /((?:@|%|&)[A-Za-z0-9\/+]{43}=\.[\w\d]+)/g
 
-function linkify(text) {
+exports.linkify = function (text) {
   var arr = text.split(refRegex)
   for (var i = 1; i < arr.length; i += 2) {
     arr[i] = h('a', {href: '#' + arr[i]}, arr[i])
@@ -33,7 +33,7 @@ exports.message_meta = function (msg) {
         while (el = msgContentEl.firstChild)
           tmp.appendChild(el)
         // show the raw stuff
-        if (!pre) pre = h('pre', linkify(JSON.stringify({
+        if (!pre) pre = h('pre', exports.linkify(JSON.stringify({
           key: msg.key,
           value: msg.value
         }, 0, 2)))

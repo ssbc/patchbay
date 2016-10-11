@@ -1,6 +1,9 @@
 var h = require('hyperscript')
 var u = require('../util')
-var avatar = require('../plugs').first(exports.avatar = [])
+var plugs = require('../plugs')
+var avatar = plugs.first(exports.avatar = [])
+var avatar_name = plugs.first(exports.avatar_name = [])
+var avatar_link = plugs.first(exports.avatar_link = [])
 var pull = require('pull-stream')
 var plugs = require('../plugs')
 
@@ -8,6 +11,18 @@ var plugs = require('../plugs')
 //so you see new users
 function isRelated(value, name) {
   return value ? name : value === false ? 'un'+name : ''
+}
+
+exports.message_content_mini = function (msg) {
+  var content = msg.value.content
+  if(content.type == 'contact' && content.contact) {
+    var relation = isRelated(content.following, 'follows')
+    if(content.blocking) relation = 'blocks'
+    return [
+      relation, ' ',
+      avatar_link(content.contact, avatar_name(content.contact), '')
+    ]
+  }
 }
 
 exports.message_content = function (msg) {
