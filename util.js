@@ -5,10 +5,16 @@ function get (obj, path) {
   if(!obj) return undefined
   if('string' === typeof path) return obj[path]
   if(Array.isArray(path)) {
-    for(var i = 0; i < path.length; i++)
+    for(var i = 0; obj && i < path.length; i++)
       obj = obj[path[i]]
     return obj
   }
+}
+
+function clone (obj) {
+  var _obj = {}
+  for(var k in obj) _obj[k] = obj[k]
+  return _obj
 }
 
 exports.next = function (createStream, opts, property, range) {
@@ -25,7 +31,7 @@ exports.next = function (createStream, opts, property, range) {
       last = null
     }
     return pull(
-      createStream(opts),
+      createStream(clone(opts)),
       pull.through(function (msg) {
         count ++
         if(!msg.sync) {
@@ -40,4 +46,9 @@ exports.next = function (createStream, opts, property, range) {
     )
   })
 }
+
+
+
+
+
 
