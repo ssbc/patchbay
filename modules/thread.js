@@ -6,6 +6,7 @@ var ref = require('ssb-ref')
 var h = require('hyperscript')
 var u = require('../util')
 var Scroller = require('pull-scroll')
+var self_id = require('../keys').id
 
 function once (cont) {
   var ended = false
@@ -99,8 +100,13 @@ exports.screen_view = function (id) {
         meta.channel = thread[0].value.content.channel
 
         var recps = thread[0].value.content.recps
-        if(recps && thread[0].value.private)
-          meta.recps = recps
+        var private = thread[0].value.private
+        if(private) {
+          if(recps)
+            meta.recps = recps
+          else
+            meta.recps = [thread[0].value.author, self_id]
+        }
       })
     }
 
@@ -108,4 +114,7 @@ exports.screen_view = function (id) {
     return div
   }
 }
+
+
+
 
