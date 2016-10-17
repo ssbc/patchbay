@@ -5,6 +5,7 @@ var Scroller = require('pull-scroll')
 var paramap = require('pull-paramap')
 var plugs = require('../plugs')
 var cont = require('cont')
+var ref = require('ssb-ref')
 
 var message_render = plugs.first(exports.message_render = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
@@ -31,6 +32,7 @@ function notifications(ourIds) {
   function isOurMsg(id, cb) {
     if (!id) return cb(null, false)
     if (typeof id === 'object' && typeof id.link === 'string') id = id.link
+    if (!ref.isMsg(id)) return cb(null, false)
     sbot_get(id, function (err, msg) {
       if (err && err.name == 'NotFoundError') cb(null, false)
       else if (err) cb(err)

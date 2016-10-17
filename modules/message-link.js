@@ -1,4 +1,5 @@
 var h = require('hyperscript')
+var ref = require('ssb-ref')
 
 var sbot_get = require('../plugs').first(exports.sbot_get = [])
 
@@ -9,6 +10,7 @@ exports.message_link = function (id) {
 
   var link = h('a', {href: '#'+id}, id.substring(0, 10)+'...')
 
+  if(ref.isMsg(id))
   sbot_get(id, function (err, value) {
     if(err) {
       if (err.name == 'NotFoundError')
