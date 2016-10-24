@@ -1,7 +1,18 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   background: #f5f5f5;
 }
+
+h1, h2, h3, h4, h5, h6, p, ul, ol {
+  margin-top: .35em;
+}
+
+h1 { font-size: 1.2em; }
+h2 { font-size: 1.18em; }
+h3 { font-size: 1.15em; }
+h4 { font-size: 1.12em; }
+h5 { font-size: 1.1em; }
+h6 { font-size: 1em; }
 
 * {
   word-break: break-word;
@@ -166,7 +177,7 @@ button:hover {
 
 .message {
   background: white;
-  display: block;
+  position: relative;
   flex-basis: 0;
   word-wrap: break-word; 
   display: inline-block;
@@ -200,7 +211,8 @@ button:hover {
 }
 
 .message_actions {
-  float: right;
+  position: absolute;
+  bottom: 0; right: 0;
   margin-right: .5ex;
   margin-bottom: .5ex;
 }
