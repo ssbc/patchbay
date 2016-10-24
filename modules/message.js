@@ -2,8 +2,6 @@ var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
 
-
-
 var plugs = require('../plugs')
 var message_content = plugs.first(exports.message_content = [])
 var avatar = plugs.first(exports.avatar = [])
