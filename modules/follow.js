@@ -13,6 +13,7 @@ function isRelated(value, name) {
   return value ? name : value === false ? 'un'+name : ''
 }
 
+exports.message_content =
 exports.message_content_mini = function (msg) {
   var content = msg.value.content
   if(content.type == 'contact' && content.contact) {

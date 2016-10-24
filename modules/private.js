@@ -77,7 +77,7 @@ function map(ary, iter) {
 }
 
 exports.message_meta = function (msg) {
-  if(msg.value.private)
+  if(msg.value.content.recps || msg.value.private)
     return h('span.row', 'PRIVATE', map(msg.value.content.recps, function (id) {
       return avatar_image_link('string' == typeof id ? id : id.link, 'thumbnail')
     }))

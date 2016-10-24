@@ -9,6 +9,8 @@ var message_confirm = plugs.first(exports.message_confirm = [])
 var message_link = plugs.first(exports.message_link = [])
 var sbot_links = plugs.first(exports.sbot_links = [])
 
+
+exports.message_content =
 exports.message_content_mini = function (msg, sbot) {
   if(msg.value.content.type !== 'vote') return
   var link = msg.value.content.vote.link
