@@ -1,5 +1,6 @@
 body {
   font-family: sans-serif;
+  background: #f5f5f5;
 }
 
 * {
@@ -164,6 +165,7 @@ button:hover {
 /* messages */
 
 .message {
+  background: white;
   display: block;
   flex-basis: 0;
   word-wrap: break-word; 
