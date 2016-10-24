@@ -25,6 +25,7 @@ function once (cont) {
 var plugs = require('../plugs')
 
 var message_render = plugs.first(exports.message_render = [])
+var message_name = plugs.first(exports.message_name = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 
@@ -67,6 +68,10 @@ exports.screen_view = function (id) {
         message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
       )
     )
+
+    message_name(id, function (err, name) {
+      div.id = name
+    })
 
     pull(
       sbot_links({
@@ -114,6 +119,7 @@ exports.screen_view = function (id) {
     return div
   }
 }
+
 
 
 
