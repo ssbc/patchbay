@@ -39,6 +39,10 @@ pre {
   word-wrap: break-word;
 }
 
+.wide {
+  width: 100%;
+}
+
 p {
   margin-top: .35ex;
 }
