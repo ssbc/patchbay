@@ -70,7 +70,7 @@ exports.screen_view = function (id) {
     )
 
     message_name(id, function (err, name) {
-      div.id = name
+      div.title = name
     })
 
     pull(
