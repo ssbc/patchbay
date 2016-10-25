@@ -180,11 +180,19 @@ button:hover {
   position: relative;
   flex-basis: 0;
   word-wrap: break-word; 
-  display: inline-block;
   margin-bottom: 1em;
   padding: 0.3rem;
   border-radius: 2px;
   box-shadow: #dadada 1px 2px 8px;
+  background: white;
+}
+
+.message--mini {
+  margin-bottom: 1em;
+  padding: ;
+  border-radius: 0;
+  box-shadow: none;
+  background: inherit;
 }
 
 .message_content div > span {
@@ -193,6 +201,11 @@ button:hover {
   display: block;
   color: #888;
 }
+
+.message_content--mini div > span {
+  display: inline-block;
+}
+
 
 .message_content div > span a {
   color: #005d8c;
@@ -225,6 +238,14 @@ button:hover {
   max-width: 100%;
 }
 
+.message > .title > .avatar {
+  margin-left: 0;
+}
+
+.message_content {
+  padding: .5ex;
+}
+
 .actions > * {
   padding-left: 5px;
   margin-left: 1px;
@@ -235,13 +256,6 @@ button:hover {
   padding-right: 5px;
 }
 
-.message > .title > .avatar {
-  margin-left: 0;
-}
-
-.message_content {
-  padding: .5ex;
-}
 
 /* -- suggest box */
 
@@ -270,11 +284,6 @@ button:hover {
 .avatar--thumbnail, 
 .avatar--fullsize {
   border: 1px solid #eee;
-}
-
-.avatar {
-  display: flex;
-  flex-direction: row;
 }
 
 .avatar--large {
@@ -452,5 +461,6 @@ button:hover {
   display: block;
 }
 
-
-
+.screen {
+  background: #f5f5f5
+}
