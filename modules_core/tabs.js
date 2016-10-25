@@ -167,11 +167,13 @@ exports.screen_view = function (path) {
     delete window.onError
   }
 
+  var errors = h('div.errors', {id: 'errors'})
+
   // put errors in a tab
   window.addEventListener('error', function (ev) {
     var err = ev.error || ev
     if(!tabs.has('errors'))
-      tabs.add('errors', errors, false)
+      tabs.add(errors, false)
     var el = h('div.message',
       h('strong', err.message),
       h('pre', err.stack))
@@ -181,8 +183,26 @@ exports.screen_view = function (path) {
       errorsContent.appendChild(el)
   })
 
+  if (process.versions.electron) {
+    window.addEventListener('contextmenu', function (ev) {
+      ev.preventDefault()
+      var remote = require('electron').remote
+      var Menu = remote.Menu
+      var MenuItem = remote.MenuItem
+      var menu = new Menu()
+      menu.append(new MenuItem({
+        label: 'Inspect Element',
+        click: function () {
+          remote.getCurrentWindow().inspectElement(ev.x, ev.y)
+        }
+      }))
+      menu.popup(remote.getCurrentWindow())
+    })
+  }
+
   return tabs
 }
+
 
 
 

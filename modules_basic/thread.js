@@ -5,6 +5,7 @@ var ref = require('ssb-ref')
 var h = require('hyperscript')
 var u = require('../util')
 var Scroller = require('pull-scroll')
+var self_id = require('../keys').id
 
 function once (cont) {
   var ended = false
@@ -23,6 +24,7 @@ function once (cont) {
 var plugs = require('../plugs')
 
 var message_render = plugs.first(exports.message_render = [])
+var message_name = plugs.first(exports.message_name = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 
@@ -66,6 +68,10 @@ exports.screen_view = function (id) {
       )
     )
 
+    message_name(id, function (err, name) {
+      div.id = name
+    })
+
     pull(
       sbot_links({
         rel: 'root', dest: id, keys: true, old: false
@@ -98,8 +104,13 @@ exports.screen_view = function (id) {
         meta.channel = thread[0].value.content.channel
 
         var recps = thread[0].value.content.recps
-        if(recps && thread[0].value.private)
-          meta.recps = recps
+        var private = thread[0].value.private
+        if(private) {
+          if(recps)
+            meta.recps = recps
+          else
+            meta.recps = [thread[0].value.author, self_id]
+        }
       })
     }
 

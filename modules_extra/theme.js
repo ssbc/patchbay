@@ -96,27 +96,40 @@ function insertAfter(parentNode, newNode, referenceNode) {
 function theme_view() {
   var themeInput
   var themesList = h('form.themes__list')
-  var themesByKey = {}
+  var themesPerFeed = {/* feedid: {blobid||name: theme} */}
 
   pull(
     themes(),
-    pull.unique('id'),
     pull.drain(function (theme) {
-      // don't show old versions of theme
-      var key = theme.feed + theme.name
-      var newerTheme = themesByKey[key]
+      var map = themesPerFeed[theme.feed] || (themesPerFeed[theme.feed] = {})
+      // replace old theme
+      var prevByName = map[theme.name]
+      var prevById = map[theme.id]
       theme.el = renderTheme(theme)
-      themesByKey[key] = theme
-      if (!newerTheme) {
-        // show latest theme
-        themesList.appendChild(theme.el)
-      } else if (theme.id === localStorage.themeId
-              || theme.id === activeTheme) {
-        // show old version because the user is still using it
-        theme.el.appendChild(document.createTextNode(' (old)'))
-        insertAfter(themesList, theme.el, newerTheme.el)
+      map[theme.name] = theme
+      map[theme.id] = theme
+      if (prevById) {
+        // remove theme which is having its id reused
+        themesList.removeChild(prevById.el)
+        // prevById.el.appendChild(document.createTextNode(' (renamed)'))
+        if (prevById === prevByName) {
+          prevByName = null
+        }
+      }
+      if (prevByName) {
+        // update theme
+        if (prevByName.id === localStorage.themeId
+         || prevByName.id === activeTheme) {
+          // keep old version because the user is still using it
+          prevByName.el.appendChild(document.createTextNode(' (old)'))
+          insertAfter(themesList, theme.el, prevByName.el)
+        } else {
+          // replace old version
+          themesList.replaceChild(theme.el, prevByName.el)
+        }
       } else {
-        // ignore old version of theme
+        // show new theme
+        themesList.appendChild(theme.el)
       }
     }, function (err) {
       if (err) console.error(err)
