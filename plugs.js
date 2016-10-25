@@ -3,8 +3,7 @@ var u = require('./util')
 exports.first = function first(plug) {
   return function () {
     var args = [].slice.call(arguments)
-    args.unshift(plug)
-    return u.firstPlug.apply(null, args)
+    return u.firstPlug(plug, args)
   }
 }
 
@@ -16,5 +15,6 @@ exports.map = function (plug) {
     }).filter(Boolean)
   }
 }
+
 
 
