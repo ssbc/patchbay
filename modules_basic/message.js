@@ -17,11 +17,12 @@ var sbot_links = plugs.first(exports.sbot_links = [])
 exports.message_render = function (msg, sbot) {
   var elMini = message_content_mini(msg)
   if (elMini) {
-    var div = h('div.message',
-      h('div.message_content.row',
+    var div = h('div.message.message--mini',
+      h('div.row',
         h('div',
           avatar_link(msg.value.author, avatar_name(msg.value.author), ''),
-          ' ', elMini),
+          ' ',
+          h('span.message_content', elMini)),
         h('div.message_meta.row', message_meta(msg))
       )
     )
