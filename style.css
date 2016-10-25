@@ -1,6 +1,5 @@
 body {
   font-family: 'Source Sans Pro', sans-serif;
-  background: #f5f5f5;
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, ol {
@@ -112,7 +111,6 @@ textarea {
 textarea:focus {
   outline: none;
   border-color: none;
-  box-shadow: none;
 }
 
 button {
@@ -143,7 +141,6 @@ button:hover {
   padding-left: 1em;
   background: #f5f5f5;
   border: 1px solid #eee;
-  box-shadow: 3px 0px 3px #ccc;
   border-radius: .2em;
 }
 
@@ -166,7 +163,7 @@ button:hover {
   width: 100%;
   margin-top: .5em;
   margin-bottom: .5em;
-  box-shadow: #dadada 1px 2px 8px;
+  border: 1px solid #f5f5f5;
 }
 
 .compose button {
@@ -176,28 +173,31 @@ button:hover {
 /* messages */
 
 .message {
-  background: white;
   position: relative;
   flex-basis: 0;
-  word-wrap: break-word; 
-  margin-bottom: 1em;
-  padding: 0.3rem;
-  border-radius: 2px;
-  box-shadow: #dadada 1px 2px 8px;
+  margin-top: .25em; 
+  margin-bottom: .25em;
+  padding: .2em;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
   background: white;
 }
 
+.message:hover {
+  background: #f9f9f9;
+}
+
 .message--mini {
-  margin-bottom: 1em;
-  padding: ;
-  border-radius: 0;
-  box-shadow: none;
+  font-size: 1em;
+  margin: 0;
+  padding: .2em;
+  border: none;
   background: inherit;
 }
 
 .message_content div > span {
-  font-size: 0.8rem;
-  margin-bottom: 0.7rem;
+  font-size: 0.9em;
+  margin-bottom: 0.7em;
   display: block;
   color: #888;
 }
@@ -205,7 +205,6 @@ button:hover {
 .message_content--mini div > span {
   display: inline-block;
 }
-
 
 .message_content div > span a {
   color: #005d8c;
@@ -284,6 +283,7 @@ button:hover {
 .avatar--thumbnail, 
 .avatar--fullsize {
   border: 1px solid #eee;
+  width: 100%;
 }
 
 .avatar--large {
@@ -294,11 +294,8 @@ button:hover {
 .avatar--thumbnail {
   width: 2.5em;
   height: 2.5em;
+  float: left;
   margin-right: .5ex;
-}
-
-.avatar--fullsize {
-  width: 100%;
 }
 
 .profile {
@@ -327,7 +324,6 @@ button:hover {
   margin-right: auto;
   border: 1px solid #eee;
   border-radius: .2em;
-  box-shadow: #dadada 1px 2px 8px;
 }
 
 /* searchprompt */
@@ -398,7 +394,6 @@ button:hover {
 .header {
   background: #f5f5f5;
   border-bottom: 1px inset;
-  box-shadow: 3px 0px 3px #ccc;
   flex-shrink: 0;
 }
 
@@ -461,6 +456,3 @@ button:hover {
   display: block;
 }
 
-.screen {
-  background: #f5f5f5
-}
