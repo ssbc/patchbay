@@ -30,7 +30,8 @@ function useTheme(id) {
 }
 
 function useSavedTheme() {
-  useTheme(localStorage.themeId || defaultTheme.id)
+  //enable setting "NONE" as your theme, and having that persist.
+  useTheme(localStorage.themeId == null ? defaultTheme.id : localStorage.themeId)
 }
 
 next(useSavedTheme)
