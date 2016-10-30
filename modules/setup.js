@@ -45,7 +45,7 @@ function invite_form () {
       status.textContent = msg
     }, function (err) {
       if(err) {
-        accept.textContent = 'error:'+err.message
+        accept.textContent = 'error:'+(err.message || err.stack || error.type)
         console.error(err)
       }
       else {
@@ -141,13 +141,5 @@ exports.screen_view = function (path) {
     exports.setup_joined_network(require('../keys').id)
   ))
 }
-
-
-
-
-
-
-
-
 
 
