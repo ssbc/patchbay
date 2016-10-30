@@ -126,6 +126,9 @@ module.exports = function () {
     sbot_gossip_peers: rec.async(function (cb) {
       sbot.gossip.peers(cb)
     }),
+    sbot_gossip_connect: rec.async(function (peer, cb) {
+      sbot.gossip.connect(peer, cb)
+    }),
     sbot_publish: rec.async(function (content, cb) {
       if(content.recps)
         content = ssbKeys.box(content, content.recps.map(function (e) {
