@@ -306,4 +306,11 @@ input, textarea {
 
 
 
+/* progress */
 
+.hyperprogress__bar {
+  background: darkgrey;
+}
+.hyperprogress__liquid {
+  background: lightblue;
+}
