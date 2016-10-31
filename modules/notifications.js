@@ -122,7 +122,7 @@ exports.screen_view = function (path) {
     )
 
     pull(
-      sbot_log({old: false}),
+      u.next(sbot_log, {old: false, limit: 100}),
       unbox(),
       notifications(ids),
       pull.filter(),
@@ -144,6 +144,7 @@ exports.screen_view = function (path) {
     return div
   }
 }
+
 
 
 
