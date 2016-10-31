@@ -32,18 +32,18 @@ function isLocal (e) {
 //pub is running scuttlebot >=8
 //have connected successfully.
 function isLongterm (e) {
-  return e.ping && e.ping.rtt.mean > 0
+  return e.ping && e.ping.rtt && e.ping.rtt.mean > 0
 }
 
 //pub is running scuttlebot < 8
 //have connected sucessfully
 function isLegacy (peer) {
-  return /connect/.test(peer.state) || peer.duration.mean > 0 && !exports.isLongterm(peer)
+  return /connect/.test(peer.state) || (peer.duration && peer.duration.mean) > 0 && !isLongterm(peer)
 }
 
 //tried to connect, but failed.
 function isInactive (e) {
-  return e.stateChange && e.duration.mean == 0
+  return e.stateChange && e.duration && e.duration.mean == 0
 }
 
 //havn't tried to connect peer yet.
@@ -143,23 +143,4 @@ exports.screen_view = function (path) {
   })()
 
   return h('div.column.scroll-y', ol)
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
