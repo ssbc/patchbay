@@ -283,7 +283,6 @@ button:hover {
 .avatar--thumbnail, 
 .avatar--fullsize {
   border: 1px solid #eee;
-  width: 100%;
 }
 
 .avatar--large {
@@ -296,6 +295,10 @@ button:hover {
   height: 2.5em;
   float: left;
   margin-right: .5ex;
+}
+
+.avatar--fullsize {
+  width: 50%;
 }
 
 .profile {
@@ -324,6 +327,7 @@ button:hover {
   margin-right: auto;
   border: 1px solid #eee;
   border-radius: .2em;
+  z-index: 2;
 }
 
 /* searchprompt */
