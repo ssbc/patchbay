@@ -8,6 +8,7 @@ var Progress = require('hyperprogress')
 
 var plugs = require('../plugs')
 var sbot_publish = plugs.first(exports.sbot_publish = [])
+var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
 var follower_of = plugs.first(exports.follower_of = [])
 
 exports.invite_parse = function (invite) {
@@ -19,6 +20,10 @@ exports.invite_accept = function (invite, onProgress, cb) {
   if(!data) return cb(new Error('not a valid invite code:' + invite))
 
   onProgress('connecting...')
+  
+  sbot_gossip_connect(data.remote, function (err) {
+    if(err) console.log(err)
+  })
 
   ssbClient(null, {
     remote: data.invite,
@@ -100,6 +105,7 @@ exports.screen_view = function (invite) {
 
   return div
 }
+
 
 
 
