@@ -293,7 +293,8 @@ exports.message_content = function (msg, sbot) {
     ]
   }
 
-  if(c.type === 'issue-edit') {
+  if(c.type === 'issue-edit'
+   || (c.type === 'post' && c.text === '')) {
     return h('div',
       c.issue ? renderIssueEdit(c) : null,
       c.issues ? c.issues.map(renderIssueEdit) : null)
