@@ -370,17 +370,6 @@ button:hover {
   background: red;
 }
 
-/* themes */
-
-.theme {
-  margin-left: 1ex;
-}
-
-.themes__form {
-  margin: 1ex;
-}
-
-
 /* tabs */
 
 .header {
