@@ -8,34 +8,62 @@ var Progress = require('hyperprogress')
 
 var plugs = require('../plugs')
 var sbot_publish = plugs.first(exports.sbot_publish = [])
+var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
+var follower_of = plugs.first(exports.follower_of = [])
 
+exports.invite_parse = function (invite) {
+  return ref.parseInvite(invite)
+}
 
-//check that invite is 
-// ws:...~shs:key:seed
-function parseMultiServerInvite (invite) {
-  var redirect = invite.split('#')
-  if(!redirect.length) return null
+exports.invite_accept = function (invite, onProgress, cb) {
+  var data = exports.invite_parse(invite)
+  if(!data) return cb(new Error('not a valid invite code:' + invite))
 
-  var parts = redirect[0].split('~')
-  .map(function (e) { return e.split(':') })
+  onProgress('connecting...')
+  
+  sbot_gossip_connect(data.remote, function (err) {
+    if(err) console.log(err)
+  })
 
-  if(parts.length !== 2) return null
-  if(!/^(net|wss?)$/.test(parts[0][0])) return null
-  if(parts[1][0] !== 'shs') return null
-  if(parts[1].length !== 3) return null
-  var p2 = invite.split(':')
-  p2.pop()
+  ssbClient(null, {
+    remote: data.invite,
+    manifest: { invite: {use: 'async'}, getAddress: 'async' }
+  }, function (err, sbot) {
+    if(err) return cb(err)
+    onProgress('requesting follow...')
+    console.log(sbot)
+    sbot.invite.use({feed: id}, function (err, msg) {
 
-  return {
-    invite: redirect[0],
-    remote: p2.join(':'),
-    redirect: '#' + redirect.slice(1).join('#')
-  }
+      //if they already follow us, just check we actually follow them.
+      if(err) follower_of(id, data.key, function (_err, follows) {
+          if(follows) cb(err)
+          else next()
+        })
+      else next()
+
+      function next () {
+        onProgress('following...')
+
+        //remove the seed from the shs address.
+        //then it's correct address.
+        //this should make the browser connect to this as remote.
+        //we don't want to do this if when using this locally, though.
+        if(process.title === 'browser')
+          localStorage.remote = data.remote
+
+        sbot_publish({
+          type: 'contact',
+          contact: data.key,
+          following: true,
+        }, cb)
+      }
+    })
+  })
 }
 
 exports.screen_view = function (invite) {
 
-  var data = parseMultiServerInvite(invite)
+  var data = ref.parseInvite(invite)
   if(!data) return
 
   var progress = Progress(4)
@@ -53,45 +81,21 @@ exports.screen_view = function (invite) {
     progress
   )
 
-  function attempt  () {
-    progress.reset().next('connecting...')
-
-    ssbClient(null, {
-      remote: data.invite,
-      manifest: { invite: {use: 'async'}, getAddress: 'async' }
-    }, function (err, sbot) {
+  function attempt () {
+    exports.invite_accept(invite, function (message) {
+      progress.next(message)
+    }, function (err) {
       if(err) return progress.fail(err)
-      progress.next('requesting follow...')
+      progress.complete()
+      //check for redirect
+      var parts = location.hash.substring(1).split('#')
 
-      sbot.invite.use({feed: id}, function (err, msg) {
-        if(err) return progress.fail(err)
-        progress.next('following...')
-
-        //remove the seed from the shs address.
-        //then it's correct address.
-        //this should make the browser connect to this as remote.
-        //we don't want to do this if when using this locally, though.
-        if(process.title === 'browser')
-          localStorage.remote = data.remote
-
-        sbot_publish({
-          type: 'contact',
-          contact: sbot.id,
-          following: true,
-        }, function (err) {
-          if(err) return progress.fail(err)
-          progress.complete()
-          //check for redirect
-          var parts = location.hash.substring(1).split('#')
-
-          //TODO: handle in a consistent way with either hashrouting
-          //or with tabs...
-          if(parts[0] === data.invite)
-            location.hash = data.redirect
-          else
-            console.log("NO REDIRECT")
-        })
-      })
+      //TODO: handle in a consistent way with either hashrouting
+      //or with tabs...
+      if(parts[0] === data.invite)
+        location.hash = data.redirect
+      else
+        console.log("NO REDIRECT")
     })
   }
 
@@ -101,5 +105,8 @@ exports.screen_view = function (invite) {
 
   return div
 }
+
+
+
 
 

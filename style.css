@@ -80,6 +80,10 @@ pre {
   word-wrap: break-word;
 }
 
+.wide {
+  width: 100%;
+}
+
 p {
   margin-top: .35ex;
 }
@@ -383,17 +387,6 @@ button:hover {
   background: red;
 }
 
-/* themes */
-
-.theme {
-  margin-left: 1ex;
-}
-
-.themes__form {
-  margin: 1ex;
-}
-
-
 /* tabs */
 
 .header {
@@ -469,3 +462,14 @@ button:hover {
   left: 0;
   z-index: 1;
 }
+
+/* progress bar */
+
+.hyperprogress__bar {
+  background: darkgrey;
+}
+.hyperprogress__liquid {
+  background: lightblue;
+}
+
+

@@ -11,7 +11,7 @@ var signified = require('../plugs').first(exports.signified = [])
 
 var builtinTabs = [
   '/public', '/private', '/notifications',
-  '/network', '/query', '/theme', '/versions'
+  '/network', '/query', '/versions'
 ].map(function (name) {
   return {
     title: name,

@@ -152,15 +152,12 @@ module.exports = function () {
     }),
     sbot_whoami: rec.async(function (cb) {
       sbot.whoami(cb)
+    }),
+    sbot_progress: rec.source(function () {
+      return sbot.replicate.changes()
     })
   }
 }
-
-
-
-
-
-
 
 
 
