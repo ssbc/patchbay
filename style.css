@@ -30,8 +30,8 @@ a:focus {
 
 .screen {
   position: absolute;
-  top: 0px; bottom: 0px;
-  left: 0px; right: 0px;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
   overflow-y: hidden;
 }
 
@@ -142,6 +142,7 @@ button:hover {
   background: #f5f5f5;
   border: 1px solid #eee;
   border-radius: .2em;
+  z-index: 5;
 }
 
 /* scrolling feeds, threads */
@@ -460,3 +461,11 @@ button:hover {
   display: block;
 }
 
+.instructions {
+  position: absolute; 
+  border: 1px solid #eee; 
+  padding: 1em;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
