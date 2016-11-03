@@ -118,9 +118,9 @@ exports.screen_view = function (path) {
             getType(peer),
             ' ',
             //TODO: show nicer details, with labels. etc.
-            peer.ping ? duration(peer.ping.rtt.mean) : '',
+            peer.ping && peer.ping.rtt ? duration(peer.ping.rtt.mean) : '',
             ' ',
-            peer.ping ? duration(peer.ping.skew.mean) : '',
+            peer.ping && peer.ping.skew ? duration(peer.ping.skew.mean) : '',
             h('label',
               {title: new Date(peer.stateChange).toString()},
               peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')')
