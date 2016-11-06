@@ -268,17 +268,23 @@ button:hover {
 }
 
 .suggest-box ul {
+  padding: 0;
   list-style-type: none;
-  padding-left: -2em;
+  margin-left: -7em;
+  background: #f7f7f7;
+  padding-top: .1em;
+  padding-bottom: .1em;
+  border-radius: .2em;
+  border: 1px solid #eee;
 }
 
 .suggest-box .selected {
-  background: #eee;
+  background: white;
 }
 
 .suggest-box {
   width: max-content;
-  background: white;
+  background: #white;
   border-radius: 1em;
 }
 
