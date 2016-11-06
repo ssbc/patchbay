@@ -460,15 +460,6 @@ button:hover {
   display: block;
 }
 
-.instructions {
-  position: absolute; 
-  border: 1px solid #eee; 
-  padding: 1em;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-}
-
 /* progress bar */
 
 .hyperprogress__bar {
