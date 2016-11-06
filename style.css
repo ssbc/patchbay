@@ -184,7 +184,7 @@ button:hover {
   margin-bottom: .25em;
   padding: .2em;
   border-top: 1px solid #f5f5f5;
-  border-bottom: 1px solid #f5f5f5;
+  // border-bottom: 1px solid #f5f5f5;
   background: white;
 }
 

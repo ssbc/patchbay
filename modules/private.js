@@ -28,8 +28,8 @@ function unbox () {
 exports.screen_view = function (path) {
 
   if(path === '/private') {
-    if(process.title === 'browser')
-      return h('div', h('h4', 'Private messages are not supported in the lite client.'))
+    //if(process.title === 'browser')
+      //return h('div', h('h4', 'Private messages are not supported in the lite client.'))
 
 
     var id = require('../keys').id

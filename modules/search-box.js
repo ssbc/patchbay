@@ -24,7 +24,7 @@ exports.search_box = function (go) {
   var suggestBox
   var search = h('input.searchprompt', {
     type: 'search',
-    placeholder: '?word, @key, #channel',
+    placeholder: 'Commands',
     onkeydown: function (ev) {
       switch (ev.keyCode) {
         case 13: // enter
