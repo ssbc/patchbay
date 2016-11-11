@@ -8,35 +8,11 @@ var Progress = require('hyperprogress')
 
 var plugs = require('../plugs')
 var sbot_publish = plugs.first(exports.sbot_publish = [])
+var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
 var follower_of = plugs.first(exports.follower_of = [])
 
-
-//check that invite is 
-// ws:...~shs:key:seed
-function parseMultiServerInvite (invite) {
-  var redirect = invite.split('#')
-  if(!redirect.length) return null
-
-  var parts = redirect[0].split('~')
-  .map(function (e) { return e.split(':') })
-
-  if(parts.length !== 2) return null
-  if(!/^(net|wss?)$/.test(parts[0][0])) return null
-  if(parts[1][0] !== 'shs') return null
-  if(parts[1].length !== 3) return null
-  var p2 = invite.split(':')
-  p2.pop()
-
-  return {
-    invite: redirect[0],
-    remote: p2.join(':'),
-    key: '@'+parts[1][1]+'.ed25519',
-    redirect: '#' + redirect.slice(1).join('#')
-  }
-}
-
 exports.invite_parse = function (invite) {
-  return parseMultiServerInvite(invite)
+  return ref.parseInvite(invite)
 }
 
 exports.invite_accept = function (invite, onProgress, cb) {
@@ -44,6 +20,10 @@ exports.invite_accept = function (invite, onProgress, cb) {
   if(!data) return cb(new Error('not a valid invite code:' + invite))
 
   onProgress('connecting...')
+  
+  sbot_gossip_connect(data.remote, function (err) {
+    if(err) console.log(err)
+  })
 
   ssbClient(null, {
     remote: data.invite,
@@ -83,7 +63,7 @@ exports.invite_accept = function (invite, onProgress, cb) {
 
 exports.screen_view = function (invite) {
 
-  var data = parseMultiServerInvite(invite)
+  var data = ref.parseInvite(invite)
   if(!data) return
 
   var progress = Progress(4)
@@ -125,4 +105,8 @@ exports.screen_view = function (invite) {
 
   return div
 }
+
+
+
+
 

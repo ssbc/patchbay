@@ -68,6 +68,7 @@ exports.screen_view = function (path) {
 
   saved.forEach(function (path) {
     var el = screen_view(path)
+    if(!el) return
     el.id = el.id || path
     if (!el) return
     el.scroll = keyscroll(el.querySelector('.scroller__content'))

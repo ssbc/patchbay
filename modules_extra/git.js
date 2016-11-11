@@ -15,6 +15,8 @@ var sbot_get = plugs.first(exports.sbot_get = [])
 var getAvatar = require('ssb-avatar')
 var avatar_name = plugs.first(exports.avatar_name = [])
 var markdown = plugs.first(exports.markdown = [])
+var KVGraph = require('kvgraph')
+var mergeRepo = require('ssb-git/merge')
 
 var self_id = require('../keys').id
 
@@ -23,40 +25,35 @@ function shortRefName(ref) {
 }
 
 function getRefs(msg) {
-  var refs = {}
-  var commitTitles = {}
-  return pull(
+  var updates = new KVGraph('key')
+  var _cb, _refs
+  pull(
     sbot_links({
       reverse: true,
-      source: msg.value.author,
+      // source: msg.value.author,
       dest: msg.key,
       rel: 'repo',
       values: true
     }),
-    pull.map(function (link) {
-      var refUpdates = link.value.content.refs || {}
-      var commits = link.value.content.commits
-      if(commits) {
-        for(var i = 0; i < commits.length; i++) {
-          var commit = commits[i]
-          if(commit && commit.sha1 && commit.title) {
-            commitTitles[commit.sha1] = commit.title
-          }
-        }
+    pull.drain(function (link) {
+      if (link.value.content.type === 'git-update') {
+        updates.add(link)
       }
-      return Object.keys(refUpdates).reverse().map(function (ref) {
-        if(refs[ref]) return
-        refs[ref] = true
-        var rev = refUpdates[ref]
-        if(!rev) return
-        return {
-          name: ref,
-          rev: rev,
-          link: link,
-          title: commitTitles[rev],
-        }
-      }).filter(Boolean)
-    }),
+    }, function (err) {
+      var refs = updates.reduceRight(mergeRepo).refs
+      var cb = _cb
+      if (cb) delete _cb, cb(err, refs)
+      else _refs = refs
+    })
+  )
+
+  return pull(
+    function fn(end, cb) {
+      if (end || fn.ended) cb(true)
+      fn.ended = true
+      if (_refs) cb(_refs)
+      else _cb = cb
+    },
     pull.flatten()
   )
 }
@@ -195,13 +192,20 @@ exports.message_content = function (msg, sbot) {
       }}, 'New Pull Request…')))
 
     pull(getRefs(msg), pull.drain(function (ref) {
-      var parts = /^refs\/(heads|tags)\/(.*)$/.exec(ref.name) || []
+      var name = ref.realname || ref.name
+      var author = ref.link && ref.link.value.author
+      var parts = /^refs\/(heads|tags)\/(.*)$/.exec(name) || []
+      var shortName = parts[2]
       var t
       if(parts[1] === 'heads') t = branchesT
       else if(parts[1] === 'tags') t = tagsT
       if(t) t.append(h('tr',
-        h('td', parts[2]),
-        h('td', h('code', ref.rev)),
+        h('td', shortName,
+          ref.conflict ? [
+            h('br'),
+            h('a', {href: '#'+author}, avatar_name(author))
+          ] : ''),
+        h('td', h('code', ref.hash)),
         h('td', messageTimestampLink(ref.link))))
     }, function (err) {
       if(err) console.error(err)
@@ -289,7 +293,8 @@ exports.message_content = function (msg, sbot) {
     ]
   }
 
-  if(c.type === 'issue-edit') {
+  if(c.type === 'issue-edit'
+   || (c.type === 'post' && c.text === '')) {
     return h('div',
       c.issue ? renderIssueEdit(c) : null,
       c.issues ? c.issues.map(renderIssueEdit) : null)
@@ -369,7 +374,7 @@ function branchMenu(msg, full) {
         var updated = new Date(ref.link.value.timestamp)
         label = branch +
           ' · ' + human(updated) +
-          ' · ' + ref.rev.substr(1, 8) +
+          ' · ' + ref.hash.substr(1, 8) +
           (ref.title ? ' · "' + ref.title + '"' : '')
       }
       return h('option', {value: branch}, label)

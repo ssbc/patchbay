@@ -11,7 +11,7 @@ module.exports = {
   "raw.js": require('./raw.js'),
   "search.js": require('./search'),
   "split.js":  require('./split.js'),
-  "theme.js":  require('./theme.js'),
   "versions.js":  require('./versions.js')
 }
+
 

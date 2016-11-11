@@ -1,7 +1,7 @@
 {
   "name": "patchbay",
   "description": "a pluggable patchwork",
-  "version": "3.5.0",
+  "version": "4.1.0",
   "homepage": "https://github.com/dominictarr/patchbay",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "hyperscript": "^1.4.7",
     "hypertabs": "^2.2.0",
     "is-visible": "^2.0.4",
+    "kvgraph": "^0.1.0",
     "map-filter-reduce": "^3.0.1",
     "mime-types": "^2.1.11",
     "moment": "^2.13.0",
@@ -41,11 +42,13 @@
     "ssb-client": "^4.0.3",
     "ssb-config": "^2.1.1",
     "ssb-feed": "^2.2.1",
+    "ssb-git": "^0.4.1",
     "ssb-keys": "^6.1.0",
     "ssb-links": "^2.0.0",
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "^0.1.0",
     "ssb-query": "^0.1.1",
+    "ssb-ref": "^2.6.2",
     "ssb-sort": "^1.0.0",
     "ssb-ws": "^0.6.2",
     "suggest-box": "^2.2.1",
@@ -63,6 +66,4 @@
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
-
-
 

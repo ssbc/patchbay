@@ -40,22 +40,27 @@ exports.setup_is_fresh_install = function (cb) {
 }
 
 function invite_form () {
-  var status = h('span')
   var accept = h('button', 'enter code', {disabled: true, onclick: function () {
     invite_accept(input.value, function (msg) {
       status.textContent = msg
     }, function (err) {
       if(err) {
-        status.textContent = 'error:'+err.message
+        accept.textContent = 'error:'+(err.message || err.stack || error.type)
         console.error(err)
       }
-      else
-        status.textContent = 'success!'
+      else {
+        input.value = ''
+        accept.textContent = 'success!'
+      }
     })
   }})
-  var input = h('input', {placeholder: 'invite code', oninput: function () {
-    console.log(invite_parse(input.value))
-    if(!invite_parse(input.value)) {
+
+  function parseInput () {
+    if(!input.value) {
+      accept.disabled = true
+      accept.textContent = 'enter code'
+    }
+    else if(!invite_parse(input.value)) {
       accept.disabled = true
       accept.textContent = 'invalid code'
     }
@@ -63,9 +68,11 @@ function invite_form () {
       accept.disabled = false
       accept.textContent = 'accept'
     }
-  }})
+  }
 
-  return h('div.invite-form', status, input, accept)
+  var input = h('input.wide', {placeholder: 'invite code', oninput: parseInput, onchange: parseInput})
+
+  return h('div.invite-form.row', input, accept)
 }
 
 exports.progress_bar = function () {
@@ -90,7 +97,7 @@ exports.progress_bar = function () {
 //that could be when a pub accepts the invite, or when a local peer accepts.
 
 exports.setup_joined_network = function (id) {
-  var followers = h('div')
+  var followers = h('div.column')
   var label = h('label', 'not connected to a network')
   var joined = h('div.setup__joined', label,followers)
 
@@ -119,21 +126,20 @@ exports.screen_view = function (path) {
 
   var status = h('span')
   var invite = h('input', {placeholder: 'invite code'})
-  return h('div.column',
+  return h('div.scroller', h('div.scroller__wrapper',
     h('h1', 'welcome to patchbay!'),
     h('div',
       'please choose avatar image and name',
       avatar_edit(id)
     ),
     h('h2', 'join network'),
-    'invite code',
     invite_form(),
     //show avatars of anyone on the same local network.
     //show realtime changes in your followers, especially for local.
 
     exports.progress_bar(),
     exports.setup_joined_network(require('../keys').id)
-  )
+  ))
 }
 
 

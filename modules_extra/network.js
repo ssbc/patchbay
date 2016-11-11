@@ -38,7 +38,7 @@ function isLongterm (e) {
 //pub is running scuttlebot < 8
 //have connected sucessfully
 function isLegacy (peer) {
-  return /connect/.test(peer.state) || (peer.duration && peer.duration.mean > 0 && !isLongterm(peer))
+  return /connect/.test(peer.state) || (peer.duration && peer.duration.mean) > 0 && !isLongterm(peer)
 }
 
 //tried to connect, but failed.
@@ -143,6 +143,6 @@ exports.screen_view = function (path) {
   })()
 
   return h('div.column.scroll-y', ol)
-
 }
+
 
