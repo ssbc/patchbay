@@ -270,7 +270,7 @@ button:hover {
 .suggest-box ul {
   padding: 0;
   list-style-type: none;
-  margin-left: -7em;
+  margin-left: -2em;
   background: #f7f7f7;
   padding-top: .1em;
   padding-bottom: .1em;
@@ -458,15 +458,6 @@ button:hover {
 
 .hypertabs--selected .hypertabs__x {
   display: block;
-}
-
-.instructions {
-  position: absolute; 
-  border: 1px solid #eee; 
-  padding: 1em;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
 }
 
 /* progress bar */
