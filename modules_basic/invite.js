@@ -78,7 +78,8 @@ exports.screen_view = function (invite) {
       h('code', data.invite)
     ),
     h('button', 'accept', {onclick: attempt}),
-    progress
+    progress,
+    h('p', {innerHTML: 'If the page doesn\'t redirect, navigate to <a href="/">Home</a>'})
   )
 
   function attempt () {
