@@ -1,5 +1,4 @@
 var ref = require('ssb-ref')
-var ui = require('../ui')
 var Scroller = require('pull-scroll')
 var h = require('hyperscript')
 var pull = require('pull-stream')
@@ -49,6 +48,7 @@ exports.screen_view = function (id) {
 
   }
 }
+
 
 
 

@@ -1,7 +1,6 @@
 var markdown = require('ssb-markdown')
 var h = require('hyperscript')
 var ref = require('ssb-ref')
-//
 
 var blob_url = require('../plugs').first(exports.blob_url = [])
 
@@ -26,6 +25,4 @@ exports.markdown = function (content) {
   return md
 
 }
-
-
 

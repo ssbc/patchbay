@@ -1,6 +1,6 @@
 require('depject')(
   require('./modules_core'),
-  require('./modules_basic'),
-  require('./modules_extra')
+  require('./modules_basic')
 ).plugs.app[0]()
+
 

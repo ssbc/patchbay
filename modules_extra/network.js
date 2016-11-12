@@ -43,7 +43,7 @@ function isLegacy (peer) {
 
 //tried to connect, but failed.
 function isInactive (e) {
-  return e.stateChange && e.duration && e.duration.mean == 0
+  return e.stateChange && (e.duration && e.duration.mean == 0)
 }
 
 //havn't tried to connect peer yet.
@@ -118,9 +118,9 @@ exports.screen_view = function (path) {
             getType(peer),
             ' ',
             //TODO: show nicer details, with labels. etc.
-            peer.ping && peer.ping.rtt ? duration(peer.ping.rtt.mean) : '',
+            (peer.ping && peer.ping.rtt) ? duration(peer.ping.rtt.mean) : '',
             ' ',
-            peer.ping && peer.ping.skew ? duration(peer.ping.skew.mean) : '',
+            (peer.ping && peer.ping.skew) ? duration(peer.ping.skew.mean) : '',
             h('label',
               {title: new Date(peer.stateChange).toString()},
               peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')')
@@ -144,3 +144,5 @@ exports.screen_view = function (path) {
 
   return h('div.column.scroll-y', ol)
 }
+
+

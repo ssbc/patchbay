@@ -1,38 +1,25 @@
 var pull = require('pull-stream')
 var Next = require('pull-next')
 
-function first (list, test) {
-  for(var i in list) {
-    var value = test(list[i], i, list)
-    if(value) return value
-  }
-}
-
-function decorate (list, value, caller) {
-  caller = caller || function (d,e,v) { return d(e, v) }
-
-  return list.reduce(function (element, decorator) {
-    return caller(decorator, element, value) || element
-  }, null)
-}
-
-function get(obj, path) {
-  if(obj == null) return obj
+function get (obj, path) {
+  if(!obj) return undefined
   if('string' === typeof path) return obj[path]
-  for(var i = 0; i < path.length; i++) {
-    obj = obj[path[i]]
-    if(obj == null) return
+  if(Array.isArray(path)) {
+    for(var i = 0; obj && i < path.length; i++)
+      obj = obj[path[i]]
+    return obj
   }
-  return obj
-
 }
 
-exports.first = first
-exports.decorate = decorate
+function clone (obj) {
+  var _obj = {}
+  for(var k in obj) _obj[k] = obj[k]
+  return _obj
+}
 
 exports.next = function (createStream, opts, property, range) {
 
-  range = range || opts.reverse ? 'lt' : 'gt'
+  range = range || (opts.reverse ? 'lt' : 'gt')
   property = property || 'timestamp'
 
   var last = null, count = -1
@@ -44,10 +31,12 @@ exports.next = function (createStream, opts, property, range) {
       last = null
     }
     return pull(
-      createStream(opts),
+      createStream(clone(opts)),
       pull.through(function (msg) {
         count ++
-        if(!msg.sync) last = msg
+        if(!msg.sync) {
+          last = msg
+        }
       }, function (err) {
         //retry on errors...
         if(err) return count = -1
@@ -58,11 +47,5 @@ exports.next = function (createStream, opts, property, range) {
   })
 }
 
-exports.firstPlug = function (plugs, args) {
-  if(!Array.isArray(plugs)) throw new Error('plugs must be an array')
-  return exports.first(plugs, function (fn) {
-    return fn.apply(null, args)
-  })
-}
 
 
