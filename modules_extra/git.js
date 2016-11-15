@@ -79,6 +79,7 @@ function repoText(id) {
   getAvatar({links: sbot_links, get: sbot_get}, self_id, id,
       function (err, avatar) {
     if(err) return console.error(err)
+    if (avatar.name[0] !== '%') avatar.name = '%' + avatar.name
     text.nodeValue = avatar.name
   })
   return text

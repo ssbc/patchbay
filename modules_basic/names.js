@@ -42,7 +42,7 @@ var filter2 = {
       content: {
         type: "about",
         name: {"$prefix": ""},
-        about: {"$prefix": "@"} //better: match regexp.
+        about: {"$prefix": ""}
       }
     }
   }
@@ -83,9 +83,10 @@ var merge = {
   }
 }
 
-function add_at(stream) {
+function add_sigil(stream) {
   return pull(stream, pull.map(function (e) {
-      if(!/^@/.test(e.name)) e.name = '@'+e.name
+      if (e && e.id && e.name && e.id[0] !== e.name[0])
+        e.name = e.id[0] + e.name
       return e
     })
   )
@@ -96,7 +97,7 @@ exports.connection_status = function (err) {
     pull(
       many([
         sbot_links2({query: [filter, map, reduce]}),
-        add_at(sbot_query({query: [filter2, map2, reduce]}))
+        add_sigil(sbot_query({query: [filter2, map2, reduce]}))
       ]),
       //reducing also ensures order by the lookup properties
       //in this case: [name, id]
@@ -112,7 +113,7 @@ exports.connection_status = function (err) {
 
     pull(many([
       sbot_links2({query: [filter, map], old: false}),
-      add_at(sbot_query({query: [filter2, map2], old: false}))
+      add_sigil(sbot_query({query: [filter2, map2], old: false}))
     ]),
     pull.drain(update))
   }

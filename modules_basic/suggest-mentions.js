@@ -9,7 +9,7 @@ var blob_url = require('../plugs').first(exports.blob_url = [])
 var signified = require('../plugs').first(exports.signified = [])
 
 exports.suggest = cont.to(function (word, cb) {
-  if(!/^@\w/.test(word)) return cb()
+  if(!/^[%&@]\w/.test(word)) return cb()
 
 
   signified(word, function (err, names) {
