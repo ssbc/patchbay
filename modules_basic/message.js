@@ -79,6 +79,11 @@ exports.message_render = function (msg, sbot) {
     {onkeydown: function (ev) {
       //on enter, hit first meta.
       if(ev.keyCode == 13) {
+
+        // unless in an input
+        if (ev.target.nodeName === 'INPUT'
+          || ev.target.nodeName === 'TEXTAREA') return
+
         msg.querySelector('.enter').click()
       }
     }}
