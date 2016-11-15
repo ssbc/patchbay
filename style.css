@@ -253,7 +253,7 @@ button:hover {
 
 .suggest-box ul {
   list-style-type: none;
-  padding-left: -2em;
+  padding-left: 0;
 }
 
 .suggest-box .selected {
