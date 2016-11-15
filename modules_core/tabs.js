@@ -150,6 +150,12 @@ exports.screen_view = function (path) {
         if (ev.shiftKey)
           search.activate('#', ev)
         return
+
+      // navigate to a message
+      case 53: // 5
+        if (ev.shiftKey)
+          search.activate('%', ev)
+        return
     }
   })
 

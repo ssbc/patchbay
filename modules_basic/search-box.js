@@ -72,7 +72,7 @@ exports.search_box = function (go) {
             subtitle: chan.rank
           }
         }))
-      else if(/^@\w/.test(word)) {
+      else if(/^[@%]\w/.test(word)) {
         signified(word, function (_, names) {
           cb(null, names.map(function (e) {
             return {
