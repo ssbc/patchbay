@@ -10,6 +10,7 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var message_unbox = plugs.first(exports.message_unbox = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
+var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var avatar_image_link = plugs.first(exports.avatar_image_link = [])
 
 function unbox () {
@@ -25,13 +26,20 @@ function unbox () {
 }
 
 exports.screen_view = function (path) {
+  if(path !== '/private') return
 
-  if(path === '/private') {
-    if(process.title === 'browser')
-      return h('div', h('h4', 'Private messages are not supported in the lite client.'))
+  var div = h('div.column.scroller',
+      {style: {'overflow':'auto'}})
 
+  // if local id is different from sbot id, sbot won't have indexes of
+  // private threads
+  var id = require('../keys').id
+  sbot_whoami(function (err, feed) {
+    if (err) return console.error(err)
+    if(id !== feed.id)
+      return div.appendChild(h('h4',
+        'Private messages are not supported in the lite client.'))
 
-    var id = require('../keys').id
     var compose = message_compose(
       {type: 'post', recps: [], private: true},
       {
@@ -48,10 +56,7 @@ exports.screen_view = function (path) {
       )
 
     var content = h('div.column.scroller__content')
-    var div = h('div.column.scroller',
-      {style: {'overflow':'auto'}},
-      h('div.scroller__wrapper', compose, content)
-    )
+    div.appendChild(h('div.scroller__wrapper', compose, content))
 
     pull(
       u.next(sbot_log, {old: false, limit: 100}),
@@ -66,9 +71,9 @@ exports.screen_view = function (path) {
         if(err) throw err
       })
     )
+  })
 
-    return div
-  }
+  return div
 }
 
 function map(ary, iter) {
