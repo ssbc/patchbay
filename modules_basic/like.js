@@ -15,7 +15,7 @@ exports.message_content_mini = function (msg, sbot) {
   if(msg.value.content.type !== 'vote') return
   var link = msg.value.content.vote.link
   return [
-      msg.value.content.vote.value > 0 ? 'Dug' : 'Undug',
+      msg.value.content.vote.value > 0 ? 'dug' : 'undug',
       ' ', message_link(link)
     ]
 }

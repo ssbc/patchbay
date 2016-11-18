@@ -20,8 +20,7 @@ exports.message_render = function (msg, sbot) {
     var div = h('div.message.message--mini',
       h('div.row',
         h('div',
-          avatar_link(msg.value.author, avatar_name(msg.value.author), ''),
-          ' ',
+          avatar_link(msg.value.author, avatar_name(msg.value.author)),
           h('span.message_content', elMini)),
         h('div.message_meta.row', message_meta(msg))
       )
