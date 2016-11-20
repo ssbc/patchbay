@@ -53,7 +53,7 @@ exports.avatar_action = function (id) {
   })
 
   var state = h('label')
-  var label = h('label')
+  var label = h('span')
 
   function update () {
     state.textContent = (
