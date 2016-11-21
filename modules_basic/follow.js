@@ -72,8 +72,10 @@ exports.avatar_action = function (id) {
         type: 'contact',
         contact: id,
         following: !you_follow
-      }, function (err) {
-        //TODO: update after following.
+      }, function (err, msg) {
+        if (err) return console.error(err)
+        you_follow = msg.value.content.following
+        update()
       })
     }}, h('br'), label)
   )
