@@ -92,12 +92,31 @@ function add_sigil(stream) {
   )
 }
 
+var queryNamedGitRepos = [
+  {$filter: {
+    value: {
+      content: {
+        type: "git-repo",
+        name: {"$prefix": ""}
+      }
+    }
+  }},
+  {$map: {
+    name: ["value", "content", "name"],
+    id: ['key'],
+    ts: "timestamp"
+  }},
+  reduce
+]
+
+
 exports.connection_status = function (err) {
   if(!err) {
     pull(
       many([
         sbot_links2({query: [filter, map, reduce]}),
-        add_sigil(sbot_query({query: [filter2, map2, reduce]}))
+        add_sigil(sbot_query({query: [filter2, map2, reduce]})),
+        add_sigil(sbot_query({query: queryNamedGitRepos}))
       ]),
       //reducing also ensures order by the lookup properties
       //in this case: [name, id]
@@ -113,7 +132,8 @@ exports.connection_status = function (err) {
 
     pull(many([
       sbot_links2({query: [filter, map], old: false}),
-      add_sigil(sbot_query({query: [filter2, map2], old: false}))
+      add_sigil(sbot_query({query: [filter2, map2], old: false})),
+      add_sigil(sbot_query({query: queryNamedGitRepos, old: false}))
     ]),
     pull.drain(update))
   }
