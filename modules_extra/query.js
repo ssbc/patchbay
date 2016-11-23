@@ -8,6 +8,10 @@ exports.menu_items = function () {
   return h('a', {href:'#/query'}, '/query')
 }
 
+exports.builtin_tabs = function () {
+  return ['/query']
+}
+
 exports.screen_view = function (path) {
   if(path != '/query') return
   var output, status, editor, stream, query

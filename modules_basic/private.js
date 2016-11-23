@@ -25,6 +25,10 @@ function unbox () {
   )
 }
 
+exports.builtin_tabs = function () {
+  return ['/private']
+}
+
 exports.screen_view = function (path) {
   if(path !== '/private') return
 

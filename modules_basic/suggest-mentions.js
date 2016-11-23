@@ -6,6 +6,7 @@ function isImage (filename) {
 var sbot_links2 = require('../plugs').first(exports.sbot_links2 = [])
 var blob_url = require('../plugs').first(exports.blob_url = [])
 var signified = require('../plugs').first(exports.signified = [])
+var builtin_tabs = require('../plugs').map(exports.builtin_tabs = [])
 
 exports.suggest_mentions = function (word, cb) {
   if(!/^[%&@]\w/.test(word)) return cb()
@@ -24,17 +25,6 @@ exports.suggest_mentions = function (word, cb) {
   })
 }
 
-//TODO: this list should be generated from plugs
-var builtinTabs = [
-  '/public', '/private', '/notifications',
-  '/network', '/query', '/versions'
-].map(function (name) {
-  return {
-    title: name,
-    value: name,
-  }
-})
-
 exports.suggest_search = function (query, cb) {
   if(/^[@%]\w/.test(query)) {
     signified(query, function (_, names) {
@@ -49,8 +39,14 @@ exports.suggest_search = function (query, cb) {
     })
 
   } else if(/^\//.test(query)) {
-    cb(null, builtinTabs.filter(function (name) {
-      return name.value.substr(0, query.length) === query
+    var tabs = [].concat.apply([], builtin_tabs())
+    cb(null, tabs.filter(function (name) {
+      return name.substr(0, query.length) === query
+    }).map(function (name) {
+      return {
+        title: name,
+        value: name,
+      }
     }))
   } else cb()
 }

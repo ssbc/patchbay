@@ -8,6 +8,10 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 
+exports.builtin_tabs = function () {
+  return ['/public']
+}
+
 exports.screen_view = function (path, sbot) {
   if(path === '/public') {
 
