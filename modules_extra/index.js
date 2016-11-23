@@ -1,6 +1,8 @@
 module.exports = {
   "audio-mp3.js":  require('./audio-mp3.js'),
   "channel.js":  require('./channel.js'),
+  "emoji.js":  require('./emoji.js'),
+  "suggest-emoji.js":  require('./suggest-emoji.js'),
   "git.js":  require('./git.js'),
   "notifications.js":  require('./notifications.js'),
   "meta-image.js":  require('./meta-image.js'),

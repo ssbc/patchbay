@@ -260,6 +260,12 @@ button:hover {
   padding-right: 5px;
 }
 
+.emoji {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
+}
+
 
 /* -- suggest box */
 
@@ -284,6 +290,12 @@ button:hover {
   width: max-content;
   background: #white;
   border-radius: 1em;
+}
+
+/* emoji */
+.suggest-box img {
+  height: 20px;
+  width: 20px;
 }
 
 /* avatar */
