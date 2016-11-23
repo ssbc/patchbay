@@ -164,9 +164,10 @@ exports.screen_view = function (path) {
 
   // errors tab
   var errorsContent = h('div.column.scroller__content')
-  var errors = h('div.column.scroller',
-    {style: {'overflow':'auto'}},
-    h('div.scroller__wrapper',
+  var errors = h('div.column.scroller', {
+    id: 'errors',
+    style: {'overflow':'auto'}
+  }, h('div.scroller__wrapper',
       errorsContent
     )
   )
@@ -176,8 +177,6 @@ exports.screen_view = function (path) {
     window.removeEventListener('error', window.onError)
     delete window.onError
   }
-
-  var errors = h('div.errors', {id: 'errors'})
 
   // put errors in a tab
   window.addEventListener('error', function (ev) {
