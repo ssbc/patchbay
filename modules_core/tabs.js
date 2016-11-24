@@ -86,6 +86,9 @@ exports.screen_view = function (path) {
     ev.preventDefault()
     ev.stopPropagation()
 
+    //let the application handle this link
+    if (link.getAttribute('href') === '#') return
+
     //open external links.
     //this ought to be made into something more runcible
     if(open.isExternal(link.href)) return open(link.href)
