@@ -187,10 +187,8 @@ exports.message_content = function (msg, sbot) {
         e.preventDefault()
         this.parentNode.replaceChild(issueForm(msg), this)
       }}, 'New Issue…')),
-      h('div', h('a', {href: '#', onclick: function (e) {
-        e.preventDefault()
-        this.parentNode.replaceChild(pullRequestForm(msg), this)
-      }}, 'New Pull Request…')))
+      newPullRequestButton.call(this, msg)
+    )
 
     pull(getRefs(msg), pull.drain(function (ref) {
       var name = ref.realname || ref.name
@@ -290,7 +288,8 @@ exports.message_content = function (msg, sbot) {
         if (issue.open === false)
           return h('p', 'Closed ', message_link(issue.link), ' in ',
             h('code', issue.object), ' ', h('q', issue.label))
-      }) : null
+      }) : null,
+      newPullRequestButton.call(this, msg)
     ]
   }
 
@@ -381,6 +380,19 @@ function branchMenu(msg, full) {
       return h('option', {value: branch}, label)
     }))
   })
+}
+
+function newPullRequestButton(msg) {
+  return h('div', [
+    h('a', {
+      href: '#',
+      onclick: function (e) {
+        e.preventDefault()
+        this.parentNode.replaceChild(pullRequestForm(msg), this)
+      }},
+      'New Pull Request…'
+    )
+  ])
 }
 
 function pullRequestForm(msg) {
