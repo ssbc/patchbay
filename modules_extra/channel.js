@@ -52,10 +52,6 @@ exports.screen_view = function (path) {
   }
 }
 
-function compareRank(a, b) {
-  return b.rank - a.rank
-}
-
 var channels
 
 var filter = {$filter: {value: {content: {channel: {$gt: ''}}}}}
