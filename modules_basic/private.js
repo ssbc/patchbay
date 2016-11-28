@@ -12,6 +12,7 @@ var message_unbox = plugs.first(exports.message_unbox = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 var sbot_whoami = plugs.first(exports.sbot_whoami = [])
 var avatar_image_link = plugs.first(exports.avatar_image_link = [])
+var emoji_url = plugs.first(exports.emoji_url = [])
 
 function unbox () {
   return pull(
@@ -91,6 +92,14 @@ exports.message_meta = function (msg) {
     }))
 }
 
+exports.message_content_mini = function (msg, sbot)  {
+  if (typeof msg.value.content === 'string') {
+    var icon = emoji_url('lock')
+    return icon
+      ? h('img', {className: 'emoji', src: icon})
+      : 'PRIVATE'
+  }
+}
 
 
 
