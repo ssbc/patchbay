@@ -2,8 +2,8 @@
 var sbot_get = require('../plugs').first(exports.sbot_get = [])
 
 function title (s) {
-  var m = /^[^\n]{0,40}/.exec(s)
-  return m && (m[0].length == 40 ? m[0]+'...' : m[0])
+  var m = /^\n*([^\n]{0,40})/.exec(s)
+  return m && (m[1].length == 40 ? m[1]+'...' : m[1])
 }
 
 exports.message_name = function (id, cb) {
