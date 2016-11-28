@@ -110,6 +110,7 @@ input:focus, .compose:focus, .message:focus, button:focus {
 
 textarea {
   padding: .5em;
+  font-size: 1em;
 }
 
 textarea:focus {
