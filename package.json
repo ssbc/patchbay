@@ -56,10 +56,14 @@
     "visualize-buffer": "0.0.0"
   },
   "devDependencies": {
-    "browselectrify": "^1.0.1"
+    "browselectrify": "^1.0.1",
+    "electro": "^2.0.3",
+    "electron": "^1.4.10"
   },
   "scripts": {
-    "build": "node scripts/style.js && mkdir -p build && browselectrify index.js > build/bundle.js",
+    "start": "electro index.js",
+    "bundle": "node scripts/style.js && mkdir -p build && browselectrify index.js > build/bundle.js",
+    "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
     "graph": "node index.js | dot -Tsvg > graph.svg",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },

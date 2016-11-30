@@ -34,9 +34,9 @@ now clone and run patchbay.
 git clone https://github.com/dominictarr/patchbay.git
 cd patchbay
 npm install
-npm install electro electron-prebuilt -g
-npm run build
-electro index.js
+npm run rebuild
+npm run bundle
+npm start
 ```
 
 ## how to add a feature
