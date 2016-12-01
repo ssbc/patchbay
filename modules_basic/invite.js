@@ -78,8 +78,7 @@ exports.screen_view = function (invite) {
       h('code', data.invite)
     ),
     h('button', 'accept', {onclick: attempt}),
-    progress,
-    h('p', {innerHTML: 'If the page doesn\'t redirect, navigate to <a href="/">Home</a>'})
+    progress
   )
 
   function attempt () {
@@ -94,7 +93,7 @@ exports.screen_view = function (invite) {
       //TODO: handle in a consistent way with either hashrouting
       //or with tabs...
       if(parts[0] === data.invite)
-        location.hash = data.redirect
+        location.hash = ''
       else
         console.log("NO REDIRECT")
     })
