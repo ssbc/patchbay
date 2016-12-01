@@ -60,6 +60,7 @@
   },
   "scripts": {
     "build": "node scripts/style.js && mkdir -p build && browselectrify index.js > build/bundle.js",
+    "lite": "node scripts/style.js && mkdir -p build && browserify index.js | indexhtmlify > build/index.html",
     "graph": "node index.js | dot -Tsvg > graph.svg",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
