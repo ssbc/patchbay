@@ -1,55 +1,74 @@
+'use strict'
+var cont = require('cont')
 var h = require('hyperscript')
 var suggest = require('suggest-box')
 var pull = require('pull-stream')
-var plugs = require('../plugs')
-var sbot_query = plugs.first(exports.sbot_query = [])
-var sbot_links2 = plugs.first(exports.sbot_links2 = [])
-var suggest_search = plugs.asyncConcat(exports.suggest_search = [])
+
+//var plugs = require('../plugs')
+//var sbot_query = plugs.first(exports.sbot_query = [])
+//var sbot_links2 = plugs.first(exports.sbot_links2 = [])
+//var suggest_search = plugs.asyncConcat(exports.suggest_search = [])
+
+exports.needs = {
+  sbot_query: 'first', sbot_links2: 'first',
+  suggest_search: 'map' //REWRITE
+}
 
 var channels = []
 
+exports.gives  = 'search_box'
 
-exports.search_box = function (go) {
+exports.create = function (api) {
 
-  var suggestBox
-  var search = h('input.searchprompt', {
-    type: 'search',
-    placeholder: 'Commands',
-    onkeydown: function (ev) {
-      switch (ev.keyCode) {
-        case 13: // enter
-          if (suggestBox && suggestBox.active) {
-            suggestBox.complete()
-            ev.stopPropagation()
-          }
-          if (go(search.value.trim(), !ev.ctrlKey))
+  return function (go) {
+
+    var suggestBox
+    var search = h('input.searchprompt', {
+      type: 'search',
+      placeholder: 'Commands',
+      onkeydown: function (ev) {
+        switch (ev.keyCode) {
+          case 13: // enter
+            if (suggestBox && suggestBox.active) {
+              suggestBox.complete()
+              ev.stopPropagation()
+            }
+            if (go(search.value.trim(), !ev.ctrlKey))
+              search.blur()
+            return
+          case 27: // escape
+            ev.preventDefault()
             search.blur()
-          return
-        case 27: // escape
-          ev.preventDefault()
-          search.blur()
-          return
+            return
+        }
+      }
+    })
+
+    search.activate = function (sigil, ev) {
+      search.focus()
+      ev.preventDefault()
+      if (search.value[0] === sigil) {
+        search.selectionStart = 1
+        search.selectionEnd = search.value.length
+      } else {
+        search.value = sigil
       }
     }
-  })
 
-  search.activate = function (sigil, ev) {
-    search.focus()
-    ev.preventDefault()
-    if (search.value[0] === sigil) {
-      search.selectionStart = 1
-      search.selectionEnd = search.value.length
-    } else {
-      search.value = sigil
-    }
+    var suggestions = {}
+
+    // delay until the element has a parent
+    setTimeout(function () {
+      suggestBox = suggest(search, function (word, cb) {
+        cont.para(api.suggest_search.map(function (e) {
+          return function (cb) { e(word, cb) }
+        }))(cb)
+      }, {})
+    }, 10)
+
+    return search
   }
 
-  var suggestions = {}
-
-  // delay until the element has a parent
-  setTimeout(function () {
-    suggestBox = suggest(search, suggest_search, {})
-  }, 10)
-
-  return search
 }
+
+

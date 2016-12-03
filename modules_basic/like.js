@@ -5,58 +5,74 @@ var pull = require('pull-stream')
 
 var plugs = require('../plugs')
 
-var message_confirm = plugs.first(exports.message_confirm = [])
-var message_link = plugs.first(exports.message_link = [])
-var sbot_links = plugs.first(exports.sbot_links = [])
+//var message_confirm = plugs.first(exports.message_confirm = [])
+//var message_link = plugs.first(exports.message_link = [])
+//var sbot_links = plugs.first(exports.sbot_links = [])
 
-
-exports.message_content =
-exports.message_content_mini = function (msg, sbot) {
-  if(msg.value.content.type !== 'vote') return
-  var link = msg.value.content.vote.link
-  return [
-      msg.value.content.vote.value > 0 ? 'dug' : 'undug',
-      ' ', message_link(link)
-    ]
+exports.needs = {
+  message_confirm: 'first',
+  message_link: 'first',
+  sbot_links: 'first'
 }
 
-exports.message_meta = function (msg, sbot) {
-  var digs = h('a')
+exports.gives = {
+  message_content: true,
+  message_content_mini: true,
+  message_meta: true,
+  message_action: true
+}
 
-  var votes = []
-  for(var k in CACHE) {
-    if(CACHE[k].content.type == 'vote' &&
-      (CACHE[k].content.vote == msg.key ||
-      CACHE[k].content.vote.link == msg.key
-      ))
-      votes.push({source: CACHE[k].author, dest: k, rel: 'vote'})
+exports.create = function (api) {
+  var exports = {}
+
+  exports.message_content =
+  exports.message_content_mini = function (msg, sbot) {
+    if(msg.value.content.type !== 'vote') return
+    var link = msg.value.content.vote.link
+    return [
+        msg.value.content.vote.value > 0 ? 'dug' : 'undug',
+        ' ', api.message_link(link)
+      ]
   }
 
-  if(votes.length === 1)
-    digs.textContent = ' 1 Dig'
-  if(votes.length > 1)
-    digs.textContent = ' ' + votes.length + ' Digs'
+  exports.message_meta = function (msg, sbot) {
+    var digs = h('a')
 
-  return digs
+    var votes = []
+    for(var k in CACHE) {
+      if(CACHE[k].content.type == 'vote' &&
+        (CACHE[k].content.vote == msg.key ||
+        CACHE[k].content.vote.link == msg.key
+        ))
+        votes.push({source: CACHE[k].author, dest: k, rel: 'vote'})
+    }
+
+    if(votes.length === 1)
+      digs.textContent = ' 1 Dig'
+    if(votes.length > 1)
+      digs.textContent = ' ' + votes.length + ' Digs'
+
+    return digs
+  }
+
+  exports.message_action = function (msg, sbot) {
+    if(msg.value.content.type !== 'vote')
+      return h('a.dig', {href: '#', onclick: function () {
+        var dig = {
+          type: 'vote',
+          vote: { link: msg.key, value: 1, expression: 'Dig' }
+        }
+        if(msg.value.content.recps) {
+          dig.recps = msg.value.content.recps.map(function (e) {
+            return e && typeof e !== 'string' ? e.link : e
+          })
+          dig.private = true
+        }
+        //TODO: actually publish...
+
+        api.message_confirm(dig)
+      }}, 'Dig')
+
+  }
+  return exports
 }
-
-exports.message_action = function (msg, sbot) {
-  if(msg.value.content.type !== 'vote')
-    return h('a.dig', {href: '#', onclick: function () {
-      var dig = {
-        type: 'vote',
-        vote: { link: msg.key, value: 1, expression: 'Dig' }
-      }
-      if(msg.value.content.recps) {
-        dig.recps = msg.value.content.recps.map(function (e) {
-          return e && typeof e !== 'string' ? e.link : e
-        })
-        dig.private = true
-      }
-      //TODO: actually publish...
-
-      message_confirm(dig)
-    }}, 'Dig')
-
-}
-
