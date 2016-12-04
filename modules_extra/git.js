@@ -257,7 +257,7 @@ exports.create = function (api) {
             getForks(msg.key)
           ]), pull.map(function (fork) {
             return h('option', {value: fork.id},
-              repoLink(fork.id), ' by ', avatar_name(fork.author))
+              repoLink(fork.id), ' by ', api.avatar_name(fork.author))
           }))
         }),
         ':',
@@ -387,7 +387,7 @@ exports.create = function (api) {
                 h('a', {href: '#'+link.key}, title), h('br'),
                 h('small',
                   'opened ', messageTimestampLink(link),
-                  ' by ', h('a', {href: '#'+author}, avatar_name(author))))))
+                  ' by ', h('a', {href: '#'+author}, api.avatar_name(author))))))
           }, function (err) {
             if (err) console.error(err)
           })

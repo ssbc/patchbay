@@ -62,7 +62,6 @@ module.exports = {
 
     var rec = Reconnect(function (isConn) {
       function notify (value) {
-        console.log('connection_status', value, connection_status)
         isConn(value); api.connection_status(value) //.forEach(function (fn) { fn(value) })
       }
 
@@ -72,7 +71,6 @@ module.exports = {
       }, function (err, _sbot) {
         if(err)
           return notify(err)
-        console.log("SboT CONNECT", _sbot)
 
         sbot = _sbot
         sbot.on('closed', function () {
@@ -94,7 +92,7 @@ module.exports = {
     }
 
     var feed = createFeed(internal, keys, {remote: true})
-    console.log('create SBOT')
+
     return {
       connection_status: connection_status,
       sbot_blobs_add: rec.sink(function (cb) {
@@ -126,7 +124,6 @@ module.exports = {
         return sbot.query.read(query)
       }),
       sbot_log: rec.source(function (opts) {
-        console.log('sbot_log', opts)
         return pull(
           sbot.createLogStream(opts),
           pull.through(function (e) {
@@ -182,6 +179,11 @@ module.exports = {
     }
   }
 }
+
+
+
+
+
 
 
 
