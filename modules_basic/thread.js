@@ -107,7 +107,7 @@ exports.create = function (api) {
 
           //decrypt
           thread = thread.map(function (msg) {
-            return 'string' === typeof msg.value.content ? message_unbox(msg) : msg
+            return 'string' === typeof msg.value.content ? api.message_unbox(msg) : msg
           })
 
           if(err) return content.appendChild(h('pre', err.stack))

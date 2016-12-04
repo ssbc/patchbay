@@ -1,10 +1,22 @@
 var isVisible = require('is-visible').isVisible
 var h = require('hyperscript')
-var plugs = require('../plugs')
 
-var avatar = plugs.first(exports.avatar = [])
-var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
-var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
+//var avatar = plugs.first(exports.avatar = [])
+//var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
+//var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
+
+exports.needs = {
+  avatar: 'first',
+  sbot_gossip_peers: 'first',
+  sbot_gossip_connect: 'first'
+}
+
+exports.gives = {
+  menu_items: true,
+  builtin_tabs: true,
+  screen_view: true
+}
+
 //sbot_gossip_connect
 //sbot_gossip_add
 
@@ -12,14 +24,6 @@ var human = require('human-time')
 
 function legacyToMultiServer(addr) {
   return 'net:'+addr.host + ':'+addr.port + '~shs:'+addr.key.substring(1).replace('.ed25519','')
-}
-
-exports.menu_items = function () {
-  return h('a', {href: '#/network'}, '/network')
-}
-
-exports.builtin_tabs = function () {
-  return ['/network']
 }
 
 //types of peers
@@ -92,61 +96,75 @@ function duration (s) {
     return round(s)+'ms'
 }
 
-exports.screen_view = function (path) {
 
-  if(path !== '/network') return
 
-  var ol = h('ul.network')
+exports.create = function (api) {
 
-  ;(function poll () {
+  return {
+    menu_items: function () {
+      return h('a', {href: '#/network'}, '/network')
+    },
 
-    //if this tab isn't open, don't update.
-    //todo: make a better way to do this...
-    if(!isVisible(ol))
-      return setTimeout(poll, 1000)
+    builtin_tabs: function () {
+      return ['/network']
+    },
 
-    sbot_gossip_peers(function (err, list) {
-      ol.innerHTML = ''
-      list.sort(function (a, b) {
-        return (
-          (states[b.state] || 0) - (states[a.state] || 0)
-          || types[getType(b)] - types[getType(a)]
-          || b.stateChange - a.stateChange
-        )
-      }).forEach(function (peer) {
-        ol.appendChild(h('div',
-          avatar(peer.key, 'thumbnail'),
-          h('div',
-            peer.state || 'not connected',
-            ' ',
-            getType(peer),
-            ' ',
-            //TODO: show nicer details, with labels. etc.
-            (peer.ping && peer.ping.rtt) ? duration(peer.ping.rtt.mean) : '',
-            ' ',
-            (peer.ping && peer.ping.skew) ? duration(peer.ping.skew.mean) : '',
-            h('label',
-              {title: new Date(peer.stateChange).toString()},
-              peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')')
-            ),
-            'source:'+peer.source,
-            h('pre', legacyToMultiServer(peer)),
-            h('button', 'connect', {onclick: function () {
-              sbot_gossip_connect(peer, function (err) {
-                if(err) console.error(err)
-                else console.log('connected to', peer)
-              })
-            }})
-          )
-        )
-      })
+    screen_view: function (path) {
 
-      setTimeout(poll, 5000)
-    })
+      if(path !== '/network') return
 
-  })()
+      var ol = h('ul.network')
 
-  return h('div.column.scroll-y', ol)
+      ;(function poll () {
+
+        //if this tab isn't open, don't update.
+        //todo: make a better way to do this...
+        if(!isVisible(ol))
+          return setTimeout(poll, 1000)
+
+        sbot_gossip_peers(function (err, list) {
+          ol.innerHTML = ''
+          list.sort(function (a, b) {
+            return (
+              (states[b.state] || 0) - (states[a.state] || 0)
+              || types[getType(b)] - types[getType(a)]
+              || b.stateChange - a.stateChange
+            )
+          }).forEach(function (peer) {
+            ol.appendChild(h('div',
+              avatar(peer.key, 'thumbnail'),
+              h('div',
+                peer.state || 'not connected',
+                ' ',
+                getType(peer),
+                ' ',
+                //TODO: show nicer details, with labels. etc.
+                (peer.ping && peer.ping.rtt) ? duration(peer.ping.rtt.mean) : '',
+                ' ',
+                (peer.ping && peer.ping.skew) ? duration(peer.ping.skew.mean) : '',
+                h('label',
+                  {title: new Date(peer.stateChange).toString()},
+                  peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')')
+                ),
+                'source:'+peer.source,
+                h('pre', legacyToMultiServer(peer)),
+                h('button', 'connect', {onclick: function () {
+                  sbot_gossip_connect(peer, function (err) {
+                    if(err) console.error(err)
+                    else console.log('connected to', peer)
+                  })
+                }})
+              )
+            )
+          })
+
+          setTimeout(poll, 5000)
+        })
+
+      })()
+
+      return h('div.column.scroll-y', ol)
+    }
+  }
 }
-
 

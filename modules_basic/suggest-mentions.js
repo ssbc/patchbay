@@ -12,7 +12,7 @@ exports.needs = {
   sbot_links2: 'first',
   blob_url: 'first',
   signified: 'first',
-  bultin_tabs: 'map'
+  builtin_tabs: 'map'
 }
 
 exports.gives = {
@@ -41,30 +41,32 @@ exports.create = function (api) {
       }
     },
 
-    suggest_search: function (query, cb) {
-      if(/^[@%]\w/.test(query)) {
-        api.signified(query, function (_, names) {
-          cb(null, names.map(function (e) {
+    suggest_search: function (query) {
+      return function (cb) {
+        if(/^[@%]\w/.test(query)) {
+          api.signified(query, function (_, names) {
+            cb(null, names.map(function (e) {
+              return {
+                title: e.name + ':'+e.id.substring(0, 10),
+                value: e.id,
+                subtitle: e.rank,
+                rank: e.rank
+              }
+            }))
+          })
+
+        } else if(/^\//.test(query)) {
+          var tabs = [].concat.apply([], api.builtin_tabs())
+          cb(null, tabs.filter(function (name) {
+            return name.substr(0, query.length) === query
+          }).map(function (name) {
             return {
-              title: e.name + ':'+e.id.substring(0, 10),
-              value: e.id,
-              subtitle: e.rank,
-              rank: e.rank
+              title: name,
+              value: name,
             }
           }))
-        })
-
-      } else if(/^\//.test(query)) {
-        var tabs = [].concat.apply([], builtin_tabs())
-        cb(null, tabs.filter(function (name) {
-          return name.substr(0, query.length) === query
-        }).map(function (name) {
-          return {
-            title: name,
-            value: name,
-          }
-        }))
-      } else cb()
+        } else cb()
+      }
     }
   }
 }

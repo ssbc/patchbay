@@ -60,9 +60,14 @@ exports.create = function (api) {
     // delay until the element has a parent
     setTimeout(function () {
       suggestBox = suggest(search, function (word, cb) {
-        cont.para(api.suggest_search.map(function (e) {
-          return function (cb) { e(word, cb) }
-        }))(cb)
+        cont.para(api.suggest_search(word))
+          (function (err, ary) {
+            if(err) return cb(err)
+
+            cb(null, ary.filter(Boolean).reduce(function (a, b) {
+              return a.concat(b)
+            }, []))
+          })
       }, {})
     }, 10)
 
@@ -70,5 +75,4 @@ exports.create = function (api) {
   }
 
 }
-
 

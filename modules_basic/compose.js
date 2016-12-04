@@ -103,7 +103,7 @@ exports.create = function (api) {
           if (cb) cb(err)
           else alert(err.message)
         }
-        return message_confirm(meta, done)
+        return api.message_confirm(meta, done)
       }
 
       api.message_confirm(content, done)
@@ -137,11 +137,12 @@ exports.create = function (api) {
       )
 
     suggest(ta, function (name, cb) {
-      cont.para(suggest_mentions.map(function (e) { return e(name) }))
+      cont.para(api.suggest_mentions(name))
         (function (err, ary) {
           cb(null, ary.reduce(function (a, b) {
+            if(!b) return a
             return a.concat(b)
-          }))
+          }, []))
         })
     }, {})
 
@@ -150,4 +151,5 @@ exports.create = function (api) {
   }
 
 }
+
 

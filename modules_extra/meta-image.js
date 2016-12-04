@@ -5,20 +5,24 @@ var ref = require('ssb-ref');
 
 //render a message
 
-var plugs = require('../plugs');
-var message_link = plugs.first(exports.message_link = []);
-var message_confirm = plugs.first(exports.message_confirm = []);
-var sbot_links = plugs.first(exports.sbot_links = []);
-var blob_url = plugs.first(exports.blob_url = []);
+//var plugs = require('../plugs');
+//var message_link = plugs.first(exports.message_link = []);
+//var message_confirm = plugs.first(exports.message_confirm = []);
+//var sbot_links = plugs.first(exports.sbot_links = []);
+//var blob_url = plugs.first(exports.blob_url = []);
+//
+exports.needs = { blob_url: 'first' }
+exports.gives = 'message_content'
 
-exports.message_content = function(msg, sbot) {
+exports.create = function (api) {
+  return function(msg, sbot) {
     if (msg.value.content.type !== 'meta-image')
         return;
 
     var v = msg.value.content;
     return h('div',
         // h('h2', "(" + v.Track + ") " + v.Title),
-        h('img', { "src" : blob_url(v.link) }))
+        h('img', { "src" : api.blob_url(v.link) }))
 
     // h('dl',
     //          Object.keys(v).map(function(k) {
@@ -44,5 +48,5 @@ exports.message_content = function(msg, sbot) {
     //     "Track": "2",
     //     "Width": "0",
 
+  }
 }
-

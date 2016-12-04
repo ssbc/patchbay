@@ -4,9 +4,17 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var TextNodeSearcher = require('text-node-searcher')
 
-var plugs = require('../plugs')
-var message_render = plugs.first(exports.message_render = [])
-var sbot_log = plugs.first(exports.sbot_log = [])
+//var plugs = require('../plugs')
+//var message_render = plugs.first(exports.message_render = [])
+//var sbot_log = plugs.first(exports.sbot_log = [])
+
+exports.needs = {
+  message_render: 'first',
+  sbot_log: 'first'
+}
+
+exports.gives = 'screen_view'
+
 var whitespace = /\s+/
 
 function andSearch(terms, inputs) {
@@ -46,60 +54,55 @@ function highlight(el, query) {
   return el
 }
 
-exports.screen_view = function (path) {
-  if(path[0] === '?') {
-    var query = path.substr(1).trim().split(whitespace)
-    var _matches = searchFilter(query)
+exports.create = function (api) {
 
-    var total = 0, matches = 0
+  return function (path) {
+    if(path[0] === '?') {
+      var query = path.substr(1).trim().split(whitespace)
+      var _matches = searchFilter(query)
 
-    var header = h('div.search_header', '')
-    var content = h('div.column.scroller__content')
-    var div = h('div.column.scroller',
-      {style: {'overflow':'auto'}},
-      h('div.scroller__wrapper',
-        header,
-        content
+      var total = 0, matches = 0
+
+      var header = h('div.search_header', '')
+      var content = h('div.column.scroller__content')
+      var div = h('div.column.scroller',
+        {style: {'overflow':'auto'}},
+        h('div.scroller__wrapper',
+          header,
+          content
+        )
       )
-    )
 
-    function matchesQuery (data) {
-      total++
-      var m = _matches(data)
-      if(m) matches++
-      header.textContent = 'searched:'+total+', found:'+matches
-      return m
+      function matchesQuery (data) {
+        total++
+        var m = _matches(data)
+        if(m) matches++
+        header.textContent = 'searched:'+total+', found:'+matches
+        return m
+      }
+
+
+
+      function renderMsg(msg) {
+        var el = api.message_render(msg)
+        highlight(el, createOrRegExp(query))
+        return el
+      }
+
+      pull(
+        api.sbot_log({old: false}),
+        pull.filter(matchesQuery),
+        Scroller(div, content, renderMsg, true, false)
+      )
+
+      pull(
+        u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+        pull.filter(matchesQuery),
+        Scroller(div, content, renderMsg, false, false)
+      )
+
+      return div
     }
-
-
-
-    function renderMsg(msg) {
-      var el = message_render(msg)
-      highlight(el, createOrRegExp(query))
-      return el
-    }
-
-    pull(
-      sbot_log({old: false}),
-      pull.filter(matchesQuery),
-      Scroller(div, content, renderMsg, true, false)
-    )
-
-    pull(
-      u.next(sbot_log, {reverse: true, limit: 500, live: false}),
-      pull.filter(matchesQuery),
-      Scroller(div, content, renderMsg, false, false)
-    )
-
-    return div
   }
+
 }
-
-
-
-
-
-
-
-
-

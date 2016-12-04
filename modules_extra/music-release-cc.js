@@ -5,34 +5,40 @@ var ref = require('ssb-ref');
 
 //render a message
 
-var plugs = require('../plugs');
-var message_link = plugs.first(exports.message_link = []);
-var message_confirm = plugs.first(exports.message_confirm = []);
-var sbot_links = plugs.first(exports.sbot_links = []);
-var blob_url = plugs.first(exports.blob_url = []);
+//var plugs = require('../plugs');
+//var message_link = plugs.first(exports.message_link = []);
+//var message_confirm = plugs.first(exports.message_confirm = []);
+//var sbot_links = plugs.first(exports.sbot_links = []);
+//var blob_url = plugs.first(exports.blob_url = []);
+//
 
-exports.message_content = function(msg, sbot) {
-    if (msg.value.content.type !== 'music-release-cc')
-        return;
+exports.needs = { blob_url: 'first' }
+exports.gives = 'message_content'
 
-    var tracks = msg.value.content.tracks;
-    return h('div',
-        h('img', { "src" : blob_url(msg.value.content.cover) }),
-        h('h1', msg.value.content.title),
-        h('ol',
-                 Object.keys(tracks).map(function(k) {
-                     var t = tracks[k];
-                     return h('li', t.fname,
-                         h("br"),
-                         h('audio', {
-                                  "controls" : true,
-                                  "src" : blob_url(t.link)
-                              }))
-                 })),
-        h('p',
-                 "More info:", h('a', { href : msg.value.content.archivedotorg }, "archive.org"),
-                 h("br"),
-                 "License:", h('a', { href : msg.value.content.license }, "Link")))
+exports.create = function (api) {
+  return function(msg, sbot) {
+      if (msg.value.content.type !== 'music-release-cc')
+          return;
+
+      var tracks = msg.value.content.tracks;
+      return h('div',
+          h('img', { "src" : api.blob_url(msg.value.content.cover) }),
+          h('h1', msg.value.content.title),
+          h('ol',
+                   Object.keys(tracks).map(function(k) {
+                       var t = tracks[k];
+                       return h('li', t.fname,
+                           h("br"),
+                           h('audio', {
+                                    "controls" : true,
+                                    "src" : api.blob_url(t.link)
+                                }))
+                   })),
+          h('p',
+                   "More info:", h('a', { href : msg.value.content.archivedotorg }, "archive.org"),
+                   h("br"),
+                   "License:", h('a', { href : msg.value.content.license }, "Link")))
+  }
 }
 
 // copied from like.js
@@ -77,4 +83,5 @@ exports.message_content = function(msg, sbot) {
 //     }}, 'yup')
 
 // }
+
 
