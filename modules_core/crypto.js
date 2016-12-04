@@ -44,12 +44,13 @@ module.exports = {
       }))
     }
 
-    exports.publish = function (content, id) {
+    exports.publish = function (content, cb) {
       if(content.recps)
         content = exports.message_box(content)
       api.sbot_publish(content, function (err, msg) {
         if(err) throw err
         console.log('PUBLISHED', msg)
+        if(cb) cb(err, msg)
       })
     }
 
