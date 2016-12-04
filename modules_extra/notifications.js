@@ -49,9 +49,7 @@ exports.create = function (api) {
       if (!id) return cb(null, false)
       if (typeof id === 'object' && typeof id.link === 'string') id = id.link
       if (!ref.isMsg(id)) return cb(null, false)
-      console.log('LOOKUP', id)
       api.sbot_get(id, function (err, msg) {
-        console.log('FOUND', msg)
         if (err && err.name == 'NotFoundError') cb(null, false)
         else if (err) cb(err)
         else if (msg.content.type === 'issue' || msg.content.type === 'pull-request')
@@ -72,10 +70,8 @@ exports.create = function (api) {
     }
 
     return paramap(function (msg, cb) {
-      console.log("LOOKUP", msg)
       var c = msg.value && msg.value.content
       if (!c || typeof c !== 'object') return cb()
-      console.log(msg.value.author, ourIds)
       if (msg.value.author in ourIds) return cb()
 
       if (c.mentions && Array.isArray(c.mentions) && c.mentions.some(linksToUs))
@@ -135,7 +131,6 @@ exports.create = function (api) {
           if (err) return console.error(err)
           if (!oldest || msg.value.timestamp < oldest) {
             oldest = msg.value.timestamp
-            console.log('OLDEST', msg)
           }
         })
 
@@ -162,7 +157,6 @@ exports.create = function (api) {
           pull.filter(),
           pull.take(function (msg) {
             // abort stream after we pass the oldest messages of our feeds
-            console.log('old?', msg.value.timestamp, oldest)
             return !oldest ? true : msg.value.timestamp > oldest
           }),
           Scroller(div, content, api.message_render, false, false)
@@ -173,6 +167,4 @@ exports.create = function (api) {
     }
   }
 }
-
-
 
