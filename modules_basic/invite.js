@@ -93,7 +93,7 @@ exports.screen_view = function (invite) {
       //TODO: handle in a consistent way with either hashrouting
       //or with tabs...
       if(parts[0] === data.invite)
-        location.hash = data.redirect
+        location.hash = ''
       else
         console.log("NO REDIRECT")
     })

@@ -8,6 +8,7 @@ var message_render = plugs.first(exports.message_render = [])
 var message_compose = plugs.first(exports.message_compose = [])
 var sbot_log = plugs.first(exports.sbot_log = [])
 var sbot_query = plugs.first(exports.sbot_query = [])
+var mfr = require('map-filter-reduce')
 
 exports.message_meta = function (msg) {
   var chan = msg.value.content.channel
@@ -49,4 +50,55 @@ exports.screen_view = function (path) {
 
     return div
   }
+}
+
+var channels
+
+var filter = {$filter: {value: {content: {channel: {$gt: ''}}}}}
+var map = {$map: {'name': ['value', 'content', 'channel']}}
+var reduce = {$reduce: {
+  name: 'name',
+  rank: {$count: true}
+}}
+
+exports.connection_status = function (err) {
+  if(err) return
+
+  channels = []
+
+  pull(
+    sbot_query({query: [filter, map, reduce]}),
+    pull.collect(function (err, chans) {
+      if (err) return console.error(err)
+      channels = chans.concat(channels)
+    })
+  )
+
+  pull(
+    sbot_log({old: false}),
+    mfr.filter(filter),
+    mfr.map(map),
+    pull.drain(function (chan) {
+      var c = channels.find(function (e) {
+        return e.name === chan.name
+      })
+      if (c) c.rank++
+      else channels.push(chan)
+    })
+  )
+}
+
+exports.suggest_search = function (query, cb) {
+  if(!/^#\w/.test(query)) return cb()
+  cb(null, channels.filter(function (chan) {
+    return ('#'+chan.name).substring(0, query.length) === query
+  })
+  .map(function (chan) {
+    var name = '#'+chan.name
+    return {
+      title: name,
+      value: name,
+      subtitle: chan.rank
+    }
+  }))
 }

@@ -36,6 +36,7 @@ function getThread (root, cb) {
   //a stream. maybe it would be better to accept an array?
 
   sbot_get(root, function (err, value) {
+    if (err) return cb(err)
     var msg = {key: root, value: value}
 //    if(value.content.root) return getThread(value.content.root, cb)
 
@@ -88,6 +89,8 @@ exports.screen_view = function (id) {
         //(i.e. message key) and then update it if necessary.
         //also, it may have moved (say, if you received a missing message)
         content.innerHTML = ''
+        if(err) return content.appendChild(h('pre', err.stack))
+
         //decrypt
         thread = thread.map(function (msg) {
           return 'string' === typeof msg.value.content ? message_unbox(msg) : msg

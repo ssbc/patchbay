@@ -2,6 +2,17 @@ body {
   font-family: sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6, p, ul, ol {
+  margin-top: .35em;
+}
+
+h1 { font-size: 1.2em; }
+h2 { font-size: 1.18em; }
+h3 { font-size: 1.15em; }
+h4 { font-size: 1.12em; }
+h5 { font-size: 1.1em; }
+h6 { font-size: 1em; }
+
 * {
   word-break: break-word;
 }
@@ -19,8 +30,8 @@ a:focus {
 
 .screen {
   position: absolute;
-  top: 0px; bottom: 0px;
-  left: 0px; right: 0px;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
   overflow-y: hidden;
 }
 
@@ -99,12 +110,12 @@ input:focus, .compose:focus, .message:focus, button:focus {
 
 textarea {
   padding: .5em;
+  font-size: 1em;
 }
 
 textarea:focus {
   outline: none;
   border-color: none;
-  box-shadow: none;
 }
 
 button {
@@ -135,8 +146,8 @@ button:hover {
   padding-left: 1em;
   background: #f5f5f5;
   border: 1px solid #eee;
-  box-shadow: 3px 0px 3px #ccc;
   border-radius: .2em;
+  z-index: 5;
 }
 
 /* scrolling feeds, threads */
@@ -158,7 +169,7 @@ button:hover {
   width: 100%;
   margin-top: .5em;
   margin-bottom: .5em;
-  box-shadow: #dadada 1px 2px 8px;
+  border: 1px solid #f5f5f5;
 }
 
 .compose button {
@@ -168,25 +179,31 @@ button:hover {
 /* messages */
 
 .message {
-  word-wrap: break-word; 
-  margin-bottom: 1em;
-  padding: 0.3rem;
-  border-radius: 2px;
-  box-shadow: #dadada 1px 2px 8px;
+  position: relative;
+  flex-basis: 0;
+  margin-top: .25em; 
+  margin-bottom: .25em;
+  padding: .2em;
+  border-top: 1px solid #f5f5f5;
+  // border-bottom: 1px solid #f5f5f5;
   background: white;
 }
 
+.message:hover {
+  background: #f9f9f9;
+}
+
 .message--mini {
-  margin-bottom: 1em;
-  padding: ;
-  border-radius: 0;
-  box-shadow: none;
+  font-size: 1em;
+  margin: 0;
+  padding: .2em;
+  border: none;
   background: inherit;
 }
 
 .message_content div > span {
-  font-size: 0.8rem;
-  margin-bottom: 0.7rem;
+  font-size: 0.9em;
+  margin-bottom: 0.7em;
   display: block;
   color: #888;
 }
@@ -194,7 +211,6 @@ button:hover {
 .message_content--mini div > span {
   display: inline-block;
 }
-
 
 .message_content div > span a {
   color: #005d8c;
@@ -213,7 +229,8 @@ button:hover {
 }
 
 .message_actions {
-  float: right;
+  position: absolute;
+  bottom: 0; right: 0;
   margin-right: .5ex;
   margin-bottom: .5ex;
 }
@@ -244,6 +261,12 @@ button:hover {
   padding-right: 5px;
 }
 
+.emoji {
+  height: 1em;
+  width: 1em;
+  vertical-align: top;
+}
+
 
 /* -- suggest box */
 
@@ -252,18 +275,28 @@ button:hover {
 }
 
 .suggest-box ul {
+  padding: 0;
   list-style-type: none;
   padding-left: 0;
+  background: #eee;
+  border: 1px solid #eee;
+  border-radius: 2px;
 }
 
 .suggest-box .selected {
-  background: #eee;
+  background: white;
 }
 
 .suggest-box {
   width: max-content;
-  background: white;
+  background: #white;
   border-radius: 1em;
+}
+
+/* emoji */
+.suggest-box img {
+  height: 20px;
+  width: 20px;
 }
 
 /* avatar */
@@ -282,11 +315,12 @@ button:hover {
 .avatar--thumbnail {
   width: 2.5em;
   height: 2.5em;
+  float: left;
   margin-right: .5ex;
 }
 
 .avatar--fullsize {
-  width: 100%;
+  width: 50%;
 }
 
 .profile {
@@ -315,7 +349,7 @@ button:hover {
   margin-right: auto;
   border: 1px solid #eee;
   border-radius: .2em;
-  box-shadow: #dadada 1px 2px 8px;
+  z-index: 2;
 }
 
 /* searchprompt */
@@ -375,7 +409,6 @@ button:hover {
 .header {
   background: #f5f5f5;
   border-bottom: 1px inset;
-  box-shadow: 3px 0px 3px #ccc;
   flex-shrink: 0;
 }
 
@@ -436,10 +469,6 @@ button:hover {
 
 .hypertabs--selected .hypertabs__x {
   display: block;
-}
-
-.screen {
-  background: #f5f5f5
 }
 
 /* progress bar */

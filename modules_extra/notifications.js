@@ -23,6 +23,10 @@ function unbox() {
   )
 }
 
+exports.builtin_tabs = function () {
+  return ['/notifications']
+}
+
 function notifications(ourIds) {
 
   function linksToUs(link) {

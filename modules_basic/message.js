@@ -14,24 +14,29 @@ var message_link = plugs.first(exports.message_link = [])
 
 var sbot_links = plugs.first(exports.sbot_links = [])
 
-exports.message_render = function (msg, sbot) {
-  var elMini = message_content_mini(msg)
-  if (elMini) {
-    var div = h('div.message.message--mini',
-      h('div.row',
-        h('div',
-          avatar_link(msg.value.author, avatar_name(msg.value.author), ''),
-          ' ',
-          h('span.message_content', elMini)),
-        h('div.message_meta.row', message_meta(msg))
-      )
+function mini(msg, el) {
+  var div = h('div.message.message--mini',
+    h('div.row',
+      h('div',
+        avatar_link(msg.value.author, avatar_name(msg.value.author)),
+        h('span.message_content', el)),
+      h('div.message_meta.row', message_meta(msg))
     )
-    div.setAttribute('tabindex', '0')
-    return div
-  }
+  )
+  div.setAttribute('tabindex', '0')
+  return div
+}
+
+function message_content_mini_fallback(msg)  {
+  return h('code', msg.value.content.type)
+}
+
+exports.message_render = function (msg, sbot) {
+  var el = message_content_mini(msg)
+  if(el) return mini(msg, el)
 
   var el = message_content(msg)
-  if(!el) return
+  if(!el) return mini(msg, message_content_mini_fallback(msg))
 
   var links = []
   for(var k in CACHE) {

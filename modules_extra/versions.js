@@ -4,6 +4,10 @@ exports.menu_items = function () {
   return h('a', {href: '#/versions'}, '/versions')
 }
 
+exports.builtin_tabs = function () {
+  return ['/versions']
+}
+
 exports.screen_view = function (path) {
   if(path !== '/versions') return
 

@@ -18,6 +18,10 @@ exports.menu_items = function () {
   return h('a', {href: '#/network'}, '/network')
 }
 
+exports.builtin_tabs = function () {
+  return ['/network']
+}
+
 //types of peers
 
 

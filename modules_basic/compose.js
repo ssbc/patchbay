@@ -2,19 +2,16 @@
 var h = require('hyperscript')
 var u = require('../util')
 var suggest = require('suggest-box')
-var cont = require('cont')
 var mentions = require('ssb-mentions')
 var lightbox = require('hyperlightbox')
 
 var plugs = require('../plugs')
 
-//var suggest         = plugs.map(exports.suggest = [])
+var suggest_mentions= plugs.asyncConcat(exports.suggest_mentions = [])
 var publish         = plugs.first(exports.sbot_publish = [])
 var message_content = plugs.first(exports.message_content = [])
 var message_confirm = plugs.first(exports.message_confirm = [])
 var file_input      = plugs.first(exports.file_input = [])
-
-exports.suggest = []
 
 function id (e) { return e }
 
@@ -126,25 +123,10 @@ exports.message_compose = function (meta, opts, cb) {
       )
     )
 
-  suggest(ta, function (word, cb) {
-    cont.para(exports.suggest.map(function (fn) {
-      return function (cb) { fn(word, cb) }
-    }))
-    (function (err, results) {
-      if(err) console.error(err)
-      results = results.reduce(function (ary, item) {
-        return ary.concat(item)
-      }, []).sort(function (a, b) {
-        return b.rank - a.rank
-      }).filter(Boolean)
-
-      cb(null, results)
-    })
-  }, {})
+  suggest(ta, suggest_mentions, {})
 
   return composer
 
 }
-
 
 

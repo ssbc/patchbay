@@ -17,4 +17,24 @@ exports.map = function (plug) {
   }
 }
 
+exports.asyncConcat = function (plug) {
+  return function () {
+    var args = [].slice.call(arguments)
+    var cb = args.pop()
+    var allResults = []
+    var waiting = plug.length
+    plug.forEach(function (fn) {
+      if (!fn) return next()
+      fn.apply(null, args.concat(next))
+    })
+    function next(err, results) {
+      if (err) {
+        waiting = 0
+        return cb(err)
+      }
+      if (results) allResults = allResults.concat(results)
+      if (--waiting === 0) cb(null, allResults)
+    }
+  }
+}
 

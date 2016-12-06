@@ -18,6 +18,7 @@ module.exports = {
   "names.js":  require('./names.js'),
   "post.js":  require('./post.js'),
   "private.js":  require('./private.js'),
+  "pub.js":  require('./pub.js'),
   "public.js":  require('./public.js'),
   "relationships.js":  require('./relationships.js'),
   "search-box.js":  require('./search-box.js'),
