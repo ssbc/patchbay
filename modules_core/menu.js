@@ -19,20 +19,26 @@ module.exports = {
       }
     })
 
+    setImmediate(function () {
+      menu_items().forEach(function (el) {
+        if(el)
+          list.appendChild(el)
+      })
+    })
+
     return {
       connection_status: function (err) {
         if(err) status.classList.add('error')
         else    status.classList.remove('error')
       },
       menu: function () {
-        menu_items().forEach(function (el) {
-          if(el)
-            list.appendChild(el)
-        })
+        return menu
       }
     }
   }
 }
+
+
 
 
 
