@@ -452,7 +452,7 @@ exports.create = function (api) {
         return h('div',
           h('p', 'opened issue on ', repoLink(c.project)),
           c.title ? h('h4', c.title) : '',
-          markdown(c)
+          api.markdown(c)
         )
       }
 
