@@ -3,5 +3,5 @@ require('depject')(
   require('./modules_extra'),
   require('./modules_basic'),
   require('./modules_core')
-).plugs.app[0]()
+).app[0]()
 

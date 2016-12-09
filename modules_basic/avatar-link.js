@@ -1,18 +1,22 @@
 var h = require('hyperscript')
-var plugs = require('../plugs')
-var avatar_name = plugs.first(exports.avatar_name = [])
 
-var signifier = require('../plugs').first(exports.signifier = [])
+exports.needs = {signifier: 'first'}
 
-exports.avatar_link = function (id, element) {
+exports.gives = 'avatar_link'
 
-  var link = h('a.avatar', {href: "#"+id, title: id}, element)
+exports.create = function (api) {
+  return function (id, element) {
 
-  signifier(id, function (_, names) {
-    if(names.length)
-      link.title = names[0].name + '\n  '+id
-  })
+    var link = h('a.avatar', {href: "#"+id, title: id}, element)
 
-  return link
+    api.signifier(id, function (_, names) {
+      if(names.length)
+        link.title = names[0].name + '\n  '+id
+    })
+
+    return link
+  }
 }
+
+
 

@@ -6,9 +6,20 @@ function all(stream, cb) {
   pull(stream, pull.collect(cb))
 }
 
-var plugs = require('../plugs')
-var sbot_links2 = plugs.first(exports.sbot_links2 = [])
-var sbot_query = plugs.first(exports.sbot_query = [])
+//var plugs = require('../plugs')
+//var sbot_links2 = plugs.first(exports.sbot_links2 = [])
+//var sbot_query = plugs.first(exports.sbot_query = [])
+//
+exports.needs = {
+  sbot_links2: 'first',
+  sbot_query: 'first'
+}
+
+exports.gives = {
+  connection_status: true,
+  signifier: true,
+  signified: true,
+}
 
 /*
   filter(rel: ['mentions', prefix('@')]) | reduce(name: rel[1], value: count())
@@ -108,62 +119,65 @@ var queryNamedGitRepos = [
   }},
   reduce
 ]
+exports.create = function (api) {
 
+  var exports = {}
+  exports.connection_status = function (err) {
+    if(!err) {
+      pull(
+        many([
+          api.sbot_links2({query: [filter, map, reduce]}),
+          add_sigil(api.sbot_query({query: [filter2, map2, reduce]})),
+          add_sigil(api.sbot_query({query: queryNamedGitRepos}))
+        ]),
+        //reducing also ensures order by the lookup properties
+        //in this case: [name, id]
+        mfr.reduce(merge),
+        pull.collect(function (err, ary) {
+          if(!err) {
+            NAMES = names = ary
+            ready = true
+            while(waiting.length) waiting.shift()()
+          }
+        })
+      )
 
-exports.connection_status = function (err) {
-  if(!err) {
-    pull(
-      many([
-        sbot_links2({query: [filter, map, reduce]}),
-        add_sigil(sbot_query({query: [filter2, map2, reduce]})),
-        add_sigil(sbot_query({query: queryNamedGitRepos}))
+      pull(many([
+        api.sbot_links2({query: [filter, map], old: false}),
+        add_sigil(api.sbot_query({query: [filter2, map2], old: false})),
+        add_sigil(api.sbot_query({query: queryNamedGitRepos, old: false}))
       ]),
-      //reducing also ensures order by the lookup properties
-      //in this case: [name, id]
-      mfr.reduce(merge),
-      pull.collect(function (err, ary) {
-        if(!err) {
-          NAMES = names = ary
-          ready = true
-          while(waiting.length) waiting.shift()()
-        }
-      })
-    )
-
-    pull(many([
-      sbot_links2({query: [filter, map], old: false}),
-      add_sigil(sbot_query({query: [filter2, map2], old: false})),
-      add_sigil(sbot_query({query: queryNamedGitRepos, old: false}))
-    ]),
-    pull.drain(update))
+      pull.drain(update))
+    }
   }
-}
 
-function async(fn) {
-  return function (value, cb) {
-    function go () { cb(null, fn(value)) }
-    if(ready) go()
-    else waiting.push(go)
+  function async(fn) {
+    return function (value, cb) {
+      function go () { cb(null, fn(value)) }
+      if(ready) go()
+      else waiting.push(go)
+    }
   }
+
+  function rank(ary) {
+    //sort by most used, or most recently used
+    return ary.sort(function (a, b) { return b.rank - a.rank || b.ts - a.ts })
+  }
+
+  //we are just iterating over the entire array.
+  //if this becomes a problem, maintain two arrays
+  //one of each sort order, but do not duplicate the objects.
+  //that should mean the space required is just 2x object references,
+  //not 2x objects, and we can use binary search to find matches.
+
+  exports.signifier = async(function (id) {
+    return rank(names.filter(function (e) { return e.id == id}))
+  })
+
+  exports.signified = async(function (name) {
+    var rx = new RegExp('^'+name)
+    return rank(names.filter(function (e) { return rx.test(e.name) }))
+  })
+
+  return exports
 }
-
-function rank(ary) {
-  //sort by most used, or most recently used
-  return ary.sort(function (a, b) { return b.rank - a.rank || b.ts - a.ts })
-}
-
-//we are just iterating over the entire array.
-//if this becomes a problem, maintain two arrays
-//one of each sort order, but do not duplicate the objects.
-//that should mean the space required is just 2x object references,
-//not 2x objects, and we can use binary search to find matches.
-
-exports.signifier = async(function (id) {
-  return rank(names.filter(function (e) { return e.id == id}))
-})
-
-exports.signified = async(function (name) {
-  var rx = new RegExp('^'+name)
-  return rank(names.filter(function (e) { return rx.test(e.name) }))
-})
-

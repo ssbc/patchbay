@@ -21,105 +21,118 @@ function once (cont) {
   }
 }
 
-var plugs = require('../plugs')
+//var plugs = require('../plugs')
+//
+//var message_render = plugs.first(exports.message_render = [])
+//var message_name = plugs.first(exports.message_name = [])
+//var message_compose = plugs.first(exports.message_compose = [])
+//var message_unbox = plugs.first(exports.message_unbox = [])
+//
+//var sbot_get = plugs.first(exports.sbot_get = [])
+//var sbot_links = plugs.first(exports.sbot_links = [])
 
-var message_render = plugs.first(exports.message_render = [])
-var message_name = plugs.first(exports.message_name = [])
-var message_compose = plugs.first(exports.message_compose = [])
-var message_unbox = plugs.first(exports.message_unbox = [])
-
-var sbot_get = plugs.first(exports.sbot_get = [])
-var sbot_links = plugs.first(exports.sbot_links = [])
-
-function getThread (root, cb) {
-  //in this case, it's inconvienent that panel only takes
-  //a stream. maybe it would be better to accept an array?
-
-  sbot_get(root, function (err, value) {
-    if (err) return cb(err)
-    var msg = {key: root, value: value}
-//    if(value.content.root) return getThread(value.content.root, cb)
-
-    pull(
-      sbot_links({rel: 'root', dest: root, values: true, keys: true}),
-      pull.collect(function (err, ary) {
-        if(err) return cb(err)
-        ary.unshift(msg)
-        cb(null, ary)
-      })
-    )
-  })
-
+exports.needs = {
+  message_render: 'first',
+  message_name: 'first',
+  message_compose: 'first',
+  message_unbox: 'first',
+  sbot_get: 'first',
+  sbot_links: 'first'
 }
 
-exports.screen_view = function (id) {
-  if(ref.isMsg(id)) {
-    var meta = {
-      type: 'post',
-      root: id,
-      branch: id //mutated when thread is loaded.
-    }
+exports.gives = 'screen_view'
 
-    var content = h('div.column.scroller__content')
-    var div = h('div.column.scroller',
-      {style: {'overflow-y': 'auto'}},
-      h('div.scroller__wrapper',
-        content,
-        message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
+
+exports.create = function (api) {
+
+  function getThread (root, cb) {
+    //in this case, it's inconvienent that panel only takes
+    //a stream. maybe it would be better to accept an array?
+
+    api.sbot_get(root, function (err, value) {
+      if (err) return cb(err)
+      var msg = {key: root, value: value}
+  //    if(value.content.root) return getThread(value.content.root, cb)
+
+      pull(
+        api.sbot_links({rel: 'root', dest: root, values: true, keys: true}),
+        pull.collect(function (err, ary) {
+          if(err) return cb(err)
+          ary.unshift(msg)
+          cb(null, ary)
+        })
       )
-    )
-
-    message_name(id, function (err, name) {
-      div.title = name
     })
 
-    pull(
-      sbot_links({
-        rel: 'root', dest: id, keys: true, old: false
-      }),
-      pull.drain(function (msg) {
-        loadThread() //redraw thread
-      }, function () {} )
-    )
+  }
 
+  return function (id) {
+    if(ref.isMsg(id)) {
+      var meta = {
+        type: 'post',
+        root: id,
+        branch: id //mutated when thread is loaded.
+      }
 
-    function loadThread () {
-      getThread(id, function (err, thread) {
-        //would probably be better keep an id for each message element
-        //(i.e. message key) and then update it if necessary.
-        //also, it may have moved (say, if you received a missing message)
-        content.innerHTML = ''
-        if(err) return content.appendChild(h('pre', err.stack))
+      var content = h('div.column.scroller__content')
+      var div = h('div.column.scroller',
+        {style: {'overflow-y': 'auto'}},
+        h('div.scroller__wrapper',
+          content,
+          api.message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
+        )
+      )
 
-        //decrypt
-        thread = thread.map(function (msg) {
-          return 'string' === typeof msg.value.content ? message_unbox(msg) : msg
-        })
-
-        if(err) return content.appendChild(h('pre', err.stack))
-        sort(thread).map(message_render).filter(Boolean).forEach(function (el) {
-          content.appendChild(el)
-        })
-
-        var branches = sort.heads(thread)
-        meta.branch = branches.length > 1 ? branches : branches[0]
-        meta.root = thread[0].value.content.root || thread[0].key
-        meta.channel = thread[0].value.content.channel
-
-        var recps = thread[0].value.content.recps
-        var private = thread[0].value.private
-        if(private) {
-          if(recps)
-            meta.recps = recps
-          else
-            meta.recps = [thread[0].value.author, self_id]
-        }
+      api.message_name(id, function (err, name) {
+        div.title = name
       })
-    }
 
-    loadThread()
-    return div
+      pull(
+        api.sbot_links({
+          rel: 'root', dest: id, keys: true, old: false
+        }),
+        pull.drain(function (msg) {
+          loadThread() //redraw thread
+        }, function () {} )
+      )
+
+
+      function loadThread () {
+        getThread(id, function (err, thread) {
+          //would probably be better keep an id for each message element
+          //(i.e. message key) and then update it if necessary.
+          //also, it may have moved (say, if you received a missing message)
+          content.innerHTML = ''
+          if(err) return content.appendChild(h('pre', err.stack))
+
+          //decrypt
+          thread = thread.map(function (msg) {
+            return 'string' === typeof msg.value.content ? api.message_unbox(msg) : msg
+          })
+
+          if(err) return content.appendChild(h('pre', err.stack))
+          sort(thread).map(api.message_render).filter(Boolean).forEach(function (el) {
+            content.appendChild(el)
+          })
+
+          var branches = sort.heads(thread)
+          meta.branch = branches.length > 1 ? branches : branches[0]
+          meta.root = thread[0].value.content.root || thread[0].key
+          meta.channel = thread[0].value.content.channel
+
+          var recps = thread[0].value.content.recps
+          var private = thread[0].value.private
+          if(private) {
+            if(recps)
+              meta.recps = recps
+            else
+              meta.recps = [thread[0].value.author, self_id]
+          }
+        })
+      }
+
+      loadThread()
+      return div
+    }
   }
 }
-
-

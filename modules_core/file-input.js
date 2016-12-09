@@ -8,30 +8,35 @@ var plugs = require('../plugs')
 
 var add = plugs.first(exports.sbot_blobs_add = [])
 
-exports.file_input = function FileInput(onAdded) {
+module.exports = {
+  needs: {sbot_blobs_add: 'first'},
+  gives: 'file_input',
+  create: function () {
+    return function FileInput(onAdded) {
+      return h('input', { type: 'file',
+        onchange: function (ev) {
+          var file = ev.target.files[0]
+          if (!file) return
+          var reader = new FileReader()
+          reader.onload = function () {
+            pull(
+              pull.values(split(new Buffer(reader.result), 64*1024)),
+              add(function (err, blob) {
+                if(err) return console.error(err)
+                onAdded({
+                  link: blob,
+                  name: file.name,
+                  size: reader.result.length || reader.result.byteLength,
+                  type: mime(file.name)
+                })
 
-  return h('input', { type: 'file',
-    onchange: function (ev) {
-      var file = ev.target.files[0]
-      if (!file) return
-      var reader = new FileReader()
-      reader.onload = function () {
-        pull(
-          pull.values(split(new Buffer(reader.result), 64*1024)),
-          add(function (err, blob) {
-            if(err) return console.error(err)
-            onAdded({
-              link: blob,
-              name: file.name,
-              size: reader.result.length || reader.result.byteLength,
-              type: mime(file.name)
-            })
-
-          })
-        )
-      }
-      reader.readAsArrayBuffer(file)
+              })
+            )
+          }
+          reader.readAsArrayBuffer(file)
+        }
+      })
     }
-  })
+  }
 }
 
