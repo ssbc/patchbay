@@ -69,6 +69,10 @@ function getType (e) {
   )
 }
 
+function origin (e) {
+  return e.source === 'local' ? 0 : 1
+}
+
 var states = {
   connected: 3,
   connecting: 2
@@ -127,12 +131,13 @@ exports.create = function (api) {
           list.sort(function (a, b) {
             return (
               (states[b.state] || 0) - (states[a.state] || 0)
+              || origin(b) - origin(a)
               || types[getType(b)] - types[getType(a)]
               || b.stateChange - a.stateChange
             )
           }).forEach(function (peer) {
             ol.appendChild(h('div',
-              avatar(peer.key, 'thumbnail'),
+              api.avatar(peer.key, 'thumbnail'),
               h('div',
                 peer.state || 'not connected',
                 ' ',
@@ -167,4 +172,5 @@ exports.create = function (api) {
     }
   }
 }
+
 
