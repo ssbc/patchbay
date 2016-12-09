@@ -19,12 +19,12 @@ module.exports = {
       }
     })
 
-    setImmediate(function () {
+    setTimeout(function () {
       menu_items().forEach(function (el) {
         if(el)
           list.appendChild(el)
       })
-    })
+    }, 0)
 
     return {
       connection_status: function (err) {
