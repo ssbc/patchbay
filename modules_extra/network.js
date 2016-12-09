@@ -122,7 +122,7 @@ exports.create = function (api) {
         if(!isVisible(ol))
           return setTimeout(poll, 1000)
 
-        sbot_gossip_peers(function (err, list) {
+        api.sbot_gossip_peers(function (err, list) {
           ol.innerHTML = ''
           list.sort(function (a, b) {
             return (
@@ -149,7 +149,7 @@ exports.create = function (api) {
                 'source:'+peer.source,
                 h('pre', legacyToMultiServer(peer)),
                 h('button', 'connect', {onclick: function () {
-                  sbot_gossip_connect(peer, function (err) {
+                  api.sbot_gossip_connect(peer, function (err) {
                     if(err) console.error(err)
                     else console.log('connected to', peer)
                   })
