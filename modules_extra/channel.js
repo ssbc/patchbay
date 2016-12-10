@@ -4,12 +4,6 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var mfr = require('map-filter-reduce')
 
-//var plugs = require('../plugs')
-//var message_render = plugs.first(exports.message_render = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-//var sbot_log = plugs.first(exports.sbot_log = [])
-//var sbot_query = plugs.first(exports.sbot_query = [])
-
 exports.needs = {
   message_render: 'first',
   message_compose: 'first',
@@ -61,14 +55,14 @@ exports.create = function (api) {
         pull(
           api.sbot_log({old: false}),
           pull.filter(matchesChannel),
-          Scroller(div, content, message_render, true, false)
+          Scroller(div, content, api.message_render, true, false)
         )
 
         pull(
           api.sbot_query({reverse: true, query: [
             {$filter: {value: {content: {channel: channel}}}}
           ]}),
-          Scroller(div, content, message_render, false, false)
+          Scroller(div, content, api.message_render, false, false)
         )
 
         return div
