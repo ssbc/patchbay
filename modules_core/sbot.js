@@ -67,7 +67,8 @@ module.exports = {
 
       createClient(keys, {
         manifest: require('../manifest.json'),
-        remote: require('../config')().remote
+        remote: require('../config')().remote,
+        caps: config.caps
       }, function (err, _sbot) {
         if(err)
           return notify(err)
