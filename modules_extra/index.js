@@ -6,6 +6,7 @@ module.exports = {
   "dns.js":  require('./dns.js'),
   "git.js":  require('./git.js'),
   "git-ssb.js":  require('./git-ssb.js'),
+  "key.js":  require('./key.js'),
   "notifications.js":  require('./notifications.js'),
   "meta-image.js":  require('./meta-image.js'),
   "music-release-cc.js":  require('./music-release-cc.js'),
