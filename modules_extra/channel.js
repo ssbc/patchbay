@@ -61,14 +61,14 @@ exports.create = function (api) {
         pull(
           api.sbot_log({old: false}),
           pull.filter(matchesChannel),
-          Scroller(div, content, message_render, true, false)
+          Scroller(div, content, api.message_render, true, false)
         )
 
         pull(
           api.sbot_query({reverse: true, query: [
             {$filter: {value: {content: {channel: channel}}}}
           ]}),
-          Scroller(div, content, message_render, false, false)
+          Scroller(div, content, api.message_render, false, false)
         )
 
         return div
