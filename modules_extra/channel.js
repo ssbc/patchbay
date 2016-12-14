@@ -4,12 +4,6 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var mfr = require('map-filter-reduce')
 
-//var plugs = require('../plugs')
-//var message_render = plugs.first(exports.message_render = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-//var sbot_log = plugs.first(exports.sbot_log = [])
-//var sbot_query = plugs.first(exports.sbot_query = [])
-
 exports.needs = {
   message_render: 'first',
   message_compose: 'first',

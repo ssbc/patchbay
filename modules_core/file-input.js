@@ -4,14 +4,10 @@ var pull = require('pull-stream')
 var mime = require('simple-mime')('application/octect-stream')
 var split = require('split-buffer')
 
-var plugs = require('../plugs')
-
-var add = plugs.first(exports.sbot_blobs_add = [])
-
 module.exports = {
   needs: {sbot_blobs_add: 'first'},
   gives: 'file_input',
-  create: function () {
+  create: function (api) {
     return function FileInput(onAdded) {
       return h('input', { type: 'file',
         onchange: function (ev) {
@@ -21,7 +17,7 @@ module.exports = {
           reader.onload = function () {
             pull(
               pull.values(split(new Buffer(reader.result), 64*1024)),
-              add(function (err, blob) {
+              api.sbot_blobs_add(function (err, blob) {
                 if(err) return console.error(err)
                 onAdded({
                   link: blob,
