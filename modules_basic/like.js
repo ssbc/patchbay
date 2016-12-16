@@ -10,6 +10,7 @@ var plugs = require('../plugs')
 //var sbot_links = plugs.first(exports.sbot_links = [])
 
 exports.needs = {
+  avatar_name: 'first',
   message_confirm: 'first',
   message_link: 'first',
   sbot_links: 'first'
@@ -49,8 +50,17 @@ exports.create = function (api) {
 
     if(votes.length === 1)
       digs.textContent = ' 1 Dig'
-    if(votes.length > 1)
+    else if(votes.length > 1)
       digs.textContent = ' ' + votes.length + ' Digs'
+
+    pull(
+        pull.values(votes.map(vote => {
+            return api.avatar_name(vote.source)
+        })),
+        pull.collect(function (err, ary) {
+            digs.title = ary.map(x => x.innerHTML).join(" ")
+        })
+    )
 
     return digs
   }
