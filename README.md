@@ -39,6 +39,25 @@ npm run bundle
 npm start
 ```
 
+## Lite
+
+To run a lite client in the browser instead of using electron, use npm
+run lite from the prompt instead of run bundle. After that you need to
+generate a modern invite:
+
+```
+sbot invite.create --modern
+```
+
+Also set up sbot to allow these connections with:
+
+```
+sbot server --allowPrivate
+```
+
+Lastly open build/index.html in a browser and append the invite
+created above using: index.html#ws://localhost:8989....
+
 ## how to add a feature
 
 To add a new message type, add add a js to `./modules/` that
