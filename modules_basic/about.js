@@ -7,11 +7,11 @@ exports.needs = {
 }
 
 exports.gives = {
-  'mcss': true,
-  'message_content': true
+  mcss: true,
+  message_content: true
 }
 
-var style = `
+var mcss = `
   About {
     background-color: red
   }
@@ -20,7 +20,7 @@ var style = `
 exports.create = function (api) {
   return { 
     message_content,
-    mcss: style
+    mcss: function () { return mcss }
   }
 
   function message_content (msg) {

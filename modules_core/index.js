@@ -7,6 +7,7 @@ module.exports = {
   "menu.js":  require('./menu.js'),
   "message-confirm.js":  require('./message-confirm.js'),
   "tabs.js":  require('./tabs.js'),
-  "sbot.js": require('./sbot.js')
+  "sbot.js": require('./sbot.js'),
+  "styles.js": require('./styles.js')
 }
 

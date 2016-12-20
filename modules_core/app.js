@@ -1,12 +1,18 @@
 var plugs = require('../plugs')
 var h = require('hyperscript')
+var insertCss = require('insert-css')
 
 module.exports = {
-  needs: {screen_view: 'first'},
+  needs: {
+    screen_view: 'first',
+    styles: 'first'
+  },
   gives: 'app',
   create: function (api) {
     return function () {
-      document.head.appendChild(h('style', require('../style.css.json')))
+      process.nextTick(function () {
+        insertCss(api.styles())
+      })
 
       window.addEventListener('error', window.onError = function (e) {
         document.body.appendChild(h('div.error',
