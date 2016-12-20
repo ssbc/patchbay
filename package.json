@@ -8,6 +8,7 @@
     "url": "git://github.com/dominictarr/patchbay.git"
   },
   "dependencies": {
+    "@mmckegg/mutant": "^3.10.1",
     "cont": "^1.0.3",
     "dataurl-": "^0.1.0",
     "depject": "^3.0.0",
@@ -23,6 +24,7 @@
     "is-visible": "^2.0.4",
     "kvgraph": "^0.1.0",
     "map-filter-reduce": "^3.0.1",
+    "micro-css": "^0.6.2",
     "mime-types": "^2.1.11",
     "moment": "^2.13.0",
     "open-external": "^0.1.1",
