@@ -13,7 +13,12 @@ exports.gives = {
 
 var mcss = `
   About {
-    background-color: red
+    display: flex
+    flex-wrap: wrap
+
+    header {
+      margin-right: .4rem
+    }
   }
 `
 
@@ -31,21 +36,23 @@ exports.create = function (api) {
 
     // if(!image && !name) return
 
-    return h('.About', {}, [
+    return h('div', {className: 'About'}, [
       verb({ aboutId, authorId: msg.value.author }),
-      profile({ aboutId, name, image, description })
+      profile({ aboutId, name, image, description, api })
     ])
   }
 }
 
 
 function verb ({ aboutId, authorId }) {
-  return authorId === aboutId
-    ? h('span', 'self-identifies as')
-    : h('span', ['identifies ', idLink(aboutId), ' as '])
+  var content = authorId === aboutId
+    ? 'self-identifies as'
+    : ['identifies ', idLink(aboutId), ' as']
+
+  return h('header', content)
 }
 
-function profile ({ aboutId, name, image, description }) {
+function profile ({ aboutId, name, image, description, api }) {
   return h('div', [
     name
       ? h('a', {href:'#'+aboutId}, name)
@@ -58,7 +65,9 @@ function profile ({ aboutId, name, image, description }) {
 }
 
 function idLink (id) {
-  return h('a', {href:'#'+id}, id)
+  if (!id) return null
+
+  return h('a', {href:'#'+id}, id.slice(0,9) + '...')
 }
 
 function asLink (ln) {
