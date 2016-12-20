@@ -6,10 +6,24 @@ exports.needs = {
   blob_url: 'first'
 }
 
-exports.gives = 'message_content'
+exports.gives = {
+  'mcss': true,
+  'message_content': true
+}
+
+var style = `
+  About {
+    background-color: red
+  }
+`
 
 exports.create = function (api) {
-  return function (msg) {
+  return { 
+    message_content,
+    mcss: style
+  }
+
+  function message_content (msg) {
     if(msg.value.content.type !== 'about') return
 
     var about = msg.value.content
