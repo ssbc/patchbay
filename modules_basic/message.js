@@ -27,6 +27,7 @@ exports.create = function (api) {
 
   function message_render (msg, sbot) {
     var content = api.message_content_mini(msg)
+    // TODO re-enable
     //if(content) return mini(msg, content)
 
     var content = api.message_content(msg)
@@ -53,7 +54,7 @@ exports.create = function (api) {
         if (ev.target.nodeName === 'INPUT'
           || ev.target.nodeName === 'TEXTAREA') return
 
-        // HACK!
+        // HACK! (mw)
         // there's no exported api to open a new tab. :/
         // it's only done in `app.js` module in an`onhashchange` handler.
         // sooooooo yeah this shit:
