@@ -1,0 +1,19 @@
+Message {
+  padding: 1em;
+
+  header {
+
+  }
+
+  section {
+    -content {
+      (img) {
+        max-width: 100%
+      }
+    }
+  }
+
+  footer {
+
+  }
+}

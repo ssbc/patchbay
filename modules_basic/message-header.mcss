@@ -1,0 +1,10 @@
+MessageHeader {
+  display: flex
+
+  section.author {
+    flex: 1
+  }
+
+  section.meta {
+  }
+}

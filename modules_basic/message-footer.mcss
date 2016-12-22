@@ -1,0 +1,17 @@
+MessageFooter {
+  display: flex
+  flex-direction: column
+
+  section.actions {
+    display: flex
+    justify-content: flex-end
+
+    a {
+      margin-left: .5em
+    }
+  }
+
+  section.backlinks {
+
+  }
+}
