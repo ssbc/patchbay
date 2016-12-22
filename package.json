@@ -62,7 +62,7 @@
     "indexhtmlify": "^1.3.1"
   },
   "scripts": {
-    "lite": "node scripts/style.js && mkdir -p build && browserify index.js | indexhtmlify > build/index.html",
+    "lite": "node scripts/style.js && mkdir -p build && browserify index.js | indexhtmlify --title patchbay > build/index.html",
     "start": "electro index.js",
     "bundle": "node scripts/style.js && mkdir -p build && browselectrify index.js > build/bundle.js",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
