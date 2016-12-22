@@ -1,0 +1,12 @@
+MessageAuthor {
+  display: flex
+  flex-direction: column
+
+  -mini {
+    flex-direction: row
+
+    section {
+      margin-right: 1rem;
+    }
+  }
+}

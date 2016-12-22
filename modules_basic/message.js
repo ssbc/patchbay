@@ -7,8 +7,11 @@ var h = require('../h')
 exports.needs = {
   avatar_name: 'first',
   avatar_link: 'first',
-  message_meta: 'first',
-  message_header: 'first',
+  message_meta: 'map',
+  message_action: 'map',
+  message_link: 'first',
+  message_backlinks: 'first',
+  message_author: 'first',
   message_content: 'first',
   message_content_mini: 'first',
   message_footer: 'first'
@@ -27,27 +30,27 @@ exports.create = function (api) {
 
   function message_render (msg, sbot) {
     var content = api.message_content_mini(msg)
-    // TODO re-enable
-    //if(content) return mini(msg, content)
+    if (content) return mini(msg, content)
 
     var content = api.message_content(msg)
-    if(!content) return mini(msg, message_content_mini_fallback(msg))
+    if (!content) return mini(msg, message_content_mini_fallback(msg))
 
-    var msgEl = h('Message', {
-      'ev-keydown': navigateToMessageOnEnter
+    return h('Message', {
+      'ev-keydown': navigateToMessageOnEnter,
+      attributes: {
+        tabindex: '0'
+      }
     }, [
-      h('header', api.message_header(msg)),
-      h('section -content', content),
-      h('footer', api.message_footer(msg))
+      h('hr'),
+      h('header.author', api.message_author(msg)),
+      h('section.meta', api.message_meta(msg)),
+      h('section.content', content),
+      h('section.action', api.message_action(msg)),
+      h('footer.backlinks', api.message_backlinks(msg))
     ])
 
-    // ); hyperscript does not seem to set attributes correctly.
-    msgEl.setAttribute('tabindex', '0')
-
-    return msgEl
-
     function navigateToMessageOnEnter (ev) {
-      //on enter, hit first meta.
+      // on enter, hit first meta.
       if(ev.keyCode == 13) {
 
         // unless in an input
@@ -57,7 +60,7 @@ exports.create = function (api) {
         // HACK! (mw)
         // there's no exported api to open a new tab. :/
         // it's only done in `app.js` module in an`onhashchange` handler.
-        // sooooooo yeah this shit:
+        // sooooooo yeah this shit for now :)
         var wtf = h('a', { href: `#${msg.key}` })
         msgEl.appendChild(wtf)
         wtf.click()
@@ -66,17 +69,16 @@ exports.create = function (api) {
   }
 
   function mini(msg, el) {
-    var div = h('div.message.message--mini', [
-      h('div.row', [
-        h('div', [
-          api.avatar_link(msg.value.author, api.avatar_name(msg.value.author)),
-          h('span.message_content', el)
-        ]),
-        h('div.message_meta.row', api.message_meta(msg))
-      ])
+    return h('Message -mini', {
+      attributes: {
+        tabindex: '0'
+      }
+    }, [
+      h('hr'),
+      h('header.author', api.message_author(msg, { size: 0 })),
+      h('section.meta', api.message_meta(msg)),
+      h('section.content', el)
     ])
-    div.setAttribute('tabindex', '0')
-    return div
   }
 }
 

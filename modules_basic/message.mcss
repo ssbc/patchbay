@@ -1,19 +1,42 @@
 Message {
-  padding: 1em;
+  padding-top: 1em
+  padding-bottom: 1em
 
-  header {
+  -mini {
+    padding-top: 0.25rem
+    padding-bottom: 0.25rem
+  }
+
+  hr {
 
   }
 
-  section {
-    -content {
-      (img) {
-        max-width: 100%
-      }
+  header.author {
+    float: left
+    display: flex
+    flex-direction: column
+  }
+
+  section.meta {
+    float: right
+  }
+
+  section.content {
+    (img) {
+      max-width: 100%
     }
   }
 
-  footer {
+  section.action {
+    display: flex
+    justify-content: flex-end
+
+    a {
+      margin-left: .5em
+    }
+  }
+
+  footer.backlinks {
 
   }
 }
