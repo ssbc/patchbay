@@ -43,6 +43,7 @@ module.exports = {
     sbot_links: true,
     sbot_links2: true,
     sbot_query: true,
+    sbot_fulltext_search: true,
     sbot_get: true,
     sbot_log: true,
     sbot_user_feed: true,
@@ -134,6 +135,9 @@ module.exports = {
       }),
       sbot_user_feed: rec.source(function (opts) {
         return sbot.createUserStream(opts)
+      }),
+      sbot_fulltext_search: rec.source(function (opts) {
+        return sbot.fulltext.search(opts)
       }),
       sbot_get: rec.async(function (key, cb) {
         if('function' !== typeof cb)

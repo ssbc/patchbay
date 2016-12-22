@@ -6,7 +6,8 @@ var TextNodeSearcher = require('text-node-searcher')
 
 exports.needs = {
   message_render: 'first',
-  sbot_log: 'first'
+  sbot_log: 'first',
+  sbot_fulltext_search: 'first'
 }
 
 exports.gives = 'screen_view'
@@ -50,14 +51,33 @@ function highlight(el, query) {
   return el
 }
 
+function fallback(reader) {
+  var fallbackRead
+  return function (read) {
+    return function (abort, cb) {
+      read(abort, function next(end, data) {
+        if (end && reader && (fallbackRead = reader(end))) {
+          reader = null
+          read = fallbackRead
+          read(abort, next)
+        } else {
+          cb(end, data)
+        }
+      })
+    }
+  }
+}
+
 exports.create = function (api) {
 
   return function (path) {
     if(path[0] === '?') {
-      var query = path.substr(1).trim().split(whitespace)
+      var queryStr = path.substr(1).trim()
+      var query = queryStr.split(whitespace)
       var _matches = searchFilter(query)
 
       var total = 0, matches = 0
+      var usingLinearSearch = false
 
       var header = h('div.search_header', '')
       var content = h('div.column.scroller__content')
@@ -73,11 +93,11 @@ exports.create = function (api) {
         total++
         var m = _matches(data)
         if(m) matches++
-        header.textContent = 'searched:'+total+', found:'+matches
+        if(usingLinearSearch) {
+          header.textContent = 'searched:'+total+', found:'+matches
+        }
         return m
       }
-
-
 
       function renderMsg(msg) {
         var el = api.message_render(msg)
@@ -92,8 +112,16 @@ exports.create = function (api) {
       )
 
       pull(
-        u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-        pull.filter(matchesQuery),
+        u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
+        fallback(function (err) {
+          if (/^no source/.test(err.message)) {
+            usingLinearSearch = true
+            return pull(
+              u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+              pull.filter(matchesQuery)
+            )
+          }
+        }),
         Scroller(div, content, renderMsg, false, false)
       )
 
