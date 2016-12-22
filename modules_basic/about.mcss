@@ -1,0 +1,49 @@
+About {
+  display: flex
+  flex-wrap: wrap
+
+  section {
+    a {
+      -target {
+        color: green
+      }
+      -name {
+
+      }
+      -image {
+
+      }
+    }
+
+    -name {
+      header {
+
+      }
+
+      section {
+      
+      }
+    }
+
+    -image {
+      header {
+
+      }
+
+      section {
+
+      }
+    }
+
+    -description {
+      header {
+
+      }
+
+      section {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+    }
+  }
+}

@@ -1,7 +1,11 @@
+var fs = require('fs')
+var Path = require('path')
 var h = require('../h')
+var when = require('@mmckegg/mutant/when')
 
 exports.needs = {
-  blob_url: 'first'
+  blob_url: 'first',
+  markdown: 'first'
 }
 
 exports.gives = {
@@ -9,67 +13,76 @@ exports.gives = {
   message_content: true
 }
 
-var mcss = `
-  About {
-    display: flex
-    flex-wrap: wrap
-
-    header {
-      margin-right: .4rem
-    }
-  }
-`
-
 exports.create = function (api) {
-  return { 
+  return {
     message_content,
-    mcss: function () { return mcss }
+    mcss: () => fs.readFileSync(Path.join(__dirname, 'about.mcss'), 'utf8')
   }
 
   function message_content (msg) {
-    if(msg.value.content.type !== 'about') return
+    if (msg.value.content.type !== 'about') return
 
-    var { value } = msg
-    var { content: about, author: authorId } = value
+    var { content: about, author: authorId } = msg.value
     var { about: aboutId, name, image, description } = about
     // TODO does about default to the message author?
     // var { about: aboutId = authorId, name, image, description } = about
 
     return h('About', [
-      verb({ aboutId, authorId: msg.value.author }),
-      profile({ aboutId, name, image, description })
+      Name({ aboutId, authorId, name }),
+      Image({ aboutId, authorId, image }),
+      Description({ aboutId, authorId, description })
     ])
   }
 
-  function profile ({ aboutId, name, image, description }) {
-    return h('div', [
-      name
-        ? h('a', {href:'#'+aboutId}, name)
-        : null,
-      image
-        ? h('a', {href:'#'+aboutId}, h('img.avatar--fullsize', {src: api.blob_url(image)}))
-        : null,
-      description || null
+  function Name ({ aboutId, authorId, name }) {
+    if (!name) return null
+    return h('section -name', [
+      h('header', ['refers to ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
+      h('section', nameLink(aboutId, name))
+    ])
+  }
+
+  function Image ({ aboutId, authorId, image }) {
+    if (!image) return null
+    return h('section -image', [
+      h('header', ['portrays ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
+      h('section', imageLink(aboutId, h('img', { src: api.blob_url(image) })))
+    ])
+  }
+
+  function Description ({ aboutId, authorId, description }) {
+    if (!description) return null
+    return h('section -description', [
+      h('header', ['describes ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
+      h('section', api.markdown(description))
     ])
   }
 }
 
-
-function verb ({ aboutId, authorId }) {
-  var content = authorId === aboutId
-    ? 'self-identifies as'
-    : ['identifies ', idLink(aboutId), ' as']
-
-  return h('header', content)
+function targetLink (aboutId) {
+  if (!aboutId) return null
+  const content = aboutId.slice(0, 9) + '...'
+  return h(
+    'a -target',
+    { href: `#${aboutId}` },
+    content
+  )
 }
 
-function idLink (id) {
-  if (!id) return null
-
-  return h('a', {href:'#'+id}, id.slice(0,9) + '...')
+function nameLink (aboutId, name) {
+  if (!aboutId) return null
+  return h(
+    'a -name',
+    { href: `#${aboutId}` },
+    name
+  )
 }
 
-function asLink (ln) {
-  return typeof ln === 'string' ? ln : ln.link
+function imageLink (aboutId, img) {
+  if (!aboutId) return null
+  return h(
+    'a -image',
+    { href: `#${aboutId}` },
+    img
+  )
 }
-
