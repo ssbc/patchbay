@@ -41,7 +41,6 @@ exports.create = function (api) {
         tabindex: '0'
       }
     }, [
-      h('hr'),
       h('header.author', api.message_author(msg)),
       h('section.meta', api.message_meta(msg)),
       h('section.content', content),
@@ -74,7 +73,6 @@ exports.create = function (api) {
         tabindex: '0'
       }
     }, [
-      h('hr'),
       h('header.author', api.message_author(msg, { size: 0 })),
       h('section.meta', api.message_meta(msg)),
       h('section.content', el)

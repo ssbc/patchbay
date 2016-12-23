@@ -1,14 +1,11 @@
 Message {
   padding-top: 1em
   padding-bottom: 1em
+  border-top: solid 1px gainsboro
 
   -mini {
     padding-top: 0.25rem
     padding-bottom: 0.25rem
-  }
-
-  hr {
-
   }
 
   header.author {

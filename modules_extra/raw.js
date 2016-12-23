@@ -30,8 +30,8 @@ exports.create = function (api) {
       title: 'View Data',
       onclick: function () {
         // HACK (mw) yo we need a better way to replace the content
-        var msgEl = this.parentNode.parentNode.parentNode.parentNode
-        var msgContentEl = msgEl.querySelector('.Message > section.-content')
+        var msgEl = this.parentNode.parentNode
+        var msgContentEl = msgEl.querySelector('.\\.content')
         if (this.checked) {
           // move away the content
           while (el = msgContentEl.firstChild)
