@@ -16,12 +16,14 @@ About {
     }
 
     -name {
+      display: flex
+
       header {
 
       }
 
       section {
-      
+        margin-left: .25rem
       }
     }
 

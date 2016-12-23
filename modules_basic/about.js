@@ -10,12 +10,14 @@ exports.needs = {
 
 exports.gives = {
   mcss: true,
-  message_content: true
+  message_content: true,
+  message_content_mini: true
 }
 
 exports.create = function (api) {
   return {
     message_content,
+    message_content_mini,
     mcss: () => fs.readFileSync(Path.join(__dirname, 'about.mcss'), 'utf8')
   }
 
@@ -24,8 +26,8 @@ exports.create = function (api) {
 
     var { content: about, author: authorId } = msg.value
     var { about: aboutId, name, image, description } = about
-    // TODO does about default to the message author?
-    // var { about: aboutId = authorId, name, image, description } = about
+
+    if (!aboutId) return null
 
     return h('About', [
       Name({ aboutId, authorId, name }),
@@ -34,55 +36,66 @@ exports.create = function (api) {
     ])
   }
 
+  function message_content_mini (msg) {
+    if (msg.value.content.type !== 'about') return
+
+    var { content: about, author: authorId } = msg.value
+    var { about: aboutId, name, image, description } = about
+
+    if (!aboutId) return null
+    if (!image && !description)
+
+    return h('About', Name({ aboutId, authorId, name }))
+  }
+
+
   function Name ({ aboutId, authorId, name }) {
     if (!name) return null
     return h('section -name', [
-      h('header', ['refers to ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
-      h('section', nameLink(aboutId, name))
+      h('header', when(authorId === aboutId,
+        'self-identifies as',
+        ['identifies ', targetLink(aboutId), ' as']
+      )),
+      h('section', h(
+        'a -name',
+        { href: `#${aboutId}` },
+        name
+      ))
     ])
   }
 
   function Image ({ aboutId, authorId, image }) {
     if (!image) return null
     return h('section -image', [
-      h('header', ['portrays ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
-      h('section', imageLink(aboutId, h('img', { src: api.blob_url(image) })))
+      h('header', when(authorId === aboutId,
+        'self-portrays as',
+        ['portrays ', targetLink(aboutId), ' as']
+      )),
+      h('section', h(
+        'a -image',
+        { href: `#${aboutId}` },
+        h('img', { src: api.blob_url(image) })
+      ))
     ])
   }
 
   function Description ({ aboutId, authorId, description }) {
     if (!description) return null
     return h('section -description', [
-      h('header', ['describes ', when(authorId === aboutId, 'self', targetLink(aboutId)), ' as ']),
+      h('header', when(authorId === aboutId,
+        'self-describes as',
+        ['describes ', targetLink(aboutId), ' as']
+      )),
       h('section', api.markdown(description))
     ])
   }
 }
 
 function targetLink (aboutId) {
-  if (!aboutId) return null
   const content = aboutId.slice(0, 9) + '...'
   return h(
     'a -target',
     { href: `#${aboutId}` },
     content
-  )
-}
-
-function nameLink (aboutId, name) {
-  if (!aboutId) return null
-  return h(
-    'a -name',
-    { href: `#${aboutId}` },
-    name
-  )
-}
-
-function imageLink (aboutId, img) {
-  if (!aboutId) return null
-  return h(
-    'a -image',
-    { href: `#${aboutId}` },
-    img
   )
 }
