@@ -3,15 +3,17 @@ About {
   flex-wrap: wrap
 
   section {
-    a {
-      -target {
-        color: green
-      }
-      -name {
+    header {
+      a {
+        -target {
+          color: green
+        }
+        -name {
 
-      }
-      -image {
+        }
+        -image {
 
+        }
       }
     }
 

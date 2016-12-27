@@ -43,7 +43,7 @@ exports.create = function (api) {
     var { about: aboutId, name, image, description } = about
 
     if (!aboutId) return null
-    if (!image && !description)
+    if (image || description) return null
 
     return h('About', Name({ aboutId, authorId, name }))
   }

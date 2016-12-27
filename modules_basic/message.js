@@ -32,7 +32,7 @@ exports.create = function (api) {
     var content = api.message_content_mini(msg)
     if (content) return mini(msg, content)
 
-    var content = api.message_content(msg)
+    content = api.message_content(msg)
     if (!content) return mini(msg, message_content_mini_fallback(msg))
 
     return h('Message', {
@@ -73,7 +73,7 @@ exports.create = function (api) {
         tabindex: '0'
       }
     }, [
-      h('header.author', api.message_author(msg, { size: 0 })),
+      h('header.author', api.message_author(msg, { size: 'mini' })),
       h('section.meta', api.message_meta(msg)),
       h('section.content', el)
     ])

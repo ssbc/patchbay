@@ -22,13 +22,14 @@ exports.create = function (api) {
   }
 
   function message_author (msg, opts = {}) {
-    var { size = 1 } = opts
+    var { size = 'small' } = opts
     var { value } = msg
     var { author } = value
+
     return h('MessageAuthor', {
-      className: size === 0 ? '-mini' : ''
+      className: `-${size}`
     }, [
-      when(size > 0,
+      when(size !== 'mini',
         h('section -image', api.avatar_link(author, api.avatar_image(author, 'thumbnail')))
       ),
       h('section -name', api.avatar_link(author, api.avatar_name(author))),
