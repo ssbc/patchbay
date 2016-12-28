@@ -12,6 +12,7 @@ exports.needs = {
   message_backlinks: 'first',
   message_content: 'first',
   message_content_mini: 'first',
+  message_title: 'first',
   message_link: 'first',
   message_meta: 'map',
 }
@@ -41,6 +42,7 @@ exports.create = function (api) {
       }
     }, [
       h('header.author', api.message_author(msg)),
+      h('section.title', api.message_title(msg)),
       h('section.meta', api.message_meta(msg)),
       h('section.content', content),
       h('section.action', api.message_action(msg)),

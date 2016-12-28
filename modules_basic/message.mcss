@@ -6,6 +6,10 @@ Message {
   -mini {
     padding-top: 0.25rem
     padding-bottom: 0.25rem
+
+    section.content {
+      clear: none
+    }
   }
 
   header.author {
@@ -14,11 +18,17 @@ Message {
     flex-direction: column
   }
 
+  section.title {
+    float: left
+  }
+
   section.meta {
     float: right
   }
 
   section.content {
+    clear: both
+
     (img) {
       max-width: 100%
     }
