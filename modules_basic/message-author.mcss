@@ -2,6 +2,20 @@ MessageAuthor {
   display: flex
   flex-direction: column
 
+  section {
+    -image { 
+      margin-bottom: .3rem
+    }
+
+    -name {
+      a { color: black }
+    }
+
+    -timestamp {
+    
+    }
+  }
+
   -mini {
     flex-direction: row
 

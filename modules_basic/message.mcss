@@ -1,7 +1,9 @@
 Message {
   padding-top: 1em
   padding-bottom: 1em
+  padding-left: 6rem
   border-top: solid 1px gainsboro
+  position: relative
 
   -mini {
     padding-top: 0.25rem
@@ -10,20 +12,43 @@ Message {
     section.content {
       clear: none
     }
+
+    display: flex
+    flex-direction: row
+    position: inherit
+     
+    header.author {
+      position: inherit
+      order: 0
+    }
+
+    section.content {
+      order: 1
+      flex-grow: 1
+    }
+
+    section.meta {
+      order: 2
+    }
   }
 
   header.author {
-    float: left
+    position: absolute
+    margin-left: -6rem
     display: flex
     flex-direction: column
   }
 
   section.title {
     float: left
+    font-size: .9rem
   }
 
   section.meta {
     float: right
+    a { 
+      color: gray
+    }
   }
 
   section.content {

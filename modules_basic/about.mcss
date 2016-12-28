@@ -6,7 +6,7 @@ About {
     header {
       a {
         -target {
-          color: green
+
         }
         -name {
 

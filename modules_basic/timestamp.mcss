@@ -1,5 +1,6 @@
 Timestamp {
   a {
-
+    font-size: .8rem
+    color: gray
   }
 }
