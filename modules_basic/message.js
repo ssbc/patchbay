@@ -7,14 +7,13 @@ var h = require('../h')
 exports.needs = {
   avatar_name: 'first',
   avatar_link: 'first',
-  message_meta: 'map',
   message_action: 'map',
-  message_link: 'first',
-  message_backlinks: 'first',
   message_author: 'first',
+  message_backlinks: 'first',
   message_content: 'first',
   message_content_mini: 'first',
-  message_footer: 'first'
+  message_link: 'first',
+  message_meta: 'map',
 }
 
 exports.gives = {
