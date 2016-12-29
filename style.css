@@ -254,6 +254,10 @@ button:hover {
 /* lightbox - used in message-confirm */
 
 .lightbox {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
   overflow: auto;
   width: 650px;
   padding: 25px;
