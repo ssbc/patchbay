@@ -1,7 +1,7 @@
 {
   "name": "patchbay",
   "description": "a pluggable patchwork",
-  "version": "6.1.5",
+  "version": "6.1.6",
   "homepage": "https://github.com/dominictarr/patchbay",
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "hyperscript": "^1.4.7",
     "hypertabs": "^3.0.0",
     "insert-css": "^2.0.0",
-    "is-visible": "^2.0.4",
+    "is-visible": "^2.1.1",
     "kvgraph": "^0.1.0",
     "map-filter-reduce": "^3.0.1",
     "micro-css": "^0.6.2",
@@ -36,7 +36,7 @@
     "pull-next": "^0.0.1",
     "pull-paramap": "^1.1.6",
     "pull-reconnect": "^0.0.3",
-    "pull-scroll": "^0.2.0",
+    "pull-scroll": "^0.3.3",
     "pull-stream": "^3.4.5",
     "scuttlebot": "^8.7.2",
     "setimmediate": "^1.0.5",
@@ -58,7 +58,7 @@
     "ssb-ws": "^0.6.2",
     "suggest-box": "^2.2.1",
     "text-node-searcher": "^1.1.0",
-    "visualize-buffer": "0.0.0"
+    "visualize-buffer": "0.0.1"
   },
   "devDependencies": {
     "browselectrify": "^1.0.1",
