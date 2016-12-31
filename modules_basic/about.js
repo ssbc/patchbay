@@ -1,7 +1,6 @@
-var fs = require('fs')
-var Path = require('path')
-var h = require('../h')
-var when = require('@mmckegg/mutant/when')
+const getStyleForModule = require('../get-style-for-module')
+const h = require('../h')
+const when = require('@mmckegg/mutant/when')
 
 exports.needs = {
   blob_url: 'first',
@@ -18,7 +17,7 @@ exports.create = function (api) {
   return {
     message_content,
     message_content_mini,
-    mcss: () => fs.readFileSync(Path.join(__dirname, 'about.mcss'), 'utf8')
+    mcss: getStyleForModule(__filename) 
   }
 
   function message_content (msg) {

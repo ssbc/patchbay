@@ -1,8 +1,7 @@
-var fs = require('fs')
-var Path = require('path')
-var pull = require('pull-stream')
-var u = require('../util')
-var h = require('../h')
+const getStyleForModule = require('../get-style-for-module')
+const pull = require('pull-stream')
+const u = require('../util')
+const h = require('../h')
 
 exports.needs = {
   avatar_name: 'first',
@@ -25,7 +24,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_render,
-    mcss: () => fs.readFileSync(Path.join(__dirname, 'message.mcss'))
+    mcss: getStyleForModule(__filename) 
   }
 
   function message_render (msg, sbot) {

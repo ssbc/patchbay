@@ -1,7 +1,6 @@
-var fs = require('fs')
-var Path = require('path')
-var h = require('../h')
-var human = require('human-time')
+const getStyleForModule = require('../get-style-for-module') 
+const h = require('../h')
+const human = require('human-time')
 
 exports.needs = {}
 
@@ -18,7 +17,7 @@ exports.create = function () {
 
   return {
     timestamp,
-    mcss: () => fs.readFileSync(Path.join(__dirname, 'timestamp.mcss'))
+    mcss: getStyleForModule(__filename)
   }
 
   function updateTimestampEl (el) {

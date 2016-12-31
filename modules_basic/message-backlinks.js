@@ -1,6 +1,5 @@
-var fs = require('fs')
-var Path = require('path')
-var h = require('../h')
+const getStyleForModule = require('../get-style-for-module')
+const h = require('../h')
 
 exports.gives = {
   message_backlinks: true,
@@ -10,7 +9,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_backlinks,
-    mcss: () => fs.readFileSync(Path.join(__dirname, 'message-backlinks.mcss'))
+    mcss: getStyleForModule(__filename) 
   }
 
   function message_backlinks (msg) {
