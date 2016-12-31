@@ -1,24 +1,73 @@
 Message {
   padding-top: 1em
   padding-bottom: 1em
-  padding-left: 6rem
+  padding-left: 7rem
   border-top: solid 1px gainsboro
+  min-height: 5rem
+
   position: relative
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: flex-end
+  
+  header.author {
+    position: absolute
+    left: 0
+  }
+
+  section.title {
+    flex-grow: 1
+    font-size: .9rem
+  }
+
+  section.meta {
+    display: flex
+    a { 
+      margin-left: .2rem
+      color: gray
+    }
+
+    input{
+      margin-right: 0
+      order: 99
+    }
+  }
+
+  section.content {
+    flex-basis: 100%
+    clear: both
+
+    (img) {
+      max-width: 100%
+    }
+  }
+
+  section.action {
+    flex-basis: 100%
+    display: flex
+    justify-content: flex-end
+
+    a {
+      margin-left: .5em
+    }
+  }
+
+  footer.backlinks {
+
+  }
+
 
   -mini {
-    padding-top: 0.25rem
-    padding-bottom: 0.25rem
+    padding-top: .25rem
+    padding-bottom: .25rem
+    min-height: inherit
 
     section.content {
       clear: none
     }
-
-    display: flex
-    flex-direction: row
-    position: inherit
      
     header.author {
-      position: inherit
       order: 0
     }
 
@@ -30,45 +79,5 @@ Message {
     section.meta {
       order: 2
     }
-  }
-
-  header.author {
-    position: absolute
-    margin-left: -6rem
-    display: flex
-    flex-direction: column
-  }
-
-  section.title {
-    float: left
-    font-size: .9rem
-  }
-
-  section.meta {
-    float: right
-    a { 
-      color: gray
-    }
-  }
-
-  section.content {
-    clear: both
-
-    (img) {
-      max-width: 100%
-    }
-  }
-
-  section.action {
-    display: flex
-    justify-content: flex-end
-
-    a {
-      margin-left: .5em
-    }
-  }
-
-  footer.backlinks {
-
   }
 }

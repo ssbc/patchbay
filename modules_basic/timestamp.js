@@ -22,7 +22,7 @@ exports.create = function () {
 
   function updateTimestampEl (el) {
     var timestamp = Number(el.getAttribute('data-timestamp'))
-    var display = human(new Date(timestamp))
+    var display = human(new Date(timestamp)).replace(/minutes/, 'mins')
     el.querySelector('a').firstChild.nodeValue = display
     return el
   }

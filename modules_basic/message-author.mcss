@@ -8,6 +8,7 @@ MessageAuthor {
     }
 
     -name {
+      max-width: 7rem
       a { color: black }
     }
 
@@ -20,7 +21,12 @@ MessageAuthor {
     flex-direction: row
 
     section {
-      margin-right: 1rem;
+      -name {
+        position: absolute
+        left: inherit
+      }
+
+      margin-right: .5rem;
     }
   }
 }
