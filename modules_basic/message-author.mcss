@@ -26,6 +26,8 @@ MessageAuthor {
       -name {
         position: initial
         left: initial
+        min-width: 6.5rem
+        max-width: none
       }
 
       -timestamp {

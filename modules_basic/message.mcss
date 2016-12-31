@@ -1,7 +1,5 @@
 Message {
-  padding-top: 1em
-  padding-bottom: 1em
-  padding-left: 7rem
+  padding: 1rem .5rem 1rem 7.5rem
   border-top: solid 1px gainsboro
   min-height: 5rem
 
@@ -13,7 +11,7 @@ Message {
   
   header.author {
     position: absolute
-    left: 0
+    left: .5rem
   }
 
   section.title {
@@ -59,7 +57,7 @@ Message {
 
 
   -mini {
-    padding: .25rem 0 
+    padding: .25rem .5rem
     min-height: inherit
 
     header.author {
