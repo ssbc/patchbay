@@ -9,7 +9,7 @@ MessageAuthor {
 
     -name {
       max-width: 7rem
-      a { color: black }
+      a { $text-primary }
     }
 
     -timestamp {
