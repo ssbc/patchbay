@@ -21,12 +21,16 @@ MessageAuthor {
     flex-direction: row
 
     section {
+      margin-right: .5rem
+
       -name {
-        position: absolute
-        left: inherit
+        position: initial
+        left: initial
       }
 
-      margin-right: .5rem;
+      -timestamp {
+
+      }
     }
   }
 }
