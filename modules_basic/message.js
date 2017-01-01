@@ -1,20 +1,19 @@
-var fs = require('fs')
-var Path = require('path')
-var pull = require('pull-stream')
-var u = require('../util')
-var h = require('../h')
+const getStyleForModule = require('../get-style-for-module')
+const pull = require('pull-stream')
+const u = require('../util')
+const h = require('../h')
 
 exports.needs = {
   avatar_name: 'first',
   avatar_link: 'first',
-  message_meta: 'map',
   message_action: 'map',
-  message_link: 'first',
-  message_backlinks: 'first',
   message_author: 'first',
+  message_backlinks: 'first',
   message_content: 'first',
   message_content_mini: 'first',
-  message_footer: 'first'
+  message_title: 'first',
+  message_link: 'first',
+  message_meta: 'map',
 }
 
 exports.gives = {
@@ -25,7 +24,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_render,
-    mcss: () => fs.readFileSync(Path.join(__dirname, 'message.mcss'))
+    mcss: getStyleForModule(__filename) 
   }
 
   function message_render (msg, sbot) {
@@ -42,6 +41,7 @@ exports.create = function (api) {
       }
     }, [
       h('header.author', api.message_author(msg)),
+      h('section.title', api.message_title(msg)),
       h('section.meta', api.message_meta(msg)),
       h('section.content', content),
       h('section.action', api.message_action(msg)),

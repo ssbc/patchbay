@@ -34,7 +34,8 @@ exports.needs = {
 exports.gives = {
   message_action: true,
   message_meta: true,
-  message_content: true
+  message_content: true,
+  message_title: true
 }
 
 
@@ -302,8 +303,6 @@ exports.create = function (api) {
         var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
         var forksT
         var div = h('div',
-          h('p', 'git repo ', repoName(msg.key)),
-          c.upstream ? h('p', 'fork of ', repoLink(c.upstream)) : '',
           h('p', h('code', 'ssb://' + msg.key)),
           h('div.git-table-wrapper', {style: {'max-height': '12em'}},
             h('table',
@@ -410,7 +409,6 @@ exports.create = function (api) {
 
       if(c.type === 'git-update') {
         return [
-          h('p', 'pushed to ', repoLink(c.repo)),
           c.refs ? h('ul', Object.keys(c.refs).map(function (ref) {
             var rev = c.refs[ref]
             return h('li',
@@ -450,7 +448,6 @@ exports.create = function (api) {
 
       if(c.type === 'issue') {
         return h('div',
-          h('p', 'opened issue on ', repoLink(c.project)),
           c.title ? h('h4', c.title) : '',
           api.markdown(c)
         )
@@ -458,12 +455,42 @@ exports.create = function (api) {
 
       if(c.type === 'pull-request') {
         return h('div',
-          h('p', 'opened pull-request ',
-            'to ', repoLink(c.repo), ':', c.branch, ' ',
-            'from ', repoLink(c.head_repo), ':', c.head_branch),
           c.title ? h('h4', c.title) : '',
           api.markdown(c)
         )
+      }
+    },
+
+    message_title: function (msg) {
+      var c = msg.value.content
+
+      if(c.type === 'git-repo') {
+        return h('div', [
+          h('p', 'git repo ', repoName(msg.key)),
+          c.upstream ? h('p', 'fork of ', repoLink(c.upstream)) : ''
+        ])
+      }
+
+      if(c.type === 'git-update') {
+        return h('p', 'pushed to ', repoLink(c.repo))
+      }
+
+      if(c.type === 'issue-edit' || (c.type === 'post' && c.text === '')) {
+        return h('div', [
+          c.issue ? renderIssueEdit(c) : null,
+          c.issues ? c.issues.map(renderIssueEdit) : null
+        ])
+      }
+
+      if(c.type === 'issue') {
+        return h('p', 'opened issue on ', repoLink(c.project))
+      }
+
+      if(c.type === 'pull-request') {
+        return h('p', 'opened pull-request ', [
+          'to ', repoLink(c.repo), ':', c.branch, ' ',
+          'from ', repoLink(c.head_repo), ':', c.head_branch
+        ])
       }
     },
 
@@ -515,5 +542,4 @@ exports.create = function (api) {
     }
   }
 }
-
 

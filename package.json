@@ -13,6 +13,7 @@
     "cont": "^1.0.3",
     "dataurl-": "^0.1.0",
     "depject": "^3.0.0",
+    "es2040": "^1.2.4",
     "hjson": "^2.0.3",
     "human-time": "0.0.1",
     "hypercombo": "0.1.0",
@@ -68,7 +69,8 @@
   },
   "browserify": {
     "transform": [
-      "brfs"
+      "brfs",
+      "es2040"
     ]
   },
   "scripts": {
