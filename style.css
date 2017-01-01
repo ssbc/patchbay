@@ -177,6 +177,7 @@ button:hover {
 }
 
 /* messages */
+/*to be deprecated once message preview is converted to modular style*/
 
 .message {
   position: relative;
@@ -193,13 +194,6 @@ button:hover {
   background: #f9f9f9;
 }
 
-.message--mini {
-  font-size: 1em;
-  margin: 0;
-  padding: .2em;
-  border: none;
-  background: inherit;
-}
 
 .message_content div > span {
   font-size: 0.9em;
