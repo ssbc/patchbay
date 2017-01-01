@@ -1,4 +1,4 @@
-const getStyleForModule = require('../get-style-for-module')
+const fs = require('fs')
 const pull = require('pull-stream')
 const u = require('../util')
 const h = require('../h')
@@ -24,7 +24,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_render,
-    mcss: getStyleForModule(__filename) 
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
   function message_render (msg, sbot) {

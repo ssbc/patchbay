@@ -1,4 +1,4 @@
-const getStyleForModule = require('../get-style-for-module')
+const fs = require('fs')
 const h = require('../h')
 const when = require('@mmckegg/mutant/when')
 
@@ -17,7 +17,7 @@ exports.create = function (api) {
   return {
     message_content,
     message_content_mini,
-    mcss: getStyleForModule(__filename) 
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
   function message_content (msg) {

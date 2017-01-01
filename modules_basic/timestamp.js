@@ -1,4 +1,4 @@
-const getStyleForModule = require('../get-style-for-module') 
+const fs = require('fs')
 const h = require('../h')
 const human = require('human-time')
 
@@ -17,7 +17,7 @@ exports.create = function () {
 
   return {
     timestamp,
-    mcss: getStyleForModule(__filename)
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
   function updateTimestampEl (el) {

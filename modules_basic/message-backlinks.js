@@ -1,4 +1,4 @@
-const getStyleForModule = require('../get-style-for-module')
+const fs = require('fs')
 const h = require('../h')
 
 exports.gives = {
@@ -9,7 +9,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_backlinks,
-    mcss: getStyleForModule(__filename) 
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
   function message_backlinks (msg) {
