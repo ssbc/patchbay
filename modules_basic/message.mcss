@@ -34,7 +34,6 @@ Message {
 
   section.content {
     flex-basis: 100%
-    clear: both
 
     (img) {
       max-width: 100%

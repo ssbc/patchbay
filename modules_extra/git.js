@@ -475,11 +475,11 @@ exports.create = function (api) {
         return h('p', 'pushed to ', repoLink(c.repo))
       }
 
-      if(c.type === 'issue-edit'
-       || (c.type === 'post' && c.text === '')) {
-        return h('div',
+      if(c.type === 'issue-edit' || (c.type === 'post' && c.text === '')) {
+        return h('div', [
           c.issue ? renderIssueEdit(c) : null,
-          c.issues ? c.issues.map(renderIssueEdit) : null)
+          c.issues ? c.issues.map(renderIssueEdit) : null
+        ])
       }
 
       if(c.type === 'issue') {
@@ -487,12 +487,11 @@ exports.create = function (api) {
       }
 
       if(c.type === 'pull-request') {
-        return h('p', 'opened pull-request ',
-            'to ', repoLink(c.repo), ':', c.branch, ' ',
-            'from ', repoLink(c.head_repo), ':', c.head_branch
-        )
+        return h('p', 'opened pull-request ', [
+          'to ', repoLink(c.repo), ':', c.branch, ' ',
+          'from ', repoLink(c.head_repo), ':', c.head_branch
+        ])
       }
-
     },
 
     message_meta: function (msg, sbot) {
@@ -543,5 +542,4 @@ exports.create = function (api) {
     }
   }
 }
-
 
