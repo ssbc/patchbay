@@ -56,6 +56,8 @@ Message {
 
 
   -mini {
+    font-size: .9rem
+    justify-content: flex-start
     padding: .25rem .5rem
     min-height: inherit
 
