@@ -8,7 +8,7 @@ module.exports = {
   "message-confirm.js":  require('./message-confirm.js'),
   "tabs.js":  require('./tabs.js'),
   "sbot.js": require('./sbot.js'),
-  "style-mixins.js": require('./style-mixins.js'),
-  "styles.js": require('./styles.js')
+  "styles.js": require('./styles.js'),
+  "style-mixins.js": require('./style-mixins.js')
 }
 

@@ -6,9 +6,10 @@ MessageConfirm {
     -message_preview {
       background-color: white
 
-      div { 
+      div {
         border: none
-        header.author { 
+
+        header.author {
           div {
             section {
               -timestamp {
@@ -17,12 +18,13 @@ MessageConfirm {
             }
           }
         }
-        section.action { 
+
+        section.action {
           display: none
         }
       }
     }
-    
+ 
     -actions {
       margin-top: 1rem
       display: flex
@@ -32,5 +34,6 @@ MessageConfirm {
         margin: 0 0 0 1rem
       }
     }
+  }
 }
 

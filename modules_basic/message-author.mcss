@@ -3,17 +3,17 @@ MessageAuthor {
   flex-direction: column
 
   section {
-    -image { 
+    -image {
       margin-bottom: .3rem
     }
 
     -name {
       max-width: 7rem
-      a { $text-primary }
+      a { $textPrimary }
     }
 
     -timestamp {
-    
+ 
     }
   }
 

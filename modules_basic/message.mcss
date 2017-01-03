@@ -8,7 +8,7 @@ Message {
   flex-direction: row
   flex-wrap: wrap
   justify-content: flex-end
-  
+
   header.author {
     position: absolute
     left: .5rem
@@ -21,9 +21,9 @@ Message {
 
   section.meta {
     display: flex
-    a { 
+    a {
       margin-left: .2rem
-      $text-subtle
+      $textSubtle
     }
 
     input{

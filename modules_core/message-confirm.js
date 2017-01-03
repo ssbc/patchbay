@@ -1,11 +1,11 @@
-const fs = require('fs')
-const lightbox = require('hyperlightbox')
-const h = require('../h')
-const u = require('../util')
-const self_id = require('../keys').id
+var fs = require('fs')
+var lightbox = require('hyperlightbox')
+var h = require('../h')
+var u = require('../util')
+var self_id = require('../keys').id
 //publish or add
 
-const plugs = require('../plugs')
+var plugs = require('../plugs')
 
 exports.needs = {
   publish: 'first',

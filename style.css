@@ -102,7 +102,7 @@ input, textarea {
   font-family: sans-serif;
 }
 
-input:focus, .compose:focus, .message:focus, button:focus {
+input:focus, .compose:focus, button:focus {
   outline: none;
   border-color: #0088cc; 
   box-shadow: 0 0 4px #0088cc;
@@ -177,82 +177,10 @@ button:hover {
 }
 
 /* messages */
-/*to be deprecated once message preview is converted to modular style*/
-
-.message {
-  position: relative;
-  flex-basis: 0;
-  margin-top: .25em; 
-  margin-bottom: .25em;
-  padding: .2em;
-  border-top: 1px solid #f5f5f5;
-  // border-bottom: 1px solid #f5f5f5;
-  background: white;
-}
-
-.message:hover {
-  background: #f9f9f9;
-}
-
-
-.message_content div > span {
-  font-size: 0.9em;
-  margin-bottom: 0.7em;
-  display: block;
-  color: #888;
-}
-
-.message_content--mini div > span {
-  display: inline-block;
-}
-
-.message_content div > span a {
-  color: #005d8c;
-}
-
-.message_meta input {
-  font-size: .8em;
-}
-
-.message_meta {
-  margin-left: auto;
-}
-
-.message_meta > * {
-  margin-left: .5ex;
-}
-
-.message_actions {
-  position: absolute;
-  bottom: 0; right: 0;
-  margin-right: .5ex;
-  margin-bottom: .5ex;
-}
+/* is .title used any more? */
 
 .title {
   padding: .5ex;
-}
-
-.message img {
-  max-width: 100%;
-}
-
-.message > .title > .avatar {
-  margin-left: 0;
-}
-
-.message_content {
-  padding: .5ex;
-}
-
-.actions > * {
-  padding-left: 5px;
-  margin-left: 1px;
-}
-
-.actions > :not(:last-child) {
-  border-right: 2px solid #eee;
-  padding-right: 5px;
 }
 
 .emoji {

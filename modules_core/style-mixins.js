@@ -1,10 +1,10 @@
 
 const mixins = `
-  $text-primary {
+  $textPrimary {
     color: black
   }
 
-  $text-subtle {
+  $textSubtle {
     color: gray
   }
 `
