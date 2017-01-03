@@ -27,7 +27,7 @@ exports.create = function (api) {
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_render (msg, sbot) {
+  function message_render (msg) {
     var content = api.message_content_mini(msg)
     if (content) return mini(msg, content)
 
@@ -84,3 +84,4 @@ exports.create = function (api) {
 function message_content_mini_fallback(msg)  {
   return h('code', msg.value.content.type)
 }
+

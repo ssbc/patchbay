@@ -1,25 +1,31 @@
-var lightbox = require('hyperlightbox')
-var h = require('hyperscript')
-var u = require('../util')
-var self_id = require('../keys').id
+const fs = require('fs')
+const lightbox = require('hyperlightbox')
+const h = require('../h')
+const u = require('../util')
+const self_id = require('../keys').id
 //publish or add
 
-var plugs = require('../plugs')
+const plugs = require('../plugs')
 
 exports.needs = {
-  publish: 'first', message_content: 'first', avatar: 'first',
+  publish: 'first',
+  message_render: 'first',
+  avatar: 'first',
   message_meta: 'map'
 }
 
-exports.gives = 'message_confirm'
+exports.gives = {
+  message_confirm: 'true',
+  mcss: 'true'
+}
 
-//var publish = plugs.first(exports.sbot_publish = [])
-//var message_content = plugs.first(exports.message_content = [])
-//var avatar = plugs.first(exports.avatar = [])
-//var message_meta = plugs.map(exports.message_meta = [])
-//
 exports.create = function (api) {
-  return function (content, cb) {
+  return {
+    message_confirm,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
+
+  function message_confirm (content, cb) {
 
     cb = cb || function () {}
 
@@ -37,30 +43,31 @@ exports.create = function (api) {
       }
     }
 
-    var okay = h('button', 'okay', {onclick: function () {
-      lb.remove()
-      api.publish(content, cb)
-    }})
+    var okay = h('button',  {
+      'ev-click': () => {
+        lb.remove()
+        api.publish(content, cb)
+      }},
+      'okay'
+    )
 
-    var cancel = h('button', 'Cancel', {onclick: function () {
-      lb.remove()
-      cb(null)
-    }})
+    var cancel = h('button', {
+      'ev-click': () => {
+        lb.remove()
+        cb(null)
+      }},
+      'Cancel'
+    )
 
     okay.addEventListener('keydown', function (ev) {
       if(ev.keyCode === 27) cancel.click() //escape
     })
 
-    lb.show(h('div.column.message-confirm',
-      h('div.message', 
-        h('div.title.row',
-          h('div.avatar', api.avatar(msg.value.author, 'thumbnail')),
-          h('div.message_meta.row', api.message_meta(msg))
-        ),
-        h('div.message_content', api.message_content(msg)
-          || h('pre', JSON.stringify(msg, null, 2)))
-      ),
-      h('div.row.message-confirm__controls', okay, cancel)
+    lb.show(h('MessageConfirm', [
+        h('header -preview_description', h('h1', 'Preview')),
+        h('section -message_preview', api.message_render(msg)),
+        h('section -actions', [okay, cancel])
+      ]
     ))
 
     okay.focus()

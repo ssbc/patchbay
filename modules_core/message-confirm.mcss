@@ -1,0 +1,36 @@
+MessageConfirm {
+  section {
+    -preview_description {
+    }
+
+    -message_preview {
+      background-color: white
+
+      div { 
+        border: none
+        header.author { 
+          div {
+            section {
+              -timestamp {
+                display: none
+              }
+            }
+          }
+        }
+        section.action { 
+          display: none
+        }
+      }
+    }
+    
+    -actions {
+      margin-top: 1rem
+      display: flex
+      justify-content: flex-end
+
+      button {
+        margin: 0 0 0 1rem
+      }
+    }
+}
+
