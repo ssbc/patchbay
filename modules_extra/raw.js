@@ -29,8 +29,9 @@ exports.create = function (api) {
       type: 'checkbox',
       title: 'View Data',
       onclick: function () {
-        var msgEl = this.parentNode.parentNode.parentNode
-        var msgContentEl = msgEl.querySelector('.message_content')
+        // HACK (mw) yo we need a better way to replace the content
+        var msgEl = this.parentNode.parentNode
+        var msgContentEl = msgEl.querySelector('.\\.content')
         if (this.checked) {
           // move away the content
           while (el = msgContentEl.firstChild)

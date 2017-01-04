@@ -1,0 +1,80 @@
+Message {
+  padding: 1rem .5rem 1rem 7.5rem
+  border-top: solid 1px gainsboro
+  min-height: 5rem
+
+  position: relative
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: flex-end
+  
+  header.author {
+    position: absolute
+    left: .5rem
+  }
+
+  section.title {
+    flex-grow: 1
+    font-size: .9rem
+  }
+
+  section.meta {
+    display: flex
+    a { 
+      margin-left: .2rem
+      $text-subtle
+    }
+
+    input{
+      margin-right: 0
+      order: 99
+    }
+  }
+
+  section.content {
+    flex-basis: 100%
+
+    (img) {
+      max-width: 100%
+    }
+  }
+
+  section.action {
+    flex-basis: 100%
+    display: flex
+    justify-content: flex-end
+
+    a {
+      margin-left: .5em
+    }
+  }
+
+  footer.backlinks {
+
+  }
+
+
+  -mini {
+    font-size: .9rem
+    justify-content: flex-start
+    padding: .25rem .5rem
+    min-height: inherit
+
+    header.author {
+      order: 0
+      position: initial
+      left: initial
+    }
+
+    section.content {
+      order: 1
+      flex-basis: initial
+      flex-grow: 1
+    }
+
+    section.meta {
+      order: 2
+    }
+  }
+}

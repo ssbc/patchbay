@@ -121,8 +121,8 @@ exports.create = function (api) {
           meta.channel = thread[0].value.content.channel
 
           var recps = thread[0].value.content.recps
-          var private = thread[0].value.private
-          if(private) {
+          var priv = thread[0].value['private']
+          if(priv) {
             if(recps)
               meta.recps = recps
             else

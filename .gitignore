@@ -3,4 +3,3 @@ npm-debug.log
 .npmignore
 build
 modules/_index.js
-style.css.json
