@@ -16,7 +16,7 @@ function ancestor (el) {
 //var search_box = plugs.first(exports.search_box = [])
 //var menu = plugs.first(exports.menu = [])
 
-exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first'}
+exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first', 'external_confirm':'first'}
 
 exports.gives = 'screen_view'
 
@@ -95,7 +95,7 @@ exports.create = function (api) {
 
       //open external links.
       //this ought to be made into something more runcible
-      if(open.isExternal(link.href)) return open(link.href)
+      if(open.isExternal(link.href)) return api.external_confirm(link.href)
 
       if(tabs.has(path))
         return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
