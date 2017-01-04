@@ -1,5 +1,5 @@
 var isVisible = require('is-visible').isVisible
-var h = require('hyperscript')
+var h = require('../h')
 
 //var avatar = plugs.first(exports.avatar = [])
 //var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
@@ -105,13 +105,8 @@ function duration (s) {
 exports.create = function (api) {
 
   return {
-    menu_items: function () {
-      return h('a', {href: '#/network'}, '/network')
-    },
-
-    builtin_tabs: function () {
-      return ['/network']
-    },
+    menu_items: () => h('a', {href: '#/network'}, '/network'),
+    builtin_tabs: () => ['/network'],
 
     screen_view: function (path) {
 
@@ -136,9 +131,9 @@ exports.create = function (api) {
               || b.stateChange - a.stateChange
             )
           }).forEach(function (peer) {
-            ol.appendChild(h('div',
+            ol.appendChild(h('div', [
               api.avatar(peer.key, 'thumbnail'),
-              h('div',
+              h('div', [
                 peer.state || 'not connected',
                 ' ',
                 getType(peer),
@@ -150,16 +145,18 @@ exports.create = function (api) {
                 h('label',
                   {title: new Date(peer.stateChange).toString()},
                   peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')')
-                ),
-                'source:'+peer.source,
-                h('pre', legacyToMultiServer(peer)),
-                h('button', 'connect', {onclick: function () {
-                  api.sbot_gossip_connect(peer, function (err) {
+              ]),
+              'source:'+peer.source,
+              h('pre', legacyToMultiServer(peer)),
+              h('button', {
+                'ev-click': () => {
+                  api.sbot_gossip_connect(peer, (err) => {
                     if(err) console.error(err)
                     else console.log('connected to', peer)
                   })
-                }})
-              )
+                }},
+                'connect'
+              )])
             )
           })
 
