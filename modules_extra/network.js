@@ -1,5 +1,13 @@
-var isVisible = require('is-visible').isVisible
-var h = require('../h')
+const isVisible = require('is-visible').isVisible
+const h = require('../h')
+const mutantMap = require('@mmckegg/mutant/map')
+const mutantDict = require('@mmckegg/mutant/dict')
+const Struct = require('@mmckegg/mutant/struct')
+const Value = require('@mmckegg/mutant/value')
+const toCollection = require('@mmckegg/mutant/dict-to-collection')
+const when = require('@mmckegg/mutant/when')
+const computed = require('@mmckegg/mutant/computed')
+const human = require('human-time')
 
 //var avatar = plugs.first(exports.avatar = [])
 //var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
@@ -20,7 +28,6 @@ exports.gives = {
 //sbot_gossip_connect
 //sbot_gossip_add
 
-var human = require('human-time')
 
 function legacyToMultiServer(addr) {
   return 'net:'+addr.host + ':'+addr.port + '~shs:'+addr.key.substring(1).replace('.ed25519','')
@@ -29,17 +36,17 @@ function legacyToMultiServer(addr) {
 
 
 //on the same wifi network
-function isLocal (e) {
+function isLocal (peer) {
   // don't rely on private ip address, because
   // cjdns creates fake private ip addresses.
-  return ip.isPrivate(e.host) && e.type === 'local'
+  return ip.isPrivate(peer.host) && peer.type === 'local'
 }
 
 
 //pub is running scuttlebot >=8
 //have connected successfully.
-function isLongterm (e) {
-  return e.ping && e.ping.rtt && e.ping.rtt.mean > 0
+function isLongterm (peer) {
+  return peer.ping && peer.ping.rtt && peer.ping.rtt.mean > 0
 }
 
 //pub is running scuttlebot < 8
@@ -49,27 +56,27 @@ function isLegacy (peer) {
 }
 
 //tried to connect, but failed.
-function isInactive (e) {
-  return e.stateChange && (e.duration && e.duration.mean == 0)
+function isInactive (peer) {
+  return peer.stateChange && (peer.duration && peer.duration.mean == 0)
 }
 
 //havn't tried to connect peer yet.
-function isUnattempted (e) {
-  return !e.stateChange
+function isUnattempted (peer) {
+  return !peer.stateChange
 }
 
-function getType (e) {
+function getType (peer) {
   return (
-      isLongterm(e)    ? 'modern'
-    : isLegacy(e)      ? 'legacy'
-    : isInactive(e)    ? 'inactive'
-    : isUnattempted(e) ? 'unattempted'
-    :                    'other' //should never happen
+      isLongterm(peer)    ? 'modern'
+    : isLegacy(peer)      ? 'legacy'
+    : isInactive(peer)    ? 'inactive'
+    : isUnattempted(peer) ? 'unattempted'
+    :                       'other' //should never happen
   )
 }
 
-function origin (e) {
-  return e.source === 'local' ? 0 : 1
+function origin (peer) {
+  return peer.source === 'local' ? 0 : 1
 }
 
 
@@ -110,6 +117,13 @@ function peerListSort (a, b) {
   )
 }
 
+function formatDate (time) {
+  return new Date(time).toString() 
+}
+
+function humanDate (time) {
+  return human(new Date(time)) 
+}
 
 exports.create = function (api) {
 
@@ -122,53 +136,98 @@ exports.create = function (api) {
   function screen_view (path) {
     if (path !== '/network') return
 
-    var ol = h('ul', { className: 'network' })
+    var peers = obs_gossip_peers(api)
 
-    ;(function poll () {
+    return h('div', { style: {'overflow':'auto'}, className: 'column scroller' }, [ 
+      h('Network', [
+        mutantMap(peers, peer => {
+          var { key, ping, source, state, stateChange } = peer
 
-      //if this tab isn't open, don't update.
-      //todo: make a better way to do this...
-      if (!isVisible(ol)) return setTimeout(poll, 1000)
+          console.log('ping', ping())
 
-      api.sbot_gossip_peers((err, list) => {
-        ol.innerHTML = ''
-        list.sort(peerListSort).forEach(peer => {
-          ol.appendChild(h('div', [
-            api.avatar(peer.key, 'thumbnail'),
+          return h('NetworkConnection', [
+            api.avatar(key(), 'thumbnail'),
             h('div', [
-              peer.state || 'not connected',
+              when(state, state, 'not connected'),
               ' ',
-              getType(peer),
+              computed(peer, getType),
               ' ',
-              //TODO: show nicer details, with labels. etc.
-              (peer.ping && peer.ping.rtt) ? duration(peer.ping.rtt.mean) : '',
+              // //TODO: show nicer details, with labels. etc.
+              computed(ping.rtt.mean, duration),
               ' ',
-              (peer.ping && peer.ping.skew) ? duration(peer.ping.skew.mean) : '',
-              h('label', 
-                { title: new Date(peer.stateChange).toString() },
-                peer.stateChange && ('(' + human(new Date(peer.stateChange))) + ')'
-              )
+              computed(ping.skew.mean, duration),
+              ' ',
+              h('label',
+                { title: computed(stateChange, formatDate) },
+                [ computed(stateChange, humanDate) ]
+              ) 
             ]),
-            'source:'+peer.source,
-            h('pre', legacyToMultiServer(peer)),
+            'source: ',
+            source,
+            h('pre', computed(peer, legacyToMultiServer)),
             h('button', {
               'ev-click': () => {
-                api.sbot_gossip_connect(peer, (err) => {
+                api.sbot_gossip_connect(peer(), (err) => {
                   if(err) console.error(err)
-                  else console.log('connected to', peer)
+                  else console.log('connected to', peer())
                 })
               }},
               'connect'
             )
-          ]))
+          ])
         })
-
-        setTimeout(poll, 5000)
-      })
-
-    })()
-
-    return h('div', { className: 'column scroll-y' }, ol)
+      ])
+    ])
   }
+}
+
+function obs_gossip_peers (api) {
+  var timer = null
+  var state = mutantDict({}, {
+    onListen: () => {
+      timer = setInterval(refresh, 5e3)
+    },
+    onUnlisten: () => {
+      clearInterval(timer)
+    }
+  })
+
+  refresh()
+
+  return toCollection.values(state)
+
+  function refresh () {
+    api.sbot_gossip_peers((err, peers) => {
+      peers.forEach(data => {
+        var current = state.get(data.key)
+        if (!current) {
+          current = Peer()
+          current.set(data)
+          state.put(data.key, current)
+        } else {
+          current.set(data)
+        }
+      })
+    })
+  }
+}
+
+function Peer () {
+  var peer = Struct({
+    key: Value(),
+    ping: Struct({
+      rtt: Struct({
+        mean: Value()
+      }),
+      skew: Struct({
+        mean: Value()
+      })
+    }),
+    source: Value(),
+    state: Value(),
+    stateChange: Value()
+  })
+
+  return peer
 }
 
