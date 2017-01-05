@@ -95,7 +95,7 @@ exports.create = function (api) {
 
       //open external links.
       //this ought to be made into something more runcible
-      if(open.isExternal(link.href)) return api.external_confirm(link.href)
+      if(link.href && open.isExternal(link.href)) return api.external_confirm(link.href)
 
       if(tabs.has(path))
         return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
