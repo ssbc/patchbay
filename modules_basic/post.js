@@ -10,7 +10,10 @@ var ref = require('ssb-ref')
 //var markdown = plugs.first(exports.markdown = [])
 //
 
-exports.needs = { message_link: 'first', markdown: 'first' }
+exports.needs = {
+  message_link: 'first',
+  markdown: 'first'
+}
 
 exports.gives = {
   message_content: true,
@@ -22,7 +25,7 @@ exports.create = function (api) {
     message_content,
     message_title
   }
-  
+
   function message_content (data) {
     if(!data.value.content || !data.value.content.text) return
 

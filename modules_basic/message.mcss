@@ -51,7 +51,9 @@ Message {
   }
 
   footer.backlinks {
+    flex-basis: 100%
 
+    margin-top: .5rem
   }
 
 

@@ -1,11 +1,17 @@
 MessageBacklinks {
-  header {
+  font-size: .9rem
 
+  header {
+    $textSubtle
   }
+
   ul {
+    padding-left: 1rem
+
     li {
       a {
         -backlink {
+          $textSubtle
 
         }
       }

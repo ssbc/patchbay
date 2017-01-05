@@ -16,10 +16,12 @@ exports.create = function (api) {
     var links = []
     for(var k in CACHE) {
       var _msg = CACHE[k]
-      if(Array.isArray(_msg.content.mentions)) {
-        for(var i = 0; i < _msg.content.mentions.length; i++)
-          if(_msg.content.mentions[i].link == msg.key)
-          links.push(k)
+      var mentions = _msg.content.mentions
+
+      if(Array.isArray(mentions)) {
+        for(var i = 0; i < mentions.length; i++)
+          if(mentions[i].link == msg.key)
+            links.push(k)
       }
     }
 
@@ -27,11 +29,9 @@ exports.create = function (api) {
 
     return h('MessageBacklinks', [
       h('header', 'backlinks:'),
-      h('ul', links.map(function (link) {
+      h('ul', links.map(link => {
         return h('li', [
-          h('a -backlink', {
-            href: `#${link}`
-          }, link)
+          h('a -backlink', { href: `#${link}` }, link)
         ])
       }))
     ])
