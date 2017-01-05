@@ -257,11 +257,11 @@ button:hover {
   position: fixed;
   left: 0px;
   right: 0px;
-  top: 0px;
+  top: 50px;
   overflow: auto;
   width: 650px;
   padding: 25px;
-  margin: 3em 0;
+  margin: auto;
 
   z-index: 2;
 
