@@ -1,10 +1,11 @@
 'use strict'
-var h = require('hyperscript')
-var u = require('../util')
-var suggest = require('suggest-box')
-var mentions = require('ssb-mentions')
-var lightbox = require('hyperlightbox')
-var cont = require('cont')
+const fs = require('fs')
+const h = require('../h')
+const u = require('../util')
+const suggest = require('suggest-box')
+const mentions = require('ssb-mentions')
+const lightbox = require('hyperlightbox')
+const cont = require('cont')
 
 //var plugs = require('../plugs')
 //var suggest_mentions= plugs.asyncConcat(exports.suggest_mentions = [])
@@ -21,9 +22,10 @@ exports.needs = {
   file_input: 'first'
 }
 
-exports.gives = 'message_compose'
-
-function id (e) { return e }
+exports.gives = {
+  'message_compose': true,
+  'mcss': true
+}
 
 /*
   opts can take
@@ -34,46 +36,52 @@ function id (e) { return e }
 */
 
 exports.create = function (api) {
+  return {
+    message_compose,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
 
-  return function (meta, opts, cb) {
+  function message_compose (meta, opts, cb) {
     if('function' === typeof cb) {
-      if('function' === typeof opts)
+      if('function' === typeof opts) {
         opts = {prepublish: opts}
       }
+    }
 
     if(!opts) opts = {}
     opts.prepublish = opts.prepublish || id
 
-    var accessories
+    var actions
     meta = meta || {}
     if(!meta.type) throw new Error('message must have type')
-    var ta = h('textarea', {
+
+    var textArea = h('textarea', {
       placeholder: opts.placeholder || 'Write a message',
       style: {height: opts.shrink === false ? '200px' : ''}
     })
 
     if(opts.shrink !== false) {
       var blur
-      ta.addEventListener('focus', function () {
+      textArea.addEventListener('focus', () => {
         clearTimeout(blur)
-        if(!ta.value) {
-          ta.style.height = '200px'
+        if(!textArea.value) {
+          textArea.style.height = '200px'
         }
-        accessories.style.display = 'block'
+        actions.style.display = 'flex'
       })
-      ta.addEventListener('blur', function () {
+      textArea.addEventListener('blur', () => {
         //don't shrink right away, so there is time
         //to click the publish button.
         clearTimeout(blur)
-        blur = setTimeout(function () {
-          if(ta.value) return
-          ta.style.height = '50px'
-          accessories.style.display = 'none'
+        blur = setTimeout(() => {
+          if(textArea.value) return
+          textArea.style.height = '50px'
+          actions.style.display = 'none'
         }, 200)
       })
     }
 
-    ta.addEventListener('keydown', function (ev) {
+    textArea.addEventListener('keydown', ev => {
       if(ev.keyCode === 13 && ev.ctrlKey) publish()
     })
 
@@ -84,10 +92,10 @@ exports.create = function (api) {
       publishBtn.disabled = true
       var content
       try {
-        content = JSON.parse(ta.value)
+        content = JSON.parse(textArea.value)
       } catch (err) {
-        meta.text = ta.value
-        meta.mentions = mentions(ta.value).map(function (mention) {
+        meta.text = textArea.value
+        meta.mentions = mentions(textArea.value).map(mention => {
           // merge markdown-detected mention with file info
           var file = filesById[mention.link]
           if (file) {
@@ -111,35 +119,38 @@ exports.create = function (api) {
       function done (err, msg) {
         publishBtn.disabled = false
         if(err) return alert(err.stack)
-        else if (msg) ta.value = ''
+        else if (msg) textArea.value = ''
 
         if (cb) cb(err, msg)
       }
     }
 
+    var fileInput = api.file_input(file => {
+      files.push(file)
+      filesById[file.link] = file
 
-    var publishBtn = h('button', 'Publish', {onclick: publish})
-    var composer =
-      h('div.compose', h('div.column', ta,
-        accessories = h('div.row.compose__controls',
-          //hidden until you focus the textarea
-          {style: {display: opts.shrink === false ? '' : 'none'}},
-          api.file_input(function (file) {
-            files.push(file)
-            filesById[file.link] = file
+      var embed = file.type.indexOf('image/') === 0 ? '!' : ''
+      textArea.value += embed + '['+file.name+']('+file.link+')'
+      console.log('added:', file)
+    })
+    var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
+    var actions = h('section.actions', 
+      //hidden until you focus the textarea
+      { style: {display: opts.shrink === false ? '' : ''} },
+      // revert
+      // { style: {display: opts.shrink === false ? '' : 'none'} },
+      [ fileInput, publishBtn ]
+    )
 
-            var embed = file.type.indexOf('image/') === 0 ? '!' : ''
-            ta.value += embed + '['+file.name+']('+file.link+')'
-            console.log('added:', file)
-          }),
-          publishBtn)
-        )
-      )
+    var composer = h('Compose', [
+      textArea,
+      actions
+    ])
 
-    suggest(ta, function (name, cb) {
+    suggest(textArea, (name, cb) => {
       cont.para(api.suggest_mentions(name))
-        (function (err, ary) {
-          cb(null, ary.reduce(function (a, b) {
+        ((err, ary) => {
+          cb(null, ary.reduce((a, b) => {
             if(!b) return a
             return a.concat(b)
           }, []))
@@ -147,9 +158,9 @@ exports.create = function (api) {
     }, {})
 
     return composer
-
   }
 
 }
 
+function id (e) { return e }
 

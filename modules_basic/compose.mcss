@@ -1,0 +1,63 @@
+Compose {
+  display: flex
+  flex-direction: column
+
+  padding: 1rem .5rem
+
+  textarea {
+    border: 1px solid gainsboro
+  }
+
+  section.actions {
+    display: flex
+    flex-direction: row
+    align-items: baseline
+
+    input[type="file"] {
+      flex-grow: 1
+
+      width: 5.5rem
+      color: transparent
+
+      ::-webkit-file-upload-button {
+        visibility: hidden
+      }
+        
+      ::before {
+        content: 'attach file'
+
+        background: #fff
+        color: #666
+        padding: .5rem
+        margin: .5rem 0
+        cursor: pointer
+        text-transform: uppercase
+        font-size: .7rem
+
+        outline: none
+        white-space: nowrap
+        -webkit-user-select: none
+      }
+      
+      :active, :focus {
+        outline: none
+        box-shadow: none 
+      }
+    }
+
+    button {
+      background: #fff
+      color: #666
+      border: 1px solid #bbb
+      border-radius: .5rem
+      padding: .5rem
+      margin: .5rem 0
+      cursor: pointer
+      text-transform: uppercase
+      font-weight: bold
+      font-size: .7rem
+    }
+  }
+}
+
+
