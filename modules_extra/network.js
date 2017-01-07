@@ -1,20 +1,23 @@
+const fs = require('fs')
 const isVisible = require('is-visible').isVisible
 const h = require('../h')
+const human = require('human-time')
+
 const mutantMap = require('@mmckegg/mutant/map')
-const mutantDict = require('@mmckegg/mutant/dict')
+const dict = require('@mmckegg/mutant/dict')
 const Struct = require('@mmckegg/mutant/struct')
 const Value = require('@mmckegg/mutant/value')
 const toCollection = require('@mmckegg/mutant/dict-to-collection')
 const when = require('@mmckegg/mutant/when')
 const computed = require('@mmckegg/mutant/computed')
-const human = require('human-time')
 
 //var avatar = plugs.first(exports.avatar = [])
 //var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
 //var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
 
 exports.needs = {
-  avatar: 'first',
+  avatar_image_link: 'first',
+  avatar_name_link: 'first',
   sbot_gossip_peers: 'first',
   sbot_gossip_connect: 'first'
 }
@@ -22,7 +25,8 @@ exports.needs = {
 exports.gives = {
   menu_items: true,
   builtin_tabs: true,
-  screen_view: true
+  screen_view: true,
+  mcss: true
 }
 
 //sbot_gossip_connect
@@ -122,7 +126,7 @@ function formatDate (time) {
 }
 
 function humanDate (time) {
-  return human(new Date(time)) 
+  return human(new Date(time)).replace(/minute/, 'min').replace(/second/, 'sec')
 }
 
 exports.create = function (api) {
@@ -130,7 +134,8 @@ exports.create = function (api) {
   return {
     menu_items: () => h('a', {href: '#/network'}, '/network'),
     builtin_tabs: () => ['/network'],
-    screen_view
+    screen_view,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
   
   function screen_view (path) {
@@ -143,37 +148,54 @@ exports.create = function (api) {
         mutantMap(peers, peer => {
           var { key, ping, source, state, stateChange } = peer
 
-          console.log('ping', ping())
-
           return h('NetworkConnection', [
-            api.avatar(key(), 'thumbnail'),
-            h('div', [
-              when(state, state, 'not connected'),
-              ' ',
+            h('section.avatar', [
+              api.avatar_image_link(key()),
+            ]),
+            h('section.name', [
+              api.avatar_name_link(key()),
+            ]),
+            h('section.type', [
               computed(peer, getType),
-              ' ',
-              // //TODO: show nicer details, with labels. etc.
-              computed(ping.rtt.mean, duration),
-              ' ',
-              computed(ping.skew.mean, duration),
-              ' ',
-              h('label',
+            ]),
+            h('section.source', [
+              'source: ',
+              h('code', source)
+            ]),
+            h('section.state', [
+              'state: ',
+              h('code', when(state, state, 'not connected'))
+            ]),
+            h('section.actions', [
+              h('button', {
+                'ev-click': () => {
+                  api.sbot_gossip_connect(peer(), (err) => {
+                    if(err) console.error(err)
+                    else console.log('connected to', peer())
+                  })
+                }},
+                'connect'
+              )
+            ]),
+            h('section.time-ago', [
+              h('div',
                 { title: computed(stateChange, formatDate) },
                 [ computed(stateChange, humanDate) ]
               ) 
             ]),
-            'source: ',
-            source,
-            h('pre', computed(peer, legacyToMultiServer)),
-            h('button', {
-              'ev-click': () => {
-                api.sbot_gossip_connect(peer(), (err) => {
-                  if(err) console.error(err)
-                  else console.log('connected to', peer())
-                })
-              }},
-              'connect'
-            )
+            h('section.ping', [
+              h('div.rtt', [
+                'rtt: ',
+                h('code', computed(ping.rtt.mean, duration))
+              ]),
+              h('div.skew', [
+                'skew: ',
+                h('code', computed(ping.skew.mean, duration))
+              ]),
+            ]),
+            h('section.address', [
+              h('code', computed(peer, legacyToMultiServer))
+            ])
           ])
         })
       ])
@@ -183,7 +205,7 @@ exports.create = function (api) {
 
 function obs_gossip_peers (api) {
   var timer = null
-  var state = mutantDict({}, {
+  var state = dict({}, {
     onListen: () => {
       timer = setInterval(refresh, 5e3)
     },
