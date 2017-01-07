@@ -1,0 +1,91 @@
+Network {
+  div {
+    margin: .8rem
+    border-bottom: 1px solid gainsboro
+  }
+
+}
+
+NetworkConnection {
+  padding-left: 6rem
+  padding-bottom: .8rem
+  position: relative
+  
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  align-items: center 
+
+  section.avatar {
+    position: absolute
+    left: 0
+    top: 0
+
+    a img {
+      height: 3rem
+      width: 3rem
+    }
+  }
+
+  section.time-ago {
+    position: absolute
+    left: 0
+    top: 3.5rem
+
+    font-size: .8rem
+    $textSubtle
+  }
+
+  section.name {
+    flex-basis: 100%
+
+    margin-right: 1rem
+  }
+
+  section.type {
+    flex-basis: 100%
+
+    font-size: .8rem
+    $textSubtle
+  }
+
+  section.source {
+    flex-basis: 100%
+  }
+
+  section.state {
+    margin-right: 2rem
+  }
+
+  section.actions {
+    button {
+      padding: .2rem
+      font-size: .7rem
+    }
+  }
+
+
+  section.ping {
+    flex-basis: 100%
+    display: flex
+
+    font-size: .8rem
+    $textSubtle
+
+    div.rtt {
+      flex-basis: 8rem
+    }
+
+    div.skew {
+      flex-basis: 8rem
+    }
+  }
+
+  section.address{
+    flex-basis: 100%
+
+    font-size: .8rem
+    $textSubtle
+  }
+}
+
