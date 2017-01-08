@@ -1,13 +1,13 @@
 const fs = require('fs')
-const isVisible = require('is-visible').isVisible
+// const { isVisible } = require('is-visible')
 const h = require('../h')
 const human = require('human-time')
 
-const mutantMap = require('@mmckegg/mutant/map')
-const dict = require('@mmckegg/mutant/dict')
 const Struct = require('@mmckegg/mutant/struct')
 const Value = require('@mmckegg/mutant/value')
+const Dict = require('@mmckegg/mutant/dict')
 const toCollection = require('@mmckegg/mutant/dict-to-collection')
+const mutantMap = require('@mmckegg/mutant/map')
 const when = require('@mmckegg/mutant/when')
 const computed = require('@mmckegg/mutant/computed')
 
@@ -37,8 +37,6 @@ function legacyToMultiServer(addr) {
   return 'net:'+addr.host + ':'+addr.port + '~shs:'+addr.key.substring(1).replace('.ed25519','')
 }
 
-
-
 //on the same wifi network
 function isLocal (peer) {
   // don't rely on private ip address, because
@@ -46,28 +44,6 @@ function isLocal (peer) {
   return ip.isPrivate(peer.host) && peer.type === 'local'
 }
 
-
-//pub is running scuttlebot >=8
-//have connected successfully.
-function isLongterm (peer) {
-  return peer.ping && peer.ping.rtt && peer.ping.rtt.mean > 0
-}
-
-//pub is running scuttlebot < 8
-//have connected sucessfully
-function isLegacy (peer) {
-  return /connect/.test(peer.state) || (peer.duration && peer.duration.mean) > 0 && !isLongterm(peer)
-}
-
-//tried to connect, but failed.
-function isInactive (peer) {
-  return peer.stateChange && (peer.duration && peer.duration.mean == 0)
-}
-
-//havn't tried to connect peer yet.
-function isUnattempted (peer) {
-  return !peer.stateChange
-}
 
 function getType (peer) {
   return (
@@ -77,12 +53,33 @@ function getType (peer) {
     : isUnattempted(peer) ? 'unattempted'
     :                       'other' //should never happen
   )
+
+  //pub is running scuttlebot >=8
+  //have connected successfully.
+  function isLongterm (peer) {
+    return peer.ping && peer.ping.rtt && peer.ping.rtt.mean > 0
+  }
+
+  //pub is running scuttlebot < 8
+  //have connected sucessfully
+  function isLegacy (peer) {
+    return /connect/.test(peer.state) || (peer.duration && peer.duration.mean) > 0 && !isLongterm(peer)
+  }
+
+  //tried to connect, but failed.
+  function isInactive (peer) {
+    return peer.stateChange && (peer.duration && peer.duration.mean == 0)
+  }
+
+  //havn't tried to connect peer yet.
+  function isUnattempted (peer) {
+    return !peer.stateChange
+  }
 }
 
 function origin (peer) {
   return peer.source === 'local' ? 0 : 1
 }
-
 
 function round(n) {
   return Math.round(n*100)/100
@@ -122,7 +119,7 @@ function peerListSort (a, b) {
 }
 
 function formatDate (time) {
-  return new Date(time).toString() 
+  return new Date(time).toString()
 }
 
 function humanDate (time) {
@@ -137,13 +134,13 @@ exports.create = function (api) {
     screen_view,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
-  
+
   function screen_view (path) {
     if (path !== '/network') return
 
     var peers = obs_gossip_peers(api)
 
-    return h('div', { style: {'overflow':'auto'}, className: 'column scroller' }, [ 
+    return h('div', { style: {'overflow':'auto'}, className: 'column scroller' }, [
       h('Network', [
         mutantMap(peers, peer => {
           var { key, ping, source, state, stateChange } = peer
@@ -164,6 +161,9 @@ exports.create = function (api) {
             ]),
             h('section.state', [
               'state: ',
+              h('i', {
+                className: computed(state, (state) => '-'+state)
+              }),
               h('code', when(state, state, 'not connected'))
             ]),
             h('section.actions', [
@@ -181,7 +181,7 @@ exports.create = function (api) {
               h('div',
                 { title: computed(stateChange, formatDate) },
                 [ computed(stateChange, humanDate) ]
-              ) 
+              )
             ]),
             h('section.ping', [
               h('div.rtt', [
@@ -205,14 +205,19 @@ exports.create = function (api) {
 
 function obs_gossip_peers (api) {
   var timer = null
-  var state = dict({}, {
-    onListen: () => {
-      timer = setInterval(refresh, 5e3)
-    },
-    onUnlisten: () => {
-      clearInterval(timer)
-    }
+  var state = Dict({}, {
+    //
+    // TODO - get this api implemented in mutantDict
+    //
+    // onListen: () => {
+    //   timer = setInterval(refresh, 5e3)
+    // },
+    // onUnlisten: () => {
+    //   clearInterval(timer)
+    // }
   })
+  // TODO - remove this line
+  setInterval(refresh, 5e3)
 
   refresh()
 
