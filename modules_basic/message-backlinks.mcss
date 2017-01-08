@@ -1,5 +1,6 @@
 MessageBacklinks {
   font-size: .9rem
+  margin-top: .5rem
 
   header {
     $textSubtle
