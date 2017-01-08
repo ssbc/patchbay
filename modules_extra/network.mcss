@@ -10,11 +10,11 @@ NetworkConnection {
   padding-left: 6rem
   padding-bottom: .8rem
   position: relative
-  
+
   display: flex
   flex-direction: row
   flex-wrap: wrap
-  align-items: center 
+  align-items: center
 
   section.avatar {
     position: absolute
@@ -54,7 +54,29 @@ NetworkConnection {
   }
 
   section.state {
+    display: flex
+    flex-direction: row
+    align-items: center
+
     margin-right: 2rem
+
+    i {
+      width: 1rem
+      height: 1rem
+      border-radius: .5rem
+
+      margin: 0 .2rem 0 .5rem
+
+      background: #ccc
+
+      -connecting, -disconnecting {
+        background: #95cc95
+       }
+
+      -connected {
+        background: #06e206
+      }
+    }
   }
 
   section.actions {
