@@ -1,7 +1,7 @@
 
 const mixins = `
   $textPrimary {
-    color: black
+    color: #222
   }
 
   $textSubtle {

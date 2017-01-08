@@ -27,33 +27,31 @@ exports.gives = {
   'mcss': true
 }
 
-/*
-  opts can take
-
-    placeholder: string. placeholder text, defaults to "Write a message"
-    prepublish: function. called before publishing a message.
-    shrink: boolean. set to false, to make composer not shrink (or hide controls) when unfocused.
-*/
-
 exports.create = function (api) {
   return {
     message_compose,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_compose (meta, opts, cb) {
+  /*
+    opts can take
+
+      placeholder: string. placeholder text, defaults to "Write a message"
+      prepublish: function. called before publishing a message.
+      shrink: boolean. set to false, to make composer not shrink (or hide controls) when unfocused.
+  */
+
+  function message_compose (meta = {}, opts = {}, cb) {
+    if(!meta.type) throw new Error('message must have type')
+
     if('function' === typeof cb) {
       if('function' === typeof opts) {
         opts = {prepublish: opts}
       }
     }
-
-    if(!opts) opts = {}
     opts.prepublish = opts.prepublish || id
 
     var actions
-    meta = meta || {}
-    if(!meta.type) throw new Error('message must have type')
 
     var textArea = h('textarea', {
       placeholder: opts.placeholder || 'Write a message',
