@@ -57,7 +57,7 @@ exports.create = function (api) {
 
     var textArea = h('textarea', {
       placeholder: opts.placeholder || 'Write a message',
-      style: {height: opts.shrink === false ? '200px' : ''}
+      className: opts.shrink === false ? '-expanded' : '-contracted'
     })
 
     if(opts.shrink !== false) {
@@ -65,7 +65,7 @@ exports.create = function (api) {
       textArea.addEventListener('focus', () => {
         clearTimeout(blur)
         if(!textArea.value) {
-          textArea.style.height = '200px'
+          textArea.className = '-expanded'
         }
         actions.style.display = 'flex'
       })
@@ -75,9 +75,9 @@ exports.create = function (api) {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if(textArea.value) return
-          textArea.style.height = '50px'
+          textArea.className = '-contracted'
           actions.style.display = 'none'
-        }, 200)
+        }, 300)
       })
     }
 
@@ -130,15 +130,13 @@ exports.create = function (api) {
       filesById[file.link] = file
 
       var embed = file.type.indexOf('image/') === 0 ? '!' : ''
-      textArea.value += embed + '['+file.name+']('+file.link+')'
+      textArea.value += '\n' + embed + '['+file.name+']('+file.link+')'
       console.log('added:', file)
     })
     var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
     var actions = h('section.actions', 
       //hidden until you focus the textarea
-      { style: {display: opts.shrink === false ? '' : ''} },
-      // revert
-      // { style: {display: opts.shrink === false ? '' : 'none'} },
+      { style: {display: opts.shrink === false ? '' : 'none'} },
       [ fileInput, publishBtn ]
     )
 
