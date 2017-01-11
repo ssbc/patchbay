@@ -4,7 +4,6 @@ const h = require('../h')
 const u = require('../util')
 const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
-const lightbox = require('hyperlightbox')
 const cont = require('cont')
 
 //var plugs = require('../plugs')
@@ -125,7 +124,9 @@ exports.create = function (api) {
       filesById[file.link] = file
 
       var embed = file.type.indexOf('image/') === 0 ? '!' : ''
-      textArea.value += '\n' + embed + '['+file.name+']('+file.link+')'
+
+      textArea.value += embed + '['+file.name+']('+file.link+')'
+      composer.className = 'Compose -expanded'
       console.log('added:', file)
     })
     var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
