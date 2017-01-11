@@ -156,11 +156,11 @@ exports.create = function (api) {
               computed(peer, getType),
             ]),
             h('section.source', [
-              'source: ',
+              h('label', 'source:'),
               h('code', source)
             ]),
             h('section.state', [
-              'state: ',
+              h('label', 'state:'),
               h('i', {
                 className: computed(state, (state) => '-'+state)
               }),
@@ -185,11 +185,11 @@ exports.create = function (api) {
             ]),
             h('section.ping', [
               h('div.rtt', [
-                'rtt: ',
+                h('label', 'rtt:'),
                 h('code', computed(ping.rtt.mean, duration))
               ]),
               h('div.skew', [
-                'skew: ',
+                h('label', 'skew:'),
                 h('code', computed(ping.skew.mean, duration))
               ]),
             ]),

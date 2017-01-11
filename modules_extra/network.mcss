@@ -51,6 +51,7 @@ NetworkConnection {
 
   section.source {
     flex-basis: 100%
+    label { margin-right: .5rem }
   }
 
   section.state {
@@ -60,6 +61,7 @@ NetworkConnection {
 
     margin-right: 2rem
 
+    label { margin-right: .5rem }
     i {
       width: 1rem
       height: 1rem
@@ -96,10 +98,12 @@ NetworkConnection {
 
     div.rtt {
       flex-basis: 8rem
+      label { margin-right: .5rem }
     }
 
     div.skew {
       flex-basis: 8rem
+      label { margin-right: .5rem }
     }
   }
 
