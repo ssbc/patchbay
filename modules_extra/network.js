@@ -206,18 +206,13 @@ exports.create = function (api) {
 function obs_gossip_peers (api) {
   var timer = null
   var state = Dict({}, {
-    //
-    // TODO - get this api implemented in mutantDict
-    //
-    // onListen: () => {
-    //   timer = setInterval(refresh, 5e3)
-    // },
-    // onUnlisten: () => {
-    //   clearInterval(timer)
-    // }
+    onListen: () => {
+      timer = setInterval(refresh, 5e3)
+    },
+    onUnlisten: () => {
+      clearInterval(timer)
+    }
   })
-  // TODO - remove this line
-  setInterval(refresh, 5e3)
 
   refresh()
 
