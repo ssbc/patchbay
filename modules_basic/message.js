@@ -34,7 +34,7 @@ exports.create = function (api) {
     content = api.message_content(msg)
     if (!content) return mini(msg, message_content_mini_fallback(msg))
 
-    return h('Message', {
+    var msgEl = h('Message', {
       'ev-keydown': navigateToMessageOnEnter,
       attributes: {
         tabindex: '0'
@@ -47,6 +47,7 @@ exports.create = function (api) {
       h('section.action', api.message_action(msg)),
       h('footer.backlinks', api.message_backlinks(msg))
     ])
+    return msgEl
 
     function navigateToMessageOnEnter (ev) {
       // on enter, hit first meta.
@@ -63,6 +64,7 @@ exports.create = function (api) {
         var wtf = h('a', { href: `#${msg.key}` })
         msgEl.appendChild(wtf)
         wtf.click()
+        msgEl.removeChild(wtf)
       }
     }
   }
