@@ -54,8 +54,7 @@ exports.create = function (api) {
     var actions
 
     var textArea = h('textarea', {
-      placeholder: opts.placeholder || 'Write a message',
-      className: opts.shrink === false ? '-expanded' : '-contracted'
+      placeholder: opts.placeholder || 'Write a message'
     })
 
     if(opts.shrink !== false) {
@@ -63,9 +62,8 @@ exports.create = function (api) {
       textArea.addEventListener('focus', () => {
         clearTimeout(blur)
         if(!textArea.value) {
-          textArea.className = '-expanded'
+          composer.className = 'Compose -expanded'
         }
-        actions.style.display = 'flex'
       })
       textArea.addEventListener('blur', () => {
         //don't shrink right away, so there is time
@@ -73,8 +71,7 @@ exports.create = function (api) {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if(textArea.value) return
-          textArea.className = '-contracted'
-          actions.style.display = 'none'
+          composer.className = 'Compose -contracted'
         }, 300)
       })
     }
@@ -132,13 +129,13 @@ exports.create = function (api) {
       console.log('added:', file)
     })
     var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
-    var actions = h('section.actions', 
-      //hidden until you focus the textarea
-      { style: {display: opts.shrink === false ? '' : 'none'} },
-      [ fileInput, publishBtn ]
-    )
+    var actions = h('section.actions', [
+      fileInput, publishBtn
+    ])
 
-    var composer = h('Compose', [
+    var composer = h('Compose', { 
+      className: opts.shrink === false ? '-expanded' : '-contracted'
+    }, [
       textArea,
       actions
     ])

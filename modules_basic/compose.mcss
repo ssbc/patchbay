@@ -6,16 +6,6 @@ Compose {
 
   textarea {
     border: 1px solid gainsboro
-
-    -expanded {
-      height: 200px
-      transition: height .15s ease-out
-    }
-
-    -contracted {
-      height: 50px
-      transition: height .15s ease-in
-    }
   }
 
   section.actions {
@@ -63,6 +53,29 @@ Compose {
       font-size: .7rem
     }
   }
+
+  -expanded {
+    textarea {
+      height: 200px
+      transition: height .15s ease-out
+    }
+
+    section.actions {
+      display: flex
+    }
+  }
+
+  -contracted { 
+    textarea {
+      height: 50px
+      transition: height .15s ease-in
+    }
+
+    section.actions {
+      display: none
+    }
+  }
+
 }
 
 $composeButton {
