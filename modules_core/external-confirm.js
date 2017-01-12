@@ -22,14 +22,21 @@ exports.create = function (api) {
       if (ev.keyCode === 27) cancel.click() // escape
     })
 
-    lb.show(h('div.column.message-confirm',
-      h('div.message',
-        h('div.title.row',
-          h('div.message_meta.row', h('strong', 'warning: '), 'please confirm opening the following link in your OSes browser:')
-        ),
-        h('div.message_content', h('pre', href))
-      ),
-      h('div.row.message-confirm__controls', okay, cancel)
+    lb.show(h('div.column',
+      h('div', [
+        h('div.title.row', [
+          h('strong.row', [
+            'Do you want to open this external link in your default browser:'
+          ])
+        ]),
+        h('div', [
+          h('pre', href)
+        ])
+      ]),
+      h('div.row', [
+        okay, 
+        cancel
+      ])
     ))
 
     okay.focus()
