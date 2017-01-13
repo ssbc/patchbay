@@ -3,13 +3,10 @@ const fs = require('fs')
 const h = require('../h')
 const human = require('human-time')
 
-const Struct = require('@mmckegg/mutant/struct')
-const Value = require('@mmckegg/mutant/value')
-const Dict = require('@mmckegg/mutant/dict')
-const toCollection = require('@mmckegg/mutant/dict-to-collection')
-const mutantMap = require('@mmckegg/mutant/map')
-const when = require('@mmckegg/mutant/when')
-const computed = require('@mmckegg/mutant/computed')
+const {
+  Struct, Value, Dict,
+  dictToCollection, map: mutantMap, when, computed
+} = require('@mmckegg/mutant')
 
 //var avatar = plugs.first(exports.avatar = [])
 //var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
@@ -216,7 +213,7 @@ function obs_gossip_peers (api) {
 
   refresh()
 
-  return toCollection.values(state)
+  return dictToCollection.values(state)
 
   function refresh () {
     api.sbot_gossip_peers((err, peers) => {
