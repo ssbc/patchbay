@@ -1,27 +1,31 @@
-var h = require('hyperscript')
-var ref = require('ssb-ref')
-
-exports.gives = 'screen_view'
+const fs = require('fs')
+const h = require('../h')
+const ref = require('ssb-ref')
 
 exports.needs = {
   blob_url: 'first'
 }
 
-exports.create = function (api) {
-  return function (path) {
-    if(ref.isBlob(path)) return blob_view(path)
+exports.gives = {
+  'screen_view': true,
+  'mcss': true
+}
+
+exports.create = (api) => {
+  return {
+    screen_view,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function blob_view(id) {
-    return h('iframe', {
-      src: api.blob_url(id),
-      sandbox: '',
-      style: {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        border: 0,
-      }
-    })
+  function screen_view (path) {
+    if(!ref.isBlob(path)) return 
+    
+    return h('Blob', [
+      h('iframe', {
+        src: api.blob_url(path),
+        sandbox: ''
+      })
+    ])
   }
 }
+
