@@ -1,1 +1,4 @@
-module.exports = require('micro-css/h')(require('@mmckegg/mutant/html-element'))
+const { h } = require('@mmckegg/mutant')
+
+module.exports = require('micro-css/h')(h)
+
