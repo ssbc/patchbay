@@ -1,5 +1,5 @@
 module.exports = {
-  "audio-mp3.js":  require('./audio-mp3.js'),
+  // "audio-mp3.js":  require('./audio-mp3.js'),
   "channel.js":  require('./channel.js'),
   "emoji.js":  require('./emoji.js'),
   "suggest-emoji.js":  require('./suggest-emoji.js'),
