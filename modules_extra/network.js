@@ -221,11 +221,12 @@ function obs_gossip_peers (api) {
   function refresh () {
     api.sbot_gossip_peers((err, peers) => {
       peers.forEach(data => {
-        var current = state.get(data.key)
+        var id = legacyToMultiServer(data)
+        var current = state.get(id)
         if (!current) {
           current = Peer()
           current.set(data)
-          state.put(data.key, current)
+          state.put(id, current)
         } else {
           current.set(data)
         }
