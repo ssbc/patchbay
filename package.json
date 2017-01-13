@@ -8,7 +8,7 @@
     "url": "git://github.com/dominictarr/patchbay.git"
   },
   "dependencies": {
-    "@mmckegg/mutant": "^3.11.0",
+    "@mmckegg/mutant": "^3.12.0",
     "brfs": "^1.4.3",
     "cont": "^1.0.3",
     "dataurl-": "^0.1.0",
