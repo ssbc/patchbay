@@ -1,5 +1,5 @@
 module.exports = {
-  "audio-mp3.js":  require('./audio-mp3.js'),
+  // "audio-mp3.js":  require('./audio-mp3.js'),
   "blob.js":  require('./blob.js'),
   "channel.js":  require('./channel.js'),
   "emoji.js":  require('./emoji.js'),
@@ -7,6 +7,7 @@ module.exports = {
   "dns.js":  require('./dns.js'),
   "git.js":  require('./git.js'),
   "git-ssb.js":  require('./git-ssb.js'),
+  "key.js":  require('./key.js'),
   "notifications.js":  require('./notifications.js'),
   "meta-image.js":  require('./meta-image.js'),
   "music-release-cc.js":  require('./music-release-cc.js'),

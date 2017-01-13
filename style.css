@@ -1,5 +1,6 @@
 body {
   font-family: sans-serif;
+  color: #222;
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, ol {
@@ -102,7 +103,7 @@ input, textarea {
   font-family: sans-serif;
 }
 
-input:focus, .compose:focus, .message:focus, button:focus {
+input:focus, .compose:focus, button:focus {
   outline: none;
   border-color: #0088cc; 
   box-shadow: 0 0 4px #0088cc;
@@ -163,102 +164,11 @@ button:hover {
   margin-right: auto;
 }
 
-/* compose */
-
-.compose {
-  width: 100%;
-  margin-top: .5em;
-  margin-bottom: .5em;
-  border: 1px solid #f5f5f5;
-}
-
-.compose button {
-  float: right;
-}
-
 /* messages */
-
-.message {
-  position: relative;
-  flex-basis: 0;
-  margin-top: .25em; 
-  margin-bottom: .25em;
-  padding: .2em;
-  border-top: 1px solid #f5f5f5;
-  // border-bottom: 1px solid #f5f5f5;
-  background: white;
-}
-
-.message:hover {
-  background: #f9f9f9;
-}
-
-.message--mini {
-  font-size: 1em;
-  margin: 0;
-  padding: .2em;
-  border: none;
-  background: inherit;
-}
-
-.message_content div > span {
-  font-size: 0.9em;
-  margin-bottom: 0.7em;
-  display: block;
-  color: #888;
-}
-
-.message_content--mini div > span {
-  display: inline-block;
-}
-
-.message_content div > span a {
-  color: #005d8c;
-}
-
-.message_meta input {
-  font-size: .8em;
-}
-
-.message_meta {
-  margin-left: auto;
-}
-
-.message_meta > * {
-  margin-left: .5ex;
-}
-
-.message_actions {
-  position: absolute;
-  bottom: 0; right: 0;
-  margin-right: .5ex;
-  margin-bottom: .5ex;
-}
+/* is .title used any more? */
 
 .title {
   padding: .5ex;
-}
-
-.message img {
-  max-width: 100%;
-}
-
-.message > .title > .avatar {
-  margin-left: 0;
-}
-
-.message_content {
-  padding: .5ex;
-}
-
-.actions > * {
-  padding-left: 5px;
-  margin-left: 1px;
-}
-
-.actions > :not(:last-child) {
-  border-right: 2px solid #eee;
-  padding-right: 5px;
 }
 
 .emoji {
@@ -316,7 +226,12 @@ button:hover {
   width: 2.5em;
   height: 2.5em;
   float: left;
-  margin-right: .5ex;
+  margin: 0 .25ex;
+}
+
+.\.meta .avatar--thumbnail {
+  width: 1.9em;
+  height: 1.9em;
 }
 
 .avatar--fullsize {
@@ -339,17 +254,20 @@ button:hover {
 /* lightbox - used in message-confirm */
 
 .lightbox {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 50px;
   overflow: auto;
-  padding: 1.5em;
-  margin-top: 3em;
-  margin-bottom: 3em;
-  width: 600px;
+  width: 650px;
+  padding: 25px;
+  margin: auto;
+
+  z-index: 2;
+
   background: #f5f5f5;
-  margin-left: auto;
-  margin-right: auto;
   border: 1px solid #eee;
   border-radius: .2em;
-  z-index: 2;
 }
 
 /* searchprompt */
@@ -360,7 +278,8 @@ button:hover {
   height: 2em;
   margin-top: .3em;
   border-radius: 1em;
-  padding-left: .2em;
+  padding-left: .7em;
+  padding-right: 0.5em;
   margin-left: 1em;
   margin-right: 1em;
 }

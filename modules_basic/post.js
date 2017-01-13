@@ -10,22 +10,33 @@ var ref = require('ssb-ref')
 //var markdown = plugs.first(exports.markdown = [])
 //
 
-exports.needs = { message_link: 'first', markdown: 'first' }
+exports.needs = {
+  message_link: 'first',
+  markdown: 'first'
+}
 
-exports.gives = 'message_content'
+exports.gives = {
+  message_content: true,
+  message_title: true
+}
 
 exports.create = function (api) {
-  return function (data) {
+  return {
+    message_content,
+    message_title
+  }
+
+  function message_content (data) {
     if(!data.value.content || !data.value.content.text) return
 
-    var root = data.value.content.root
-    var re = !root ? null : h('span', 're: ', api.message_link(root))
-
     return h('div',
-      re,
       api.markdown(data.value.content)
     )
+  }
 
+  function message_title (data) {
+    var root = data.value.content && data.value.content.root
+    return !root ? null : h('span', 're: ', api.message_link(root))
   }
 }
 

@@ -1,0 +1,21 @@
+MessageBacklinks {
+  font-size: .9rem
+  margin-top: .5rem
+
+  header {
+    $textSubtle
+  }
+
+  ul {
+    padding-left: 1rem
+
+    li {
+      a {
+        -backlink {
+          $textSubtle
+
+        }
+      }
+    }
+  }
+}

@@ -34,6 +34,8 @@ var waiting = []
 
 var last = 0
 
+var cache = {}
+
 exports.create = function (api) {
   var avatars  = {}
 
@@ -90,18 +92,23 @@ exports.create = function (api) {
       classes = classes || ''
       if(classes && 'string' === typeof classes) classes = '.avatar--'+classes
 
-      var img = visualize(new Buffer(author.substring(1), 'base64'), 256)
+      function gen (id) {
+        if(cache[id]) return h('img', {src: cache[id]})
+        var img = visualize(new Buffer(author.substring(1), 'base64'), 256)
+        cache[id] = img.src
+        return img
+      }
+
+      var img = ready && avatars[author] ? h('img', {src: api.blob_url(avatars[author].image)}) : gen(author)
+
       ;(classes || '').split('.').filter(Boolean).forEach(function (c) {
         img.classList.add(c)
       })
 
-      function go () {
-        if(avatars[author]) img.src = api.blob_url(avatars[author].image)
-      }
-
       if(!ready)
-        waiting.push(go)
-      else go()
+        waiting.push(function () {
+          if(avatars[author]) img.src = api.blob_url(avatars[author].image)
+        })
 
       return img
     }

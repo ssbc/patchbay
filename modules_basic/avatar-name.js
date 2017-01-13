@@ -9,7 +9,7 @@ exports.gives = 'avatar_name'
 exports.create = function (api) {
 
   return function name (id) {
-    var n = h('span', id.substring(0, 10))
+    var n = h('span', id ? id.substring(0, 10) : "")
 
     //choose the most popular name for this person.
     //for anything like this you'll see I have used sbot.links2

@@ -1,3 +1,6 @@
+// polyfills
+require('setimmediate')
+
 require('depject')(
   // from more specialized to more general
   require('./modules_extra'),

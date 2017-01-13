@@ -5,16 +5,6 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var ref = require('ssb-ref')
 
-//var plugs = require('../plugs')
-//
-//var message_render = plugs.first(exports.message_render = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-//var message_unbox = plugs.first(exports.message_unbox = [])
-//var sbot_log = plugs.first(exports.sbot_log = [])
-//var sbot_whoami = plugs.first(exports.sbot_whoami = [])
-//var avatar_image_link = plugs.first(exports.avatar_image_link = [])
-//var emoji_url = plugs.first(exports.emoji_url = [])
-
 function map(ary, iter) {
   if(Array.isArray(ary)) return ary.map(iter)
 }
@@ -26,7 +16,7 @@ exports.needs = {
   sbot_log: 'first',
   sbot_whoami: 'first',
   avatar_image_link: 'first',
-//  emoji_link: 'first'
+  emoji_url: 'first'
 }
 
 exports.gives = {
@@ -116,7 +106,7 @@ exports.create = function (api) {
 
     message_content_mini: function (msg, sbot)  {
       if (typeof msg.value.content === 'string') {
-        var icon = false //api.emoji_url('lock')
+        var icon = api.emoji_url('lock')
         return icon
           ? h('img', {className: 'emoji', src: icon})
           : 'PRIVATE'

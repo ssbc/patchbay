@@ -1,122 +1,89 @@
-var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-
-//var plugs = require('../plugs')
-//
-//var message_content = plugs.first(exports.message_content = [])
-//var message_content_mini = plugs.first(exports.message_content_mini = [])
-//
-//var avatar = plugs.first(exports.avatar = [])
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//var avatar_link = plugs.first(exports.avatar_link = [])
-//var message_meta = plugs.map(exports.message_meta = [])
-//var message_action = plugs.map(exports.message_action = [])
-//var message_link = plugs.first(exports.message_link = [])
-//
-//var sbot_links = plugs.first(exports.sbot_links = [])
+const fs = require('fs')
+const pull = require('pull-stream')
+const u = require('../util')
+const h = require('../h')
 
 exports.needs = {
-  message_content: 'first',
-  message_content_mini: 'first',
-  avatar: 'first',
   avatar_name: 'first',
   avatar_link: 'first',
-  message_meta: 'map',
   message_action: 'map',
+  message_author: 'first',
+  message_backlinks: 'first',
+  message_content: 'first',
+  message_content_mini: 'first',
+  message_title: 'first',
   message_link: 'first',
-//  sbot_links: 'first'
+  message_meta: 'map',
 }
 
-exports.gives = 'message_render'
+exports.gives = {
+  message_render: true,
+  mcss: true
+}
+
+exports.create = function (api) {
+  return {
+    message_render,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
+
+  function message_render (msg) {
+    var content = api.message_content_mini(msg)
+    if (content) return mini(msg, content)
+
+    content = api.message_content(msg)
+    if (!content) return mini(msg, message_content_mini_fallback(msg))
+
+    var msgEl = h('Message', {
+      'ev-keydown': navigateToMessageOnEnter,
+      attributes: {
+        tabindex: '0'
+      }
+    }, [
+      h('header.author', api.message_author(msg)),
+      h('section.title', api.message_title(msg)),
+      h('section.meta', api.message_meta(msg)),
+      h('section.content', content),
+      h('section.action', api.message_action(msg)),
+      h('footer.backlinks', api.message_backlinks(msg))
+    ])
+    return msgEl
+
+    function navigateToMessageOnEnter (ev) {
+      // on enter, hit first meta.
+      if(ev.keyCode == 13) {
+
+        // unless in an input
+        if (ev.target.nodeName === 'INPUT'
+          || ev.target.nodeName === 'TEXTAREA') return
+
+        // HACK! (mw)
+        // there's no exported api to open a new tab. :/
+        // it's only done in `app.js` module in an`onhashchange` handler.
+        // sooooooo yeah this shit for now :)
+        var wtf = h('a', { href: `#${msg.key}` })
+        msgEl.appendChild(wtf)
+        wtf.click()
+        msgEl.removeChild(wtf)
+      }
+    }
+  }
+
+  function mini(msg, el) {
+    return h('Message -mini', {
+      attributes: {
+        tabindex: '0'
+      }
+    }, [
+      h('header.author', api.message_author(msg, { size: 'mini' })),
+      h('section.meta', api.message_meta(msg)),
+      h('section.content', el)
+    ])
+  }
+}
+
 
 function message_content_mini_fallback(msg)  {
   return h('code', msg.value.content.type)
 }
-
-exports.create = function (api) {
-
-  function mini(msg, el) {
-    var div = h('div.message.message--mini',
-      h('div.row',
-        h('div',
-          api.avatar_link(msg.value.author, api.avatar_name(msg.value.author)),
-          h('span.message_content', el)),
-        h('div.message_meta.row', api.message_meta(msg))
-      )
-    )
-    div.setAttribute('tabindex', '0')
-    return div
-  }
-
-  return function (msg, sbot) {
-    var el = api.message_content_mini(msg)
-    if(el) return mini(msg, el)
-
-    var el = api.message_content(msg)
-    if(!el) return mini(msg, message_content_mini_fallback(msg))
-
-    var links = []
-    for(var k in CACHE) {
-      var _msg = CACHE[k]
-      if(Array.isArray(_msg.content.mentions)) {
-        for(var i = 0; i < _msg.content.mentions.length; i++)
-          if(_msg.content.mentions[i].link == msg.key)
-          links.push(k)
-      }
-    }
-
-    var backlinks = h('div.backlinks')
-    if(links.length)
-      backlinks.appendChild(h('label', 'backlinks:', 
-        h('div', links.map(function (key) {
-          return api.message_link(key)
-        }))
-      ))
-
-
-  //  pull(
-  //    sbot_links({dest: msg.key, rel: 'mentions', keys: true}),
-  //    pull.collect(function (err, links) {
-  //      if(links.length)
-  //        backlinks.appendChild(h('label', 'backlinks:', 
-  //          h('div', links.map(function (link) {
-  //            return message_link(link.key)
-  //          }))
-  //        ))
-  //    })
-  //  )
-
-    var msg = h('div.message',
-      h('div.title.row',
-        h('div.avatar', api.avatar(msg.value.author, 'thumbnail')),
-        h('div.message_meta.row', api.message_meta(msg))
-      ),
-      h('div.message_content', el),
-      h('div.message_actions.row',
-        h('div.actions', api.message_action(msg),
-          h('a', {href: '#' + msg.key}, 'Reply')
-        )
-      ),
-      backlinks,
-      {onkeydown: function (ev) {
-        //on enter, hit first meta.
-        if(ev.keyCode == 13) {
-
-          // unless in an input
-          if (ev.target.nodeName === 'INPUT'
-            || ev.target.nodeName === 'TEXTAREA') return
-
-          msg.querySelector('.enter').click()
-        }
-      }}
-    )
-
-    // ); hyperscript does not seem to set attributes correctly.
-    msg.setAttribute('tabindex', '0')
-
-    return msg
-  }
-}
-
 

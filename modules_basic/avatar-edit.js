@@ -136,7 +136,7 @@ exports.create = function (api) {
               image: selected
             })
           else if(name_input.value) //name only
-            confirm({
+            api.message_confirm({
               type: 'about',
               about: id,
               name: name_input.value || undefined,

@@ -1,0 +1,7 @@
+Timestamp {
+  a {
+    $textSubtle
+    font-size: .8rem
+  }
+}
+
