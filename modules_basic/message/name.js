@@ -5,7 +5,7 @@ function title (s) {
 }
 
 exports.needs = { sbot_get: 'first' }
-exports.gives = 'message_name'
+exports.gives = 'name'
 
 //TODO: rewrite as observable?
 

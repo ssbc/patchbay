@@ -9,7 +9,7 @@ exports.needs = {
   message_name: 'first'
 }
 
-exports.gives = 'message_link'
+exports.gives = 'link'
 
 exports.create = function (api) {
 

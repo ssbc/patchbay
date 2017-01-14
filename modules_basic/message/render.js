@@ -1,7 +1,7 @@
 const fs = require('fs')
 const pull = require('pull-stream')
-const u = require('../util')
-const h = require('../h')
+const u = require('../../util')
+const h = require('../../h')
 
 exports.needs = {
   avatar_name: 'first',
@@ -17,7 +17,7 @@ exports.needs = {
 }
 
 exports.gives = {
-  message_render: true,
+  render: true,
   mcss: true
 }
 

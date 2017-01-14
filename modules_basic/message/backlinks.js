@@ -1,22 +1,22 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 
 exports.needs = {
   message_name: 'first'
 }
 
 exports.gives = {
-  message_backlinks: true,
+  backlinks: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_backlinks,
+    backlinks,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_backlinks (msg) {
+  function backlinks (msg) {
     var links = []
     for(var k in CACHE) {
       var _msg = CACHE[k]

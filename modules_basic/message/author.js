@@ -1,5 +1,5 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 const { when }= require('@mmckegg/mutant')
 
 exports.needs = {
@@ -10,17 +10,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  message_author: true,
+  author: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_author,
+    author,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_author (msg, opts = {}) {
+  function author (msg, opts = {}) {
     var { size = 'small' } = opts
     var { value } = msg
     var { author } = value
