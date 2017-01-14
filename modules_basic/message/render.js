@@ -17,7 +17,7 @@ exports.needs = {
 }
 
 exports.gives = {
-  render: true,
+  message_render: true,
   mcss: true
 }
 

@@ -6,17 +6,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  backlinks: true,
+  message_backlinks: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    backlinks,
+    message_backlinks,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function backlinks (msg) {
+  function message_backlinks (msg) {
     var links = []
     for(var k in CACHE) {
       var _msg = CACHE[k]

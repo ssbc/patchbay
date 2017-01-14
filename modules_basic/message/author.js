@@ -10,17 +10,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  author: true,
+  message_author: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    author,
+    message_author,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function author (msg, opts = {}) {
+  function message_author (msg, opts = {}) {
     var { size = 'small' } = opts
     var { value } = msg
     var { author } = value
