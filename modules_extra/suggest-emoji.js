@@ -1,6 +1,3 @@
-//var plugs = require('../plugs')
-//var emoji_url = plugs.first(exports.emoji_url = [])
-//var emoji_names = plugs.first(exports.emoji_names = [])
 
 exports.needs = {
   emoji_url: 'first',

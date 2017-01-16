@@ -1,8 +1,8 @@
-
-var signifier = require('../plugs').first(exports.signifier = [])
 var h = require('hyperscript')
 
-exports.needs = { signifier: 'first' }
+exports.needs = {
+  signifier: 'first'
+}
 
 exports.gives = 'avatar_name'
 

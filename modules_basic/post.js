@@ -5,11 +5,6 @@ var ref = require('ssb-ref')
 
 //render a message
 
-//var plugs = require('../plugs')
-//var message_link = plugs.first(exports.message_link = [])
-//var markdown = plugs.first(exports.markdown = [])
-//
-
 exports.needs = {
   message_link: 'first',
   markdown: 'first'

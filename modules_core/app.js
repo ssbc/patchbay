@@ -1,4 +1,3 @@
-var plugs = require('../plugs')
 var h = require('hyperscript')
 var insertCss = require('insert-css')
 

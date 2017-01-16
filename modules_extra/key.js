@@ -3,14 +3,10 @@ var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 
-//var plugs = require('../plugs')
-// var message_render = plugs.first(exports.message_render = [])
-// var message_compose = plugs.first(exports.message_compose = [])
-// var sbot_log = plugs.first(exports.sbot_log = [])
-
 
 exports.gives = {
-  menu_items: true, screen_view: true
+  menu_items: true,
+  screen_view: true
 }
 
 exports.create = function (api) {

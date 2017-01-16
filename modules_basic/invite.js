@@ -6,11 +6,6 @@ var h = require('hyperscript')
 
 var Progress = require('hyperprogress')
 
-//var plugs = require('../plugs')
-//var sbot_publish = plugs.first(exports.sbot_publish = [])
-//var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
-//var follower_of = plugs.first(exports.follower_of = [])
-
 exports.needs = {
   sbot_publish: 'first',
   sbot_gossip_connect: 'first',

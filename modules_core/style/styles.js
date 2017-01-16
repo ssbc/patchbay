@@ -1,11 +1,11 @@
-var h = require('../h')
+var h = require('../../h')
 var compile = require('micro-css')
 var fs = require('fs')
 var Path = require('path')
 
 // TODO distribute these styles across all
 // the relevant modules, not as a core style.
-var coreStyle = fs.readFileSync(Path.join(__dirname, '../style.css'))
+var coreStyle = fs.readFileSync(Path.join(__dirname, '../../style.css'))
 
 module.exports = {
   needs: {

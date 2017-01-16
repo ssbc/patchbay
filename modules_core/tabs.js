@@ -11,12 +11,12 @@ function ancestor (el) {
   return el
 }
 
-//var plugs = require('../plugs')
-//var screen_view = plugs.first(exports._screen_view = [])
-//var search_box = plugs.first(exports.search_box = [])
-//var menu = plugs.first(exports.menu = [])
-
-exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first', 'external_confirm':'first'}
+exports.needs = {
+  screen_view: 'first',
+  search_box: 'first',
+  menu: 'first',
+  'external_confirm':'first'
+}
 
 exports.gives = 'screen_view'
 

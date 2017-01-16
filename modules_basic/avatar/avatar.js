@@ -1,5 +1,5 @@
 var h = require('hyperscript')
-var u = require('../util')
+var u = require('../../util')
 
 exports.needs = {
   avatar_name: 'first',

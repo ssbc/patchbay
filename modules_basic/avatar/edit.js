@@ -6,17 +6,9 @@ var hyperlightbox = require('hyperlightbox')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var getAvatar = require('ssb-avatar')
-var plugs = require('../plugs')
 var ref = require('ssb-ref')
 var visualize = require('visualize-buffer')
-var self_id = require('../keys').id
-
-//var confirm = plugs.first(exports.message_confirm = [])
-//var sbot_blobs_add = plugs.first(exports.sbot_blobs_add = [])
-//var blob_url = plugs.first(exports.blob_url = [])
-//var sbot_links = plugs.first(exports.sbot_links = [])
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//
+var self_id = require('../../keys').id
 
 function crop (d, cb) {
   var data
