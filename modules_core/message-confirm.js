@@ -15,8 +15,8 @@ exports.needs = {
 }
 
 exports.gives = {
-  message_confirm: 'true',
-  mcss: 'true'
+  message_confirm: true,
+  mcss: true
 }
 
 exports.create = function (api) {
