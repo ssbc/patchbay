@@ -11,7 +11,6 @@ var visualize = require('visualize-buffer')
 var self_id = require('../keys').id
 
 function crop (d, cb) {
-  var data
   var canvas = hypercrop(h('img', {src: d}))
 
   return h('div.column.avatar_pic',
@@ -47,7 +46,7 @@ exports.create = function (api) {
     var lb = hyperlightbox()
     var name_input = h('input', {placeholder: 'rename'})
     var name = api.avatar_name(id)
-    var selected = null, selected_data = null
+    var selected = null
 
     getAvatar({links: api.sbot_links}, self_id, id, function (err, avatar) {
       if (err) return console.error(err)

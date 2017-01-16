@@ -1,4 +1,3 @@
-var u = require('../util')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var mime = require('simple-mime')('application/octect-stream')

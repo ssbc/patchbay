@@ -1,7 +1,5 @@
 var Tabs = require('hypertabs')
 var h = require('hyperscript')
-var pull = require('pull-stream')
-var u = require('../util')
 var keyscroll = require('../keyscroll')
 var open = require('open-external')
 

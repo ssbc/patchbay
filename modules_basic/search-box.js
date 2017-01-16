@@ -2,14 +2,11 @@
 var cont = require('cont')
 var h = require('hyperscript')
 var suggest = require('suggest-box')
-var pull = require('pull-stream')
 
 exports.needs = {
   sbot_query: 'first', sbot_links2: 'first',
   suggest_search: 'map' //REWRITE
 }
-
-var channels = []
 
 exports.gives  = 'search_box'
 
@@ -49,8 +46,6 @@ exports.create = function (api) {
         search.value = sigil
       }
     }
-
-    var suggestions = {}
 
     // delay until the element has a parent
     setTimeout(function () {

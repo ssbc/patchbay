@@ -1,7 +1,6 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
-const u = require('../util')
 const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
 const cont = require('cont')

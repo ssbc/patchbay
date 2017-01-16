@@ -24,7 +24,6 @@ module.exports = {
         return window.location.hash.substring(1)
       }
 
-      console.log(hash() || 'tabs')
       var view = api.screen_view(hash() || 'tabs')
 
       var screen = h('div.screen.column', view)
