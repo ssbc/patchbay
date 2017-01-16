@@ -1,14 +1,6 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
 
-//var plugs = require('../plugs')
-//var avatar_image_link = plugs.first(exports.avatar_image_link = [])
-//var avatar_action = plugs.map(exports.avatar_action = [])
-//var avatar_edit = plugs.first(exports.avatar_edit = [])
-
-//var follows = plugs.first(exports.follows = [])
-//var followers = plugs.first(exports.followers = [])
-//
 exports.needs = {
   avatar_image_link: 'first',
   avatar_action: 'map',
@@ -85,4 +77,3 @@ exports.create = function (api) {
   }
 
 }
-

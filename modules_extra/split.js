@@ -1,9 +1,5 @@
 var h = require('hyperscript')
 
-//var screen_view = 
-//  require('../plugs').first(exports._screen_view = [])
-
-
 exports.needs = {
   screen_view: 'first'
 }

@@ -3,10 +3,6 @@ var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 
-var plugs = require('../plugs')
-//var message_render = plugs.first(exports.message_render = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-
 // from ssb-ref
 var refRegex = /((?:@|%|&)[A-Za-z0-9\/+]{43}=\.[\w\d]+)/g
 

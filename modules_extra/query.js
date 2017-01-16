@@ -2,8 +2,6 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 var HJSON = require('hjson')
 
-//var sbot_query = require('../plugs').first(exports.sbot_query = [])
-
 exports.needs = { sbot_query: 'first' }
 
 exports.gives = {

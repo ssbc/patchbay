@@ -1,13 +1,6 @@
-
 var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
-
-var plugs = require('../plugs')
-
-//var message_confirm = plugs.first(exports.message_confirm = [])
-//var message_link = plugs.first(exports.message_link = [])
-//var sbot_links = plugs.first(exports.sbot_links = [])
 
 exports.needs = {
   avatar_name: 'first',

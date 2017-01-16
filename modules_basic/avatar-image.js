@@ -9,11 +9,6 @@ var pull = require('pull-stream')
 
 var self_id = require('../keys').id
 
-//var plugs = require('../plugs')
-//var sbot_query = plugs.first(exports.sbot_query = [])
-//var blob_url = require('../plugs').first(exports.blob_url = [])
-//
-
 exports.needs = {
   sbot_query: 'first',
   blob_url: 'first'
@@ -114,4 +109,3 @@ exports.create = function (api) {
     }
   }
 }
-

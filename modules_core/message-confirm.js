@@ -5,8 +5,6 @@ var u = require('../util')
 var self_id = require('../keys').id
 //publish or add
 
-var plugs = require('../plugs')
-
 exports.needs = {
   publish: 'first',
   message_render: 'first',

@@ -1,9 +1,4 @@
 var pull = require('pull-stream')
-//var plugs = require('../plugs')
-
-//var sbot_query = plugs.first(exports.sbot_query = [])
-
-//this is a bit crude, and doesn't actually show unfollows yet.
 
 function makeQuery (a, b) {
   return {"$filter": {
