@@ -1,8 +1,5 @@
 var h = require('hyperscript')
-//var plugs = require('../plugs')
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//var avatar_link = plugs.first(exports.avatar_link = [])
-//
+
 exports.needs = {
   avatar_name: 'first',
   avatar_link: 'first'

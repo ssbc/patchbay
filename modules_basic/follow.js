@@ -1,13 +1,4 @@
 var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-
-//var plugs = require('../plugs')
-//var avatar = plugs.first(exports.avatar = [])
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//var avatar_link = plugs.first(exports.avatar_link = [])
-//var message_confirm = plugs.first(exports.message_confirm = [])
-//var follower_of = plugs.first(exports.follower_of = [])
 
 //render a message when someone follows someone,
 //so you see new users

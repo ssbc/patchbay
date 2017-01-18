@@ -1,17 +1,9 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
-const u = require('../util')
 const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
 const cont = require('cont')
-
-//var plugs = require('../plugs')
-//var suggest_mentions= plugs.asyncConcat(exports.suggest_mentions = [])
-//var publish         = plugs.first(exports.sbot_publish = [])
-//var message_content = plugs.first(exports.message_content = [])
-//var message_confirm = plugs.first(exports.message_confirm = [])
-//var file_input      = plugs.first(exports.file_input = [])
 
 exports.needs = {
   suggest_mentions: 'map', //<-- THIS MUST BE REWRITTEN
@@ -134,7 +126,7 @@ exports.create = function (api) {
       fileInput, publishBtn
     ])
 
-    var composer = h('Compose', { 
+    var composer = h('Compose', {
       className: opts.shrink === false ? '-expanded' : '-contracted'
     }, [
       textArea,
@@ -157,4 +149,3 @@ exports.create = function (api) {
 }
 
 function id (e) { return e }
-

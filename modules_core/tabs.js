@@ -1,7 +1,5 @@
 var Tabs = require('hypertabs')
 var h = require('hyperscript')
-var pull = require('pull-stream')
-var u = require('../util')
 var keyscroll = require('../keyscroll')
 var open = require('open-external')
 
@@ -10,11 +8,6 @@ function ancestor (el) {
   if(el.tagName !== 'A') return ancestor(el.parentElement)
   return el
 }
-
-//var plugs = require('../plugs')
-//var screen_view = plugs.first(exports._screen_view = [])
-//var search_box = plugs.first(exports.search_box = [])
-//var menu = plugs.first(exports.menu = [])
 
 exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first', 'external_confirm':'first'}
 

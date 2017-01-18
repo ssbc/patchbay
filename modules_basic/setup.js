@@ -2,15 +2,6 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
 
-//var plugs = require('../plugs')
-//
-//var avatar_edit = plugs.first(exports.avatar_edit = [])
-//var invite_parse = plugs.first(exports.invite_parse = [])
-//var invite_accept = plugs.first(exports.invite_accept = [])
-//var sbot_progress = plugs.first(exports.sbot_progress = [])
-//var sbot_query = plugs.first(exports.sbot_query = [])
-//var avatar = plugs.first(exports.avatar = [])
-
 exports.needs = {
   avatar: 'first',
   avatar_edit: 'first',
@@ -129,16 +120,13 @@ exports.create = function (api) {
   }
 
   exports.screen_view = function (path) {
-
     if(path !== '/setup') return
 
     var id = require('../keys').id
 
     //set up an avatar
 
-
     var status = h('span')
-    var invite = h('input', {placeholder: 'invite code'})
     return h('div.scroller', h('div.scroller__wrapper',
       h('h1', 'welcome to patchbay!'),
       h('div',

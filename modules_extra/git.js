@@ -10,16 +10,6 @@ var getAvatar = require('ssb-avatar')
 var KVGraph = require('kvgraph')
 var mergeRepo = require('ssb-git/merge')
 
-//var plugs = require('../plugs')
-//var message_link = plugs.first(exports.message_link = [])
-//var message_confirm = plugs.first(exports.message_confirm = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-//var sbot_links = plugs.first(exports.sbot_links = [])
-//var sbot_links2 = plugs.first(exports.sbot_links2 = [])
-//var sbot_get = plugs.first(exports.sbot_get = [])
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//var markdown = plugs.first(exports.markdown = [])
-
 exports.needs = {
   message_link: 'first',
   message_confirm: 'first',

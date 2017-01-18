@@ -1,18 +1,10 @@
 'use strict'
-var getAvatar = require('ssb-avatar')
 var h = require('hyperscript')
-var ref = require('ssb-ref')
-var path = require('path')
 var visualize = require('visualize-buffer')
 
 var pull = require('pull-stream')
 
 var self_id = require('../keys').id
-
-//var plugs = require('../plugs')
-//var sbot_query = plugs.first(exports.sbot_query = [])
-//var blob_url = require('../plugs').first(exports.blob_url = [])
-//
 
 exports.needs = {
   sbot_query: 'first',
@@ -22,12 +14,6 @@ exports.needs = {
 exports.gives = {
   connection_status: true, avatar_image: true
 }
-
-
-function isFunction (f) {
-  return 'function' === typeof f
-}
-
 
 var ready = false
 var waiting = []
@@ -114,4 +100,3 @@ exports.create = function (api) {
     }
   }
 }
-

@@ -1,10 +1,7 @@
 var pull = require('pull-stream')
-var Cat = require('pull-cat')
 var sort = require('ssb-sort')
 var ref = require('ssb-ref')
 var h = require('hyperscript')
-var u = require('../util')
-var Scroller = require('pull-scroll')
 var self_id = require('../keys').id
 
 function once (cont) {
@@ -20,16 +17,6 @@ function once (cont) {
       })
   }
 }
-
-//var plugs = require('../plugs')
-//
-//var message_render = plugs.first(exports.message_render = [])
-//var message_name = plugs.first(exports.message_name = [])
-//var message_compose = plugs.first(exports.message_compose = [])
-//var message_unbox = plugs.first(exports.message_unbox = [])
-//
-//var sbot_get = plugs.first(exports.sbot_get = [])
-//var sbot_links = plugs.first(exports.sbot_links = [])
 
 exports.needs = {
   message_render: 'first',

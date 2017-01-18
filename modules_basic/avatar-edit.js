@@ -6,20 +6,11 @@ var hyperlightbox = require('hyperlightbox')
 var h = require('hyperscript')
 var pull = require('pull-stream')
 var getAvatar = require('ssb-avatar')
-var plugs = require('../plugs')
 var ref = require('ssb-ref')
 var visualize = require('visualize-buffer')
 var self_id = require('../keys').id
 
-//var confirm = plugs.first(exports.message_confirm = [])
-//var sbot_blobs_add = plugs.first(exports.sbot_blobs_add = [])
-//var blob_url = plugs.first(exports.blob_url = [])
-//var sbot_links = plugs.first(exports.sbot_links = [])
-//var avatar_name = plugs.first(exports.avatar_name = [])
-//
-
 function crop (d, cb) {
-  var data
   var canvas = hypercrop(h('img', {src: d}))
 
   return h('div.column.avatar_pic',
@@ -55,7 +46,7 @@ exports.create = function (api) {
     var lb = hyperlightbox()
     var name_input = h('input', {placeholder: 'rename'})
     var name = api.avatar_name(id)
-    var selected = null, selected_data = null
+    var selected = null
 
     getAvatar({links: api.sbot_links}, self_id, id, function (err, avatar) {
       if (err) return console.error(err)

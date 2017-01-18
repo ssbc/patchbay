@@ -8,10 +8,6 @@ const {
   dictToCollection, map: mutantMap, when, computed
 } = require('@mmckegg/mutant')
 
-//var avatar = plugs.first(exports.avatar = [])
-//var sbot_gossip_peers = plugs.first(exports.sbot_gossip_peers = [])
-//var sbot_gossip_connect = plugs.first(exports.sbot_gossip_connect = [])
-
 exports.needs = {
   avatar_image_link: 'first',
   avatar_name_link: 'first',

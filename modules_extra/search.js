@@ -4,10 +4,6 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var TextNodeSearcher = require('text-node-searcher')
 
-//var plugs = require('../plugs')
-//var message_render = plugs.first(exports.message_render = [])
-//var sbot_log = plugs.first(exports.sbot_log = [])
-
 exports.needs = {
   message_render: 'first',
   sbot_log: 'first'

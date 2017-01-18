@@ -1,13 +1,4 @@
 var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-var Scroller = require('pull-scroll')
-
-//var plugs = require('../plugs')
-// var message_render = plugs.first(exports.message_render = [])
-// var message_compose = plugs.first(exports.message_compose = [])
-// var sbot_log = plugs.first(exports.sbot_log = [])
-
 
 exports.gives = {
   menu_items: true, screen_view: true
@@ -23,8 +14,8 @@ exports.create = function (api) {
         if(process.title === 'browser') {
           var importKey = h('textarea', {placeholder: 'import an existing public/private key', name: 'textarea'})
           var importRemote = h('textarea', {placeholder: 'import an existing remote', name: 'textarea'})
-          var content = h('div.column.scroller__content')
-          var div = h('div.column.scroller',
+
+          return h('div.column.scroller',
             {style: {'overflow':'auto'}},
             h('div.scroller__wrapper',
               h('div.column.scroller__content',
@@ -51,7 +42,6 @@ exports.create = function (api) {
               )
             )
           )
-          return div
         } else { 
           return h('p', 'Your key is saved at .ssb/secret')
         }

@@ -1,16 +1,7 @@
-var markdown = require('ssb-markdown');
 var h = require('hyperscript');
-var u = require('../util');
-var ref = require('ssb-ref');
 
 //render a message
 
-//var plugs = require('../plugs');
-//var message_link = plugs.first(exports.message_link = []);
-//var message_confirm = plugs.first(exports.message_confirm = []);
-//var sbot_links = plugs.first(exports.sbot_links = []);
-//var blob_url = plugs.first(exports.blob_url = []);
-//
 exports.needs = { blob_url: 'first' }
 exports.gives = 'message_content'
 

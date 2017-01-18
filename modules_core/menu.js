@@ -1,4 +1,3 @@
-var plugs = require('../plugs')
 var h = require('hyperscript')
 
 module.exports = {
@@ -6,7 +5,7 @@ module.exports = {
   gives: {connection_status: true, menu: true},
   create: function (api) {
 
-    var menu_items = api.menu_items //plugs.map(exports.menu_items = [])
+    var menu_items = api.menu_items
 
     var status = h('div.status.error') //start off disconnected
     var list = h('div.menu.column', {style: 'display: none;'})
