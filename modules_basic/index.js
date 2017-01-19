@@ -9,6 +9,7 @@ module.exports = {
     'avatar':  require('./avatar/avatar')
   },
   'compose':  require('./compose'),
+  'emoji':    require('./emoji'),
   'feed':     require('./feed'),
   'follow':   require('./follow'),
   'invite':   require('./invite'),
@@ -17,20 +18,18 @@ module.exports = {
   'message': {
     'author':    require('./message/author'),
     'backlinks': require('./message/backlinks'),
+    'confirm':   require('./message/confirm'),
     'link':      require('./message/link'),
     'name':      require('./message/name'),
     'render':    require('./message/render'),
   },
-  'names':            require('./names'),
   'post':             require('./post'),
   'private':          require('./private'),
   'pub':              require('./pub'),
   'public':           require('./public'),
   'relationships':    require('./relationships'),
   'reply':            require('./reply'),
-  'search-box':       require('./search-box'),
   'setup':            require('./setup'),
-  'suggest-mentions': require('./suggest-mentions'),
   'thread':           require('./thread'),
   'timestamp':        require('./timestamp')
 }

@@ -5,14 +5,14 @@ module.exports = {
   'external-confirm': require('./external-confirm'),
   'file-input':       require('./file-input'),
   'menu':             require('./menu'),
-  'message': {
-    'confirm': require('./message/confirm')
-  },
-  'tabs':         require('./tabs'),
-  'sbot':         require('./sbot'),
+  'names':            require('./names'),
+  'tabs':             require('./tabs'),
+  'sbot':             require('./sbot'),
+  'search-box':       require('./search-box'),
   'style': {
     'styles': require('./style/styles'),
     'mixins': require('./style/mixins')
-  }
+  },
+  'suggest-mentions': require('./suggest-mentions')
 }
 

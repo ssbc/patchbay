@@ -2,7 +2,6 @@ module.exports = {
   // 'audio-mp3':  require('./audio-mp3'),
   'blob':          require('./blob'),
   'channel':       require('./channel'),
-  'emoji':         require('./emoji'),
   'suggest-emoji': require('./suggest-emoji'),
   'dns':           require('./dns'),
   'git':           require('./git'),

@@ -1,22 +1,27 @@
-var h = require('hyperscript')
+const h = require('hyperscript')
 
 module.exports = {
-  needs: {menu_items: 'map'},
-  gives: {connection_status: true, menu: true},
+  needs: {
+    menu_items: 'map'
+  },
+  gives: {
+    connection_status: true,
+    menu: true,
+    menu_items: true
+  },
   create: function (api) {
-
-    var menu_items = api.menu_items
+    const { menu_items } = api
 
     var status = h('div.status.error') //start off disconnected
     var list = h('div.menu.column', {style: 'display: none;'})
 
-    var menu = h('div.column', status, list , {
-      onmouseover: function (e) {
-        list.style.display = 'flex'
-      }, onmouseout: function () {
-        list.style.display = 'none'
-      }
-    })
+    var menu = h('div.column', {
+      onmouseover: () => list.style.display = 'flex',
+      onmouseout: () => list.style.display = 'none'
+    }, [
+      status, 
+      list
+    ])
 
     setTimeout(function () {
       menu_items().forEach(function (el) {
@@ -26,13 +31,12 @@ module.exports = {
     }, 0)
 
     return {
-      connection_status: function (err) {
+      connection_status: (err) => {
         if(err) status.classList.add('error')
         else    status.classList.remove('error')
       },
-      menu: function () {
-        return menu
-      }
+      menu: () => menu,
+      menu_items: () => null
     }
   }
 }
