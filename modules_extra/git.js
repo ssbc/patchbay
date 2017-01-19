@@ -465,11 +465,8 @@ exports.create = function (api) {
         return h('p', 'pushed to ', repoLink(c.repo))
       }
 
-      if(c.type === 'issue-edit' || (c.type === 'post' && c.text === '')) {
-        return h('div', [
-          c.issue ? renderIssueEdit(c) : null,
-          c.issues ? c.issues.map(renderIssueEdit) : null
-        ])
+      if(c.type === 'issue-edit') {
+        return
       }
 
       if(c.type === 'issue') {
