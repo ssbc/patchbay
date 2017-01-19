@@ -120,16 +120,13 @@ exports.create = function (api) {
   }
 
   exports.screen_view = function (path) {
-
     if(path !== '/setup') return
 
     var id = require('../keys').id
 
     //set up an avatar
 
-
     var status = h('span')
-    var invite = h('input', {placeholder: 'invite code'})
     return h('div.scroller', h('div.scroller__wrapper',
       h('h1', 'welcome to patchbay!'),
       h('div',

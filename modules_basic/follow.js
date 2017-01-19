@@ -1,7 +1,4 @@
 var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-
 
 //render a message when someone follows someone,
 //so you see new users

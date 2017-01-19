@@ -1,7 +1,6 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
-const u = require('../util')
 const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
 const cont = require('cont')
@@ -127,7 +126,7 @@ exports.create = function (api) {
       fileInput, publishBtn
     ])
 
-    var composer = h('Compose', { 
+    var composer = h('Compose', {
       className: opts.shrink === false ? '-expanded' : '-contracted'
     }, [
       textArea,
@@ -150,4 +149,3 @@ exports.create = function (api) {
 }
 
 function id (e) { return e }
-

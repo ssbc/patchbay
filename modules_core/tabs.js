@@ -1,7 +1,5 @@
 var Tabs = require('hypertabs')
 var h = require('hyperscript')
-var pull = require('pull-stream')
-var u = require('../util')
 var keyscroll = require('../keyscroll')
 var open = require('open-external')
 
@@ -15,7 +13,7 @@ exports.needs = {
   screen_view: 'first',
   search_box: 'first',
   menu: 'first',
-  'external_confirm':'first'
+  external_confirm:'first'
 }
 
 exports.gives = 'screen_view'

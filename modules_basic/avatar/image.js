@@ -1,8 +1,5 @@
 'use strict'
-var getAvatar = require('ssb-avatar')
 var h = require('hyperscript')
-var ref = require('ssb-ref')
-var path = require('path')
 var visualize = require('visualize-buffer')
 
 var pull = require('pull-stream')
@@ -17,11 +14,6 @@ exports.needs = {
 exports.gives = {
   connection_status: true, avatar_image: true
 }
-
-function isFunction (f) {
-  return 'function' === typeof f
-}
-
 
 var ready = false
 var waiting = []
@@ -108,4 +100,3 @@ exports.create = function (api) {
     }
   }
 }
-

@@ -10,7 +10,6 @@ var getAvatar = require('ssb-avatar')
 var KVGraph = require('kvgraph')
 var mergeRepo = require('ssb-git/merge')
 
-
 exports.needs = {
   message_link: 'first',
   message_confirm: 'first',

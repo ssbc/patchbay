@@ -1,6 +1,4 @@
 const fs = require('fs')
-const pull = require('pull-stream')
-const u = require('../../util')
 const h = require('../../h')
 
 exports.needs = {

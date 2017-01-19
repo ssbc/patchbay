@@ -1,4 +1,3 @@
-var h = require('../../h')
 var compile = require('micro-css')
 var fs = require('fs')
 var Path = require('path')
