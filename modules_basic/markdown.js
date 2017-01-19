@@ -33,10 +33,11 @@ exports.create = function (api) {
     var md = h('div.markdown')
     md.innerHTML = markdown.block(content.text, {
       emoji: renderEmoji,
-      toUrl: function (id) {
+      toUrl: (id) => {
         if(ref.isBlob(id)) return api.blob_url(id)
         return '#'+(mentions[id]?mentions[id]:id)
-      }
+      },
+      imageLink: (id) => '#' + id
     })
 
     return md

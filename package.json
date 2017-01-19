@@ -51,7 +51,7 @@
     "ssb-git": "^0.4.1",
     "ssb-keys": "^6.1.0",
     "ssb-links": "^2.0.0",
-    "ssb-markdown": "^3.0.0",
+    "ssb-markdown": "^3.1.1",
     "ssb-mentions": "^0.1.0",
     "ssb-query": "^0.1.1",
     "ssb-ref": "^2.6.2",
