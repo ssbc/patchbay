@@ -381,8 +381,14 @@ button:hover {
   z-index: 1;
 }
 
+/*note, without space means "and"*/
+
+.hypertabs__tab.hypertabs--notify {
+  background: red;
+}
+
 .hypertabs__x  {
-  display: none; 
+  display: none;
   transform: translate(-4px, -3px);
 }
 
