@@ -2,7 +2,7 @@ var h = require('hyperscript')
 var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
-
+var ScrollNotify = u.ScrollNotify
 exports.needs = {
   message_render: 'first',
   message_compose: 'first',
@@ -34,7 +34,7 @@ exports.create = function (api) {
 
         pull(
           u.next(api.sbot_log, {old: false, limit: 100}),
-          Scroller(div, content, api.message_render, true, false)
+          ScrollNotify(div, Scroller(div, content, api.message_render, true, false))
         )
 
         pull(
@@ -47,3 +47,4 @@ exports.create = function (api) {
     }
   }
 }
+
