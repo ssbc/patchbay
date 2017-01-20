@@ -9,10 +9,7 @@ module.exports = {
   'tabs':             require('./tabs'),
   'sbot':             require('./sbot'),
   'search-box':       require('./search-box'),
-  'style': {
-    'styles': require('./style/styles'),
-    'mixins': require('./style/mixins')
-  },
+  'style':            require('./style'),
   'suggest-mentions': require('./suggest-mentions')
 }
 
