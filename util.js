@@ -48,7 +48,7 @@ exports.next = function (createStream, opts, property, range) {
 }
 
 
-export.ScrollNotify = function (div, scroller) {
+exports.ScrollNotify = function (div, scroller) {
   var cl = 'hypertabs--notify'
   live.observ(function (len) {
     if(div.classList.contains(cl) != (len != 0)) {
