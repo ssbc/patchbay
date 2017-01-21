@@ -1,26 +1,25 @@
-var markdown = require('ssb-markdown')
-var h = require('hyperscript')
-var ref = require('ssb-ref')
+const renderer = require('ssb-markdown')
+const fs = require('fs')
+const h = require('../h')
+const ref = require('ssb-ref')
 
 exports.needs = {
   blob_url: 'first',
   emoji_url: 'first'
 }
 
-exports.gives = 'markdown'
+exports.gives = {
+  markdown: true,
+  mcss: true
+}
 
 exports.create = function (api) {
-
-  function renderEmoji(emoji) {
-    var url = api.emoji_url(emoji)
-    if (!url) return ':' + emoji + ':'
-    return '<img src="' + encodeURI(url) + '"'
-      + ' alt=":' + escape(emoji) + ':"'
-      + ' title=":' + escape(emoji) + ':"'
-      + ' class="emoji">'
+  return {
+    markdown,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  return function (content) {
+  function markdown (content) {
     if('string' === typeof content)
       content = {text: content}
     //handle patchwork style mentions.
@@ -30,8 +29,8 @@ exports.create = function (api) {
         if(link.name) mentions["@"+link.name] = link.link
       })
 
-    var md = h('div.markdown')
-    md.innerHTML = markdown.block(content.text, {
+    var md = h('Markdown')
+    md.innerHTML = renderer.block(content.text, {
       emoji: renderEmoji,
       toUrl: function (id) {
         if(ref.isBlob(id)) return api.blob_url(id)
@@ -42,5 +41,15 @@ exports.create = function (api) {
     return md
 
   }
+
+  function renderEmoji(emoji) {
+    var url = api.emoji_url(emoji)
+    if (!url) return ':' + emoji + ':'
+    return '<img src="' + encodeURI(url) + '"'
+      + ' alt=":' + escape(emoji) + ':"'
+      + ' title=":' + escape(emoji) + ':"'
+      + ' class="emoji">'
+  }
+
 }
 
