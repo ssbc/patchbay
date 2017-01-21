@@ -1,6 +1,6 @@
-const fs = require('fs')
 // const { isVisible } = require('is-visible')
 const h = require('../h')
+const mcss = require('../mcss')(__filename)
 const human = require('human-time')
 
 const {
@@ -125,7 +125,7 @@ exports.create = function (api) {
     menu_items: () => h('a', {href: '#/network'}, '/network'),
     builtin_tabs: () => ['/network'],
     screen_view,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   function screen_view (path) {

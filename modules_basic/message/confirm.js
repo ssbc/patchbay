@@ -1,6 +1,6 @@
-var fs = require('fs')
 var lightbox = require('hyperlightbox')
 var h = require('../../h')
+const mcss = require('../../mcss')(__filename)
 var self_id = require('../../keys').id
 //publish or add
 
@@ -19,7 +19,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_confirm,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   function message_confirm (content, cb) {
