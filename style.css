@@ -260,6 +260,7 @@ button:hover {
   top: 50px;
   overflow: auto;
   width: 650px;
+  max-width: 100%;
   padding: 25px;
   margin: auto;
 
