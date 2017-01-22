@@ -1,5 +1,8 @@
-var h = require('hyperscript')
-var pull = require('pull-stream')
+const fs = require('fs')
+const h = require('../../h')
+const pull = require('pull-stream')
+const { unique, collect, drain } = pull
+
 
 exports.needs = {
   avatar_image_link: 'first',
@@ -9,71 +12,76 @@ exports.needs = {
   followers: 'first'
 }
 
-exports.gives = 'avatar_profile'
-
-function streamToList(stream, el) {
-  pull(
-    stream,
-    pull.drain(function (item) {
-      if(item) el.appendChild(item)
-    })
-  )
-  return el
+exports.gives = {
+  avatar_profile: true,
+  mcss: true
 }
 
 exports.create = function (api) {
-
-  function image_link (id) {
-    return api.avatar_image_link(id, 'thumbnail')
+  return { 
+    avatar_profile,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  return function (id) {
+  function avatar_profile (id) {
 
-    var follows_el = h('div.profile__follows.wrap')
-    var friends_el = h('div.profile__friendss.wrap')
-    var followers_el = h('div.profile__followers.wrap')
+    var friends_el = h('div.friends', [
+      h('header', 'Friends')
+    ])
+    var follows_el = h('div.follows', [
+      h('header', 'Follows')
+    ])
+    var followers_el = h('div.followers', [
+      h('header', 'Followers')
+    ])
     var a, b
 
-    pull(api.follows(id), pull.unique(), pull.collect(function (err, ary) {
-      a = ary || []; next()
-    }))
-    pull(api.followers(id), pull.unique(), pull.collect(function (err, ary) {
-      b = ary || {}; next()
-    }))
+    pull(
+      api.follows(id),
+      unique(), 
+      collect((err, ary = []) => { 
+        a = ary; next() 
+      })
+    )
+    pull(
+      api.followers(id),
+      unique(), 
+      collect((err, ary = {}) => {
+        b = ary; next()
+      })
+    )
 
     function next () {
       if(!(a && b)) return
       var _c = [], _a = [], _b = []
 
-      a.forEach(function (id) {
+      a.forEach(id => {
         if(!~b.indexOf(id)) _a.push(id)
         else               _c.push(id)
       })
-      b.forEach(function (id) {
+      b.forEach(id => {
         if(!~_c.indexOf(id)) _b.push(id)
       })
-      function add (ary, el) {
-        ary.forEach(function (id) { el.appendChild(image_link(id)) })
-      }
 
-      add(_a, follows_el)
       add(_c, friends_el)
+      add(_a, follows_el)
       add(_b, followers_el)
+
+      function add (ary, el) {
+        ary.forEach(id => el.appendChild(api.avatar_image_link(id)) )
+      }
     }
 
 
-    return h('div.column.profile',
-      api.avatar_edit(id),
-      api.avatar_action(id),
-      h('div.profile__relationships.column',
-        h('strong', 'follows'),
-        follows_el,
-        h('strong', 'friends'),
+    return h('Profile', [
+      h('section.edit', api.avatar_edit(id)),
+      h('section.action', api.avatar_action(id)),
+      h('section.relationships', [
         friends_el,
-        h('strong', 'followers'),
+        follows_el,
         followers_el
-      )
-    )
+      ])
+    ])
   }
 
 }

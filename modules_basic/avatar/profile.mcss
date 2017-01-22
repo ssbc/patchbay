@@ -1,0 +1,69 @@
+Profile {
+  section.edit {
+
+  }
+
+  section.action {
+
+  }
+  
+  section.relationships {
+    div {
+      display: flex
+      flex-wrap: wrap
+      justify-content: space-between
+      align-content: flex-start
+
+      min-height: 5rem
+      margin: 1rem 0
+
+      header {
+        flex-basis: 100%
+        
+        margin-bottom: .2rem
+      }
+
+      a {
+        margin-right: .1rem
+
+
+        img { $avatar-small }
+      }
+
+
+    }
+
+    div.friends {
+      a {
+        margin: 0 .15rem 0.2rem 0
+
+        img { 
+          $avatar-large
+        }
+      }
+
+    }
+
+    div.follows {
+
+    }
+
+    div.followers {
+
+    }
+  }
+}
+
+$avatar-portrait {
+}
+
+$avatar-large {
+  width: 58px
+  height: 58px
+}
+
+$avatar-small {
+  width: 32px
+  height: 32px
+}
+
