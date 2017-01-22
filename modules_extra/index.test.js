@@ -2,7 +2,7 @@ const test = require('tape')
 const jsdom = require('jsdom')
 const combine = require('depject')
 
-var window = {}
+process.env.ssb_appname = 'test'
 
 const core = require('../modules_core')
 const basic = require('../modules_basic')
