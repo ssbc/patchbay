@@ -4,7 +4,7 @@ var Path = require('path')
 
 // TODO distribute these styles across all
 // the relevant modules, not as a core style.
-var coreStyle = fs.readFileSync(Path.join(__dirname, '../style.css'))
+var coreStyle = fs.readFileSync(Path.join(__dirname, '../../style.css'))
 
 module.exports = {
   needs: {

@@ -4,7 +4,7 @@ var visualize = require('visualize-buffer')
 
 var pull = require('pull-stream')
 
-var self_id = require('../keys').id
+var self_id = require('../../keys').id
 
 exports.needs = {
   sbot_query: 'first',

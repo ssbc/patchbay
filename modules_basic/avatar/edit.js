@@ -8,7 +8,7 @@ var pull = require('pull-stream')
 var getAvatar = require('ssb-avatar')
 var ref = require('ssb-ref')
 var visualize = require('visualize-buffer')
-var self_id = require('../keys').id
+var self_id = require('../../keys').id
 
 function crop (d, cb) {
   var canvas = hypercrop(h('img', {src: d}))

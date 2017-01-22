@@ -1,7 +1,7 @@
 var fs = require('fs')
 var lightbox = require('hyperlightbox')
-var h = require('../h')
-var self_id = require('../keys').id
+var h = require('../../h')
+var self_id = require('../../keys').id
 //publish or add
 
 exports.needs = {

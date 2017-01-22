@@ -9,7 +9,12 @@ function ancestor (el) {
   return el
 }
 
-exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first', 'external_confirm':'first'}
+exports.needs = {
+  screen_view: 'first',
+  search_box: 'first',
+  menu: 'first',
+  external_confirm:'first'
+}
 
 exports.gives = 'screen_view'
 
