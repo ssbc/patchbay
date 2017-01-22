@@ -47,7 +47,7 @@ exports.create = function (api) {
           id: id, reverse: true,
           limit: 50, live: false
         }, ['value', 'sequence']),
-        pull.through(console.log.bind(console)),
+        // pull.through(console.log.bind(console)),
         Scroller(div, content, api.message_render, false, false)
       )
 
