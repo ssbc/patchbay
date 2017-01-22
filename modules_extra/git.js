@@ -456,13 +456,14 @@ exports.create = function (api) {
 
       if(c.type === 'git-repo') {
         return h('div', [
-          h('p', 'git repo ', repoName(msg.key)),
-          c.upstream ? h('p', 'fork of ', repoLink(c.upstream)) : ''
+          h('div', 'git repo ', repoName(msg.key)),
+          c.upstream ? h('br') : '',
+          c.upstream ? h('div', 'fork of ', repoLink(c.upstream)) : ''
         ])
       }
 
       if(c.type === 'git-update') {
-        return h('p', 'pushed to ', repoLink(c.repo))
+        return h('div', 'pushed to ', repoLink(c.repo))
       }
 
       if(c.type === 'issue-edit') {
@@ -470,11 +471,11 @@ exports.create = function (api) {
       }
 
       if(c.type === 'issue') {
-        return h('p', 'opened issue on ', repoLink(c.project))
+        return h('div', 'opened issue on ', repoLink(c.project))
       }
 
       if(c.type === 'pull-request') {
-        return h('p', 'opened pull-request ', [
+        return h('div', 'opened pull-request ', [
           'to ', repoLink(c.repo), ':', c.branch, ' ',
           'from ', repoLink(c.head_repo), ':', c.head_branch
         ])
