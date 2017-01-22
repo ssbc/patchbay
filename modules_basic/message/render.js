@@ -1,5 +1,5 @@
-const fs = require('fs')
 const h = require('../../h')
+const mcss = require('../../mcss')(__filename)
 
 exports.needs = {
   avatar_name: 'first',
@@ -22,7 +22,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_render,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   function message_render (msg) {

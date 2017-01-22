@@ -1,6 +1,6 @@
 'use strict'
-const fs = require('fs')
 const h = require('../h')
+const mcss = require('../mcss')(__filename)
 const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
 const cont = require('cont')
@@ -21,7 +21,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     message_compose,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   /*

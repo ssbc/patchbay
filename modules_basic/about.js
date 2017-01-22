@@ -1,6 +1,6 @@
-const fs = require('fs')
-const h = require('../h')
 const { when } = require('@mmckegg/mutant')
+const h = require('../h')
+const mcss = require('../mcss')(__filename)
 
 exports.needs = {
   blob_url: 'first',
@@ -17,7 +17,7 @@ exports.create = function (api) {
   return {
     message_content,
     message_content_mini,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   function message_content (msg) {

@@ -1,5 +1,5 @@
-const fs = require('fs')
 const h = require('../h')
+const mcss = require('../mcss')(__filename)
 const ref = require('ssb-ref')
 
 exports.needs = {
@@ -14,7 +14,7 @@ exports.gives = {
 exports.create = (api) => {
   return {
     screen_view,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    mcss
   }
 
   function screen_view (path) {
