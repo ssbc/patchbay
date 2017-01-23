@@ -67,13 +67,14 @@ exports.create = function (api) {
       pull.unique('link'),
       pull.drain(image => images.push(image) )
     )
+
     var namesRecord = MutantObject()
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
       pull.map(e => e.value.content.name),
       pull.filter(Boolean),
       pull.drain(name => {
-        var n = namesRecord.get('name') || 0
+        var n = namesRecord.get(name) || 0
         namesRecord.put(name, n+1)
       })
     )
