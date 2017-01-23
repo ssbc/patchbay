@@ -55,7 +55,7 @@ exports.create = function (api) {
       } else if(/^\//.test(query)) {
         var tabs = [].concat.apply([], api.builtin_tabs())
         cb(null, tabs.filter(function (name) {
-          return name.substr(0, query.length) === query
+          return name && name.substr(0, query.length) === query
         }).map(function (name) {
           return {
             title: name,
