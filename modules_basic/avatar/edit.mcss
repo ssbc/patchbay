@@ -41,7 +41,6 @@ ProfileEdit {
     section {
       display: flex
       flex-wrap: wrap
-      justify-content: space-between
       align-content: flex-start
 
       margin-bottom: 1rem
@@ -91,6 +90,7 @@ ProfileEdit {
             margin: 0
             padding: 10% 20%
             top: 12%
+            left: 18%
 
             content: '+'
             font-size: 1.4rem
@@ -109,10 +109,38 @@ ProfileEdit {
     }
 
     section.names {
-      input {
-        border: 1px gainsboro solid
-        font-size: 1rem
+      header {
       }
+      
+      section {
+        display: flex
+        flex-wrap: wrap
+
+        div {
+          display: flex
+
+          border: 1px gainsboro solid
+          margin: 0 .4rem .5rem 0
+
+          div { padding: .3rem }
+
+          div.name {
+            border-right: 1px gainsboro solid
+          }
+
+          div.count {
+            font-size: .9rem
+            background-color: #eeeeee
+          }
+        }
+
+        input {
+          border: 1px gainsboro solid
+          font-size: 1rem
+          height: 1.7rem
+        }
+      }
+
     }
 
     button.confirm {

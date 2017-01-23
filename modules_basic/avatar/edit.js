@@ -7,7 +7,7 @@ const hyperlightbox = require('hyperlightbox')
 const h = require('../../h')
 const {
   Value, Array: MutantArray, Dict: MutantObject,
-  map, computed, when
+  map, computed, when, dictToCollection
 } = require('@mmckegg/mutant')
 const pull = require('pull-stream')
 const getAvatar = require('ssb-avatar')
@@ -65,13 +65,23 @@ exports.create = function (api) {
       pull.map(e => e.value.content.image),
       pull.filter(e => e && 'string' == typeof e.link),
       pull.unique('link'),
-      pull.drain(image =>  images.push(image) )
+      pull.drain(image => images.push(image) )
     )
+    var namesRecord = MutantObject()
+    pull(
+      api.sbot_links({dest: id, rel: 'about', values: true}),
+      pull.map(e => e.value.content.name),
+      pull.filter(Boolean),
+      pull.drain(name => {
+        var n = namesRecord.get('name') || 0
+        namesRecord.put(name, n+1)
+      })
+    )
+    var names = dictToCollection(namesRecord)
 
     var lb = hyperlightbox()
     var name = Value(api.avatar_name(id))
     var proposedName = Value()
-    var names = [] //TODO load in name aliases
     var name_input = h('input', {placeholder: ' + another name', 'ev-keyup': (e) => proposedName.set(e.target.value) })
     var description = '' //TODO load this in, make this editable
 
@@ -100,8 +110,13 @@ exports.create = function (api) {
         ]),
         h('section.names', [
           h('header', 'Names'),
-          names,
-          name_input
+          h('section', [
+            map(names, name => h('div', [
+              h('div.name', name.key),
+              h('div.count', name.value)
+            ])),
+            name_input
+          ])
         ]),
         when(isPossibleUpdate, h('button.confirm', { 'ev-click': handleUpdateClick }, 'Confirm changes'))
       ])
