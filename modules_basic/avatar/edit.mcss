@@ -4,7 +4,7 @@ ProfileEdit {
   justify-content: space-between
 
   margin-bottom: 2rem
-  
+
   section.lightbox {
     position: absolute
   }
@@ -16,7 +16,7 @@ ProfileEdit {
       width: 256px
       height: 256px
     }
-    
+
     footer {
       font-size: 1.2rem
     }
@@ -33,7 +33,7 @@ ProfileEdit {
     flex-basis: 100%
 
     margin-top: 1rem
-    
+
     header {
       margin-bottom: .2rem
     }
@@ -60,12 +60,51 @@ ProfileEdit {
     }
 
     section.avatars {
-
       img {
         $avatar-large
         margin: 0 .15rem 0.2rem 0
 
         cursor: pointer
+      }
+
+      div.file-upload {
+        position: relative
+
+        input[type="file"] {
+          $avatar-large
+          color: transparent
+
+          ::-webkit-file-upload-button {
+            visibility: hidden
+          }
+
+          ::before {
+            position: absolute
+
+            background: #fff
+            color: #666
+            border: 1px solid #bbb
+            border-radius: .2rem
+            padding: .5rem
+            cursor: pointer
+
+            margin: 0
+            padding: 10% 20%
+            top: 12%
+
+            content: '+'
+            font-size: 1.4rem
+
+            outline: none
+            white-space: nowrap
+            -webkit-user-select: none
+          }
+
+          :active, :focus {
+            outline: none
+            box-shadow: none
+          }
+        }
       }
     }
 
@@ -75,9 +114,13 @@ ProfileEdit {
         font-size: 1rem
       }
     }
-    
+
     button.confirm {
       margin-left: 0
+      
+      color: #fff
+      $backgroundPrimary
+      border: none
     }
   }
 }

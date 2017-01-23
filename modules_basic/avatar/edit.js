@@ -22,12 +22,8 @@ function crop (d, cb) {
     canvas,
     //canvas.selection,
     h('div.row.avatar_pic__controls', [
-      h('button', 'okay', {'ev-click': () => {
-        cb(null, canvas.selection.toDataURL())
-      }}),
-      h('button', 'cancel', {'ev-click': () => {
-        cb(new Error('canceled'))
-      }})
+      h('button', {'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay'),
+      h('button', {'ev-click': () => cb(new Error('canceled')) }, 'cancel')
     ])
   ])
 }
@@ -80,8 +76,6 @@ exports.create = function (api) {
     var description = '' //TODO load this in, make this editable
 
     var isPossibleUpdate = computed([proposedName, proposedAvatar], (name, image) => {
-      console.log('checking', name, image)
-
       return name || Object.keys(image).length
     })
 
@@ -100,7 +94,9 @@ exports.create = function (api) {
             'src': api.blob_url(image),
             'ev-click': changeSelectedImage(image)
           })),
-          hyperfile.asDataURL(dataUrlCallback),
+          h('div.file-upload', [
+            hyperfile.asDataURL(dataUrlCallback)
+          ])
         ]),
         h('section.names', [
           h('header', 'Names'),
@@ -146,16 +142,20 @@ exports.create = function (api) {
     }
 
     function handleUpdateClick () {
+      const name = proposedName()
+      const avatar = proposedAvatar()
+
       const msg = {
         type: 'about',
-        about: id,
-        name: proposedName(),
-        image: proposedAvatar()
+        about: id
       }
+
+      if (name) msg.name = name 
+      if (Object.keys(avatar).length) msg.image = avatar
 
       api.message_confirm(msg)
 
-      if(proposedName) name.set('@'+proposedName())
+      if (name) name.set('@'+name)
     }
   }
 
