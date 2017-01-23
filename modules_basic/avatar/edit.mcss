@@ -1,0 +1,84 @@
+ProfileEdit {
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+
+  margin-bottom: 2rem
+  
+  section.lightbox {
+    position: absolute
+  }
+
+  section.avatar {
+    margin-right: 1rem
+
+    section img {
+      width: 256px
+      height: 256px
+    }
+    
+    footer {
+      font-size: 1.2rem
+    }
+  }
+
+  section.description {
+    flex-basis: 40%
+    flex-grow: 1
+
+    margin-top: 1rem
+  }
+
+  section.aliases {
+    flex-basis: 100%
+
+    margin-top: 1rem
+    
+    header {
+      margin-bottom: .2rem
+    }
+
+    section {
+      display: flex
+      flex-wrap: wrap
+      justify-content: space-between
+      align-content: flex-start
+
+      margin-bottom: 1rem
+
+      header {
+        flex-basis: 100%
+
+        font-size: .9rem
+        $textSubtle
+
+        margin-bottom: .2rem
+      }
+
+      input {
+      }
+    }
+
+    section.avatars {
+
+      img {
+        $avatar-large
+        margin: 0 .15rem 0.2rem 0
+
+        cursor: pointer
+      }
+    }
+
+    section.names {
+      input {
+        border: 1px gainsboro solid
+        font-size: 1rem
+      }
+    }
+    
+    button.confirm {
+      margin-left: 0
+    }
+  }
+}
+
