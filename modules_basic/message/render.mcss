@@ -45,6 +45,7 @@ Message {
     display: flex
     justify-content: flex-end
 
+    font-size: .9rem
     a {
       margin-left: .5em
     }
