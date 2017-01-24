@@ -118,6 +118,7 @@ ProfileEdit {
 
         div {
           display: flex
+          cursor: pointer
 
           border: 1px gainsboro solid
           margin: 0 .4rem .5rem 0
@@ -143,12 +144,16 @@ ProfileEdit {
 
     }
 
-    button.confirm {
-      margin-left: 0
-      
-      color: #fff
-      $backgroundPrimary
-      border: none
+    section.action {
+      button.cancel {
+        margin-left: 0
+      }
+
+      button.confirm {
+        color: #fff
+        $backgroundPrimary
+        border: none
+      }
     }
   }
 }
