@@ -26,6 +26,7 @@ exports.create = function (api) {
         {style: {'overflow':'auto'}},
         h('div.scroller__wrapper',
           h('div', api.avatar_profile(id)),
+          h('header', 'Activity'),
           content
         )
       )

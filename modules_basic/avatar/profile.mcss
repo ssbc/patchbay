@@ -1,13 +1,15 @@
 Profile {
+
   section.edit {
 
   }
 
-  section.action {
-
-  }
-  
   section.relationships {
+    header {
+      margin-bottom: .8rem
+      border-bottom: 1px gainsboro solid
+    }
+
     div {
       display: flex
       flex-wrap: wrap
@@ -15,51 +17,51 @@ Profile {
       align-content: flex-start
 
       min-height: 5rem
-      margin: 1rem 0
+      margin-bottom: 2rem
 
       header {
         flex-basis: 100%
         
+        $textSubtle
+        font-size: .9rem
+        
         margin-bottom: .2rem
       }
 
-      a {
-        margin-right: .1rem
-
+      section a {
+        margin-right: .2rem
 
         img { $avatar-small }
       }
+    }
 
-
+    div.your-status {
+      margin: 0 
+      section.action {
+      }
     }
 
     div.friends {
-      a {
-        margin: 0 .15rem 0.2rem 0
+      section a {
+        margin: 0 .2rem 0.2rem 0
 
         img { 
           $avatar-large
         }
       }
-
     }
 
     div.follows {
-
     }
 
     div.followers {
-
     }
   }
 }
 
-$avatar-portrait {
-}
-
 $avatar-large {
-  width: 58px
-  height: 58px
+  width: 56px
+  height: 56px
 }
 
 $avatar-small {

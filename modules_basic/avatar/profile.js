@@ -1,7 +1,11 @@
 const fs = require('fs')
 const h = require('../../h')
 const pull = require('pull-stream')
-const { unique, collect, drain } = pull
+const { unique, drain } = pull
+const {
+  Array: MutantArray,
+  map, computed, when, dictToCollection
+} = require('@mmckegg/mutant')
 
 
 exports.needs = {
@@ -25,61 +29,56 @@ exports.create = function (api) {
 
   function avatar_profile (id) {
 
-    var friends_el = h('div.friends', [
-      h('header', 'Friends')
-    ])
-    var follows_el = h('div.follows', [
-      h('header', 'Follows')
-    ])
-    var followers_el = h('div.followers', [
-      h('header', 'Followers')
-    ])
-    var a, b
+    var rawFollows = MutantArray()
+    var rawFollowers = MutantArray()
+    var friends = computed([rawFollows, rawFollowers], (follows, followers) => {
+      return follows.filter(follow => followers.includes(follow))
+    })
+
+    var follows = computed([rawFollows, friends], (follows, friends) => {
+      return follows.filter(follow => !friends.includes(follow))
+    })
+    var followers = computed([rawFollowers, friends], (followers, friends) => {
+      return followers.filter(follower => !friends.includes(follower))
+    })
 
     pull(
       api.follows(id),
       unique(), 
-      collect((err, ary = []) => { 
-        a = ary; next() 
-      })
+      drain(
+        peer => rawFollows.push(peer), 
+        data => console.log('follows drain done', data)
+      )
     )
     pull(
       api.followers(id),
       unique(), 
-      collect((err, ary = {}) => {
-        b = ary; next()
-      })
+      drain(
+        peer => rawFollowers.push(peer), 
+        data => console.log('followers drain done', data)
+      )
     )
-
-    function next () {
-      if(!(a && b)) return
-      var _c = [], _a = [], _b = []
-
-      a.forEach(id => {
-        if(!~b.indexOf(id)) _a.push(id)
-        else               _c.push(id)
-      })
-      b.forEach(id => {
-        if(!~_c.indexOf(id)) _b.push(id)
-      })
-
-      add(_c, friends_el)
-      add(_a, follows_el)
-      add(_b, followers_el)
-
-      function add (ary, el) {
-        ary.forEach(id => el.appendChild(api.avatar_image_link(id)) )
-      }
-    }
-
 
     return h('Profile', [
       h('section.edit', api.avatar_edit(id)),
-      h('section.action', api.avatar_action(id)),
       h('section.relationships', [
-        friends_el,
-        follows_el,
-        followers_el
+        h('header', 'Relationships'),
+        h('div.your-status', [
+          h('header', 'Your status'),
+          h('section.action', api.avatar_action(id))
+        ]),
+        h('div.friends', [
+          h('header', 'Friends'),
+          h('section', map(friends, id => api.avatar_image_link(id)))
+        ]),
+        h('div.follows', [
+          h('header', 'Follows'),
+          h('section', map(follows, id => api.avatar_image_link(id)))
+        ]),
+        h('div.followers', [
+          h('header', 'Followers'),
+          h('section', map(followers, id => api.avatar_image_link(id)))
+        ])
       ])
     ])
   }

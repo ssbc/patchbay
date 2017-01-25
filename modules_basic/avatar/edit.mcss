@@ -35,7 +35,8 @@ ProfileEdit {
     margin-top: 1rem
 
     header {
-      margin-bottom: .2rem
+      margin-bottom: .8rem
+      border-bottom: 1px gainsboro solid
     }
 
     section {
