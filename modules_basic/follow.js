@@ -73,9 +73,9 @@ exports.create = function (api) {
 
     function update () {
       state.textContent = (
-        follows_you && you_follow ? 'you are friends'
-      : follows_you               ? 'follows you'
-      : you_follow                ? 'you follow'
+        follows_you && you_follow ? '- you are friends'
+      : follows_you               ? '- they follow you'
+      : you_follow                ? '- you are following'
       :                             ''
       )
       
