@@ -47,7 +47,7 @@ exports.create = function (api) {
       unique(), 
       drain(
         peer => rawFollows.push(peer), 
-        data => console.log('follows drain done', data)
+        (err, data) => console.log('follows drain done', err, data)
       )
     )
     pull(
@@ -55,7 +55,7 @@ exports.create = function (api) {
       unique(), 
       drain(
         peer => rawFollowers.push(peer), 
-        data => console.log('followers drain done', data)
+        (err, data) => console.log('followers drain done', err, data)
       )
     )
 
