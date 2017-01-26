@@ -54,7 +54,7 @@ exports.create = function (api) {
             return {
               title: name,
               subtitle: `(${rank}) ${id.substring(0,10)}`,
-              value: '['+name+']('+id+')',
+              value: id,
               rank,
               image: api.avatar_image_src(id),
               showBoth: true
@@ -70,7 +70,7 @@ exports.create = function (api) {
             return {
               title: name,
               subtitle: `(${rank}) ${id.substring(0,10)}`,
-              value: '['+name+']('+id+')',
+              value: id,
               rank
             }
           }))
