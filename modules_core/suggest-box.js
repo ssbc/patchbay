@@ -17,7 +17,7 @@ exports.create = function (api) {
   }
 
   function build_suggest_box (inputNode, asyncSuggester, opts = {}) {
-    // NOTE - suggest expects inputNode to have parentNode available
+    // NOTE - HACK: suggest expects inputNode to have parentNode available
     var container = h('SuggestBox', inputNode)
 
     function suggester (inputText, cb) {
