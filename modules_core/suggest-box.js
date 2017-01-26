@@ -18,7 +18,7 @@ exports.create = function (api) {
 
   function build_suggest_box (inputNode, asyncSuggester, opts = {}) {
     // NOTE - HACK: suggest expects inputNode to have parentNode available
-    var container = h('SuggestBox', inputNode)
+    var container = h('DummyParent', inputNode)
 
     function suggester (inputText, cb) {
       para(asyncSuggester(inputText))
@@ -30,10 +30,8 @@ exports.create = function (api) {
         })
     }
 
-    var suggestBox = suggest(inputNode, suggester, opts)
-
-    return suggestBox // NOTE suggestBox.el = input
-
+    return suggest(inputNode, suggester, opts)
+    // NOTE if ^ is suggestBox, suggestbox.el = inputNode
   }
 }
 
