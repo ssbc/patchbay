@@ -12,7 +12,7 @@ exports.create = function (api) {
 
   return function (go) {
 
-    var input = h('input.searchprompt', {
+    var search = h('input.searchprompt', {
       type: 'search',
       placeholder: 'Commands',
       onkeydown: ev => {
@@ -21,31 +21,31 @@ exports.create = function (api) {
             ev.stopPropagation()
             suggestBox.complete()
 
-            if (go(input.value.trim(), !ev.ctrlKey))
-              input.blur()
+            if (go(search.value.trim(), !ev.ctrlKey))
+              search.blur()
             return
           case 27: // escape
             ev.preventDefault()
-            input.blur()
+            search.blur()
             return
         }
       }
     })
 
-    input.activate = (sigil, ev) => {
-      input.focus()
+    search.activate = (sigil, ev) => {
+      search.focus()
       ev.preventDefault()
-      if (input.value[0] === sigil) {
-        input.selectionStart = 1
-        input.selectionEnd = input.value.length
+      if (search.value[0] === sigil) {
+        search.selectionStart = 1
+        search.selectionEnd = search.value.length
       } else {
-        input.value = sigil
+        search.value = sigil
       }
     }
 
-    var suggestBox = api.build_suggest_box(input, api.suggest_search)
+    var suggestBox = api.build_suggest_box(search, api.suggest_search)
 
-    return input
+    return search
   }
 
 }
