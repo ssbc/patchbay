@@ -57,7 +57,7 @@ exports.create = function (api) {
     //reposition hypertabs menu to inside a container...
     tabs.insertBefore(h('div.header.row',
         h('div.header__tabs.row', tabs.firstChild), //tabs
-        h('div.header__search.row.end', h('div', search), api.menu())
+        h('div.header__search.row.end', [search, api.menu()])
     ), tabs.firstChild)
   //  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 

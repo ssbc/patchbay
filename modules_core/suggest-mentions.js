@@ -3,7 +3,8 @@ exports.needs = {
   sbot_links2: 'first',
   blob_url: 'first',
   signified: 'first',
-  builtin_tabs: 'map'
+  builtin_tabs: 'map',
+  avatar_image: 'first'
 }
 
 exports.gives = {
@@ -24,14 +25,18 @@ exports.create = function (api) {
     return function (cb) {
       if(!/^[%&@]\w/.test(word)) return cb()
 
-      api.signified(word, function (err, names) {
-        if(err) cb(err)
-        else cb(null, names.map(function (e) {
+      api.signified(word, (err, names) => {
+        if(err) return cb(err)
+
+        cb(null, names.map(e => {
+          const { name, rank, id } = e
           return {
-            title: e.name + ': ' + e.id.substring(0,10)+' ('+e.rank+')',
-            value: '['+e.name+']('+e.id+')',
-            rank: e.rank,
-            //TODO: avatar images...
+            title: name,
+            // subtitle: `${id.substring(0,10)} (${rank})`,
+            subtitle: `(${rank}) ${id.substring(0,10)}`,
+            value: '['+name+']('+id+')',
+            rank,
+            // image: avatar_image(e.id)    //TODO: avatar images...
           }
         }))
       })

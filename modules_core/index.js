@@ -10,6 +10,7 @@ module.exports = {
   'sbot':             require('./sbot'),
   'search-box':       require('./search-box'),
   'style':            require('./style'),
+  'suggest-box':      require('./suggest-box'),
   'suggest-mentions': require('./suggest-mentions')
 }
 
