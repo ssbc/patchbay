@@ -7,6 +7,10 @@ const mixins = `
   $textSubtle {
     color: gray
   }
+
+  $backgroundPrimary {
+    background-color: #50aadf
+  }
 `
 
 module.exports = {

@@ -1,0 +1,161 @@
+ProfileEdit {
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+
+  margin-bottom: 2rem
+
+  section.lightbox {
+    position: absolute
+  }
+
+  section.avatar {
+    margin-right: 1rem
+
+    section img {
+      width: 256px
+      height: 256px
+    }
+
+    footer {
+      font-size: 1.2rem
+    }
+  }
+
+  section.description {
+    flex-basis: 40%
+    flex-grow: 1
+
+    margin-top: 1rem
+  }
+
+  section.aliases {
+    flex-basis: 100%
+
+    margin-top: 1rem
+
+    header {
+      margin-bottom: .8rem
+      border-bottom: 1px gainsboro solid
+    }
+
+    section {
+      display: flex
+      flex-wrap: wrap
+      align-content: flex-start
+
+      margin-bottom: 1rem
+
+      header {
+        flex-basis: 100%
+
+        font-size: .9rem
+        $textSubtle
+
+        margin-bottom: .2rem
+      }
+
+      input {
+      }
+    }
+
+    section.avatars {
+      img {
+        $avatar-large
+        margin: 0 .15rem 0.2rem 0
+
+        cursor: pointer
+      }
+
+      div.file-upload {
+        position: relative
+
+        input[type="file"] {
+          $avatar-large
+          color: transparent
+
+          ::-webkit-file-upload-button {
+            visibility: hidden
+          }
+
+          ::before {
+            position: absolute
+
+            background: #fff
+            color: #666
+            border: 1px solid #bbb
+            border-radius: .2rem
+            padding: .5rem
+            cursor: pointer
+
+            margin: 0
+            padding: 10% 20%
+            top: 12%
+            left: 18%
+
+            content: '+'
+            font-size: 1.4rem
+
+            outline: none
+            white-space: nowrap
+            -webkit-user-select: none
+          }
+
+          :active, :focus {
+            outline: none
+            box-shadow: none
+          }
+        }
+      }
+    }
+
+    section.names {
+      header {
+      }
+      
+      section {
+        display: flex
+        flex-wrap: wrap
+
+        div {
+          display: flex
+          cursor: pointer
+
+          border: 1px gainsboro solid
+          margin: 0 .4rem .5rem 0
+
+          div { padding: .3rem }
+
+          div.name {
+            border-right: 1px gainsboro solid
+          }
+
+          div.count {
+            font-size: .9rem
+            background-color: #eeeeee
+          }
+        }
+
+        input {
+          border: 1px gainsboro solid
+          font-size: 1rem
+          height: 1.7rem
+        }
+      }
+
+    }
+
+    section.action {
+      button.cancel {
+        margin-left: 0
+      }
+
+      button.confirm {
+        color: #fff
+        $backgroundPrimary
+        border: none
+      }
+    }
+  }
+}
+

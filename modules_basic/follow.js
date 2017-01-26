@@ -1,4 +1,5 @@
-var h = require('hyperscript')
+const fs = require('fs')
+const h = require('../h')
 
 //render a message when someone follows someone,
 //so you see new users
@@ -18,73 +19,91 @@ exports.gives = {
   message_content: true,
   message_content_mini: true,
   avatar_action: true,
+  mcss: true
 }
 
 exports.create = function (api) {
-  var exports = {}
-  exports.message_content =
-  exports.message_content_mini = function (msg) {
-    var content = msg.value.content
-    if(content.type == 'contact' && content.contact) {
-      var relation = isRelated(content.following, 'follows')
-      if(content.blocking) relation = 'blocks'
+  return {
+    message_content_mini,
+    message_content,
+    avatar_action,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
+
+  function message_content_mini (msg) {
+    const { type, contact, following, blocking } = msg.value.content
+    if(type == 'contact' && contact) {
+      var relation = isRelated(following, 'follows')
+      if(blocking) relation = 'blocks'
       return [
-        relation, ' ',
-        api.avatar_link(content.contact, api.avatar_name(content.contact), '')
+        relation,
+        ' ',
+        api.avatar_link(contact, api.avatar_name(contact), '')
       ]
     }
   }
 
-  exports.message_content = function (msg) {
-
-    var content = msg.value.content
-    if(content.type == 'contact' && content.contact) {
-      var relation = isRelated(content.following, 'follows')
-      if(content.blocking) relation = 'blocks'
-      return h('div.contact', relation, api.avatar(msg.value.content.contact, 'thumbnail'))
+  function message_content (msg) {
+    const { type, contact, following, blocking } = msg.value.content
+    if(type == 'contact' && contact) {
+      var relation = isRelated(following, 'follows')
+      if(blocking) relation = 'blocks'
+      return h('div.contact', [
+        relation, 
+        api.avatar(contact, 'thumbnail')
+      ])
     }
   }
 
-  exports.avatar_action = function (id) {
+  function avatar_action (id) {
     var follows_you, you_follow
 
     var self_id = require('../keys').id
-    api.follower_of(self_id, id, function (err, f) {
+    api.follower_of(self_id, id, (err, f) => {
       you_follow = f
       update()
     })
-    api.follower_of(id, self_id, function (err, f) {
+    api.follower_of(id, self_id, (err, f) => {
       follows_you = f
       update()
     })
 
-    var state = h('label')
-    var label = h('span')
+    var followBtn = h('button', { 'ev-click': toggleFollow }, 'loading')
+    var state = h('label', 'loading')
 
     function update () {
       state.textContent = (
-        follows_you && you_follow ? 'friend'
-      : follows_you               ? 'follows you'
-      : you_follow                ? 'you follow'
+        follows_you && you_follow ? '- you are friends'
+      : follows_you               ? '- they follow you'
+      : you_follow                ? '- you are following'
       :                             ''
       )
-
-      label.textContent = you_follow ? 'unfollow' : 'follow'
+      
+      if (you_follow === undefined) return 
+      followBtn.textContent = you_follow ? 'unfollow' : 'follow'
     }
 
-    return h('div', state,
-      h('a', {href:'#', onclick: function () {
-        api.message_confirm({
-          type: 'contact',
-          contact: id,
-          following: !you_follow
-        }, function (err, msg) {
-          if (err) return console.error(err)
-          you_follow = msg.value.content.following
-          update()
-        })
-      }}, h('br'), label)
-    )
+    return h('Follow', [
+      followBtn,
+      state
+    ])
+
+    function toggleFollow () {
+      if (followBtn.textContent === 'loading') return
+      const msg = {
+        type: 'contact',
+        contact: id,
+        following: !you_follow
+      }
+
+      api.message_confirm(msg, (err, msg) => {
+        if (err) return console.error(err)
+
+        you_follow = msg.value.content.following
+        update()
+      })
+    }
+    
   }
   return exports
 }

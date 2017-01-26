@@ -1,30 +1,31 @@
 'use strict'
-var dataurl = require('dataurl-')
-var hyperfile = require('hyperfile')
-var hypercrop = require('hypercrop')
-var hyperlightbox = require('hyperlightbox')
-var h = require('hyperscript')
-var pull = require('pull-stream')
-var getAvatar = require('ssb-avatar')
-var ref = require('ssb-ref')
-var visualize = require('visualize-buffer')
-var self_id = require('../../keys').id
+const fs = require('fs')
+const dataurl = require('dataurl-')
+const hyperfile = require('hyperfile')
+const hypercrop = require('hypercrop')
+const hyperlightbox = require('hyperlightbox')
+const h = require('../../h')
+const {
+  Value, Array: MutantArray, Dict: MutantObject, Struct,
+  map, computed, when, dictToCollection
+} = require('@mmckegg/mutant')
+const pull = require('pull-stream')
+const getAvatar = require('ssb-avatar')
+const ref = require('ssb-ref')
+const visualize = require('visualize-buffer')
+const self_id = require('../../keys').id
 
 function crop (d, cb) {
   var canvas = hypercrop(h('img', {src: d}))
 
-  return h('div.column.avatar_pic',
+  return h('div.column.avatar_pic', [
     canvas,
     //canvas.selection,
-    h('div.row.avatar_pic__controls',
-      h('button', 'okay', {onclick: function () {
-        cb(null, canvas.selection.toDataURL())
-      }}),
-      h('button', 'cancel', {onclick: function () {
-        cb(new Error('canceled'))
-      }})
-    )
-  )
+    h('div.row.avatar_pic__controls', [
+      h('button', {'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay'),
+      h('button', {'ev-click': () => cb(new Error('canceled')) }, 'cancel')
+    ])
+  ])
 }
 
 exports.needs = {
@@ -35,109 +36,163 @@ exports.needs = {
   avatar_name: 'first'
 }
 
-exports.gives = 'avatar_edit'
+exports.gives = {
+  avatar_edit: true,
+  mcss: true
+}
 
 exports.create = function (api) {
-  return function (id) {
+  return {
+    avatar_edit,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
 
-    var img = visualize(new Buffer(id.substring(1), 'base64'), 256)
-    img.classList.add('avatar--large')
+  function avatar_edit (id) {
 
-    var lb = hyperlightbox()
-    var name_input = h('input', {placeholder: 'rename'})
-    var name = api.avatar_name(id)
-    var selected = null
-
-    getAvatar({links: api.sbot_links}, self_id, id, function (err, avatar) {
-      if (err) return console.error(err)
-      //don't show user has already selected an avatar.
-      if(selected) return
-      if(ref.isBlob(avatar.image))
-        img.src = api.blob_url(avatar.image)
+    var avatar = Struct({
+      original: Value(visualize(new Buffer(id.substring(1), 'base64'), 256).src),
+      new: MutantObject()
     })
 
-    var also_pictured = h('div.profile__alsopicturedas.wrap')
+    getAvatar({links: api.sbot_links}, self_id, id, (err, _avatar) => {
+      if (err) return console.error(err)
+      //don't show user has already selected an avatar.
+      if(ref.isBlob(_avatar.image))
+        avatar.original.set(api.blob_url(_avatar.image))
+    })
 
+    var name = Struct({
+      original: Value(api.avatar_name(id)),
+      new: Value()
+    })
+
+    var images = MutantArray()
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
-      pull.map(function (e) {
-        return e.value.content.image
-      }),
-      pull.filter(function (e) {
-        return e && 'string' == typeof e.link
-      }),
+      pull.map(e => e.value.content.image),
+      pull.filter(e => e && 'string' == typeof e.link),
       pull.unique('link'),
-      pull.drain(function (image) {
-        also_pictured.appendChild(
-          h('a', {href:'#', onclick: function (ev) {
-              ev.stopPropagation()
-              ev.preventDefault()
-              selected = image
-              img.src = api.blob_url(image.link || image)
-            }},
-            h('img.avatar--thumbnail', {src: api.blob_url(image)})
-          )
-        )
+      pull.drain(image => images.push(image) )
+    )
+
+    var namesRecord = MutantObject()
+    pull(
+      api.sbot_links({dest: id, rel: 'about', values: true}),
+      pull.map(e => e.value.content.name),
+      pull.filter(Boolean),
+      pull.drain(name => {
+        var n = namesRecord.get(name) || 0
+        namesRecord.put(name, n+1)
       })
     )
+    var names = dictToCollection(namesRecord)
 
-    return h('div.row.profile',
-      lb,
-      img,
-      h('div.column.profile__info',
-        h('strong', name),
-        name_input,
+    var lb = hyperlightbox()
+  
+    
+    var description = '' //TODO load this in, make this editable
 
-        hyperfile.asDataURL(function (data) {
-          var el = crop(data, function (err, data) {
-            if(data) {
-              img.src = data
-              var _data = dataurl.parse(data)
-              pull(
-                pull.once(_data.data),
-                api.sbot_blobs_add(function (err, hash) {
-                  //TODO. Alerts are EVIL.
-                  //I use them only in a moment of weakness.
+    var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
+      return name || avatar.link
+    })
 
-                  if(err) return alert(err.stack)
-                  selected = {
-                    link: hash,
-                    size: _data.data.length,
-                    type: _data.mimetype,
-                    width: 512,
-                    height: 512
-                  }
+    var avatarSrc = computed([avatar], avatar => {
+      if (avatar.new.link) return api.blob_url(avatar.new.link)
+      else return avatar.original
+    })
 
-                })
-              )
-            }
-            lb.close()
-          })
-          lb.show(el)
-        }),
-        h('button', 'update', {onclick: function () {
-          if(name_input.value)
-            name.textContent = name_input.value
+    var displayedName = computed([name], name => {
+      if (name.new) return '@'+name.new
+      else return name.original
+    })
 
-          if(selected)
-            api.message_confirm({
-              type: 'about',
-              about: id,
-              name: name_input.value || undefined,
-              image: selected
+    return h('ProfileEdit', [
+      h('section.lightbox', lb),
+      h('section.avatar', [
+        h('section', [
+          h('img', { src: avatarSrc }),
+        ]),
+        h('footer', displayedName),
+      ]),
+      h('section.description', description),
+      h('section.aliases', [
+        h('header', 'Aliases'),
+        h('section.avatars', [
+          h('header', 'Avatars'),
+          map(images, image => h('img', {
+            'src': api.blob_url(image),
+            'ev-click': () => avatar.new.set(image)
+          })),
+          h('div.file-upload', [
+            hyperfile.asDataURL(dataUrlCallback)
+          ])
+        ]),
+        h('section.names', [
+          h('header', 'Names'),
+          h('section', [
+            map(names, n => h('div', { 'ev-click': () => name.new.set(n.key()) }, [
+              h('div.name', n.key),
+              h('div.count', n.value)
+            ])),
+            h('input', {
+              placeholder: ' + another name',
+              'ev-keyup': e => name.new.set(e.target.value)
             })
-          else if(name_input.value) //name only
-            api.message_confirm({
-              type: 'about',
-              about: id,
-              name: name_input.value || undefined,
+          ])
+        ]),
+        when(isPossibleUpdate, h('section.action', [
+          h('button.cancel', { 'ev-click': handleCancelClick }, 'cancel'),
+          h('button.confirm', { 'ev-click': handleUpdateClick }, 'confirm changes')
+        ]))
+      ])
+    ])
+
+    function dataUrlCallback (data) {
+      var el = crop(data, (err, data) => {
+        if(data) {
+          var _data = dataurl.parse(data)
+          pull(
+            pull.once(_data.data),
+            api.sbot_blobs_add((err, hash) => {
+              //TODO. Alerts are EVIL.
+              //I use them only in a moment of weakness.
+
+              if(err) return alert(err.stack)
+              avatar.new.set({
+                link: hash,
+                size: _data.data.length,
+                type: _data.mimetype,
+                width: 512,
+                height: 512
+              })
             })
-          else
-            //another moment of weakness
-            alert('must select a name or image')
-        }}),
-      also_pictured
-      )
-    )
+          )
+        }
+        lb.close()
+      })
+      lb.show(el)
+    }
+
+    function handleCancelClick () {
+      name.new.set(null)
+      avatar.new.set({})
+    }
+
+    function handleUpdateClick () {
+      const newName = name.new()
+      const newAvatar = avatar.new()
+
+      const msg = {
+        type: 'about',
+        about: id
+      }
+
+      if (newName) msg.name = newName
+      if (newAvatar.link) msg.image = newAvatar
+
+      api.message_confirm(msg)
+    }
   }
+
 }
+

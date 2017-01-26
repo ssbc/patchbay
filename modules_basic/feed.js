@@ -26,6 +26,7 @@ exports.create = function (api) {
         {style: {'overflow':'auto'}},
         h('div.scroller__wrapper',
           h('div', api.avatar_profile(id)),
+          h('header', 'Activity'),
           content
         )
       )
@@ -47,7 +48,7 @@ exports.create = function (api) {
           id: id, reverse: true,
           limit: 50, live: false
         }, ['value', 'sequence']),
-        pull.through(console.log.bind(console)),
+        // pull.through(console.log.bind(console)),
         Scroller(div, content, api.message_render, false, false)
       )
 
