@@ -1,49 +1,66 @@
 /*
- * NOTE the suggest-box module appends the suggestion div to the end of the body,
- * so wrapping it in a module is impossible
- *
- * Writing mcss for this is hard, so I've just written tight css selectors
+NOTE the suggest-box module appends the suggestion div to the end of the body,
+so wrapping it in a module is impossible.
+
+Writing mcss for this is hard, so I've just written tight css selectors
+
+Schema:
+
+  body div.suggest-box ul {
+    li {
+      img {}
+      strong {}
+      small {}
+    }
+
+    li.selected {
+      img {}
+      strong {}
+      small {}
+    }
+  }
 */
+
 
 body > .suggest-box {
   width: max-content;
   background-color: #fff;
   border: 1px gainsboro solid;
+
   padding: .2rem .5rem;
-
-  font-weight: 300;
 }
-
-/* body > .suggest-box > * { */
-/*   display: block; */
-/* } */
 
 body > .suggest-box > ul {
   list-style-type: none;
-  padding-left: 0;
-  border-radius: 2px;
+  padding: 0;
 }
 
 body > .suggest-box > ul > li {
   display: flex;
   align-items: center;
 
-  padding: .1rem .2rem;
-
   border: 1px #fff solid;
+  padding-right: .2rem;
+  margin-bottom: .2rem;
 }
 
 body > .suggest-box > ul > li.selected {
   background: #eee;
-  border-right: 3px black solid;
   border: 1px gainsboro solid;
+}
+
+body > .suggest-box > ul > li > img {
+  height: 36px;
+  width: 36px;
+  margin: 0;
+  padding: 0;
+  /* TODO make smaller emoji thumbnails */
 }
 
 body > .suggest-box > ul > li > strong {
   flex-grow: 1;
-}
-
-body > .suggest-box > ul > li > img {
+  margin-left: .5rem;
+  font-weight: 300;
 }
 
 body > .suggest-box > ul > li > small {
@@ -53,13 +70,4 @@ body > .suggest-box > ul > li > small {
   float: right;
 }
 
-
-
-
-/* emoji */
-
-body > .suggest-box img {
-  height: 20px;
-  width: 20px;
-}
 

@@ -16,12 +16,12 @@ exports.create = function (api) {
     css: () => fs.readFileSync(__filename.replace(/js$/, 'css'), 'utf8') //NOTE css
   }
 
-  function build_suggest_box (inputNode, asyncSuggester, opts = {}) {
+  function build_suggest_box (inputNode, asyncSuggesters, opts = {}) {
     // NOTE - HACK: suggest expects inputNode to have parentNode available
     var container = h('DummyParent', inputNode)
 
     function suggester (inputText, cb) {
-      para(asyncSuggester(inputText))
+      para(asyncSuggesters(inputText))
         ((err, ary) => {
           if(err) return cb(err)
 

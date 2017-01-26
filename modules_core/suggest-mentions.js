@@ -4,7 +4,7 @@ exports.needs = {
   blob_url: 'first',
   signified: 'first',
   builtin_tabs: 'map',
-  avatar_image: 'first'
+  avatar_image_src: 'first'
 }
 
 exports.gives = {
@@ -32,11 +32,11 @@ exports.create = function (api) {
           const { name, rank, id } = e
           return {
             title: name,
-            // subtitle: `${id.substring(0,10)} (${rank})`,
             subtitle: `(${rank}) ${id.substring(0,10)}`,
             value: '['+name+']('+id+')',
             rank,
-            // image: avatar_image(e.id)    //TODO: avatar images...
+            image: api.avatar_image_src(id),
+            showBoth: true
           }
         }))
       })
@@ -45,18 +45,36 @@ exports.create = function (api) {
 
   function suggest_search (query) {
     return function (cb) {
-      if(/^[@%]\w/.test(query)) {
-        api.signified(query, function (_, names) {
-          cb(null, names.map(function (e) {
+      if(/^@\w/.test(query)) {
+        api.signified(query, (err, names) => {
+          if(err) return cb(err)
+
+          cb(null, names.map(e => {
+            const { name, rank, id } = e
             return {
-              title: e.name + ':'+e.id.substring(0, 10),
-              value: e.id,
-              subtitle: e.rank,
-              rank: e.rank
+              title: name,
+              subtitle: `(${rank}) ${id.substring(0,10)}`,
+              value: '['+name+']('+id+')',
+              rank,
+              image: api.avatar_image_src(id),
+              showBoth: true
             }
           }))
         })
+      } else if (/^%\w/.test(query)) {
+        api.signified(query, (err, names) => {
+          if(err) return cb(err)
 
+          cb(null, names.map(e => {
+            const { name, rank, id } = e
+            return {
+              title: name,
+              subtitle: `(${rank}) ${id.substring(0,10)}`,
+              value: '['+name+']('+id+')',
+              rank
+            }
+          }))
+        })
       } else if(/^\//.test(query)) {
         var tabs = [].concat.apply([], api.builtin_tabs())
         cb(null, tabs.filter(function (name) {
