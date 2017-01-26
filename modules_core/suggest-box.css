@@ -39,21 +39,19 @@ body > .suggest-box > ul > li {
   display: flex;
   align-items: center;
 
-  border: 1px #fff solid;
   padding-right: .2rem;
   margin-bottom: .2rem;
 }
 
 body > .suggest-box > ul > li.selected {
-  background: #eee;
-  border: 1px gainsboro solid;
+  color: #fff;
+  background: #0caaf9;
 }
 
 body > .suggest-box > ul > li > img {
   height: 36px;
   width: 36px;
-  margin: 0;
-  padding: 0;
+  padding: .2rem;
   /* TODO make smaller emoji thumbnails */
 }
 
@@ -66,8 +64,7 @@ body > .suggest-box > ul > li > strong {
 body > .suggest-box > ul > li > small {
   font-family: monospace;
   margin-left: .5rem;
+  padding-right: .2rem;
   font-size: 1rem;
-  float: right;
 }
-
 
