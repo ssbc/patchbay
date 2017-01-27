@@ -28,6 +28,7 @@ body > .suggest-box {
   border: 1px gainsboro solid;
 
   padding: .2rem .5rem;
+  margin-top: .7rem;
 }
 
 body > .suggest-box > ul {
