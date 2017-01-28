@@ -60,11 +60,11 @@ exports.create = function (api) {
 
     var self_id = require('../keys').id
     api.follower_of(self_id, id, (err, f) => {
-      you_follow = f
+      you_follow = f || false
       update()
     })
     api.follower_of(id, self_id, (err, f) => {
-      follows_you = f
+      follows_you = f || false
       update()
     })
 
@@ -79,6 +79,7 @@ exports.create = function (api) {
       :                             ''
       )
       
+      // wait till finished loading before offering follow options
       if (you_follow === undefined) return 
       followBtn.textContent = you_follow ? 'unfollow' : 'follow'
     }
@@ -99,7 +100,7 @@ exports.create = function (api) {
       api.message_confirm(msg, (err, msg) => {
         if (err) return console.error(err)
 
-        you_follow = msg.value.content.following
+        you_follow = !you_follow
         update()
       })
     }
