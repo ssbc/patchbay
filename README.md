@@ -31,7 +31,7 @@ sbot plugins.install ssb-ws
 ```
 now clone and run patchbay.
 ```
-git clone https://github.com/dominictarr/patchbay.git
+git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
 npm run rebuild
