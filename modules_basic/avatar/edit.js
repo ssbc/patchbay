@@ -76,6 +76,7 @@ exports.create = function (api) {
     )
 
     var namesRecord = MutantObject()
+    // TODO constrain query to one name per peer?
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
       pull.map(e => e.value.content.name),
@@ -89,8 +90,8 @@ exports.create = function (api) {
 
     var lb = hyperlightbox()
   
-    
-    var description = '' //TODO load this in, make this editable
+    // TODO load this in, make this editable
+    var description = ''
 
     var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
       return name || avatar.link
@@ -141,7 +142,7 @@ exports.create = function (api) {
           ])
         ]),
         when(isPossibleUpdate, h('section.action', [
-          h('button.cancel', { 'ev-click': handleCancelClick }, 'cancel'),
+          h('button.cancel', { 'ev-click': clearNewSelections }, 'cancel'),
           h('button.confirm', { 'ev-click': handleUpdateClick }, 'confirm changes')
         ]))
       ])
@@ -173,7 +174,7 @@ exports.create = function (api) {
       lb.show(el)
     }
 
-    function handleCancelClick () {
+    function clearNewSelections () {
       name.new.set(null)
       avatar.new.set({})
     }
@@ -190,7 +191,16 @@ exports.create = function (api) {
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
 
-      api.message_confirm(msg)
+      api.message_confirm(msg, (err, data) => {
+        if (err) return console.error(err)
+
+        if (newName) name.original.set(newName)
+        if (newAvatar) avatar.original.set(api.blob_url(newAvatar.link))
+
+        clearNewSelections()
+
+        // TODO - update aliases displayed
+      })
     }
   }
 

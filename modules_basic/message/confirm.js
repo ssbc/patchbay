@@ -40,7 +40,7 @@ exports.create = function (api) {
       }
     }
 
-    var okay = h('button',  {
+    var okay = h('button.okay',  {
       'ev-click': () => {
         lb.remove()
         api.publish(content, cb)
@@ -48,12 +48,12 @@ exports.create = function (api) {
       'okay'
     )
 
-    var cancel = h('button', {
+    var cancel = h('button.cancel', {
       'ev-click': () => {
         lb.remove()
         cb(null)
       }},
-      'Cancel'
+      'cancel'
     )
 
     okay.addEventListener('keydown', function (ev) {
@@ -63,7 +63,7 @@ exports.create = function (api) {
     lb.show(h('MessageConfirm', [
         h('header -preview_description', h('h1', 'Preview')),
         h('section -message_preview', api.message_render(msg)),
-        h('section -actions', [okay, cancel])
+        h('section -actions', [cancel, okay])
       ]
     ))
 
