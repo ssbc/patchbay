@@ -195,7 +195,7 @@ exports.create = function (api) {
         if (err) return console.error(err)
 
         if (newName) name.original.set(newName)
-        if (newAvatar) avatar.original.set(api.blob_url(newAvatar.link))
+        if (newAvatar.link) avatar.original.set(api.blob_url(newAvatar.link))
 
         clearNewSelections()
 
