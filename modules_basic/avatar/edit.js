@@ -194,7 +194,7 @@ exports.create = function (api) {
       api.message_confirm(msg, (err, data) => {
         if (err) return console.error(err)
 
-        if (newName) name.original.set(newName)
+        if (newName) name.original.set('@'+newName)
         if (newAvatar.link) avatar.original.set(api.blob_url(newAvatar.link))
 
         clearNewSelections()
