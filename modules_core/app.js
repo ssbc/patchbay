@@ -1,46 +1,56 @@
-var h = require('hyperscript')
-var insertCss = require('insert-css')
+const fs = require('fs')
+const h = require('../h')
+const { Value } = require('@mmckegg/mutant')
+const insertCss = require('insert-css')
 
-module.exports = {
-  needs: {
-    screen_view: 'first',
-    styles: 'first'
-  },
-  gives: 'app',
-  create: function (api) {
-    return function () {
-      process.nextTick(function () {
-        insertCss(api.styles())
-      })
+exports.needs = {
+  screen_view: 'first',
+  styles: 'first'
+}
 
-      window.addEventListener('error', window.onError = function (e) {
-        document.body.appendChild(h('div.error',
-          h('h1', e.message),
-          h('big', h('code', e.filename + ':' + e.lineno)),
-          h('pre', e.error ? (e.error.stack || e.error.toString()) : e.toString())))
-      })
+exports.gives = {
+  app: true,
+  mcss: true
+}
 
-      function hash() {
-        return window.location.hash.substring(1)
-      }
+exports.create = function (api) {
+  return {
+    app,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
 
-      var view = api.screen_view(hash() || 'tabs')
+  function app () {
+    process.nextTick(() => insertCss(api.styles()))
 
-      var screen = h('div.screen.column', view)
+    var view = Value(getView())
+    var screen = h('App', view)
 
-      window.onhashchange = function (ev) {
-        var _view = view
-        view = api.screen_view(hash() || 'tabs')
+    window.onhashchange = () => view.set(getView())
+    document.body.appendChild(screen)
 
-        if(_view) screen.replaceChild(view, _view)
-        else      document.body.appendChild(view)
-      }
+    window.addEventListener('error', window.onError = displayError)
 
-      document.body.appendChild(screen)
+    return screen
+  }
 
-      return screen
-    }
+  function getView () {
+    const view = window.location.hash.substring(1) || 'tabs'
+    return api.screen_view(view)
   }
 }
 
+function displayError (e) {
+  document.body.appendChild(
+    h('Error', [
+      h('h1', e.message),
+      h('big', [
+        h('code', e.filename + ':' + e.lineno)
+      ]),
+      h('pre', e.error
+        ? (e.error.stack || e.error.toString())
+        : e.toString()
+      )
+    ])
+  )
+}
 
