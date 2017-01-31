@@ -2,10 +2,10 @@
   "name": "patchbay",
   "description": "a pluggable patchwork",
   "version": "6.5.0",
-  "homepage": "https://github.com/dominictarr/patchbay",
+  "homepage": "https://github.com/ssbc/patchbay",
   "repository": {
     "type": "git",
-    "url": "git://github.com/dominictarr/patchbay.git"
+    "url": "git://github.com/ssbc/patchbay.git"
   },
   "scripts": {
     "lite": "mkdir -p build && browserify index.js | indexhtmlify --title patchbay > build/index.html",
