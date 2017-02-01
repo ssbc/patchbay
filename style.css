@@ -178,36 +178,6 @@ button:hover {
 }
 
 
-/* -- suggest box */
-
-.suggest-box > * {
-  display: block;
-}
-
-.suggest-box ul {
-  padding: 0;
-  list-style-type: none;
-  padding-left: 0;
-  background: #eee;
-  border: 1px solid #eee;
-  border-radius: 2px;
-}
-
-.suggest-box .selected {
-  background: white;
-}
-
-.suggest-box {
-  width: max-content;
-  background: #white;
-  border-radius: 1em;
-}
-
-/* emoji */
-.suggest-box img {
-  height: 20px;
-  width: 20px;
-}
 
 /* avatar */
 

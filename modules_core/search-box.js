@@ -1,11 +1,9 @@
 'use strict'
-var cont = require('cont')
 var h = require('hyperscript')
-var suggest = require('suggest-box')
 
 exports.needs = {
-  sbot_query: 'first', sbot_links2: 'first',
-  suggest_search: 'map' //REWRITE
+  suggest_search: 'map', //REWRITE
+  build_suggest_box: 'first'
 }
 
 exports.gives  = 'search_box'
@@ -14,17 +12,15 @@ exports.create = function (api) {
 
   return function (go) {
 
-    var suggestBox
     var search = h('input.searchprompt', {
       type: 'search',
       placeholder: 'Commands',
-      onkeydown: function (ev) {
+      onkeydown: ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            if (suggestBox && suggestBox.active) {
-              suggestBox.complete()
-              ev.stopPropagation()
-            }
+            ev.stopPropagation()
+            suggestBox.complete()
+
             if (go(search.value.trim(), !ev.ctrlKey))
               search.blur()
             return
@@ -36,7 +32,7 @@ exports.create = function (api) {
       }
     })
 
-    search.activate = function (sigil, ev) {
+    search.activate = (sigil, ev) => {
       search.focus()
       ev.preventDefault()
       if (search.value[0] === sigil) {
@@ -47,19 +43,7 @@ exports.create = function (api) {
       }
     }
 
-    // delay until the element has a parent
-    setTimeout(function () {
-      suggestBox = suggest(search, function (word, cb) {
-        cont.para(api.suggest_search(word))
-          (function (err, ary) {
-            if(err) return cb(err)
-
-            cb(null, ary.filter(Boolean).reduce(function (a, b) {
-              return a.concat(b)
-            }, []))
-          })
-      }, {})
-    }, 10)
+    var suggestBox = api.build_suggest_box(search, api.suggest_search)
 
     return search
   }

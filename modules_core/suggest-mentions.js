@@ -3,7 +3,8 @@ exports.needs = {
   sbot_links2: 'first',
   blob_url: 'first',
   signified: 'first',
-  builtin_tabs: 'map'
+  builtin_tabs: 'map',
+  avatar_image_src: 'first'
 }
 
 exports.gives = {
@@ -24,14 +25,18 @@ exports.create = function (api) {
     return function (cb) {
       if(!/^[%&@]\w/.test(word)) return cb()
 
-      api.signified(word, function (err, names) {
-        if(err) cb(err)
-        else cb(null, names.map(function (e) {
+      api.signified(word, (err, names) => {
+        if(err) return cb(err)
+
+        cb(null, names.map(e => {
+          const { name, rank, id } = e
           return {
-            title: e.name + ': ' + e.id.substring(0,10)+' ('+e.rank+')',
-            value: '['+e.name+']('+e.id+')',
-            rank: e.rank,
-            //TODO: avatar images...
+            title: name,
+            subtitle: `(${rank}) ${id.substring(0,10)}`,
+            value: '['+name+']('+id+')',
+            rank,
+            image: api.avatar_image_src(id),
+            showBoth: true
           }
         }))
       })
@@ -40,18 +45,36 @@ exports.create = function (api) {
 
   function suggest_search (query) {
     return function (cb) {
-      if(/^[@%]\w/.test(query)) {
-        api.signified(query, function (_, names) {
-          cb(null, names.map(function (e) {
+      if(/^@\w/.test(query)) {
+        api.signified(query, (err, names) => {
+          if(err) return cb(err)
+
+          cb(null, names.map(e => {
+            const { name, rank, id } = e
             return {
-              title: e.name + ':'+e.id.substring(0, 10),
-              value: e.id,
-              subtitle: e.rank,
-              rank: e.rank
+              title: name,
+              subtitle: `(${rank}) ${id.substring(0,10)}`,
+              value: id,
+              rank,
+              image: api.avatar_image_src(id),
+              showBoth: true
             }
           }))
         })
+      } else if (/^%\w/.test(query)) {
+        api.signified(query, (err, names) => {
+          if(err) return cb(err)
 
+          cb(null, names.map(e => {
+            const { name, rank, id } = e
+            return {
+              title: name,
+              subtitle: `(${rank}) ${id.substring(0,10)}`,
+              value: id,
+              rank
+            }
+          }))
+        })
       } else if(/^\//.test(query)) {
         var tabs = [].concat.apply([], api.builtin_tabs())
         cb(null, tabs.filter(function (name) {
