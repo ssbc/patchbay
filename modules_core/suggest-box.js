@@ -1,7 +1,8 @@
 const fs = require('fs')
 const h = require('../h')
+const onload = require('on-load')
 const { para } = require('cont')
-const suggest = require('suggest-box')
+const Suggest = require('suggest-box')
 
 exports.needs = {}
 
@@ -17,9 +18,6 @@ exports.create = function (api) {
   }
 
   function build_suggest_box (inputNode, asyncSuggesters, opts = {}) {
-    // NOTE - HACK: suggest expects inputNode to have parentNode available
-    var container = h('DummyParent', inputNode)
-
     function suggester (inputText, cb) {
       para(asyncSuggesters(inputText))
         ((err, ary) => {
@@ -30,8 +28,16 @@ exports.create = function (api) {
         })
     }
 
-    return suggest(inputNode, suggester, opts)
-    // NOTE this returns a suggestBox and suggestbox.el = inputNode if you need it
+    var suggestBox
+    onload(inputNode, (el) => {
+      suggestBox = Suggest(el, suggester, opts)
+    })
+
+    // HACK (mix) : onload is needed because Suggest demands a parent node.
+    // I've chosen this over forcing users to pass a callback
+    return {
+      complete: () => suggestBox.complete()
+    }
   }
 }
 
