@@ -7,8 +7,6 @@ MessageConfirm {
       background-color: white
 
       div {
-        border: none
-
         header.author {
           div {
             section {

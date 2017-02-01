@@ -8,6 +8,7 @@ var cont = require('cont')
 var ref = require('ssb-ref')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   sbot_log: 'first',
   sbot_get: 'first',
@@ -127,20 +128,14 @@ exports.create = function (api) {
           }
         })
 
-        var content = h('div.column.scroller__content')
-        var div = h('div.column.scroller',
-          {style: {'overflow':'auto'}},
-          h('div.scroller__wrapper',
-            content
-          )
-        )
+        var { container, content } = api.build_scroller()
 
         pull(
           u.next(api.sbot_log, {old: false, limit: 100}),
           unbox(),
           notifications(ids),
           pull.filter(),
-          Scroller(div, content, api.message_render, true, false)
+          Scroller(container, content, api.message_render, true, false)
         )
 
         pull(
@@ -152,10 +147,10 @@ exports.create = function (api) {
             // abort stream after we pass the oldest messages of our feeds
             return !oldest ? true : msg.value.timestamp > oldest
           }),
-          Scroller(div, content, api.message_render, false, false)
+          Scroller(container, content, api.message_render, false, false)
         )
 
-        return div
+        return container
       }
     }
   }

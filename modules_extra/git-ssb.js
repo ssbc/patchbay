@@ -4,13 +4,15 @@ var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   message_compose: 'first',
   sbot_log: 'first'
 }
 
 exports.gives = {
-  menu_items: true, screen_view: true
+  menu_items: true,
+  screen_view: true
 }
 
 exports.create = function (api) {
@@ -22,15 +24,11 @@ exports.create = function (api) {
     screen_view: function (path, sbot) {
       if(path === '/git-ssb') {
 
-        var content = h('div.column.scroller__content')
-        var div = h('div.column.scroller',
-          {style: {'overflow':'auto'}},
-          h('div.scroller__wrapper', content)
-        )
+        var { container, content } = api.build_scroller()
 
         pull(
           u.next(api.sbot_log, {old: false, limit: 100}),
-          Scroller(div, content, api.message_render, true, false)
+          Scroller(container, content, api.message_render, true, false)
         )
 
         pull(
@@ -39,10 +37,10 @@ exports.create = function (api) {
           pull.filter(function(msg) {
             return msg.value.content.type.match(/^git/)
           }),
-          Scroller(div, content, api.message_render, false, false)
+          Scroller(container, content, api.message_render, false, false)
         )
 
-        return div
+        return container
       }
     }
   }

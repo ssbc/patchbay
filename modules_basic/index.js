@@ -15,6 +15,7 @@ module.exports = {
   'public':        require('./public'),
   'relationships': require('./relationships'),
   'reply':         require('./reply'),
+  'scroller':      require('./scroller'),
   'setup':         require('./setup'),
   'thread':        require('./thread'),
   'timestamp':     require('./timestamp')

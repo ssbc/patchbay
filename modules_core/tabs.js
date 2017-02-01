@@ -10,6 +10,7 @@ function ancestor (el) {
 }
 
 exports.needs = {
+  build_scroller: 'first',
   screen_view: 'first',
   search_box: 'first',
   menu: 'first',
@@ -20,8 +21,7 @@ exports.gives = 'screen_view'
 
 exports.create = function (api) {
   return function (path) {
-    if(path !== 'tabs')
-      return
+    if(path !== 'tabs') return
 
     function setSelected (indexes) {
       var ids = indexes.map(function (index) {
@@ -47,7 +47,7 @@ exports.create = function (api) {
 
       if(el) {
         if(!el.title) el.title = path
-        el.scroll = keyscroll(el.querySelector('.scroller__content'))
+        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
         tabs.add(el, change)
   //      localStorage.openTabs = JSON.stringify(tabs.tabs)
         return change
@@ -73,7 +73,7 @@ exports.create = function (api) {
       if(!el) return
       el.id = el.id || path
       if (!el) return
-      el.scroll = keyscroll(el.querySelector('.scroller__content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
       if(el) tabs.add(el, false, false)
     })
 
@@ -101,7 +101,7 @@ exports.create = function (api) {
       var el = api.screen_view(path)
       if(el) {
         el.id = el.id || path
-        el.scroll = keyscroll(el.querySelector('.scroller__content'))
+        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
         tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
   //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       }
@@ -165,14 +165,10 @@ exports.create = function (api) {
     })
 
     // errors tab
-    var errorsContent = h('div.column.scroller__content')
-    var errors = h('div.column.scroller', {
-      id: 'errors',
-      style: {'overflow':'auto'}
-    }, h('div.scroller__wrapper',
-        errorsContent
-      )
-    )
+    var {
+      container: errors,
+      content: errorsContent 
+    } = api.build_scroller()
 
     // remove loader error handler
     if (window.onError) {
