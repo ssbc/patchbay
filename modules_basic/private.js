@@ -10,6 +10,7 @@ function map(ary, iter) {
 }
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   message_compose: 'first',
   message_unbox: 'first',
@@ -48,8 +49,21 @@ exports.create = function (api) {
     screen_view: function (path) {
       if(path !== '/private') return
 
-      var div = h('div.column.scroller',
-          {style: {'overflow':'auto'}})
+      var composer = api.message_compose(
+        {type: 'post', recps: [], private: true},
+        {
+          prepublish: function (msg) {
+            msg.recps = [id].concat(msg.mentions).filter(function (e) {
+              return ref.isFeed('string' === typeof e ? e : e.link)
+            })
+            if(!msg.recps.length)
+              throw new Error('cannot make private message without recipients - just mention the user in an at reply in the message you send')
+            return msg
+          },
+          placeholder: 'Write a private message'
+        }
+      )
+      var { container, content } = api.build_scroller({ prepend: composer })
 
       // if local id is different from sbot id, sbot won't have indexes of
       // private threads
@@ -58,43 +72,25 @@ exports.create = function (api) {
       api.sbot_whoami(function (err, feed) {
         if (err) return console.error(err)
         if(id !== feed.id)
-          return div.appendChild(h('h4',
+          return container.appendChild(h('h4',
             'Private messages are not supported in the lite client.'))
-
-        var compose = api.message_compose(
-          {type: 'post', recps: [], private: true},
-          {
-            prepublish: function (msg) {
-              msg.recps = [id].concat(msg.mentions).filter(function (e) {
-                return ref.isFeed('string' === typeof e ? e : e.link)
-              })
-              if(!msg.recps.length)
-                throw new Error('cannot make private message without recipients - just mention the user in an at reply in the message you send')
-              return msg
-            },
-            placeholder: 'Write a private message'
-          }
-          )
-
-        var content = h('div.column.scroller__content')
-        div.appendChild(h('div.scroller__wrapper', compose, content))
 
         pull(
           u.next(api.sbot_log, {old: false, limit: 100}),
           unbox(),
-          Scroller(div, content, api.message_render, true, false)
+          Scroller(container, content, api.message_render, true, false)
         )
 
         pull(
           u.next(api.sbot_log, {reverse: true, limit: 1000}),
           unbox(),
-          Scroller(div, content, api.message_render, false, false, function (err) {
+          Scroller(container, content, api.message_render, false, false, function (err) {
             if(err) throw err
           })
         )
       })
 
-      return div
+      return container
     },
 
     message_meta: function (msg) {

@@ -4,6 +4,7 @@ var Scroller = require('pull-scroll')
 var mfr = require('map-filter-reduce')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   message_compose: 'first',
   sbot_log: 'first',
@@ -36,14 +37,8 @@ exports.create = function (api) {
       if(path[0] === '#') {
         var channel = path.substr(1)
 
-        var content = h('div.column.scroller__content')
-        var div = h('div.column.scroller',
-          {style: {'overflow':'auto'}},
-          h('div.scroller__wrapper',
-            api.message_compose({type: 'post', channel: channel}),
-            content
-          )
-        )
+        var composer = api.message_compose({type: 'post', channel: channel})
+        var { container, content } = api.build_scroller({ prepend: composer })
 
         function matchesChannel(msg) {
           if (msg.sync) console.error('SYNC', msg)
@@ -54,17 +49,17 @@ exports.create = function (api) {
         pull(
           api.sbot_log({old: false}),
           pull.filter(matchesChannel),
-          Scroller(div, content, api.message_render, true, false)
+          Scroller(container, content, api.message_render, true, false)
         )
 
         pull(
           api.sbot_query({reverse: true, query: [
             {$filter: {value: {content: {channel: channel}}}}
           ]}),
-          Scroller(div, content, api.message_render, false, false)
+          Scroller(container, content, api.message_render, false, false)
         )
 
-        return div
+        return container
       }
     },
 

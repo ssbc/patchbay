@@ -1,49 +1,50 @@
-var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-var Scroller = require('pull-scroll')
+const fs = require('fs')
+const h = require('hyperscript')
+const u = require('../util')
+const pull = require('pull-stream')
+const Scroller = require('pull-scroll')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   message_compose: 'first',
   sbot_log: 'first',
 }
 
 exports.gives = {
-  builtin_tabs: true, screen_view: true
+  builtin_tabs: true,
+  screen_view: true,
+  // mcss: true
 }
 
 exports.create = function (api) {
-
   return {
-    builtin_tabs: function () {
-      return ['/public']
-    },
+    builtin_tabs,
+    screen_view,
+    // mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
 
-    screen_view: function (path, sbot) {
-      if(path === '/public') {
+  function builtin_tabs () {
+    return ['/public']
+  }
 
-        var content = h('div.column.scroller__content')
-        var div = h('div.column.scroller',
-          {style: {'overflow':'auto'}},
-          h('div.scroller__wrapper',
-            api.message_compose({type: 'post'}, {placeholder: 'Write a public message'}),
-            content
-          )
-        )
+  function screen_view (path, sbot) {
+    if(path !== '/public') return 
 
-        pull(
-          u.next(api.sbot_log, {old: false, limit: 100}),
-          Scroller(div, content, api.message_render, true, false)
-        )
+    const composer = api.message_compose({type: 'post'}, {placeholder: 'Write a public message'})
+    var { container, content } = api.build_scroller({ prepend: composer })
 
-        pull(
-          u.next(api.sbot_log, {reverse: true, limit: 100, live: false}),
-          Scroller(div, content, api.message_render, false, false)
-        )
+    pull(
+      u.next(api.sbot_log, {old: false, limit: 100}),
+      Scroller(container, content, api.message_render, true, false)
+    )
 
-        return div
-      }
-    }
+    pull(
+      u.next(api.sbot_log, {reverse: true, limit: 100, live: false}),
+      Scroller(container, content, api.message_render, false, false)
+    )
+
+    return container
   }
 }
+
