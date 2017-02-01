@@ -61,11 +61,12 @@ exports.create = function (api) {
     })
 
     lb.show(h('MessageConfirm', [
-        h('header -preview_description', h('h1', 'Preview')),
-        h('section -message_preview', api.message_render(msg)),
-        h('section -actions', [cancel, okay])
-      ]
-    ))
+      h('header -preview_description', [
+        h('h1', 'Preview')
+      ]),
+      h('section -message_preview', api.message_render(msg)),
+      h('section -actions', [cancel, okay])
+    ]))
 
     okay.focus()
   }

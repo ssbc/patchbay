@@ -112,7 +112,7 @@ ProfileEdit {
     section.names {
       header {
       }
-      
+
       section {
         display: flex
         flex-wrap: wrap
@@ -155,6 +155,27 @@ ProfileEdit {
         $backgroundPrimary
         border: none
       }
+    }
+  }
+}
+
+AvatarEditor {
+  header {
+    font-weight: 600
+    margin-bottom: .5rem
+  }
+
+  section.actions {
+    display: flex
+    justify-content: flex-end
+
+    button.cancel {
+
+    }
+
+    button.okay {
+      margin-right: 0
+
     }
   }
 }

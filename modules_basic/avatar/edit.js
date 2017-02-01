@@ -18,12 +18,13 @@ const self_id = require('../../keys').id
 function crop (d, cb) {
   var canvas = hypercrop(h('img', {src: d}))
 
-  return h('div.column.avatar_pic', [
+  return h('AvatarEditor', [
+    h('header', 'Click and drag to crop your avatar.'),
     canvas,
     //canvas.selection,
-    h('div.row.avatar_pic__controls', [
-      h('button', {'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay'),
-      h('button', {'ev-click': () => cb(new Error('canceled')) }, 'cancel')
+    h('section.actions', [
+      h('button.cancel', {'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
+      h('button.okay', {'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
     ])
   ])
 }
@@ -89,7 +90,7 @@ exports.create = function (api) {
     var names = dictToCollection(namesRecord)
 
     var lb = hyperlightbox()
-  
+
     // TODO load this in, make this editable
     var description = ''
 
