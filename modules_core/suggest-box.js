@@ -13,7 +13,7 @@ exports.gives = {
 exports.create = function (api) {
   return {
     build_suggest_box,
-    css: () => fs.readFileSync(__filename.replace(/js$/, 'css'), 'utf8') //NOTE css
+    css: () => fs.readFileSync(__filename.replace(/js$/, 'css'), 'utf8') // NOTE css
   }
 
   function build_suggest_box (inputNode, asyncSuggesters, opts = {}) {
@@ -31,7 +31,7 @@ exports.create = function (api) {
     }
 
     return suggest(inputNode, suggester, opts)
-    // NOTE if ^ is suggestBox, suggestbox.el = inputNode
+    // NOTE this returns a suggestBox and suggestbox.el = inputNode if you need it
   }
 }
 

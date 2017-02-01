@@ -79,11 +79,6 @@ exports.create = function (api) {
     avatar_image_src: function (author) {
       var src = ready && avatars[author] ? api.blob_url(avatars[author].image) : genSrc(author)
 
-      if(!ready)
-        waiting.push(() => {
-          if(avatars[author]) src = api.blob_url(avatars[author].image)
-        })
-
       return src
 
       function genSrc (id) {
