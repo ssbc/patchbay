@@ -21,6 +21,7 @@ exports.create = function (api) {
   }
 
   function avatar (author, classes) {
+    // ??? BUG
     return exports.avatar_image_name_link(author, classes)
   }
 
