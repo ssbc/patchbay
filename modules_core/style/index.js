@@ -1,5 +1,6 @@
 module.exports = {
-  'styles': require('./styles'),
-  'mixins': require('./mixins')
+  'hypertabs': require('./hypertabs'),
+  'mixins':    require('./mixins'),
+  'styles':    require('./styles')
 }
 

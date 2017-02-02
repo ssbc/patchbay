@@ -1,5 +1,5 @@
 var Tabs = require('hypertabs')
-var h = require('hyperscript')
+var h = require('../h')
 var keyscroll = require('../keyscroll')
 var open = require('open-external')
 
@@ -55,10 +55,9 @@ exports.create = function (api) {
     })
 
     //reposition hypertabs menu to inside a container...
-    tabs.insertBefore(h('div.header.row',
-        h('div.header__tabs.row', tabs.firstChild), //tabs
-        h('div.header__search.row.end', [search, api.menu()])
-    ), tabs.firstChild)
+    tabs.firstChild.appendChild(
+      h('div.search', [search, api.menu()])
+    )
   //  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 
     var saved = []

@@ -1,0 +1,55 @@
+Hypertabs {
+  display: flex
+  flex-direction: column
+
+  position: absolute
+  top: 0; bottom: 0
+  left: 0; right: 0
+  overflow-y: hidden
+
+  nav {
+    display: flex
+
+    section.tabs {
+      flex-grow: 1
+      display: flex
+
+
+      div.tab {
+        flex-grow: 1
+
+        display: flex
+        padding: 5px
+        border: 1px gainsboro solid
+
+        -selected {
+          background-color: cyan;
+        }
+
+        -notify {
+          background-color: orange;
+        }
+
+        a.link {
+          flex-grow: 1
+        }
+
+        a.close {
+        }
+      }
+
+    }
+  }
+
+  section.content {
+    display: flex
+
+    div.page {
+      flex-grow: 1
+
+      padding: 1rem
+      border: 1px gainsboro solid
+    }
+  }
+}
+
