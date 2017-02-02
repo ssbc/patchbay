@@ -21,29 +21,28 @@ exports.create = function (api) {
   }
   
   function search_box (go) {
-    var search = h('Search', [
-      h('input', {
-        type: 'search',
-        placeholder: 'Commands',
-        'ev-click': ev => {
-          switch (ev.keyCode) {
-            case 13: // enter
-              ev.stopPropagation()
-              suggestBox.complete()
+    const input = h('input', {
+      type: 'search',
+      placeholder: 'Commands',
+      'ev-keyup': ev => {
+        switch (ev.keyCode) {
+          case 13: // enter
+            console.log(ev)
+            ev.stopPropagation()
+            suggestBox.complete()
 
-              if (go(search.value.trim(), !ev.ctrlKey))
-                search.blur()
-              return
-            case 27: // escape
-              ev.preventDefault()
-              search.blur()
-              return
-          }
+            if (go(input.value.trim(), !ev.ctrlKey))
+              input.blur()
+            return
+          case 27: // escape
+            ev.preventDefault()
+            input.blur()
+            return
         }
-      })
-    ])
+      }
+    })
+    const search = h('Search', input)
 
-    const input = search.firstChild
     search.activate = (sigil, ev) => {
       input.focus()
       ev.preventDefault()
@@ -55,7 +54,7 @@ exports.create = function (api) {
       }
     }
 
-    var suggestBox = api.build_suggest_box(input, api.suggest_search)
+    const suggestBox = api.build_suggest_box(input, api.suggest_search)
 
     return search
   }
