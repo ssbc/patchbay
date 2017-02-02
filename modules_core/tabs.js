@@ -56,7 +56,7 @@ exports.create = function (api) {
 
     // TODO add a Tabs(setSelected, { append: el }) to hypertabs
     tabs.firstChild.appendChild(
-      h('div.search', [
+      h('div.extra', [
         search,
         api.menu()
       ])

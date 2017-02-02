@@ -2,32 +2,55 @@ Hypertabs {
   display: flex
   flex-direction: column
 
-  position: absolute
-  top: 0; bottom: 0
-  left: 0; right: 0
-  overflow-y: hidden
+  height: 100% /* needed to stop scroller blowing out */
 
   nav {
     display: flex
+    
+    background: linear-gradient(to bottom, #efefef, #e5e5e5)
 
     section.tabs {
       flex-grow: 1
       display: flex
 
-
       div.tab {
         flex-grow: 1
 
         display: flex
-        padding: 5px
+        align-items: center
+
+        font-size: .9rem
+        background-color: #efefef
+        overflow-x: hidden
+
+        padding: 0 .4rem
+        margin-left: .6rem
         border: 1px gainsboro solid
+        border-bottom: none
 
         -selected {
-          background-color: cyan;
+          color: #222
+          background-color: #fff
+          /* border: 1px #bababa solid */
+          border-bottom: none
+
+          a.close {
+            visibility: visible
+          }
         }
 
         -notify {
           background-color: orange;
+        }
+
+
+        a {
+          color: #666
+
+          :hover {
+            color: #0088cc
+            text-decoration: none
+          }
         }
 
         a.link {
@@ -35,20 +58,29 @@ Hypertabs {
         }
 
         a.close {
+          visibility: hidden
         }
       }
 
+    }
+
+    div.extra {
+      display: flex
+      align-items: center
     }
   }
 
   section.content {
     display: flex
 
+    height: 100% /* needed to stop scroller blowing out */
+
     div.page {
       flex-grow: 1
 
-      padding: 1rem
-      border: 1px gainsboro solid
+      display: flex /* hack to get give Scroller context it's needed */
+
+      padding-top: .2rem
     }
   }
 }
