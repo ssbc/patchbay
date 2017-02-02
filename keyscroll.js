@@ -25,8 +25,9 @@ module.exports = function (container) {
 
   return function scroll(d) {
     selectChild(!curMsgEl ? container.firstChild
-      : d > 0 ? curMsgEl.nextElementSibling || container.lastChild
+      : d === 'first' ? container.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || container.firstChild
+      : d > 0 ? curMsgEl.nextElementSibling || container.lastChild
       : curMsgEl)
   }
 }

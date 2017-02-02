@@ -110,11 +110,22 @@ exports.create = function (api) {
       return false
     }
 
+    var gPressed = false
     window.addEventListener('keydown', function (ev) {
       if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA')
         return
-      switch(ev.keyCode) {
 
+      // scroll to top
+      if (ev.keyCode == 71) { // g
+        if (!gPressed) return gPressed = true
+
+        var el = tabs.get(tabs.selected[0]).firstChild.scroll('first')
+        gPressed = false
+      } else {
+        gPressed = false
+      }
+
+      switch(ev.keyCode) {
         // scroll through tabs
         case 72: // h
           return tabs.selectRelative(-1)
@@ -123,9 +134,9 @@ exports.create = function (api) {
 
         // scroll through messages
         case 74: // j
-          return tabs.get(tabs.selected[0]).scroll(1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(1)
         case 75: // k
-          return tabs.get(tabs.selected[0]).scroll(-1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
 
         // close a tab
         case 88: // x
