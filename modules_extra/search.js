@@ -62,6 +62,7 @@ exports.create = function (api) {
 
       var header = h('div.search_header', '')
       var { container, content } = api.build_scroller({ prepend: header})
+      container.id = path // helps tabs find this tab
 
       function matchesQuery (data) {
         total++

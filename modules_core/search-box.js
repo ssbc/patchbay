@@ -27,7 +27,6 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            console.log(ev)
             ev.stopPropagation()
             suggestBox.complete()
 
@@ -43,6 +42,7 @@ exports.create = function (api) {
     })
     const search = h('Search', input)
 
+    search.input = input
     search.activate = (sigil, ev) => {
       input.focus()
       ev.preventDefault()

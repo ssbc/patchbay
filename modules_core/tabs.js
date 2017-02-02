@@ -24,37 +24,32 @@ exports.create = function (api) {
     if(path !== 'tabs') return
 
     function setSelected (indexes) {
-      var ids = indexes.map(function (index) {
-        return tabs.get(index).id
-      })
+      const ids = indexes.map(index => tabs.get(index).content.id)
       if(search)
         if(ids.length > 1)
-          search.value = 'split('+ids.join(',')+')'
+          search.input.value = 'split('+ids.join(',')+')'
         else
-          search.value = ids[0]
+          search.input.value = ids[0]
     }
 
-    var search
-    var tabs = Tabs(setSelected)
-
-    search = api.search_box(function (path, change) {
-
+    const tabs = Tabs(setSelected)
+    const search = api.search_box((path, change) => {
       if(tabs.has(path)) {
         tabs.select(path)
         return true
       }
-      var el = api.screen_view(path)
 
-      if(el) {
-        if(!el.title) el.title = path
-        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
-        tabs.add(el, change)
-  //      localStorage.openTabs = JSON.stringify(tabs.tabs)
-        return change
-      }
+      const el = api.screen_view(path)
+      if (!el) return
+
+      if(!el.title) el.title = path
+      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      tabs.add(el, change)
+//      localStorage.openTabs = JSON.stringify(tabs.tabs)
+      return change
     })
 
-    // TODO add a Tabs(setSelected, { append: el }) to hypertabs
+    // TODO add options to Tabs : e.g. Tabs(setSelected, { append: el })
     tabs.firstChild.appendChild(
       h('div.extra', [
         search,
@@ -79,6 +74,7 @@ exports.create = function (api) {
     })
 
     tabs.select(0)
+    search.input.value = null // start with an empty field to show placeholder
 
     //handle link clicks
     window.onclick = function (ev) {
