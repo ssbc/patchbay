@@ -54,11 +54,13 @@ exports.create = function (api) {
       }
     })
 
-    //reposition hypertabs menu to inside a container...
+    // TODO add a Tabs(setSelected, { append: el }) to hypertabs
     tabs.firstChild.appendChild(
-      h('div.search', [search, api.menu()])
+      h('div.search', [
+        search,
+        api.menu()
+      ])
     )
-  //  tabs.insertBefore(search, tabs.firstChild.nextSibling)
 
     var saved = []
   //  try { saved = JSON.parse(localStorage.openTabs) }

@@ -29,13 +29,6 @@ a:focus {
   text-decoration: underline;
 }
 
-.screen {
-  position: absolute;
-  top: 0; bottom: 0;
-  left: 0; right: 0;
-  overflow-y: hidden;
-}
-
 .column {
   display: flex;
   flex-direction: column;
@@ -288,10 +281,6 @@ highlight {
   margin: .7em;
   border-radius: 100%;
   background: #08c;
-}
-
-.error {
-  background: red;
 }
 
 /* tabs */
