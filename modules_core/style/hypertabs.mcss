@@ -18,6 +18,7 @@ Hypertabs {
 
         display: flex
         align-items: center
+        justify-content: space-between
 
         font-size: .9rem
         background-color: #efefef
@@ -55,6 +56,11 @@ Hypertabs {
 
         a.link {
           flex-grow: 1
+          flex-shrink: 0
+          overflow-x: hidden
+          max-width: 220px
+          white-space: nowrap
+          text-overflow: ellipsis
         }
 
         a.close {
