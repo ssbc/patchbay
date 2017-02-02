@@ -43,18 +43,19 @@ exports.create = function (api) {
       })
     ])
 
+    const input = search.firstChild
     search.activate = (sigil, ev) => {
-      search.focus()
+      input.focus()
       ev.preventDefault()
-      if (search.value[0] === sigil) {
-        search.selectionStart = 1
-        search.selectionEnd = search.value.length
+      if (input.value[0] === sigil) {
+        input.selectionStart = 1
+        input.selectionEnd = input.value.length
       } else {
-        search.value = sigil
+        input.value = sigil
       }
     }
 
-    var suggestBox = api.build_suggest_box(search, api.suggest_search)
+    var suggestBox = api.build_suggest_box(input, api.suggest_search)
 
     return search
   }
