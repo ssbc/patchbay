@@ -4,6 +4,9 @@ MessageConfirm {
     }
 
     -message_preview {
+      max-height: 70vh
+      overflow-y: scroll
+
       background-color: white
 
       div {
