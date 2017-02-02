@@ -118,7 +118,6 @@ exports.create = function (api) {
       // scroll to top
       if (ev.keyCode == 71) { // g
         if (!gPressed) return gPressed = true
-
         var el = tabs.get(tabs.selected[0]).firstChild.scroll('first')
         gPressed = false
       } else {

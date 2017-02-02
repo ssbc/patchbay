@@ -40,16 +40,18 @@ exports.create = function (api) {
 }
 
 function displayError (e) {
-  document.body.appendChild(
-    h('Error', [
-      h('h1', e.message),
-      h('big', [
-        h('code', e.filename + ':' + e.lineno)
-      ]),
-      h('pre', e.error
-        ? (e.error.stack || e.error.toString())
-        : e.toString()
-      )
+  document.body.querySelector('.\\.content').appendChild(
+    h('div.page', [
+      h('Error', { title: e.message }, [
+        h('h1', e.message),
+        h('big', [
+          h('code', e.filename + ':' + e.lineno)
+        ]),
+        h('pre', e.error
+          ? (e.error.stack || e.error.toString())
+          : e.toString()
+        )
+      ])
     ])
   )
 }
