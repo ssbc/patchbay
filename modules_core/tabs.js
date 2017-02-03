@@ -1,7 +1,8 @@
-var Tabs = require('hypertabs')
-var h = require('hyperscript')
-var keyscroll = require('../keyscroll')
-var open = require('open-external')
+const Tabs = require('hypertabs')
+const h = require('hyperscript')
+const keyscroll = require('../keyscroll')
+const open = require('open-external')
+const { webFrame, remote } = require('electron')
 
 function ancestor (el) {
   if(!el) return
@@ -177,13 +178,14 @@ exports.create = function (api) {
     }
 
     // put errors in a tab
-    window.addEventListener('error', function (ev) {
-      var err = ev.error || ev
+    window.addEventListener('error', ev => {
+      const err = ev.error || ev
       if(!tabs.has('errors'))
         tabs.add(errors, false)
-      var el = h('div.message',
+      const el = h('div.message', [
         h('strong', err.message),
-        h('pre', err.stack))
+        h('pre', err.stack)
+      ])
       if (errorsContent.firstChild)
         errorsContent.insertBefore(el, errorsContent.firstChild)
       else
@@ -191,26 +193,24 @@ exports.create = function (api) {
     })
 
     if (process.versions.electron) {
-      var {webFrame} = require('electron')
       
-      window.addEventListener('mousewheel', function (ev) {
-        var {ctrlKey, deltaY} = ev
-        if(ctrlKey){
-          var direction = (deltaY / Math.abs(deltaY))
-          var currentZoom = webFrame.getZoomLevel()
+      window.addEventListener('mousewheel', ev => {
+        const { ctrlKey, deltaY } = ev
+        if (ctrlKey) {
+          const direction = (deltaY / Math.abs(deltaY))
+          const currentZoom = webFrame.getZoomLevel()
           webFrame.setZoomLevel(currentZoom - direction)
         }
       })
 
-      window.addEventListener('contextmenu', function (ev) {
+      window.addEventListener('contextmenu', ev => {
         ev.preventDefault()
-        var remote = require('electron').remote
-        var Menu = remote.Menu
-        var MenuItem = remote.MenuItem
-        var menu = new Menu()
+        const Menu = remote.Menu
+        const MenuItem = remote.MenuItem
+        const menu = new Menu()
         menu.append(new MenuItem({
           label: 'Inspect Element',
-          click: function () {
+          click: () => {
             remote.getCurrentWindow().inspectElement(ev.x, ev.y)
           }
         }))
