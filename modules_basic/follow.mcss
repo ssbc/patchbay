@@ -1,0 +1,11 @@
+Follow {
+  button {
+    width: 6rem
+    margin: 0 .5rem 0 0 
+  }
+
+  label {
+    $textSubtle
+  }
+}
+

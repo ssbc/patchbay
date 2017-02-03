@@ -1,5 +1,5 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 
 exports.needs = {
   avatar_name: 'first',
@@ -48,8 +48,8 @@ exports.create = function (api) {
     return msgEl
 
     function navigateToMessageOnEnter (ev) {
-      // on enter, hit first meta.
-      if(ev.keyCode == 13) {
+      // on enter (or 'o'), hit first meta.
+      if(ev.keyCode == 13 || ev.keyCode == 79) {
 
         // unless in an input
         if (ev.target.nodeName === 'INPUT'

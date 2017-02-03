@@ -5,6 +5,7 @@ var Scroller = require('pull-scroll')
 var TextNodeSearcher = require('text-node-searcher')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   sbot_log: 'first'
 }
@@ -60,14 +61,8 @@ exports.create = function (api) {
       var total = 0, matches = 0
 
       var header = h('div.search_header', '')
-      var content = h('div.column.scroller__content')
-      var div = h('div.column.scroller',
-        {style: {'overflow':'auto'}},
-        h('div.scroller__wrapper',
-          header,
-          content
-        )
-      )
+      var { container, content } = api.build_scroller({ prepend: header})
+      container.id = path // helps tabs find this tab
 
       function matchesQuery (data) {
         total++
@@ -76,8 +71,6 @@ exports.create = function (api) {
         header.textContent = 'searched:'+total+', found:'+matches
         return m
       }
-
-
 
       function renderMsg(msg) {
         var el = api.message_render(msg)
@@ -88,16 +81,16 @@ exports.create = function (api) {
       pull(
         api.sbot_log({old: false}),
         pull.filter(matchesQuery),
-        Scroller(div, content, renderMsg, true, false)
+        Scroller(container, content, renderMsg, true, false)
       )
 
       pull(
         u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
         pull.filter(matchesQuery),
-        Scroller(div, content, renderMsg, false, false)
+        Scroller(container, content, renderMsg, false, false)
       )
 
-      return div
+      return container
     }
   }
 

@@ -1,7 +1,8 @@
 var h = require('hyperscript')
 
 exports.gives = {
-  menu_items: true, screen_view: true
+  menu_items: true,
+  screen_view: true
 }
 
 exports.create = function (api) {

@@ -1,6 +1,8 @@
 var h = require('hyperscript')
 
-exports.needs = {signifier: 'first'}
+exports.needs = {
+  signifier: 'first'
+}
 
 exports.gives = 'avatar_link'
 

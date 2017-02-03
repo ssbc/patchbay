@@ -1,43 +1,50 @@
-var lightbox = require('hyperlightbox')
-var h = require('hyperscript')
-var open = require('open-external')
+const lightbox = require('hyperlightbox')
+const fs = require('fs')
+const h = require('../h')
+const open = require('open-external')
 
-exports.gives = 'external_confirm'
+exports.gives = {
+  external_confirm: true,
+  mcss:true
+}
 
 exports.create = function (api) {
-  return function (href) {
+  return {
+    external_confirm,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
+
+  function external_confirm (href) {
     var lb = lightbox()
     document.body.appendChild(lb)
 
-    var okay = h('button', 'open', {onclick: function () {
-      lb.remove()
-      open(href)
-    }})
+    var okay = h('button.okay', {
+      'ev-click': () => {
+        lb.remove()
+        open(href)
+      }},
+      'open'
+    )
 
-    var cancel = h('button', 'Cancel', {onclick: function () {
-      lb.remove()
-    }})
+    var cancel = h('button.cancel', {
+      'ev-click': () => {
+        lb.remove()
+      }},
+      'cancel'
+    )
 
     okay.addEventListener('keydown', function (ev) {
       if (ev.keyCode === 27) cancel.click() // escape
     })
 
-    lb.show(h('div.column',
-      h('div', [
-        h('div.title.row', [
-          h('strong.row', [
-            'Do you want to open this external link in your default browser:'
-          ])
-        ]),
-        h('div', [
-          h('pre', href)
-        ])
+    lb.show(h('ExternalConfirm', [
+      h('header', 'External link'),
+      h('section.prompt', [
+        h('div.question', 'Open this link in your external browser?'),
+        h('pre.link', href)
       ]),
-      h('div.row', [
-        okay, 
-        cancel
-      ])
-    ))
+      h('section.actions', [cancel, okay])
+    ]))
 
     okay.focus()
   }

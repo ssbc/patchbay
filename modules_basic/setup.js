@@ -1,4 +1,3 @@
-
 var h = require('hyperscript')
 var pull = require('pull-stream')
 
@@ -9,6 +8,13 @@ exports.needs = {
   invite_accept: 'first',
   sbot_progress: 'first',
   sbot_query: 'first'
+}
+
+exports.gives = {
+  setup_is_fresh_install: true,
+  progress_bar: true,
+  setup_joined_network: true,
+  screen_view: true
 }
 
 //maybe this could show the pubs, or
@@ -29,11 +35,15 @@ function followers_query (id) {
 }
 
 exports.create = function (api) {
-
-  var exports = {}
+  return {
+    setup_is_fresh_install,
+    progress_bar,
+    setup_joined_network,
+    screen_view
+  }
 
   //test whether we are connected to the ssb network.
-  exports.setup_is_fresh_install = function (cb) {
+  function setup_is_fresh_install (cb) {
     //test by checking whether you have any friends following you?
     pull(
       api.sbot_query({query: followers_query(id), limit: 1, live: false}),
@@ -79,7 +89,7 @@ exports.create = function (api) {
     return h('div.invite-form.row', input, accept)
   }
 
-  exports.progress_bar = function () {
+  function progress_bar () {
     var liquid = h('div.hyperprogress__liquid', '.')
     var bar = h('div.hyperprogress__bar', liquid)
     liquid.style.width = '0%'
@@ -100,7 +110,7 @@ exports.create = function (api) {
   //when you join the network, I want this to show as people follow you.
   //that could be when a pub accepts the invite, or when a local peer accepts.
 
-  exports.setup_joined_network = function (id) {
+  function setup_joined_network (id) {
     var followers = h('div.column')
     var label = h('label', 'not connected to a network')
     var joined = h('div.setup__joined', label, followers)
@@ -119,30 +129,31 @@ exports.create = function (api) {
     return joined
   }
 
-  exports.screen_view = function (path) {
+  function screen_view (path) {
     if(path !== '/setup') return
 
-    var id = require('../keys').id
+    var { id } = require('../keys')
 
     //set up an avatar
 
     var status = h('span')
-    return h('div.scroller', h('div.scroller__wrapper',
-      h('h1', 'welcome to patchbay!'),
-      h('div',
-        'please choose avatar image and name',
-        api.avatar_edit(id)
-      ),
-      h('h2', 'join network'),
-      invite_form(),
-      //show avatars of anyone on the same local network.
-      //show realtime changes in your followers, especially for local.
+    var invite = h('input', {placeholder: 'invite code'})
+    return h('div.scroller', [
+      h('div.scroller__wrapper', [
+        h('h1', 'welcome to patchbay!'),
+        h('div',
+          'please choose avatar image and name',
+          api.avatar_edit(id)
+        ),
+        h('h2', 'join network'),
+        invite_form(),
+        //show avatars of anyone on the same local network.
+        //show realtime changes in your followers, especially for local.
 
-      exports.progress_bar(),
-      exports.setup_joined_network(require('../keys').id)
-    ))
+        progress_bar(),
+        setup_joined_network(id)
+      ])
+    ])
   }
-
-  return exports
-
 }
+

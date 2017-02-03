@@ -4,7 +4,7 @@ var visualize = require('visualize-buffer')
 
 var pull = require('pull-stream')
 
-var self_id = require('../keys').id
+var self_id = require('../../keys').id
 
 exports.needs = {
   sbot_query: 'first',
@@ -12,7 +12,9 @@ exports.needs = {
 }
 
 exports.gives = {
-  connection_status: true, avatar_image: true
+  connection_status: true, 
+  avatar_image_src: true,
+  avatar_image: true
 }
 
 var ready = false
@@ -72,6 +74,19 @@ exports.create = function (api) {
 
         })
       )
+    },
+
+    avatar_image_src: function (author) {
+      return ready && avatars[author]
+        ? api.blob_url(avatars[author].image)
+        : genSrc(author)
+
+      function genSrc (id) {
+        if(cache[id]) return cache[id]
+        var { src } = visualize(new Buffer(author.substring(1), 'base64'), 256)
+        cache[id] = src
+        return src
+      }
     },
 
     avatar_image: function (author, classes) {

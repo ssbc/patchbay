@@ -1,15 +1,16 @@
 module.exports = {
-//  "_screen_view.js":  require('./_screen_view.js'),
-  "app.js":  require('./app.js'),
-  "blob-url.js":  require('./blob-url.js'),
-  "crypto.js":  require('./crypto.js'),
-  "external-confirm.js": require('./external-confirm.js'),
-  "file-input.js":  require('./file-input.js'),
-  "menu.js":  require('./menu.js'),
-  "message-confirm.js":  require('./message-confirm.js'),
-  "tabs.js":  require('./tabs.js'),
-  "sbot.js": require('./sbot.js'),
-  "styles.js": require('./styles.js'),
-  "style-mixins.js": require('./style-mixins.js')
+  'app':              require('./app'),
+  'blob-url':         require('./blob-url'),
+  'crypto':           require('./crypto'),
+  'external-confirm': require('./external-confirm'),
+  'file-input':       require('./file-input'),
+  'menu':             require('./menu'),
+  'names':            require('./names'),
+  'tabs':             require('./tabs'),
+  'sbot':             require('./sbot'),
+  'search-box':       require('./search-box'),
+  'style':            require('./style'),
+  'suggest-box':      require('./suggest-box'),
+  'suggest-mentions': require('./suggest-mentions')
 }
 

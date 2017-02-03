@@ -1,7 +1,8 @@
-var Tabs = require('hypertabs')
-var h = require('hyperscript')
-var keyscroll = require('../keyscroll')
-var open = require('open-external')
+const Tabs = require('hypertabs')
+const h = require('../h')
+const keyscroll = require('../keyscroll')
+const open = require('open-external')
+const { webFrame, remote } = require('electron')
 
 function ancestor (el) {
   if(!el) return
@@ -9,52 +10,53 @@ function ancestor (el) {
   return el
 }
 
-exports.needs = {screen_view: 'first', search_box: 'first', menu: 'first', 'external_confirm':'first'}
+exports.needs = {
+  build_scroller: 'first',
+  screen_view: 'first',
+  search_box: 'first',
+  menu: 'first',
+  external_confirm:'first'
+}
 
 exports.gives = 'screen_view'
 
 exports.create = function (api) {
   return function (path) {
-    if(path !== 'tabs')
-      return
+    if(path !== 'tabs') return
 
     function setSelected (indexes) {
-      var ids = indexes.map(function (index) {
-        return tabs.get(index).id
-      })
+      const ids = indexes.map(index => tabs.get(index).content.id)
       if(search)
         if(ids.length > 1)
-          search.value = 'split('+ids.join(',')+')'
+          search.input.value = 'split('+ids.join(',')+')'
         else
-          search.value = ids[0]
+          search.input.value = ids[0]
     }
 
-    var search
-    var tabs = Tabs(setSelected)
-
-    search = api.search_box(function (path, change) {
-
+    const tabs = Tabs(setSelected)
+    const search = api.search_box((path, change) => {
       if(tabs.has(path)) {
         tabs.select(path)
         return true
       }
-      var el = api.screen_view(path)
 
-      if(el) {
-        if(!el.title) el.title = path
-        el.scroll = keyscroll(el.querySelector('.scroller__content'))
-        tabs.add(el, change)
-  //      localStorage.openTabs = JSON.stringify(tabs.tabs)
-        return change
-      }
+      const el = api.screen_view(path)
+      if (!el) return
+
+      if(!el.title) el.title = path
+      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      tabs.add(el, change)
+//      localStorage.openTabs = JSON.stringify(tabs.tabs)
+      return change
     })
 
-    //reposition hypertabs menu to inside a container...
-    tabs.insertBefore(h('div.header.row',
-        h('div.header__tabs.row', tabs.firstChild), //tabs
-        h('div.header__search.row.end', h('div', search), api.menu())
-    ), tabs.firstChild)
-  //  tabs.insertBefore(search, tabs.firstChild.nextSibling)
+    // TODO add options to Tabs : e.g. Tabs(setSelected, { append: el })
+    tabs.firstChild.appendChild(
+      h('div.extra', [
+        search,
+        api.menu()
+      ])
+    )
 
     var saved = []
   //  try { saved = JSON.parse(localStorage.openTabs) }
@@ -68,11 +70,12 @@ exports.create = function (api) {
       if(!el) return
       el.id = el.id || path
       if (!el) return
-      el.scroll = keyscroll(el.querySelector('.scroller__content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
       if(el) tabs.add(el, false, false)
     })
 
     tabs.select(0)
+    search.input.value = null // start with an empty field to show placeholder
 
     //handle link clicks
     window.onclick = function (ev) {
@@ -96,7 +99,7 @@ exports.create = function (api) {
       var el = api.screen_view(path)
       if(el) {
         el.id = el.id || path
-        el.scroll = keyscroll(el.querySelector('.scroller__content'))
+        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
         tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
   //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       }
@@ -104,11 +107,21 @@ exports.create = function (api) {
       return false
     }
 
+    var gPressed = false
     window.addEventListener('keydown', function (ev) {
       if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA')
         return
-      switch(ev.keyCode) {
 
+      // scroll to top
+      if (ev.keyCode == 71) { // g
+        if (!gPressed) return gPressed = true
+        var el = tabs.get(tabs.selected[0]).firstChild.scroll('first')
+        gPressed = false
+      } else {
+        gPressed = false
+      }
+
+      switch(ev.keyCode) {
         // scroll through tabs
         case 72: // h
           return tabs.selectRelative(-1)
@@ -117,9 +130,9 @@ exports.create = function (api) {
 
         // scroll through messages
         case 74: // j
-          return tabs.get(tabs.selected[0]).scroll(1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(1)
         case 75: // k
-          return tabs.get(tabs.selected[0]).scroll(-1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
 
         // close a tab
         case 88: // x
@@ -160,14 +173,10 @@ exports.create = function (api) {
     })
 
     // errors tab
-    var errorsContent = h('div.column.scroller__content')
-    var errors = h('div.column.scroller', {
-      id: 'errors',
-      style: {'overflow':'auto'}
-    }, h('div.scroller__wrapper',
-        errorsContent
-      )
-    )
+    var {
+      container: errors,
+      content: errorsContent 
+    } = api.build_scroller()
 
     // remove loader error handler
     if (window.onError) {
@@ -176,13 +185,14 @@ exports.create = function (api) {
     }
 
     // put errors in a tab
-    window.addEventListener('error', function (ev) {
-      var err = ev.error || ev
+    window.addEventListener('error', ev => {
+      const err = ev.error || ev
       if(!tabs.has('errors'))
         tabs.add(errors, false)
-      var el = h('div.message',
+      const el = h('div.message', [
         h('strong', err.message),
-        h('pre', err.stack))
+        h('pre', err.stack)
+      ])
       if (errorsContent.firstChild)
         errorsContent.insertBefore(el, errorsContent.firstChild)
       else
@@ -190,15 +200,24 @@ exports.create = function (api) {
     })
 
     if (process.versions.electron) {
-      window.addEventListener('contextmenu', function (ev) {
+      
+      window.addEventListener('mousewheel', ev => {
+        const { ctrlKey, deltaY } = ev
+        if (ctrlKey) {
+          const direction = (deltaY / Math.abs(deltaY))
+          const currentZoom = webFrame.getZoomLevel()
+          webFrame.setZoomLevel(currentZoom - direction)
+        }
+      })
+
+      window.addEventListener('contextmenu', ev => {
         ev.preventDefault()
-        var remote = require('electron').remote
-        var Menu = remote.Menu
-        var MenuItem = remote.MenuItem
-        var menu = new Menu()
+        const Menu = remote.Menu
+        const MenuItem = remote.MenuItem
+        const menu = new Menu()
         menu.append(new MenuItem({
           label: 'Inspect Element',
-          click: function () {
+          click: () => {
             remote.getCurrentWindow().inspectElement(ev.x, ev.y)
           }
         }))

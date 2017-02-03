@@ -24,8 +24,8 @@ module.exports = function () {
     blobsUrl = 'http://localhost:8989/blobs/get'
 
   return {
-    remote: remote,
-    blobsUrl: blobsUrl
+    remote,
+    blobsUrl
   }
 }
 

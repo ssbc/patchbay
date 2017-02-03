@@ -1,12 +1,11 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
-const suggest = require('suggest-box')
 const mentions = require('ssb-mentions')
-const cont = require('cont')
 
 exports.needs = {
   suggest_mentions: 'map', //<-- THIS MUST BE REWRITTEN
+  build_suggest_box: 'first',
   publish: 'first',
   message_content: 'first',
   message_confirm: 'first',
@@ -126,6 +125,8 @@ exports.create = function (api) {
       fileInput, publishBtn
     ])
 
+    api.build_suggest_box(textArea, api.suggest_mentions)
+
     var composer = h('Compose', {
       className: opts.shrink === false ? '-expanded' : '-contracted'
     }, [
@@ -133,15 +134,6 @@ exports.create = function (api) {
       actions
     ])
 
-    suggest(textArea, (name, cb) => {
-      cont.para(api.suggest_mentions(name))
-        ((err, ary) => {
-          cb(null, ary.reduce((a, b) => {
-            if(!b) return a
-            return a.concat(b)
-          }, []))
-        })
-    }, {})
 
     return composer
   }

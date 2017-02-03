@@ -1,5 +1,5 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 
 exports.needs = {
   message_name: 'first'
