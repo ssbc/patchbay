@@ -16,7 +16,8 @@ exports.gives = {
   screen_view: true,
   connection_status: true,
   suggest_search: true,
-  suggest_mentions: true
+  suggest_mentions: true,
+  suggest_channel: true
 }
 
 exports.create = function (api) {
@@ -35,7 +36,8 @@ exports.create = function (api) {
     screen_view,
     connection_status,
     suggest_search,
-    suggest_mentions
+    suggest_mentions,
+    suggest_channel
   }
 
   function message_meta (msg) {
@@ -136,5 +138,22 @@ exports.create = function (api) {
       }))
     }
   }
-}
 
+  function suggest_channel (query) {
+    return function (cb) {
+      if (!/^#\w/.test(query)) return cb()
+
+      cb(null, channels.filter(function (chan) {
+        return (`#${chan.name}`).substring(0, query.length) === query
+      })
+      .map(function (chan) {
+        var name = `#${chan.name}`
+        return {
+          title: name,
+          subtitle: `(${chan.rank})`,
+          value: name.substr(1)
+        }
+      }))
+    }
+  }
+}
