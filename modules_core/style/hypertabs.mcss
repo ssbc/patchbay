@@ -12,6 +12,7 @@ Hypertabs {
     section.tabs {
       flex-grow: 1
       display: flex
+      min-width: 0
 
       div.tab {
         flex-grow: 1
@@ -58,7 +59,8 @@ Hypertabs {
           flex-grow: 1
           flex-shrink: 0
           overflow-x: hidden
-          max-width: 220px
+          min-width: 0
+          max-width: 90%
           white-space: nowrap
           text-overflow: ellipsis
         }
