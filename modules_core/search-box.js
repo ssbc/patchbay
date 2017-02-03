@@ -1,49 +1,60 @@
 'use strict'
-var h = require('hyperscript')
+const h = require('../h')
+const fs = require('fs')
+
 
 exports.needs = {
   suggest_search: 'map', //REWRITE
   build_suggest_box: 'first'
 }
 
-exports.gives  = 'search_box'
+exports.gives = {
+  search_box: true,
+  mcss: true
+}
 
 exports.create = function (api) {
 
-  return function (go) {
-
-    var search = h('input.searchprompt', {
+  return {
+    search_box,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
+  
+  function search_box (go) {
+    const input = h('input', {
       type: 'search',
       placeholder: 'Commands',
-      onkeydown: ev => {
+      'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
             ev.stopPropagation()
             suggestBox.complete()
 
-            if (go(search.value.trim(), !ev.ctrlKey))
-              search.blur()
+            if (go(input.value.trim(), !ev.ctrlKey))
+              input.blur()
             return
           case 27: // escape
             ev.preventDefault()
-            search.blur()
+            input.blur()
             return
         }
       }
     })
+    const search = h('Search', input)
 
+    search.input = input
     search.activate = (sigil, ev) => {
-      search.focus()
+      input.focus()
       ev.preventDefault()
-      if (search.value[0] === sigil) {
-        search.selectionStart = 1
-        search.selectionEnd = search.value.length
+      if (input.value[0] === sigil) {
+        input.selectionStart = 1
+        input.selectionEnd = input.value.length
       } else {
-        search.value = sigil
+        input.value = sigil
       }
     }
 
-    var suggestBox = api.build_suggest_box(search, api.suggest_search)
+    const suggestBox = api.build_suggest_box(input, api.suggest_search)
 
     return search
   }

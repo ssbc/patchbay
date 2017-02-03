@@ -1,5 +1,5 @@
 const Tabs = require('hypertabs')
-const h = require('hyperscript')
+const h = require('../h')
 const keyscroll = require('../keyscroll')
 const open = require('open-external')
 const { webFrame, remote } = require('electron')
@@ -25,42 +25,38 @@ exports.create = function (api) {
     if(path !== 'tabs') return
 
     function setSelected (indexes) {
-      var ids = indexes.map(function (index) {
-        return tabs.get(index).id
-      })
+      const ids = indexes.map(index => tabs.get(index).content.id)
       if(search)
         if(ids.length > 1)
-          search.value = 'split('+ids.join(',')+')'
+          search.input.value = 'split('+ids.join(',')+')'
         else
-          search.value = ids[0]
+          search.input.value = ids[0]
     }
 
-    var search
-    var tabs = Tabs(setSelected)
-
-    search = api.search_box(function (path, change) {
-
+    const tabs = Tabs(setSelected)
+    const search = api.search_box((path, change) => {
       if(tabs.has(path)) {
         tabs.select(path)
         return true
       }
-      var el = api.screen_view(path)
 
-      if(el) {
-        if(!el.title) el.title = path
-        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
-        tabs.add(el, change)
-  //      localStorage.openTabs = JSON.stringify(tabs.tabs)
-        return change
-      }
+      const el = api.screen_view(path)
+      if (!el) return
+
+      if(!el.title) el.title = path
+      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      tabs.add(el, change)
+//      localStorage.openTabs = JSON.stringify(tabs.tabs)
+      return change
     })
 
-    //reposition hypertabs menu to inside a container...
-    tabs.insertBefore(h('div.header.row',
-        h('div.header__tabs.row', tabs.firstChild), //tabs
-        h('div.header__search.row.end', [search, api.menu()])
-    ), tabs.firstChild)
-  //  tabs.insertBefore(search, tabs.firstChild.nextSibling)
+    // TODO add options to Tabs : e.g. Tabs(setSelected, { append: el })
+    tabs.firstChild.appendChild(
+      h('div.extra', [
+        search,
+        api.menu()
+      ])
+    )
 
     var saved = []
   //  try { saved = JSON.parse(localStorage.openTabs) }
@@ -79,6 +75,7 @@ exports.create = function (api) {
     })
 
     tabs.select(0)
+    search.input.value = null // start with an empty field to show placeholder
 
     //handle link clicks
     window.onclick = function (ev) {
@@ -110,11 +107,21 @@ exports.create = function (api) {
       return false
     }
 
+    var gPressed = false
     window.addEventListener('keydown', function (ev) {
       if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA')
         return
-      switch(ev.keyCode) {
 
+      // scroll to top
+      if (ev.keyCode == 71) { // g
+        if (!gPressed) return gPressed = true
+        var el = tabs.get(tabs.selected[0]).firstChild.scroll('first')
+        gPressed = false
+      } else {
+        gPressed = false
+      }
+
+      switch(ev.keyCode) {
         // scroll through tabs
         case 72: // h
           return tabs.selectRelative(-1)
@@ -123,9 +130,9 @@ exports.create = function (api) {
 
         // scroll through messages
         case 74: // j
-          return tabs.get(tabs.selected[0]).scroll(1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(1)
         case 75: // k
-          return tabs.get(tabs.selected[0]).scroll(-1)
+          return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
 
         // close a tab
         case 88: // x
