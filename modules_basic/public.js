@@ -37,7 +37,6 @@ exports.create = function (api) {
 
     pull(
       u.next(api.sbot_log, {old: false, limit: 100}),
-      // Scroller(container, content, api.message_render, true, false)
       ScrollNotify(container, Scroller(container, content, api.message_render, true, false))
     )
 

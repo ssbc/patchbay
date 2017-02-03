@@ -23,6 +23,7 @@ Hypertabs {
 
         font-size: .9rem
         background-color: #efefef
+        background: linear-gradient(to top, #cfcfcf, #f2f2f2 8%, #efefef 14%, #efefef)
         overflow-x: hidden
 
         padding: 0 .4rem
@@ -32,7 +33,7 @@ Hypertabs {
 
         -selected {
           color: #222
-          background-color: #fff
+          background: #fff
 
           a.close {
             visibility: visible
@@ -40,7 +41,9 @@ Hypertabs {
         }
 
         -notify {
-          background-color: orange;
+          a.link {
+            color: #0088cc
+          }
         }
 
 

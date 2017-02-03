@@ -48,19 +48,23 @@ exports.next = function (createStream, opts, property, range) {
 }
 
 
-exports.ScrollNotify = function (div, scroller) {
-  var cl = 'hypertabs--notify'
-  scroller.observ(function (len) {
-    if(div.classList.contains(cl) != (len != 0)) {
-      if(len) div.classList.add(cl)
-      else div.classList.remove(cl)
+exports.ScrollNotify = function (container, scroller) {
+  var cl = '-notify'
+  scroller.observ((len) => {
+    if(pageClassList().contains(cl) != (len != 0)) {
+      if(len) pageClassList().add(cl)
+      else pageClassList().remove(cl)
     }
   })
 
-  div.addEventListener('focus', function () {
-    live.visible()
-    div.classList.remove(cl)
+  container.addEventListener('focus', () => {
+    scroller.visible()
+    pageClassList().remove(cl)
   })
+
+  function pageClassList () {
+    return container.parentNode.classList
+  }
 
   return scroller
 }
