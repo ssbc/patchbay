@@ -191,6 +191,17 @@ exports.create = function (api) {
     })
 
     if (process.versions.electron) {
+      var {webFrame} = require('electron')
+      
+      window.addEventListener('mousewheel', function (ev) {
+        var {ctrlKey, deltaY} = ev
+        if(ctrlKey){
+          var direction = (deltaY / Math.abs(deltaY))
+          var currentZoom = webFrame.getZoomLevel()
+          webFrame.setZoomLevel(currentZoom - direction)
+        }
+      })
+
       window.addEventListener('contextmenu', function (ev) {
         ev.preventDefault()
         var remote = require('electron').remote
