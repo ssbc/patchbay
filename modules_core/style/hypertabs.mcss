@@ -33,8 +33,6 @@ Hypertabs {
         -selected {
           color: #222
           background-color: #fff
-          /* border: 1px #bababa solid */
-          border-bottom: none
 
           a.close {
             visibility: visible
@@ -81,12 +79,12 @@ Hypertabs {
   section.content {
     display: flex
 
-    height: 100% /* needed to stop scroller blowing out */
+    height: 100% /* needed to stop making nav weird */
 
     div.page {
       flex-grow: 1
 
-      display: flex /* hack to get give Scroller context it's needed */
+      display: flex /*hack to get give Scroller context it needs */
 
       padding-top: .2rem
     }
