@@ -28,6 +28,7 @@ exports.create = function (api) {
     api.signifier(id, function (_, names) {
       if(names.length) container.title = names[0].name
     })
+    container.id = id
 
     pull(
       api.sbot_user_feed({id: id, old: false, live: true}),

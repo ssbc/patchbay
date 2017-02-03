@@ -27,9 +27,6 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            ev.stopPropagation()
-            suggestBox.complete()
-
             if (go(input.value.trim(), !ev.ctrlKey))
               input.blur()
             return
@@ -39,6 +36,10 @@ exports.create = function (api) {
             return
         }
       }
+    })
+    input.addEventListener('suggestselect', ev => {
+      if (go(input.value.trim(), !ev.ctrlKey))
+        input.blur()
     })
     const search = h('Search', input)
 
