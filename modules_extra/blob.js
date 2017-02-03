@@ -20,7 +20,7 @@ exports.create = (api) => {
   function screen_view (path) {
     if(!ref.isBlob(path)) return 
     
-    return h('Blob', [
+    return h('Blob', { id: path, title: path.slice(0, 9) + '...' }, [
       h('iframe', {
         src: api.blob_url(path),
         sandbox: ''
