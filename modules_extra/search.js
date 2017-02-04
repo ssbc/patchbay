@@ -1,8 +1,10 @@
-var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-var Scroller = require('pull-scroll')
-var TextNodeSearcher = require('text-node-searcher')
+const h = require('../h')
+const fs = require('fs')
+const { Value } = require('@mmckegg/mutant')
+const u = require('../util')
+const pull = require('pull-stream')
+const Scroller = require('pull-scroll')
+const TextNodeSearcher = require('text-node-searcher')
 
 exports.needs = {
   build_scroller: 'first',
@@ -10,7 +12,10 @@ exports.needs = {
   sbot_log: 'first'
 }
 
-exports.gives = 'screen_view'
+exports.gives = {
+  screen_view: true,
+  mcss: true
+}
 
 var whitespace = /\s+/
 
@@ -53,45 +58,56 @@ function highlight(el, query) {
 
 exports.create = function (api) {
 
-  return function (path) {
-    if(path[0] === '?') {
-      var query = path.substr(1).trim().split(whitespace)
-      var _matches = searchFilter(query)
-
-      var total = 0, matches = 0
-
-      var header = h('div.search_header', '')
-      var { container, content } = api.build_scroller({ prepend: header})
-      container.id = path // helps tabs find this tab
-
-      function matchesQuery (data) {
-        total++
-        var m = _matches(data)
-        if(m) matches++
-        header.textContent = 'searched:'+total+', found:'+matches
-        return m
-      }
-
-      function renderMsg(msg) {
-        var el = api.message_render(msg)
-        highlight(el, createOrRegExp(query))
-        return el
-      }
-
-      pull(
-        api.sbot_log({old: false}),
-        pull.filter(matchesQuery),
-        Scroller(container, content, renderMsg, true, false)
-      )
-
-      pull(
-        u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-        pull.filter(matchesQuery),
-        Scroller(container, content, renderMsg, false, false)
-      )
-
-      return container
-    }
+  return {
+    screen_view,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
+  function screen_view (path) {
+    if (path[0] !== '?') return
+
+    var query = path.substr(1).trim().split(whitespace)
+    var _matches = searchFilter(query)
+
+    const searched = Value(0)
+    const matches = Value(0)
+    const searchHeader = h('Search', [
+      h('header', h('h1', query)),
+      h('section.details', [ 
+        h('div.searched', ['Searched: ', searched]),
+        h('div.matches', [matches, ' matches']) 
+      ])
+    ])
+    var { container, content } = api.build_scroller({ prepend: searchHeader })
+    container.id = path // helps tabs find this tab
+
+    function matchesQuery (data) {
+      searched.set(searched() + 1)
+      var m = _matches(data)
+      if(m) matches.set(matches() +1 )
+      
+      return m
+    }
+
+    function renderMsg(msg) {
+      var el = api.message_render(msg)
+      highlight(el, createOrRegExp(query))
+      return el
+    }
+
+    pull(
+      api.sbot_log({old: false}),
+      pull.filter(matchesQuery),
+      Scroller(container, content, renderMsg, true, false)
+    )
+
+    pull(
+      u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+      pull.filter(matchesQuery),
+      Scroller(container, content, renderMsg, false, false)
+    )
+
+    return container
+  }
 }
+

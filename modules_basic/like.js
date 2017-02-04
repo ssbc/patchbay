@@ -40,18 +40,18 @@ exports.create = function (api) {
         votes.push({source: CACHE[k].author, dest: k, rel: 'vote'})
     }
 
-    if(votes.length === 1)
-      digs.textContent = ' 1 Dig'
-    else if(votes.length > 1)
-      digs.textContent = ' ' + votes.length + ' Digs'
+    if (votes.length === 0) return
+
+    digs.textContent = votes.length > 4
+      ? votes.length + ' 🗸'
+      : Array(votes.length).fill('🗸').join('')
 
     pull(
-        pull.values(votes.map(vote => {
-            return api.avatar_name(vote.source)
-        })),
-        pull.collect(function (err, ary) {
-            digs.title = ary.map(x => x.innerHTML).join(" ")
-        })
+      pull.values(votes.map(vote => api.avatar_name(vote.source))),
+      pull.collect((err, ary) => {
+        if (err) console.error(err)
+        digs.title = 'Dug by:\n' + ary.map(x => x.innerHTML).join("\n")
+      })
     )
 
     return digs

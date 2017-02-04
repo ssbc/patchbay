@@ -43,7 +43,10 @@ exports.create = function (api) {
   function message_meta (msg) {
     var chan = msg.value.content.channel
     if (chan)
-      return h('a', {href: '##'+chan}, '#'+chan)
+      return h('a', {
+        href: '##'+chan,
+        order: 98
+      }, '#'+chan)
   }
 
   function screen_view (path) {
