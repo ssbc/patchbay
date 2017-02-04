@@ -8,7 +8,7 @@ exports.create = function (api) {
     var tmp = h('div')
     var el
     var pre
-    const symbol = '⛭'
+    const symbol = '\u2699'
     var clicked = false
 
     return h('a', {
@@ -79,5 +79,3 @@ function linkify (text) {
   }
   return arr
 }
-
-

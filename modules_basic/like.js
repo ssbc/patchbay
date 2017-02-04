@@ -43,8 +43,8 @@ exports.create = function (api) {
     if (votes.length === 0) return
 
     digs.textContent = votes.length > 4
-      ? votes.length + ' 🗸'
-      : Array(votes.length).fill('🗸').join('')
+      ? votes.length + ' \u2713'
+      : Array(votes.length).fill('\u2713').join('')
 
     pull(
       pull.values(votes.map(vote => api.avatar_name(vote.source))),
