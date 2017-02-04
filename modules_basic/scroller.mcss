@@ -9,14 +9,14 @@ Scroller {
 
   div.wrapper {
     flex: 1
-    max-width: 600px
+    width: 600px
     margin-left: auto
     margin-right: auto
 
     section.content {
 
       div {
-        border-top: solid 1px gainsboro
+        border-bottom: solid 1px gainsboro
       }
     }
   }
