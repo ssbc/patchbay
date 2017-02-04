@@ -20,14 +20,13 @@ Message {
 
   section.meta {
     display: flex
-    a {
-      margin-left: .2rem
-      $textSubtle
+    align-items: center
+    * {
+      margin-left: .4rem
     }
 
-    input{
-      margin-right: 0
-      order: 99
+    a {
+      $textSubtle
     }
   }
 
@@ -36,6 +35,22 @@ Message {
 
     (img) {
       max-width: 100%
+    }
+  }
+
+  section.raw-content {
+    margin-left: -7rem
+    flex-basis: 130%
+    pre {
+      border: 1px gainsboro solid
+      padding: .8rem
+
+      span {
+        font-weight: 600
+      }
+      a {
+        word-break: break-all
+      }
     }
   }
 
@@ -75,6 +90,11 @@ Message {
 
     section.meta {
       order: 2
+    }
+
+    section.raw-content {
+      order: 3
+      margin-left: 0
     }
   }
 }

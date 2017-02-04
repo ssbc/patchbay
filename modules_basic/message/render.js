@@ -42,6 +42,7 @@ exports.create = function (api) {
       h('section.title', api.message_title(msg)),
       h('section.meta', api.message_meta(msg)),
       h('section.content', content),
+      h('section.raw-content'),
       h('section.action', api.message_action(msg)),
       h('footer.backlinks', api.message_backlinks(msg))
     ])
@@ -75,7 +76,8 @@ exports.create = function (api) {
     }, [
       h('header.author', api.message_author(msg, { size: 'mini' })),
       h('section.meta', api.message_meta(msg)),
-      h('section.content', el)
+      h('section.content', el),
+      h('section.raw-content')
     ])
   }
 }
