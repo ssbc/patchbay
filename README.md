@@ -2,20 +2,16 @@
 
 Prototype of a pluggable patchwork.
 
-`patchbay` is an secure-scuttlebutt client interface
-that is fully compatible with [patchwork](https://github.com/ssbc/patchwork)
+`patchbay` is a secure-scuttlebutt client interface that is fully compatible with [patchwork](https://github.com/ssbc/patchwork).
 
-I started `patchbay` to experiment with a different internal architecture
-based on [depject](https://github.com/dominictarr/depject). The goal was
-to make it easier to develop new features, and enable or disable features.
-This has so far been quite successful!
+I started `patchbay` to experiment with a different internal architecture based on [depject](https://github.com/dominictarr/depject). The goal was to make it easier to develop new features, and enable or disable features. This has so far been quite successful!
 
-This makes in very easy to create say, a renderer for a new message type,
-or switch to a different method for choosing user names.
+This makes in very easy to create say, a renderer for a new message type, or switch to a different method for choosing user names.
 
-## Running
 
-```
+## Setup
+
+```sh
 npm install scuttlebot@latest -g
 # make sure you have secure-scuttlebutt@15.2.0
 npm ls secure-scuttlebutt -g
@@ -30,59 +26,58 @@ sbot plugins.install ssb-ws
 sbot plugins.install ssb-fulltext # for faster searches (optional)
 # restart sbot server (go back to previous tab and kill it)
 ```
-now clone and run patchbay.
-```
+
+now clone patchbay.
+
+```sh
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
+```
+
+
+## Running the desktop app
+
+From inside the patchbay repo folder, 
+
+```sh
 npm run rebuild
-npm run bundle
 npm start
 ```
 
-## Lite
 
-To run a lite client in the browser instead of using electron, use npm
-run lite from the prompt instead of run bundle. After that you need to
-generate a modern invite:
+## Running in the browser
 
-```
+Make sure scuttlebot is allowing private connections. Stop any running sbot server, restart it with the `--allowPrivate` option and create a new modern invite:
+
+```sh
+sbot server --allowPrivate
 sbot invite.create --modern
 ```
 
-Also set up sbot to allow these connections with:
+From inside the patchbay repo folder, run `npm run lite`.
 
-```
-sbot server --allowPrivate
-```
-
-Lastly open build/index.html in a browser and append the invite
+Lastly open `build/index.html` in a browser and append the invite
 created above using: index.html#ws://localhost:8989....
 
-## how to add a feature
 
-To add a new message type, add add a js to `./modules/` that
-exports a function named `message_content` (it should return an html element)
-To add a new tab, export a function named `screen_view` (returns an html element)
+## How to add a feature
 
-To add a new detail, that appears above a message,
-export a function named `message_meta`.
+To add a new message type, add add a js to `./modules/` that exports a function named `message_content` (it should return an HTML element). To add a new tab, export a function named `screen_view` (returns an html element).
 
-see the code for more examples.
+To add a new detail, that appears above a message, export a function named `message_meta`.
 
-## module graph
+See the code for more examples.
 
-patchbay uses [depject](http://github.com/dominictarr/depject) to manage it's modules.
-here is a graph of the current connections between them. (round shows module,
-square shows api, arrow direction points from user to provider)
+
+## Module graph
+
+patchbay uses [depject](http://github.com/dominictarr/depject) to manage it's modules. Here is a graph of the current connections between them (round shows module, square shows api, arrow direction points from user to provider).
 
 [module graph](./graph.svg)
+
 
 ## License
 
 MIT
-
-
-
-
 
