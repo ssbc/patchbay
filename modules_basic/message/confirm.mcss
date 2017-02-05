@@ -4,11 +4,12 @@ MessageConfirm {
     }
 
     -message_preview {
+      max-height: 70vh
+      overflow-y: auto
+
       background-color: white
 
       div {
-        border: none
-
         header.author {
           div {
             section {

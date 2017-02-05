@@ -1,5 +1,5 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 
 exports.needs = {
   avatar_name: 'first',
@@ -42,14 +42,15 @@ exports.create = function (api) {
       h('section.title', api.message_title(msg)),
       h('section.meta', api.message_meta(msg)),
       h('section.content', content),
+      h('section.raw-content'),
       h('section.action', api.message_action(msg)),
       h('footer.backlinks', api.message_backlinks(msg))
     ])
     return msgEl
 
     function navigateToMessageOnEnter (ev) {
-      // on enter, hit first meta.
-      if(ev.keyCode == 13) {
+      // on enter (or 'o'), hit first meta.
+      if(ev.keyCode == 13 || ev.keyCode == 79) {
 
         // unless in an input
         if (ev.target.nodeName === 'INPUT'
@@ -75,7 +76,8 @@ exports.create = function (api) {
     }, [
       h('header.author', api.message_author(msg, { size: 'mini' })),
       h('section.meta', api.message_meta(msg)),
-      h('section.content', el)
+      h('section.content', el),
+      h('section.raw-content')
     ])
   }
 }

@@ -1,16 +1,22 @@
-var h = require('hyperscript')
-var u = require('../util')
-var pull = require('pull-stream')
-var Scroller = require('pull-scroll')
-var TextNodeSearcher = require('text-node-searcher')
+const h = require('../h')
+const fs = require('fs')
+const { Value, when } = require('@mmckegg/mutant')
+const u = require('../util')
+const pull = require('pull-stream')
+const Scroller = require('pull-scroll')
+const TextNodeSearcher = require('text-node-searcher')
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   sbot_log: 'first',
   sbot_fulltext_search: 'first'
 }
 
-exports.gives = 'screen_view'
+exports.gives = {
+  screen_view: true,
+  mcss: true
+}
 
 var whitespace = /\s+/
 
@@ -70,63 +76,68 @@ function fallback(reader) {
 
 exports.create = function (api) {
 
-  return function (path) {
-    if(path[0] === '?') {
-      var queryStr = path.substr(1).trim()
-      var query = queryStr.split(whitespace)
-      var _matches = searchFilter(query)
-
-      var total = 0, matches = 0
-      var usingLinearSearch = false
-
-      var header = h('div.search_header', '')
-      var content = h('div.column.scroller__content')
-      var div = h('div.column.scroller',
-        {style: {'overflow':'auto'}},
-        h('div.scroller__wrapper',
-          header,
-          content
-        )
-      )
-
-      function matchesQuery (data) {
-        total++
-        var m = _matches(data)
-        if(m) matches++
-        if(usingLinearSearch) {
-          header.textContent = 'searched:'+total+', found:'+matches
-        }
-        return m
-      }
-
-      function renderMsg(msg) {
-        var el = api.message_render(msg)
-        highlight(el, createOrRegExp(query))
-        return el
-      }
-
-      pull(
-        api.sbot_log({old: false}),
-        pull.filter(matchesQuery),
-        Scroller(div, content, renderMsg, true, false)
-      )
-
-      pull(
-        u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
-        fallback(function (err) {
-          if (/^no source/.test(err.message)) {
-            usingLinearSearch = true
-            return pull(
-              u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-              pull.filter(matchesQuery)
-            )
-          }
-        }),
-        Scroller(div, content, renderMsg, false, false)
-      )
-
-      return div
-    }
+  return {
+    screen_view,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
+  function screen_view (path) {
+    if (path[0] !== '?') return
+
+    var queryStr = path.substr(1).trim()
+    var query = queryStr.split(whitespace)
+    var _matches = searchFilter(query)
+
+    const isLinearSearch = Value(false)
+    const searched = Value(0)
+    const matches = Value(0)
+    const searchHeader = h('Search', [
+      h('header', h('h1', query.join(' '))),
+      when(isLinearSearch, 
+        h('section.details', [ 
+          h('div.searched', ['Searched: ', searched]),
+          h('div.matches', [matches, ' matches']) 
+        ])
+      )
+    ])
+    var { container, content } = api.build_scroller({ prepend: searchHeader })
+    container.id = path // helps tabs find this tab
+
+    function matchesQuery (data) {
+      searched.set(searched() + 1)
+      var m = _matches(data)
+      if(m) matches.set(matches() +1 )
+      
+      return m
+    }
+
+    function renderMsg(msg) {
+      var el = api.message_render(msg)
+      highlight(el, createOrRegExp(query))
+      return el
+    }
+
+    pull(
+      api.sbot_log({old: false}),
+      pull.filter(matchesQuery),
+      Scroller(container, content, renderMsg, true, false)
+    )
+
+    pull(
+      u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
+      fallback((err) => {
+        if (/^no source/.test(err.message)) {
+          isLinearSearch.set(true)
+          return pull(
+            u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+            pull.filter(matchesQuery)
+          )
+        }
+      }),
+      Scroller(container, content, renderMsg, false, false)
+    )
+
+    return container
+  }
 }
+

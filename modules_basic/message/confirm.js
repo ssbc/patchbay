@@ -1,7 +1,7 @@
 var fs = require('fs')
 var lightbox = require('hyperlightbox')
-var h = require('../h')
-var self_id = require('../keys').id
+var h = require('../../h')
+var self_id = require('../../keys').id
 //publish or add
 
 exports.needs = {
@@ -40,7 +40,7 @@ exports.create = function (api) {
       }
     }
 
-    var okay = h('button',  {
+    var okay = h('button.okay',  {
       'ev-click': () => {
         lb.remove()
         api.publish(content, cb)
@@ -48,12 +48,12 @@ exports.create = function (api) {
       'okay'
     )
 
-    var cancel = h('button', {
+    var cancel = h('button.cancel', {
       'ev-click': () => {
         lb.remove()
         cb(null)
       }},
-      'Cancel'
+      'cancel'
     )
 
     okay.addEventListener('keydown', function (ev) {
@@ -61,11 +61,12 @@ exports.create = function (api) {
     })
 
     lb.show(h('MessageConfirm', [
-        h('header -preview_description', h('h1', 'Preview')),
-        h('section -message_preview', api.message_render(msg)),
-        h('section -actions', [okay, cancel])
-      ]
-    ))
+      h('header -preview_description', [
+        h('h1', 'Preview')
+      ]),
+      h('section -message_preview', api.message_render(msg)),
+      h('section -actions', [cancel, okay])
+    ]))
 
     okay.focus()
   }

@@ -61,6 +61,12 @@ module.exports = {
     var sbot = null
     var connection_status = []
 
+    var rec = { 
+      sync: () => {},
+      async: () => {},
+      source: () => {},
+    }
+
     var rec = Reconnect(function (isConn) {
       function notify (value) {
         isConn(value); api.connection_status(value) //.forEach(function (fn) { fn(value) })

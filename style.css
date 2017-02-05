@@ -29,13 +29,6 @@ a:focus {
   text-decoration: underline;
 }
 
-.screen {
-  position: absolute;
-  top: 0; bottom: 0;
-  left: 0; right: 0;
-  overflow-y: hidden;
-}
-
 .column {
   display: flex;
   flex-direction: column;
@@ -64,16 +57,6 @@ a:focus {
 
 .expand {
   justify-content: space-between;
-}
-
-.scroll-y {
-  overflow-y: auto;
-  min-height: 0px;
-}
-
-.scroll-x {
-  overflow-x: auto;
-  min-width: 0px;
 }
 
 pre {
@@ -151,19 +134,6 @@ button:hover {
   z-index: 5;
 }
 
-/* scrolling feeds, threads */
-
-.scroller {
-  width: 100%;
-}
-
-.scroller__wrapper {
-  flex: 1;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* messages */
 /* is .title used any more? */
 
@@ -178,36 +148,6 @@ button:hover {
 }
 
 
-/* -- suggest box */
-
-.suggest-box > * {
-  display: block;
-}
-
-.suggest-box ul {
-  padding: 0;
-  list-style-type: none;
-  padding-left: 0;
-  background: #eee;
-  border: 1px solid #eee;
-  border-radius: 2px;
-}
-
-.suggest-box .selected {
-  background: white;
-}
-
-.suggest-box {
-  width: max-content;
-  background: #white;
-  border-radius: 1em;
-}
-
-/* emoji */
-.suggest-box img {
-  height: 20px;
-  width: 20px;
-}
 
 /* avatar */
 
@@ -238,19 +178,6 @@ button:hover {
   width: 50%;
 }
 
-.profile {
-  padding: .5ex;
-  overflow: auto;
-}
-
-.profile input {
-  width: 100%;
-}
-
-.profile__info {
-  margin-left: .5em;
-}
-
 /* lightbox - used in message-confirm */
 
 .lightbox {
@@ -260,6 +187,7 @@ button:hover {
   top: 50px;
   overflow: auto;
   width: 650px;
+  max-width: 100%;
   padding: 25px;
   margin: auto;
 
@@ -270,19 +198,6 @@ button:hover {
   border-radius: .2em;
 }
 
-/* searchprompt */
-
-.searchprompt {
-  float: left;
-  width: 85%;
-  height: 2em;
-  margin-top: .3em;
-  border-radius: 1em;
-  padding-left: .7em;
-  padding-right: 0.5em;
-  margin-left: 1em;
-  margin-right: 1em;
-}
 
 /* TextNodeSearcher highlights */
 
@@ -319,75 +234,12 @@ highlight {
   background: #08c;
 }
 
-.error {
-  background: red;
-}
-
 /* tabs */
 
 .header {
   background: #f5f5f5;
   border-bottom: 1px inset;
   flex-shrink: 0;
-}
-
-.header__tabs {
-  width: 100%; 
-  min-width: 0px;
-}
-
-/* --- hypertabs ------- */
-
-.hypertabs__tabs {
-  min-width: 0px;
-  width: 100%;
-}
-
-.hypertabs__tab {
-  overflow-x: hidden;
-  min-width: 0px;
-  width: 100%;
-}
-
-.hypertabs__button {
-  overflow-x: hidden;
-  min-width: 0px;
-  width: 100%;
-}
-
-.hypertabs__tab {
-  color: black;
-  background: #f5f5f5;
-  border-top-left-radius: 5px;
-  margin-left: -3px;
-  border-bottom: none;
-  padding-top: .56em;
-  padding-left: 1em;
-  border-left: 1px solid #ddd;
-  width: 100%; 
-}
-
-.hypertabs__tab > a {
-  color: #666;
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: .9em;
-}
-
-.hypertabs--selected {
-  font-weight: bold;
-  background: #eee;
-  border-top-right-radius: 5px;
-  z-index: 1;
-}
-
-.hypertabs__x  {
-  display: none; 
-  transform: translate(-4px, -3px);
-}
-
-.hypertabs--selected .hypertabs__x {
-  display: block;
 }
 
 /* progress bar */

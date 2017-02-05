@@ -1,0 +1,29 @@
+App {
+  position: absolute
+
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  overflow: hidden
+  min-height: 0px
+
+}
+
+
+Error {
+  padding: 1rem
+
+  h1 {
+    color: red
+  }
+
+  big {
+  }
+  
+  pre {
+    padding: 1rem
+    border: 1px gainsboro solid
+  }
+}
+

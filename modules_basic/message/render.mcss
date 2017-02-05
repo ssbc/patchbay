@@ -1,6 +1,5 @@
 Message {
   padding: 1rem .5rem 1rem 7.5rem
-  border-top: solid 1px gainsboro
   min-height: 5rem
 
   position: relative
@@ -21,14 +20,20 @@ Message {
 
   section.meta {
     display: flex
-    a {
-      margin-left: .2rem
-      $textSubtle
+    align-items: center
+    * {
+      margin-left: .4rem
     }
 
-    input{
-      margin-right: 0
-      order: 99
+    a {
+      $textSubtle
+    }
+ 
+  /* this is for private message_meta, TODO find a better home */
+    (img) {
+      height: 1.8rem
+      width: 1.8rem
+      margin: 0 .2rem -.2rem
     }
   }
 
@@ -40,11 +45,28 @@ Message {
     }
   }
 
+  section.raw-content {
+    margin-left: -7rem
+    flex-basis: 130%
+    pre {
+      border: 1px gainsboro solid
+      padding: .8rem
+
+      span {
+        font-weight: 600
+      }
+      a {
+        word-break: break-all
+      }
+    }
+  }
+
   section.action {
     flex-basis: 100%
     display: flex
     justify-content: flex-end
 
+    font-size: .9rem
     a {
       margin-left: .5em
     }
@@ -75,6 +97,11 @@ Message {
 
     section.meta {
       order: 2
+    }
+
+    section.raw-content {
+      order: 3
+      margin-left: 0
     }
   }
 }

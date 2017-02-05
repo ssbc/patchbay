@@ -19,6 +19,7 @@ function once (cont) {
 }
 
 exports.needs = {
+  build_scroller: 'first',
   message_render: 'first',
   message_name: 'first',
   message_compose: 'first',
@@ -61,17 +62,11 @@ exports.create = function (api) {
         branch: id //mutated when thread is loaded.
       }
 
-      var content = h('div.column.scroller__content')
-      var div = h('div.column.scroller',
-        {style: {'overflow-y': 'auto'}},
-        h('div.scroller__wrapper',
-          content,
-          api.message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
-        )
-      )
+      var composer = api.message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
+      var { container, content } = api.build_scroller({ append: composer })
 
       api.message_name(id, function (err, name) {
-        div.title = name
+        container.title = name
       })
 
       pull(
@@ -119,7 +114,7 @@ exports.create = function (api) {
       }
 
       loadThread()
-      return div
+      return container
     }
   }
 }
