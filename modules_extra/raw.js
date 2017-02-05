@@ -8,14 +8,14 @@ exports.create = function (api) {
     var tmp = h('div')
     var el
     var pre
-    const symbol = '⛭'
+    const symbol = '\u2699' // gear ⚙
     var clicked = false
 
     return h('a', {
       title: 'View raw data',
       style: {
         order: 99,
-        color: 'gray',
+        color: '#a8a8a8',
         'font-size': '1rem',
         cursor: 'pointer',
       },

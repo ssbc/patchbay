@@ -42,9 +42,11 @@ exports.create = function (api) {
 
     if (votes.length === 0) return
 
+    const symbol = '\u2713' // tick  🗸
+
     digs.textContent = votes.length > 4
-      ? votes.length + ' 🗸'
-      : Array(votes.length).fill('🗸').join('')
+      ? votes.length + ' ' + symbol
+      : Array(votes.length).fill(symbol).join('')
 
     pull(
       pull.values(votes.map(vote => api.avatar_name(vote.source))),

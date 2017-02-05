@@ -28,6 +28,13 @@ Message {
     a {
       $textSubtle
     }
+ 
+  /* this is for private message_meta, TODO find a better home */
+    (img) {
+      height: 1.8rem
+      width: 1.8rem
+      margin: 0 .2rem -.2rem
+    }
   }
 
   section.content {
