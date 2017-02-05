@@ -13,11 +13,12 @@
     "bundle": "mkdir -p build && browselectrify index.js > build/bundle.js",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
     "graph": "node index.js | dot -Tsvg > graph.svg",
-    "test": "browserify modules_*/index.test.js | tape-run"
+    "test": "browserify test/modules.js | tape-run"
   },
   "dependencies": {
     "@mmckegg/mutant": "^3.12.0",
     "brfs": "^1.4.3",
+    "bulk-require": "^1.0.0",
     "cont": "^1.0.3",
     "dataurl-": "^0.1.0",
     "depject": "^3.1.4",

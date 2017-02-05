@@ -9,7 +9,7 @@ exports.needs = {
 //  message_link: 'first',
 //  message_confirm: 'first',
 //  sbot_links: 'first',
-  blobs_url: 'first'
+  blob_url: 'first'
 }
 
 exports.gives = 'message_content'
