@@ -102,6 +102,12 @@ exports.create = function (api) {
           meta.root = thread[0].value.content.root || thread[0].key
           meta.channel = thread[0].value.content.channel
 
+          if (meta.channel) {
+            const channelInput = composer.querySelector('input')
+            channelInput.value = `#${meta.channel}`
+            channelInput.disabled = true
+          }
+
           var recps = thread[0].value.content.recps
           var priv = thread[0].value['private']
           if(priv) {

@@ -5,6 +5,7 @@ const mentions = require('ssb-mentions')
 
 exports.needs = {
   suggest_mentions: 'map', //<-- THIS MUST BE REWRITTEN
+  suggest_channel: 'map',
   build_suggest_box: 'first',
   publish: 'first',
   message_content: 'first',
@@ -47,6 +48,22 @@ exports.create = function (api) {
       placeholder: opts.placeholder || 'Write a message'
     })
 
+    var channelInput = h('input.channel', {
+      placeholder: '#channel',
+      value: meta.channel ? `#${meta.channel}` : '',
+      disabled: meta.channel ? true : false
+    })
+
+    channelInput.addEventListener('keydown', function (e) {
+      console.log(e)
+      if (this.value.startsWith('#') && this.value.length === 1) {
+        this.value = ''
+        return
+      }
+      if (this.value.startsWith('#')) return
+      this.value = `#${this.value}`
+    })
+
     if(opts.shrink !== false) {
       var blur
       textArea.addEventListener('focus', () => {
@@ -61,6 +78,19 @@ exports.create = function (api) {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if(textArea.value) return
+          composer.className = 'Compose -contracted'
+        }, 300)
+      })
+      channelInput.addEventListener('focus', () => {
+        clearTimeout(blur)
+        if (!textArea.value) {
+          composer.className = 'Compose -expanded'
+        }
+      })
+      channelInput.addEventListener('blur', () => {
+        clearTimeout(blur)
+        blur = setTimeout(() => {
+          if (textArea.value || channelInput.value) return
           composer.className = 'Compose -contracted'
         }, 300)
       })
@@ -80,6 +110,8 @@ exports.create = function (api) {
         content = JSON.parse(textArea.value)
       } catch (err) {
         meta.text = textArea.value
+        meta.channel = (channelInput.value.startsWith('#') ?
+          channelInput.value.substr(1).trim() : channelInput.value.trim()) || null
         meta.mentions = mentions(textArea.value).map(mention => {
           // merge markdown-detected mention with file info
           var file = filesById[mention.link]
@@ -126,11 +158,13 @@ exports.create = function (api) {
     ])
 
     api.build_suggest_box(textArea, api.suggest_mentions)
+    api.build_suggest_box(channelInput, api.suggest_channel)
 
     var composer = h('Compose', {
       className: opts.shrink === false ? '-expanded' : '-contracted'
     }, [
       textArea,
+      channelInput,
       actions
     ])
 
