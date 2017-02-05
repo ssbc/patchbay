@@ -8,6 +8,11 @@ Compose {
     border: 1px solid gainsboro
   }
 
+  input.channel {
+    border: 1px solid gainsboro
+    padding: .5rem
+  }
+
   section.actions {
     display: flex
     flex-direction: row
@@ -26,7 +31,7 @@ Compose {
       ::-webkit-file-upload-button {
         visibility: hidden
       }
-        
+
       ::before {
         $composeButton
         padding-top: .3rem
@@ -38,10 +43,10 @@ Compose {
         white-space: nowrap
         -webkit-user-select: none
       }
-      
+
       :active, :focus {
         outline: none
-        box-shadow: none 
+        box-shadow: none
       }
     }
 
@@ -60,15 +65,23 @@ Compose {
       transition: height .15s ease-out
     }
 
+    input.channel {
+      display: flex
+    }
+
     section.actions {
       display: flex
     }
   }
 
-  -contracted { 
+  -contracted {
     textarea {
       height: 50px
       transition: height .15s ease-in
+    }
+
+    input.channel {
+      display: none
     }
 
     section.actions {
@@ -87,4 +100,3 @@ $composeButton {
   margin: 0
   cursor: pointer
 }
-
