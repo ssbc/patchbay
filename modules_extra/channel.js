@@ -45,7 +45,7 @@ exports.create = function (api) {
     if (chan)
       return h('a', {
         href: '##'+chan,
-        order: 98
+        style: { order: 98 },
       }, '#'+chan)
   }
 
