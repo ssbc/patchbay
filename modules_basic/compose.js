@@ -50,7 +50,18 @@ exports.create = function (api) {
 
     var channelInput = h('input.channel', {
       placeholder: '#channel',
-      value: meta.channel || ''
+      value: meta.channel ? `#${meta.channel}` : '',
+      disabled: meta.channel ? true : false
+    })
+
+    channelInput.addEventListener('keydown', function (e) {
+      console.log(e)
+      if (this.value.startsWith('#') && this.value.length === 1) {
+        this.value = ''
+        return
+      }
+      if (this.value.startsWith('#')) return
+      this.value = `#${this.value}`
     })
 
     if(opts.shrink !== false) {
@@ -67,6 +78,19 @@ exports.create = function (api) {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if(textArea.value) return
+          composer.className = 'Compose -contracted'
+        }, 300)
+      })
+      channelInput.addEventListener('focus', () => {
+        clearTimeout(blur)
+        if (!textArea.value) {
+          composer.className = 'Compose -expanded'
+        }
+      })
+      channelInput.addEventListener('blur', () => {
+        clearTimeout(blur)
+        blur = setTimeout(() => {
+          if (textArea.value || channelInput.value) return
           composer.className = 'Compose -contracted'
         }, 300)
       })

@@ -11,6 +11,12 @@ Compose {
   input.channel {
     border: 1px solid gainsboro
     padding: .5rem
+    margin-top: 1rem
+
+    :disabled {
+      background-color: #e5e5e5
+      cursor: not-allowed
+    }
   }
 
   section.actions {

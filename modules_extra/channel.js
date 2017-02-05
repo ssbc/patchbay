@@ -154,7 +154,7 @@ exports.create = function (api) {
         return {
           title: name,
           subtitle: `(${chan.rank})`,
-          value: name.substr(1)
+          value: `#${name.substr(1)}`
         }
       }))
     }
