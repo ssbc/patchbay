@@ -1,29 +1,46 @@
-var ref = require('ssb-ref')
-var Scroller = require('pull-scroll')
-var h = require('hyperscript')
-var pull = require('pull-stream')
-var u = require('../../util')
+const ref = require('ssb-ref')
+const Scroller = require('pull-scroll')
+const fs = require('fs')
+const pull = require('pull-stream')
+const h = require('../../h')
+const u = require('../../util')
 
 exports.needs = {
+  about_edit: 'first',
   build_scroller: 'first',
   sbot_user_feed: 'first',
   message_render: 'first',
-  about_profile: 'first',
+  contact_relationships: 'first',
   signifier: 'first'
 }
 
-exports.gives = 'screen_view'
-
+exports.gives = {
+  screen_view: true,
+  mcss: true
+}
 
 exports.create = function (api) {
+  return {
+    screen_view,
+    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  }
 
-  return function (id) {
+  function screen_view (id) {
     //TODO: header of user info, avatars, names, follows.
 
     if(!ref.isFeed(id)) return
 
-    const profile = h('div', api.about_profile(id))
-    var { container, content } = api.build_scroller({ prepend: [profile, h('header', 'Activity')] })
+
+    const profile =  h('Profile', [
+      h('section.edit', api.about_edit(id)),
+      h('section.relationships', api.contact_relationships(id)),
+      h('section.activity', [
+        h('header', 'Activity')
+        // ideally the scroller content would go in here
+      ])
+    ])
+
+    var { container, content } = api.build_scroller({ prepend: profile })
           
     api.signifier(id, function (_, names) {
       if(names.length) container.title = names[0].name

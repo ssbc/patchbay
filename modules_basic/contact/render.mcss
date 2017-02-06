@@ -1,61 +1,54 @@
-Profile {
-
-  section.edit {
-
+Relationships {
+  header {
+    margin-bottom: .8rem
+    border-bottom: 1px gainsboro solid
   }
 
-  section.relationships {
+  div {
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    align-content: flex-start
+
+    min-height: 5rem
+    margin-bottom: 2rem
+
     header {
-      margin-bottom: .8rem
-      border-bottom: 1px gainsboro solid
+      flex-basis: 100%
+      
+      $textSubtle
+      font-size: .9rem
+      
+      margin-bottom: .2rem
     }
 
-    div {
-      display: flex
-      flex-wrap: wrap
-      justify-content: space-between
-      align-content: flex-start
+    section a {
+      margin-right: .2rem
 
-      min-height: 5rem
-      margin-bottom: 2rem
-
-      header {
-        flex-basis: 100%
-        
-        $textSubtle
-        font-size: .9rem
-        
-        margin-bottom: .2rem
-      }
-
-      section a {
-        margin-right: .2rem
-
-        img { $avatar-small }
-      }
+      img { $avatar-small }
     }
+  }
 
-    div.your-status {
-      margin: 0 
-      section.action {
+  div.your-status {
+    margin: 0 
+    section.action {
+    }
+  }
+
+  div.friends {
+    section a {
+      margin: 0 .2rem 0.2rem 0
+
+      img { 
+        $avatar-large
       }
     }
+  }
 
-    div.friends {
-      section a {
-        margin: 0 .2rem 0.2rem 0
+  div.follows {
+  }
 
-        img { 
-          $avatar-large
-        }
-      }
-    }
-
-    div.follows {
-    }
-
-    div.followers {
-    }
+  div.followers {
   }
 }
 
