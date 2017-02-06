@@ -10,7 +10,7 @@ const {
 
 exports.needs = {
   about_image_link: 'first',
-  about_action: 'map',
+  contact_action: 'map',
   follows: 'first',
   followers: 'first'
 }
@@ -63,7 +63,7 @@ exports.create = function (api) {
       h('header', 'Relationships'),
       h('div.your-status', [
         h('header', 'Your status'),
-        h('section.action', api.about_action(id))
+        h('section.action', api.contact_action(id))
       ]),
       h('div.friends', [
         h('header', 'Friends'),

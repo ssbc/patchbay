@@ -2,7 +2,7 @@ var pull = require('pull-stream')
 var sort = require('ssb-sort')
 var ref = require('ssb-ref')
 var h = require('hyperscript')
-var self_id = require('../keys').id
+var self_id = require('../../keys').id
 
 function once (cont) {
   var ended = false

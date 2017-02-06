@@ -1,5 +1,6 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
+const self_id = require('../../keys').id
 
 //render a message when someone follows someone,
 //so you see new users
@@ -18,7 +19,7 @@ exports.needs = {
 exports.gives = {
   message_content: true,
   message_content_mini: true,
-  about_action: true,
+  contact_action: true,
   mcss: true
 }
 
@@ -26,7 +27,7 @@ exports.create = function (api) {
   return {
     message_content_mini,
     message_content,
-    about_action,
+    contact_action,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -55,10 +56,9 @@ exports.create = function (api) {
     }
   }
 
-  function about_action (id) {
+  function contact_action (id) {
     var follows_you, you_follow
 
-    var self_id = require('../keys').id
     api.follower_of(self_id, id, (err, f) => {
       you_follow = f || false
       update()

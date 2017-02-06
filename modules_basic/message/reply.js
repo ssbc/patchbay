@@ -1,4 +1,4 @@
-var h = require('../h')
+var h = require('../../h')
 
 exports.gives = 'message_action'
 
