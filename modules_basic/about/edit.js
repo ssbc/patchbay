@@ -18,7 +18,7 @@ const self_id = require('../../keys').id
 function crop (d, cb) {
   var canvas = hypercrop(h('img', {src: d}))
 
-  return h('AvatarEditor', [
+  return h('AboutImageEditor', [
     h('header', 'Click and drag to crop your avatar.'),
     canvas,
     //canvas.selection,
@@ -34,21 +34,21 @@ exports.needs = {
   sbot_blobs_add: 'first',
   blob_url: 'first',
   sbot_links: 'first',
-  avatar_name: 'first'
+  about_name: 'first'
 }
 
 exports.gives = {
-  avatar_edit: true,
+  about_edit: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    avatar_edit,
+    about_edit,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function avatar_edit (id) {
+  function about_edit (id) {
 
     var avatar = Struct({
       original: Value(visualize(new Buffer(id.substring(1), 'base64'), 256).src),
@@ -63,7 +63,7 @@ exports.create = function (api) {
     })
 
     var name = Struct({
-      original: Value(api.avatar_name(id)),
+      original: Value(api.about_name(id)),
       new: Value()
     })
 
@@ -108,7 +108,7 @@ exports.create = function (api) {
       else return name.original
     })
 
-    return h('ProfileEdit', [
+    return h('AboutEditor', [
       h('section.lightbox', lb),
       h('section.avatar', [
         h('section', [

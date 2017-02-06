@@ -1,10 +1,11 @@
 'use strict'
 const fs = require('fs')
-const h = require('../h')
-const u = require('../util')
+const h = require('../../h')
+const u = require('../../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const ref = require('ssb-ref')
+const id = require('../../keys').id
 
 function map(ary, iter) {
   if(Array.isArray(ary)) return ary.map(iter)
@@ -17,7 +18,7 @@ exports.needs = {
   message_unbox: 'first',
   sbot_log: 'first',
   sbot_whoami: 'first',
-  avatar_image_link: 'first',
+  about_image_link: 'first',
   emoji_url: 'first'
 }
 
@@ -77,7 +78,6 @@ exports.create = function (api) {
     // if local id is different from sbot id, sbot won't have indexes of
     // private threads
     //TODO: put all private indexes client side.
-    var id = require('../keys').id
     api.sbot_whoami(function (err, feed) {
       if (err) return console.error(err)
       if(id !== feed.id)
@@ -114,7 +114,7 @@ exports.create = function (api) {
     }, [
       h('div', 'private: ['),
       map(msg.value.content.recps, id => (
-        api.avatar_image_link('string' == typeof id ? id : id.link)
+        api.about_image_link('string' == typeof id ? id : id.link)
       )),
       h('div', ']'),
     ])

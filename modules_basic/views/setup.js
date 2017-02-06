@@ -1,9 +1,11 @@
 var h = require('hyperscript')
 var pull = require('pull-stream')
+var { id } = require('../../keys')
+
 
 exports.needs = {
-  avatar: 'first',
-  avatar_edit: 'first',
+  about_image_name_link: 'first',
+  about_edit: 'first',
   invite_parse: 'first',
   invite_accept: 'first',
   sbot_progress: 'first',
@@ -121,7 +123,7 @@ exports.create = function (api) {
         if(follower.sync) return
         label.textContent = 'connected to network via...'
         followers.appendChild(
-          api.avatar(follower.value.author, 'thumbnail')
+          api.about_image_name_link(follower.value.author, 'thumbnail')
         )
       })
     )
@@ -132,8 +134,6 @@ exports.create = function (api) {
   function screen_view (path) {
     if(path !== '/setup') return
 
-    var { id } = require('../keys')
-
     //set up an avatar
 
     var status = h('span')
@@ -143,7 +143,7 @@ exports.create = function (api) {
         h('h1', 'welcome to patchbay!'),
         h('div',
           'please choose avatar image and name',
-          api.avatar_edit(id)
+          api.about_edit(id)
         ),
         h('h2', 'join network'),
         invite_form(),

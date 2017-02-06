@@ -12,9 +12,9 @@ exports.needs = {
 }
 
 exports.gives = {
-  connection_status: true, 
-  avatar_image_src: true,
-  avatar_image: true
+  connection_status: true,  // TODO rename this
+  about_image_src: true,
+  about_image: true
 }
 
 var ready = false
@@ -76,7 +76,7 @@ exports.create = function (api) {
       )
     },
 
-    avatar_image_src: function (author) {
+    about_image_src: function (author) {
       return ready && avatars[author]
         ? api.blob_url(avatars[author].image)
         : genSrc(author)
@@ -89,7 +89,7 @@ exports.create = function (api) {
       }
     },
 
-    avatar_image: function (author, classes) {
+    about_image: function (author, classes) {
       classes = classes || ''
       if(classes && 'string' === typeof classes) classes = '.avatar--'+classes
 

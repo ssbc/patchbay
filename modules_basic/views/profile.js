@@ -2,13 +2,13 @@ var ref = require('ssb-ref')
 var Scroller = require('pull-scroll')
 var h = require('hyperscript')
 var pull = require('pull-stream')
-var u = require('../util')
+var u = require('../../util')
 
 exports.needs = {
   build_scroller: 'first',
   sbot_user_feed: 'first',
   message_render: 'first',
-  avatar_profile: 'first',
+  about_profile: 'first',
   signifier: 'first'
 }
 
@@ -22,7 +22,7 @@ exports.create = function (api) {
 
     if(!ref.isFeed(id)) return
 
-    const profile = h('div', api.avatar_profile(id))
+    const profile = h('div', api.about_profile(id))
     var { container, content } = api.build_scroller({ prepend: [profile, h('header', 'Activity')] })
           
     api.signifier(id, function (_, names) {

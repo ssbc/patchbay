@@ -9,8 +9,8 @@ const {
 } = require('@mmckegg/mutant')
 
 exports.needs = {
-  avatar_image_link: 'first',
-  avatar_name_link: 'first',
+  about_image_link: 'first',
+  about_name_link: 'first',
   build_scroller: 'first',
   sbot_gossip_peers: 'first',
   sbot_gossip_connect: 'first'
@@ -141,10 +141,10 @@ exports.create = function (api) {
 
         return h('NetworkConnection', [
           h('section.avatar', [
-            api.avatar_image_link(key()),
+            api.about_image_link(key()),
           ]),
           h('section.name', [
-            api.avatar_name_link(key()),
+            api.about_name_link(key()),
           ]),
           h('section.type', [
             computed(peer, getType),

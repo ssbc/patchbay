@@ -1,6 +1,6 @@
 const fs = require('fs')
 const h = require('hyperscript')
-const u = require('../util')
+const u = require('../../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 

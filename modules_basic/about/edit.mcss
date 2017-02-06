@@ -1,4 +1,25 @@
-ProfileEdit {
+AboutImageEditor {
+  header {
+    font-weight: 600
+    margin-bottom: .5rem
+  }
+
+  section.actions {
+    display: flex
+    justify-content: flex-end
+
+    button.cancel {
+
+    }
+
+    button.okay {
+      margin-right: 0
+
+    }
+  }
+}
+
+AboutEditor {
   display: flex
   flex-wrap: wrap
   justify-content: space-between
@@ -159,24 +180,4 @@ ProfileEdit {
   }
 }
 
-AvatarEditor {
-  header {
-    font-weight: 600
-    margin-bottom: .5rem
-  }
-
-  section.actions {
-    display: flex
-    justify-content: flex-end
-
-    button.cancel {
-
-    }
-
-    button.okay {
-      margin-right: 0
-
-    }
-  }
-}
 

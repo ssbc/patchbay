@@ -3,9 +3,9 @@ const h = require('../../h')
 const { when }= require('@mmckegg/mutant')
 
 exports.needs = {
-  avatar_link: 'first',
-  avatar_image: 'first',
-  avatar_name: 'first',
+  about_link: 'first',
+  about_image: 'first',
+  about_name: 'first',
   timestamp: 'first'
 }
 
@@ -29,9 +29,9 @@ exports.create = function (api) {
       className: `-${size}`
     }, [
       when(size !== 'mini',
-        h('section -image', api.avatar_link(author, api.avatar_image(author, 'thumbnail')))
+        h('section -image', api.about_link(author, api.about_image(author, 'thumbnail')))
       ),
-      h('section -name', api.avatar_link(author, api.avatar_name(author))),
+      h('section -name', api.about_link(author, api.about_name(author))),
       h('section -timestamp', api.timestamp(msg))
     ])
   }

@@ -17,7 +17,7 @@ exports.needs = {
   sbot_links: 'first',
   sbot_links2: 'first',
   sbot_get: 'first',
-  avatar_name: 'first',
+  about_name: 'first',
   markdown: 'first'
 }
 
@@ -248,7 +248,7 @@ exports.create = function (api) {
             getForks(msg.key)
           ]), pull.map(function (fork) {
             return h('option', {value: fork.id},
-              repoLink(fork.id), ' by ', api.avatar_name(fork.author))
+              repoLink(fork.id), ' by ', api.about_name(fork.author))
           }))
         }),
         ':',
@@ -339,7 +339,7 @@ exports.create = function (api) {
             h('td', shortName,
               ref.conflict ? [
                 h('br'),
-                h('a', {href: '#'+author}, api.avatar_name(author))
+                h('a', {href: '#'+author}, api.about_name(author))
               ] : ''),
             h('td', h('code', ref.hash)),
             h('td', messageTimestampLink(ref.link))))
@@ -376,7 +376,7 @@ exports.create = function (api) {
                 h('a', {href: '#'+link.key}, title), h('br'),
                 h('small',
                   'opened ', messageTimestampLink(link),
-                  ' by ', h('a', {href: '#'+author}, api.avatar_name(author))))))
+                  ' by ', h('a', {href: '#'+author}, api.about_name(author))))))
           }, function (err) {
             if (err) console.error(err)
           })
@@ -388,7 +388,7 @@ exports.create = function (api) {
           pull.drain(function (fork) {
             forksT.append(h('tr', h('td',
               repoLink(fork.id),
-              ' by ', h('a', {href: '#'+fork.author}, api.avatar_name(fork.author)))))
+              ' by ', h('a', {href: '#'+fork.author}, api.about_name(fork.author)))))
           }, function (err) {
             if (err) console.error(err)
           })

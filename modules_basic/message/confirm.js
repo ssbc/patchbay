@@ -7,7 +7,7 @@ var self_id = require('../../keys').id
 exports.needs = {
   publish: 'first',
   message_render: 'first',
-  avatar: 'first',
+  about_image_name_link: 'first',
   message_meta: 'map'
 }
 

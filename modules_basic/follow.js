@@ -8,9 +8,9 @@ function isRelated(value, name) {
 }
 
 exports.needs = {
-  avatar: 'first',
-  avatar_name: 'first',
-  avatar_link: 'first',
+  about_image_name_link: 'first',
+  about_name: 'first',
+  about_link: 'first',
   message_confirm: 'first',
   follower_of: 'first'
 }
@@ -18,7 +18,7 @@ exports.needs = {
 exports.gives = {
   message_content: true,
   message_content_mini: true,
-  avatar_action: true,
+  about_action: true,
   mcss: true
 }
 
@@ -26,7 +26,7 @@ exports.create = function (api) {
   return {
     message_content_mini,
     message_content,
-    avatar_action,
+    about_action,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -38,7 +38,7 @@ exports.create = function (api) {
       return [
         relation,
         ' ',
-        api.avatar_link(contact, api.avatar_name(contact), '')
+        api.about_link(contact, api.about_name(contact), '')
       ]
     }
   }
@@ -50,12 +50,12 @@ exports.create = function (api) {
       if(blocking) relation = 'blocks'
       return h('div.contact', [
         relation, 
-        api.avatar(contact, 'thumbnail')
+        api.about_image_name_link(contact, 'thumbnail')
       ])
     }
   }
 
-  function avatar_action (id) {
+  function about_action (id) {
     var follows_you, you_follow
 
     var self_id = require('../keys').id

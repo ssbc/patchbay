@@ -4,11 +4,16 @@ exports.needs = {
   signifier: 'first'
 }
 
-exports.gives = 'avatar_name'
+exports.gives = {
+  about_name: true
+}
 
 exports.create = function (api) {
+  return {
+    about_name  
+  }
 
-  return function name (id) {
+  function about_name (id) {
     var n = h('span', id ? id.substring(0, 10) : "")
 
     //choose the most popular name for this person.
@@ -24,6 +29,5 @@ exports.create = function (api) {
 
     return n
   }
-
 }
 

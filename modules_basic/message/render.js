@@ -2,8 +2,8 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.needs = {
-  avatar_name: 'first',
-  avatar_link: 'first',
+  about_name: 'first',
+  about_link: 'first',
   message_action: 'map',
   message_author: 'first',
   message_backlinks: 'first',

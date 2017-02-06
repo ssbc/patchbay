@@ -2,7 +2,7 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 
 exports.needs = {
-  avatar_name: 'first',
+  about_name: 'first',
   message_confirm: 'first',
   message_link: 'first',
   sbot_links: 'first'
@@ -49,7 +49,7 @@ exports.create = function (api) {
       : Array(votes.length).fill(symbol).join('')
 
     pull(
-      pull.values(votes.map(vote => api.avatar_name(vote.source))),
+      pull.values(votes.map(vote => api.about_name(vote.source))),
       pull.collect((err, ary) => {
         if (err) console.error(err)
         digs.title = 'Dug by:\n' + ary.map(x => x.innerHTML).join("\n")

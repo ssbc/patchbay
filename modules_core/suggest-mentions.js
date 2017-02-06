@@ -4,7 +4,7 @@ exports.needs = {
   blob_url: 'first',
   signified: 'first',
   builtin_tabs: 'map',
-  avatar_image_src: 'first'
+  about_image_src: 'first'
 }
 
 exports.gives = {
@@ -35,7 +35,7 @@ exports.create = function (api) {
             subtitle: `(${rank}) ${id.substring(0,10)}`,
             value: '['+name+']('+id+')',
             rank,
-            image: api.avatar_image_src(id),
+            image: api.about_image_src(id),
             showBoth: true
           }
         }))
@@ -56,7 +56,7 @@ exports.create = function (api) {
               subtitle: `(${rank}) ${id.substring(0,10)}`,
               value: id,
               rank,
-              image: api.avatar_image_src(id),
+              image: api.about_image_src(id),
               showBoth: true
             }
           }))
