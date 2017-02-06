@@ -79,5 +79,3 @@ function linkify (text) {
   }
   return arr
 }
-
-
