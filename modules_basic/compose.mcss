@@ -6,15 +6,23 @@ Compose {
 
   textarea {
     border: 1px solid gainsboro
+    border-top-left-radius: 0
+    border-top-right-radius: 0
   }
 
   input.channel {
     border: 1px solid gainsboro
+    border-bottom: none
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
     padding: .5rem
-    margin-top: 1rem
 
+    :focus {
+      outline: none
+      box-shadow: none
+    }
     :disabled {
-      background-color: #e5e5e5
+      background-color: #f1f1f1
       cursor: not-allowed
     }
   }

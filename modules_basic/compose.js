@@ -1,6 +1,7 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
+const { Value, when } = require('@mmckegg/mutant')
 const mentions = require('ssb-mentions')
 
 exports.needs = {
@@ -42,34 +43,32 @@ exports.create = function (api) {
     }
     opts.prepublish = opts.prepublish || id
 
-    var actions
+    const isExpanded = Value(opts.shrink === false)
 
     var textArea = h('textarea', {
       placeholder: opts.placeholder || 'Write a message'
     })
 
     var channelInput = h('input.channel', {
-      placeholder: '#channel',
+      placeholder: '#channel (optional)',
       value: meta.channel ? `#${meta.channel}` : '',
-      disabled: meta.channel ? true : false
+      disabled: meta.channel ? true : false,
+      title: meta.channel ? 'Reply is in same channel as original message' : '',
     })
 
-    channelInput.addEventListener('keydown', function (e) {
-      console.log(e)
-      if (this.value.startsWith('#') && this.value.length === 1) {
-        this.value = ''
-        return
-      }
-      if (this.value.startsWith('#')) return
-      this.value = `#${this.value}`
+    channelInput.addEventListener('keyup', (e) => {
+      e.target.value = e.target.value
+        .replace(/^#*([\w@%&])/, '#$1')
     })
 
     if(opts.shrink !== false) {
+      isExpanded.set(false)
       var blur
+
       textArea.addEventListener('focus', () => {
         clearTimeout(blur)
         if(!textArea.value) {
-          composer.className = 'Compose -expanded'
+          isExpanded.set(true)
         }
       })
       textArea.addEventListener('blur', () => {
@@ -78,20 +77,20 @@ exports.create = function (api) {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if(textArea.value) return
-          composer.className = 'Compose -contracted'
+          isExpanded.set(false)
         }, 300)
       })
       channelInput.addEventListener('focus', () => {
         clearTimeout(blur)
         if (!textArea.value) {
-          composer.className = 'Compose -expanded'
+          isExpanded.set(true)
         }
       })
       channelInput.addEventListener('blur', () => {
         clearTimeout(blur)
         blur = setTimeout(() => {
           if (textArea.value || channelInput.value) return
-          composer.className = 'Compose -contracted'
+          isExpanded.set(false)
         }, 300)
       })
     }
@@ -149,25 +148,22 @@ exports.create = function (api) {
       var embed = file.type.indexOf('image/') === 0 ? '!' : ''
 
       textArea.value += embed + '['+file.name+']('+file.link+')'
-      composer.className = 'Compose -expanded'
+      isExpanded.set(true)
       console.log('added:', file)
     })
     var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
-    var actions = h('section.actions', [
-      fileInput, publishBtn
-    ])
+    var actions = h('section.actions', [ fileInput, publishBtn ])
 
     api.build_suggest_box(textArea, api.suggest_mentions)
     api.build_suggest_box(channelInput, api.suggest_channel)
 
     var composer = h('Compose', {
-      className: opts.shrink === false ? '-expanded' : '-contracted'
+      classList: [ when(isExpanded, '-expanded', '-contracted') ]
     }, [
-      textArea,
       channelInput,
+      textArea,
       actions
     ])
-
 
     return composer
   }
