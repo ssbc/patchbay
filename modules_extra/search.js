@@ -1,6 +1,6 @@
 const h = require('../h')
 const fs = require('fs')
-const { Value, when } = require('@mmckegg/mutant')
+const { Value, when, computed } = require('@mmckegg/mutant')
 const u = require('../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -86,30 +86,30 @@ exports.create = function (api) {
 
     var queryStr = path.substr(1).trim()
     var query = queryStr.split(whitespace)
-    var _matches = searchFilter(query)
+    var matchesQuery = searchFilter(query)
 
     const isLinearSearch = Value(false)
+    const isFulltextSearchDone = Value(false)
     const searched = Value(0)
     const matches = Value(0)
+    const hasNoFulltextMatches = computed([isFulltextSearchDone, matches],
+      (done, matches) => done && matches === 0)
     const searchHeader = h('Search', [
       h('header', h('h1', query.join(' '))),
       when(isLinearSearch, 
         h('section.details', [ 
           h('div.searched', ['Searched: ', searched]),
           h('div.matches', [matches, ' matches']) 
-        ])
+        ]),
+        when(hasNoFulltextMatches,
+          h('section.details', [
+            h('div.matches', 'No matches')
+          ])
+        )
       )
     ])
     var { container, content } = api.build_scroller({ prepend: searchHeader })
     container.id = path // helps tabs find this tab
-
-    function matchesQuery (data) {
-      searched.set(searched() + 1)
-      var m = _matches(data)
-      if(m) matches.set(matches() +1 )
-      
-      return m
-    }
 
     function renderMsg(msg) {
       var el = api.message_render(msg)
@@ -126,14 +126,18 @@ exports.create = function (api) {
     pull(
       u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
       fallback((err) => {
-        if (/^no source/.test(err.message)) {
+        if (err === true) {
+          isFulltextSearchDone.set(true)
+        } else if (/^no source/.test(err.message)) {
           isLinearSearch.set(true)
           return pull(
             u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+            pull.through(() => searched.set(searched()+1)),
             pull.filter(matchesQuery)
           )
         }
       }),
+      pull.through(() => matches.set(matches()+1)),
       Scroller(container, content, renderMsg, false, false)
     )
 
