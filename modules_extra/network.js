@@ -208,8 +208,14 @@ function obs_gossip_peers (api) {
   })
 
   refresh()
+  
+  var sortedIds = computed([state], (state) => {
+    Object.keys(state).sort((a, b) => {
+      return peerListSort(state[a], state[b])
+    })
+  })
 
-  return dictToCollection.values(state)
+  return mutantMap(sortedIds, state.get)
 
   function refresh () {
     api.sbot_gossip_peers((err, peers) => {
