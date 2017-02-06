@@ -1,6 +1,6 @@
 const h = require('../h')
 const fs = require('fs')
-const { Value, when, computed } = require('@mmckegg/mutant')
+const { Struct, Value, when, computed } = require('@mmckegg/mutant')
 const u = require('../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -88,24 +88,31 @@ exports.create = function (api) {
     var query = queryStr.split(whitespace)
     var matchesQuery = searchFilter(query)
 
-    const isLinearSearch = Value(false)
-    const isFulltextSearchDone = Value(false)
-    const searched = Value(0)
-    const matches = Value(0)
-    const hasNoFulltextMatches = computed([isFulltextSearchDone, matches],
+    const search = Struct({
+      isLinear: Value(false),
+      linear: Struct({
+        checked: Value(0)
+      }),
+      fulltext: Struct({
+        isDone: Value(false)
+      }),
+      matches: Value(0)
+    })
+    const hasNoFulltextMatches = computed([search.fulltext.isDone, search.matches],
       (done, matches) => done && matches === 0)
+
+
     const searchHeader = h('Search', [
       h('header', h('h1', query.join(' '))),
-      when(isLinearSearch, 
-        h('section.details', [ 
-          h('div.searched', ['Searched: ', searched]),
-          h('div.matches', [matches, ' matches']) 
+      when(search.isLinear,
+        h('section.details', [
+          h('div.searched', ['Searched: ', search.linear.checked]),
+          h('div.matches', [search.matches, ' matches'])
         ]),
-        when(hasNoFulltextMatches,
-          h('section.details', [
-            h('div.matches', 'No matches')
-          ])
-        )
+        h('section.details', [
+          h('div.searched'),
+          when(hasNoFulltextMatches, h('div.matches', 'No matches'))
+        ])
       )
     ])
     var { container, content } = api.build_scroller({ prepend: searchHeader })
@@ -127,9 +134,9 @@ exports.create = function (api) {
       u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
       fallback((err) => {
         if (err === true) {
-          isFulltextSearchDone.set(true)
+          search.fulltext.isDone.set(true)
         } else if (/^no source/.test(err.message)) {
-          isLinearSearch.set(true)
+          search.isLinear.set(true)
           return pull(
             u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
             pull.through(() => searched.set(searched()+1)),
@@ -137,7 +144,7 @@ exports.create = function (api) {
           )
         }
       }),
-      pull.through(() => matches.set(matches()+1)),
+      pull.through(() => search.matches.set(search.matches()+1)),
       Scroller(container, content, renderMsg, false, false)
     )
 
