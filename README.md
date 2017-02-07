@@ -11,10 +11,20 @@ This makes in very easy to create say, a renderer for a new message type, or swi
 
 ## Setup
 
+Libsodium has some build dependencies. On *ubuntu systems the following might help:
+
+```sh
+sudo apt-get install m4 libtool eclipse-cdt-autotools
+```
+
+Install Scuttlebot (your gossip server)
+
 ```sh
 npm install scuttlebot@latest -g
+
 # make sure you have secure-scuttlebutt@15.2.0
 npm ls secure-scuttlebutt -g
+
 sbot server
 # if you are already running patchwork, that also works.
 # (must have at least >= 2.8)
@@ -24,10 +34,11 @@ sbot plugins.install ssb-links
 sbot plugins.install ssb-query
 sbot plugins.install ssb-ws
 sbot plugins.install ssb-fulltext # for faster searches (optional)
+
 # restart sbot server (go back to previous tab and kill it)
 ```
 
-now clone patchbay.
+Install Patchbay (an interface for the your scuttlebutt database)
 
 ```sh
 git clone https://github.com/ssbc/patchbay.git
