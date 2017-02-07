@@ -32,7 +32,6 @@ now clone patchbay.
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
-npm run rebuild
 ```
 
 
@@ -41,7 +40,7 @@ npm run rebuild
 From inside the patchbay repo folder, 
 
 ```sh
-npm run bundle
+npm run rebuild
 npm start
 ```
 
