@@ -11,6 +11,7 @@ const {
 exports.needs = {
   avatar_image_link: 'first',
   avatar_name_link: 'first',
+  build_scroller: 'first',
   sbot_gossip_peers: 'first',
   sbot_gossip_connect: 'first'
 }
@@ -131,35 +132,36 @@ exports.create = function (api) {
   function screen_view (path) {
     if (path !== '/network') return
 
-    var peers = obs_gossip_peers(api)
+    const peers = obs_gossip_peers(api)
 
-    return h('div', { style: {'overflow':'auto'}, className: 'column scroller' }, [
-      h('Network', [
-        mutantMap(peers, peer => {
-          var { key, ping, source, state, stateChange } = peer
+    const network = h('Network', [
+      mutantMap(peers, peer => {
+        const { key, ping, source, state, stateChange } = peer
+        const isConnected = computed(state, state => /^connect/.test(state))
 
-          return h('NetworkConnection', [
-            h('section.avatar', [
-              api.avatar_image_link(key()),
-            ]),
-            h('section.name', [
-              api.avatar_name_link(key()),
-            ]),
-            h('section.type', [
-              computed(peer, getType),
-            ]),
-            h('section.source', [
-              h('label', 'source:'),
-              h('code', source)
-            ]),
-            h('section.state', [
-              h('label', 'state:'),
-              h('i', {
-                className: computed(state, (state) => '-'+state)
-              }),
-              h('code', when(state, state, 'not connected'))
-            ]),
-            h('section.actions', [
+        return h('NetworkConnection', [
+          h('section.avatar', [
+            api.avatar_image_link(key()),
+          ]),
+          h('section.name', [
+            api.avatar_name_link(key()),
+          ]),
+          h('section.type', [
+            computed(peer, getType),
+          ]),
+          h('section.source', [
+            h('label', 'source:'),
+            h('code', source)
+          ]),
+          h('section.state', [
+            h('label', 'state:'),
+            h('i', {
+              className: computed(state, (state) => '-'+state)
+            }),
+            h('code', when(state, state, 'not connected'))
+          ]),
+          h('section.actions', [
+            when(isConnected, null,
               h('button', {
                 'ev-click': () => {
                   api.sbot_gossip_connect(peer(), (err) => {
@@ -169,30 +171,34 @@ exports.create = function (api) {
                 }},
                 'connect'
               )
+            )
+          ]),
+          h('section.time-ago', [
+            h('div',
+              { title: computed(stateChange, formatDate) },
+              [ computed(stateChange, humanDate) ]
+            )
+          ]),
+          h('section.ping', [
+            h('div.rtt', [
+              h('label', 'rtt:'),
+              h('code', computed(ping.rtt.mean, duration))
             ]),
-            h('section.time-ago', [
-              h('div',
-                { title: computed(stateChange, formatDate) },
-                [ computed(stateChange, humanDate) ]
-              )
+            h('div.skew', [
+              h('label', 'skew:'),
+              h('code', computed(ping.skew.mean, duration))
             ]),
-            h('section.ping', [
-              h('div.rtt', [
-                h('label', 'rtt:'),
-                h('code', computed(ping.rtt.mean, duration))
-              ]),
-              h('div.skew', [
-                h('label', 'skew:'),
-                h('code', computed(ping.skew.mean, duration))
-              ]),
-            ]),
-            h('section.address', [
-              h('code', computed(peer, legacyToMultiServer))
-            ])
+          ]),
+          h('section.address', [
+            h('code', computed(peer, legacyToMultiServer))
           ])
-        })
-      ])
+        ])
+      })
     ])
+
+    // doesn't use the scroller, just a styling convenience
+    const { container } = api.build_scroller({ prepend: network })
+    return container
   }
 }
 
