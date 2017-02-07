@@ -1,6 +1,6 @@
 const h = require('../h')
 const fs = require('fs')
-const { Value } = require('@mmckegg/mutant')
+const { Struct, Value, when, computed } = require('@mmckegg/mutant')
 const u = require('../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -9,7 +9,8 @@ const TextNodeSearcher = require('text-node-searcher')
 exports.needs = {
   build_scroller: 'first',
   message_render: 'first',
-  sbot_log: 'first'
+  sbot_log: 'first',
+  sbot_fulltext_search: 'first'
 }
 
 exports.gives = {
@@ -56,6 +57,23 @@ function highlight(el, query) {
   return el
 }
 
+function fallback(reader) {
+  var fallbackRead
+  return function (read) {
+    return function (abort, cb) {
+      read(abort, function next(end, data) {
+        if (end && reader && (fallbackRead = reader(end))) {
+          reader = null
+          read = fallbackRead
+          read(abort, next)
+        } else {
+          cb(end, data)
+        }
+      })
+    }
+  }
+}
+
 exports.create = function (api) {
 
   return {
@@ -66,28 +84,39 @@ exports.create = function (api) {
   function screen_view (path) {
     if (path[0] !== '?') return
 
-    var query = path.substr(1).trim().split(whitespace)
-    var _matches = searchFilter(query)
+    var queryStr = path.substr(1).trim()
+    var query = queryStr.split(whitespace)
+    var matchesQuery = searchFilter(query)
 
-    const searched = Value(0)
-    const matches = Value(0)
+    const search = Struct({
+      isLinear: Value(false),
+      linear: Struct({
+        checked: Value(0)
+      }),
+      fulltext: Struct({
+        isDone: Value(false)
+      }),
+      matches: Value(0)
+    })
+    const hasNoFulltextMatches = computed([search.fulltext.isDone, search.matches],
+      (done, matches) => done && matches === 0)
+
+
     const searchHeader = h('Search', [
-      h('header', h('h1', query)),
-      h('section.details', [ 
-        h('div.searched', ['Searched: ', searched]),
-        h('div.matches', [matches, ' matches']) 
-      ])
+      h('header', h('h1', query.join(' '))),
+      when(search.isLinear,
+        h('section.details', [
+          h('div.searched', ['Searched: ', search.linear.checked]),
+          h('div.matches', [search.matches, ' matches'])
+        ]),
+        h('section.details', [
+          h('div.searched'),
+          when(hasNoFulltextMatches, h('div.matches', 'No matches'))
+        ])
+      )
     ])
     var { container, content } = api.build_scroller({ prepend: searchHeader })
     container.id = path // helps tabs find this tab
-
-    function matchesQuery (data) {
-      searched.set(searched() + 1)
-      var m = _matches(data)
-      if(m) matches.set(matches() +1 )
-      
-      return m
-    }
 
     function renderMsg(msg) {
       var el = api.message_render(msg)
@@ -102,8 +131,20 @@ exports.create = function (api) {
     )
 
     pull(
-      u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-      pull.filter(matchesQuery),
+      u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
+      fallback((err) => {
+        if (err === true) {
+          search.fulltext.isDone.set(true)
+        } else if (/^no source/.test(err.message)) {
+          search.isLinear.set(true)
+          return pull(
+            u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+            pull.through(() => searched.set(searched()+1)),
+            pull.filter(matchesQuery)
+          )
+        }
+      }),
+      pull.through(() => search.matches.set(search.matches()+1)),
       Scroller(container, content, renderMsg, false, false)
     )
 

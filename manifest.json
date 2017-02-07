@@ -104,6 +104,9 @@
     "changes": "source",
     "createWants": "source"
   },
+  "fulltext": {
+    "search": "source"
+  },
   "links2": {
     "read": "source",
     "dump": "source"

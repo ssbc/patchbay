@@ -23,10 +23,11 @@ sbot server
 # if you are already running patchwork, that also works.
 # (must have at least >= 2.8)
 
-# then in another tab (these must be 3 separate commands)
+# then in another tab (these must be separate commands)
 sbot plugins.install ssb-links
 sbot plugins.install ssb-query
 sbot plugins.install ssb-ws
+sbot plugins.install ssb-fulltext # for faster searches (optional)
 # restart sbot server (go back to previous tab and kill it)
 ```
 now clone and run patchbay.
