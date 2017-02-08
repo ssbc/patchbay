@@ -58,14 +58,12 @@ exports.create = function (api) {
 
   function publish (content, cb) {
     if(content.recps)
-      content = exports.message_box(content)
+      content = box(content)
     api.sbot.publish(content, function (err, msg) {
       if(err) throw err
       console.log('PUBLISHED', msg)
       if(cb) cb(err, msg)
     })
   }
-
-  return exports
 }
 

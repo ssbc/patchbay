@@ -27,7 +27,7 @@ exports.create = function (api) {
     return function (cb) {
       if(!/^[%&@]\w/.test(word)) return cb()
 
-      api.signified(word, (err, names) => {
+      api.about.signified(word, (err, names) => {
         if(err) return cb(err)
 
         cb(null, names.map(e => {
@@ -37,7 +37,7 @@ exports.create = function (api) {
             subtitle: `(${rank}) ${id.substring(0,10)}`,
             value: '['+name+']('+id+')',
             rank,
-            image: api.about_image_src(id),
+            image: api.about.image_src(id),
             showBoth: true
           }
         }))
