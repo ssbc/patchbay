@@ -12,21 +12,29 @@ function map(ary, iter) {
 }
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  message_compose: 'first',
-  message_unbox: 'first',
-  sbot_log: 'first',
-  sbot_whoami: 'first',
-  about_image_link: 'first',
-  emoji_url: 'first'
+  about: { image_link: 'first' },
+  message: {
+    render: 'first',
+    compose: 'first',
+    unbox: 'first'
+  },
+  sbot: {
+    log: 'first',
+    whoami: 'first'
+  },
+  helpers: {
+    build_scroller: 'first',
+    emoji_url: 'first'
+  }
 }
 
 exports.gives = {
   builtin_tabs: true,
   screen_view: true,
-  message_meta: true,
-  message_content_mini: true,
+  message: {
+    meta: true,
+    content_mini: true,
+  }
   // mcss: true
 }
 
@@ -38,7 +46,7 @@ exports.create = function (api) {
         return 'string' == typeof msg.value.content
       }),
       pull.map(function (msg) {
-        return api.message_unbox(msg)
+        return api.message.unbox(msg)
       }),
       pull.filter(Boolean)
     )
@@ -47,8 +55,10 @@ exports.create = function (api) {
   return {
     builtin_tabs,
     screen_view,
-    message_meta,
-    message_content_mini,
+    message: {
+      meta,
+      content_mini
+    },
     // mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -59,7 +69,7 @@ exports.create = function (api) {
   function screen_view (path) {
     if(path !== '/private') return
 
-    var composer = api.message_compose(
+    var composer = api.message.compose(
       {type: 'post', recps: [], private: true},
       {
         prepublish: function (msg) {
@@ -73,27 +83,27 @@ exports.create = function (api) {
         placeholder: 'Write a private message'
       }
     )
-    var { container, content } = api.build_scroller({ prepend: composer })
+    var { container, content } = api.helpers.build_scroller({ prepend: composer })
 
     // if local id is different from sbot id, sbot won't have indexes of
     // private threads
     //TODO: put all private indexes client side.
-    api.sbot_whoami(function (err, feed) {
+    api.sbot.whoami(function (err, feed) {
       if (err) return console.error(err)
       if(id !== feed.id)
         return container.appendChild(h('h4',
           'Private messages are not supported in the lite client.'))
 
       pull(
-        u.next(api.sbot_log, {old: false, limit: 100}),
+        u.next(api.sbot.log, {old: false, limit: 100}),
         unbox(),
-        Scroller(container, content, api.message_render, true, false)
+        Scroller(container, content, api.message.render, true, false)
       )
 
       pull(
-        u.next(api.sbot_log, {reverse: true, limit: 1000}),
+        u.next(api.sbot.log, {reverse: true, limit: 1000}),
         unbox(),
-        Scroller(container, content, api.message_render, false, false, function (err) {
+        Scroller(container, content, api.message.render, false, false, function (err) {
           if(err) throw err
         })
       )
@@ -102,7 +112,7 @@ exports.create = function (api) {
     return container
   }
 
-  function message_meta (msg) {
+  function meta (msg) {
     if(!msg.value.content.recps && ! msg.value.private) return
 
     return h('div', {
@@ -114,15 +124,15 @@ exports.create = function (api) {
     }, [
       h('div', 'private: ['),
       map(msg.value.content.recps, id => (
-        api.about_image_link('string' == typeof id ? id : id.link)
+        api.about.image_link('string' == typeof id ? id : id.link)
       )),
       h('div', ']'),
     ])
   }
 
-  function message_content_mini (msg, sbot)  {
+  function content_mini (msg, sbot)  {
     if (typeof msg.value.content === 'string') {
-      var icon = api.emoji_url('lock')
+      var icon = api.helpers.emoji_url('lock')
       return icon
         ? h('img', {className: 'emoji', src: icon})
         : 'PRIVATE'

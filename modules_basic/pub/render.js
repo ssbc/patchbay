@@ -1,20 +1,22 @@
 var h = require('hyperscript')
 
 exports.needs = {
-  about_name: 'first',
-  about_link: 'first'
+  about: {
+    name: 'first',
+    link: 'first'
+  }
 }
 
 exports.gives = {
-  message_content: true,
+  message: { content: true }
 }
 
 exports.create = function (api) {
   return {
-    message_content
+    message: { content }
   }
 
-  function message_content (msg, sbot)  {
+  function content (msg, sbot)  {
     var c = msg.value.content
     if (c.type !== 'pub') return
 
@@ -22,7 +24,7 @@ exports.create = function (api) {
 
     return [
       h('p', 'announced an address for ',
-        api.about_link(address.key, api.about_name(address.key)), ':'),
+        api.about.link(address.key, api.about.name(address.key)), ':'),
       h('blockquote',
         h('code', address.host + ':' + address.port)
       )

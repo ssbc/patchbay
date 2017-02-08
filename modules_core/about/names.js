@@ -7,14 +7,18 @@ function all(stream, cb) {
 }
 
 exports.needs = {
-  sbot_links2: 'first',
-  sbot_query: 'first'
+  sbot: {
+    links2: 'first',
+    query: 'first'
+  }
 }
 
 exports.gives = {
   connection_status: true,
-  signifier: true,
-  signified: true,
+  about: {
+    signifier: true,
+    signified: true
+  }
 }
 
 /*
@@ -117,14 +121,15 @@ var queryNamedGitRepos = [
 ]
 exports.create = function (api) {
 
-  var exports = {}
-  exports.connection_status = function (err) {
+  // return at bottom
+
+  function connection_status (err) {
     if(!err) {
       pull(
         many([
-          api.sbot_links2({query: [filter, map, reduce]}),
-          add_sigil(api.sbot_query({query: [filter2, map2, reduce]})),
-          add_sigil(api.sbot_query({query: queryNamedGitRepos}))
+          api.sbot.links2({query: [filter, map, reduce]}),
+          add_sigil(api.sbot.query({query: [filter2, map2, reduce]})),
+          add_sigil(api.sbot.query({query: queryNamedGitRepos}))
         ]),
         //reducing also ensures order by the lookup properties
         //in this case: [name, id]
@@ -139,9 +144,9 @@ exports.create = function (api) {
       )
 
       pull(many([
-        api.sbot_links2({query: [filter, map], old: false}),
-        add_sigil(api.sbot_query({query: [filter2, map2], old: false})),
-        add_sigil(api.sbot_query({query: queryNamedGitRepos, old: false}))
+        api.sbot.links2({query: [filter, map], old: false}),
+        add_sigil(api.sbot.query({query: [filter2, map2], old: false})),
+        add_sigil(api.sbot.query({query: queryNamedGitRepos, old: false}))
       ]),
       pull.drain(update))
     }
@@ -166,14 +171,20 @@ exports.create = function (api) {
   //that should mean the space required is just 2x object references,
   //not 2x objects, and we can use binary search to find matches.
 
-  exports.signifier = async(function (id) {
+  const signifier = async(function (id) {
     return rank(names.filter(function (e) { return e.id == id}))
   })
 
-  exports.signified = async(function (name) {
+  const signified = async(function (name) {
     var rx = new RegExp('^'+name)
     return rank(names.filter(function (e) { return rx.test(e.name) }))
   })
 
-  return exports
+  return {
+    connection_status,
+    about: {
+      signifier,
+      signified
+    }
+  }
 }

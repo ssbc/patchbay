@@ -8,10 +8,8 @@ exports.needs = {
     edit: 'first',
     image_name_link: 'first'
   },
-  invite: {
-    parse: 'first',
-    accept: 'first'
-  }
+  invite_parse: 'first',
+  invite_accept: 'first',
   sbot: {
     progress: 'first',
     query: 'first'

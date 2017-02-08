@@ -30,11 +30,13 @@ function crop (d, cb) {
 }
 
 exports.needs = {
-  message_confirm: 'first',
-  sbot_blobs_add: 'first',
-  blob_url: 'first',
-  sbot_links: 'first',
-  about_name: 'first'
+  about: { name: 'first' },
+  helpers: { blob_url: 'first' },
+  message: { confirm: 'first' },
+  sbot: {
+    links: 'first',
+    blobs_add: 'first'
+  }
 }
 
 exports.gives = {
@@ -49,27 +51,26 @@ exports.create = function (api) {
   }
 
   function edit (id) {
-
     var avatar = Struct({
       original: Value(visualize(new Buffer(id.substring(1), 'base64'), 256).src),
       new: MutantObject()
     })
 
-    getAvatar({links: api.sbot_links}, self_id, id, (err, _avatar) => {
+    getAvatar({links: api.sbot.links}, self_id, id, (err, _avatar) => {
       if (err) return console.error(err)
       //don't show user has already selected an avatar.
       if(ref.isBlob(_avatar.image))
-        avatar.original.set(api.blob_url(_avatar.image))
+        avatar.original.set(api.helpers.blob_url(_avatar.image))
     })
 
     var name = Struct({
-      original: Value(api.about_name(id)),
+      original: Value(api.about.name(id)),
       new: Value()
     })
 
     var images = MutantArray()
     pull(
-      api.sbot_links({dest: id, rel: 'about', values: true}),
+      api.sbot.links({dest: id, rel: 'about', values: true}),
       pull.map(e => e.value.content.image),
       pull.filter(e => e && 'string' == typeof e.link),
       pull.unique('link'),
@@ -79,7 +80,7 @@ exports.create = function (api) {
     var namesRecord = MutantObject()
     // TODO constrain query to one name per peer?
     pull(
-      api.sbot_links({dest: id, rel: 'about', values: true}),
+      api.sbot.links({dest: id, rel: 'about', values: true}),
       pull.map(e => e.value.content.name),
       pull.filter(Boolean),
       pull.drain(name => {
@@ -99,7 +100,7 @@ exports.create = function (api) {
     })
 
     var avatarSrc = computed([avatar], avatar => {
-      if (avatar.new.link) return api.blob_url(avatar.new.link)
+      if (avatar.new.link) return api.helpers.blob_url(avatar.new.link)
       else return avatar.original
     })
 
@@ -122,7 +123,7 @@ exports.create = function (api) {
         h('section.avatars', [
           h('header', 'Avatars'),
           map(images, image => h('img', {
-            'src': api.blob_url(image),
+            'src': api.helpers.blob_url(image),
             'ev-click': () => avatar.new.set(image)
           })),
           h('div.file-upload', [
@@ -155,7 +156,7 @@ exports.create = function (api) {
           var _data = dataurl.parse(data)
           pull(
             pull.once(_data.data),
-            api.sbot_blobs_add((err, hash) => {
+            api.sbot.blobs_add((err, hash) => {
               //TODO. Alerts are EVIL.
               //I use them only in a moment of weakness.
 

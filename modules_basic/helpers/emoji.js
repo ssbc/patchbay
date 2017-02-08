@@ -1,18 +1,32 @@
 var emojis = require('emoji-named-characters')
 var emojiNames = Object.keys(emojis)
 
-exports.needs = { blob_url: 'first' }
-exports.gives = { emoji_names: true, emoji_url: true }
+exports.needs = { 
+  helpers: { blob_url: 'first' }
+}
+
+exports.gives = {
+  helpers: {
+    emoji_names: true,
+    emoji_url: true
+  }
+}
 
 exports.create = function (api) {
   return {
-    emoji_names: function () {
-      return emojiNames
-    },
-    emoji_url: function (emoji) {
-      return emoji in emojis &&
-        api.blob_url(emoji).replace(/\/blobs\/get/, '/img/emoji') + '.png'
+    helpers: {
+      emoji_names,
+      emoji_url
     }
+  }
+
+  function emoji_names () {
+    return emojiNames
+  }
+
+  function emoji_url (emoji) {
+    return emoji in emojis &&
+      api.helpers.blob_url(emoji).replace(/\/blobs\/get/, '/img/emoji') + '.png'
   }
 }
 

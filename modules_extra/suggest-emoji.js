@@ -1,7 +1,9 @@
 
 exports.needs = {
-  emoji_url: 'first',
-  emoji_names: 'first'
+  helpers: {
+    emoji_url: 'first',
+    emoji_names: 'first'
+  }
 }
 
 exports.gives = 'suggest_mentions'
@@ -13,11 +15,11 @@ exports.create = function (api) {
       if (word[0] !== ':' || word.length < 2) return cb()
       word = word.substr(1)
       if (word[word.length-1] === ':') word = word.substr(0, word.length-1)
-      cb(null, api.emoji_names().filter(function (name) {
+      cb(null, api.helpers.emoji_names().filter(function (name) {
         return name.substr(0, word.length) === word
       }).slice(0, 50).map(function (emoji) {
         return {
-          image: api.emoji_url(emoji),
+          image: api.helpers.emoji_url(emoji),
           title: emoji,
           subtitle: emoji,
           value: ':' + emoji + ':'

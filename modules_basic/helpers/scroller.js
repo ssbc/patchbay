@@ -2,13 +2,13 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.gives = {
-  build_scroller: true,
+  helpers: { build_scroller: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    build_scroller,
+    helpers: { build_scroller },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 

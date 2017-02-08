@@ -9,29 +9,37 @@ function isRelated(value, name) {
 }
 
 exports.needs = {
-  about_image_name_link: 'first',
-  about_name: 'first',
-  about_link: 'first',
-  message_confirm: 'first',
-  follower_of: 'first'
+  about: {
+    image_name_link: 'first',
+    name: 'first',
+    link: 'first',
+  },
+  message: { confirm: 'first' },
+  contact: { follower_of: 'first' }
 }
 
 exports.gives = {
-  message_content: true,
-  message_content_mini: true,
-  contact_action: true,
+  message: {
+    content: true,
+    content_mini: true
+  },
+  contact: { action: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_content_mini,
-    message_content,
-    contact_action,
+    message: {
+      content_mini,
+      content
+    },
+    contact: {
+      action
+    },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_content_mini (msg) {
+  function content_mini (msg) {
     const { type, contact, following, blocking } = msg.value.content
     if(type == 'contact' && contact) {
       var relation = isRelated(following, 'follows')
@@ -39,31 +47,31 @@ exports.create = function (api) {
       return [
         relation,
         ' ',
-        api.about_link(contact, api.about_name(contact), '')
+        api.about.link(contact, api.about.name(contact), '')
       ]
     }
   }
 
-  function message_content (msg) {
+  function content (msg) {
     const { type, contact, following, blocking } = msg.value.content
     if(type == 'contact' && contact) {
       var relation = isRelated(following, 'follows')
       if(blocking) relation = 'blocks'
       return h('div.contact', [
         relation, 
-        api.about_image_name_link(contact, 'thumbnail')
+        api.about.name_link(contact, 'thumbnail')
       ])
     }
   }
 
-  function contact_action (id) {
+  function action (id) {
     var follows_you, you_follow
 
-    api.follower_of(self_id, id, (err, f) => {
+    api.contact.follower_of(self_id, id, (err, f) => {
       you_follow = f || false
       update()
     })
-    api.follower_of(id, self_id, (err, f) => {
+    api.contact.follower_of(id, self_id, (err, f) => {
       follows_you = f || false
       update()
     })

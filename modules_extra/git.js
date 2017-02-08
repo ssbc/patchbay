@@ -11,21 +11,27 @@ var KVGraph = require('kvgraph')
 var mergeRepo = require('ssb-git/merge')
 
 exports.needs = {
-  message_link: 'first',
-  message_confirm: 'first',
-  message_compose: 'first',
-  sbot_links: 'first',
-  sbot_links2: 'first',
-  sbot_get: 'first',
-  about_name: 'first',
-  markdown: 'first'
+  about: { name: 'first' },
+  message: {
+    link: 'first',
+    confirm: 'first',
+    compose: 'first'
+  },
+  sbot: {
+    links: 'first',
+    links2: 'first',
+    get: 'first'
+  },
+  helpers: { markdown: 'first' }
 }
 
 exports.gives = {
-  message_action: true,
-  message_meta: true,
-  message_content: true,
-  message_title: true
+  message: {
+    action: true,
+    meta: true,
+    content: true,
+    title: true
+  }
 }
 
 
@@ -41,7 +47,7 @@ exports.create = function (api) {
     var updates = new KVGraph('key')
     var _cb, _refs
     pull(
-      api.sbot_links({
+      api.sbot.links({
         reverse: true,
         // source: msg.value.author,
         dest: msg.key,
@@ -73,7 +79,7 @@ exports.create = function (api) {
 
   function getForks(id) {
     return pull(
-      api.sbot_links({
+      api.sbot.links({
         reverse: true,
         dest: id,
         rel: 'upstream'
@@ -89,7 +95,7 @@ exports.create = function (api) {
 
   function repoText(id) {
     var text = document.createTextNode(id.substr(0, 10) + '…')
-    getAvatar({links: api.sbot_links, get: api.sbot_get}, self_id, id,
+    getAvatar({links: api.sbot.links, get: api.sbot.get}, self_id, id,
         function (err, avatar) {
       if(err) return console.error(err)
       if (avatar.name[0] !== '%') avatar.name = '%' + avatar.name
@@ -108,7 +114,7 @@ exports.create = function (api) {
 
   function getIssueState(id, cb) {
     pull(
-      api.sbot_links({dest: id, rel: 'issues', values: true, reverse: true}),
+      api.sbot.links({dest: id, rel: 'issues', values: true, reverse: true}),
       pull.map(function (msg) {
         return msg.value.content.issues
       }),
@@ -154,10 +160,10 @@ exports.create = function (api) {
   function renderIssueEdit(c) {
     var id = c.issue || c.link
     return [
-      c.title ? h('p', 'renamed issue ', api.message_link(id),
+      c.title ? h('p', 'renamed issue ', api.message.link(id),
         ' to ', h('ins', c.title)) : null,
-      c.open === false ? h('p', 'closed issue ', api.message_link(id)) : null,
-      c.open === true ? h('p', 'reopened issue ', api.message_link(id)) : null]
+      c.open === false ? h('p', 'closed issue ', api.message.link(id)) : null,
+      c.open === true ? h('p', 'reopened issue ', api.message.link(id)) : null]
   }
 
   function findMessageContent(el) {
@@ -171,7 +177,7 @@ exports.create = function (api) {
   function issueForm(msg, contentEl) {
     var form = h('form',
       h('strong', 'New Issue:'),
-      api.message_compose(
+      api.message.compose(
         {type: 'issue', project: msg.key},
         function (value) { return value },
         function (err, issue) {
@@ -236,7 +242,7 @@ exports.create = function (api) {
           onchange: function () {
             // list branches for selected repo
             var repoId = this.value
-            if(repoId) api.sbot_get(repoId, function (err, value) {
+            if(repoId) api.sbot.get(repoId, function (err, value) {
               if(err) console.error(err)
               var msg = value && {key: repoId, value: value}
               headBranchInput = headBranchInput.swap(branchMenu(msg, true))
@@ -248,7 +254,7 @@ exports.create = function (api) {
             getForks(msg.key)
           ]), pull.map(function (fork) {
             return h('option', {value: fork.id},
-              repoLink(fork.id), ' by ', api.about_name(fork.author))
+              repoLink(fork.id), ' by ', api.about.name(fork.author))
           }))
         }),
         ':',
@@ -257,7 +263,7 @@ exports.create = function (api) {
         repoName(msg.key),
         ':',
         branchInput),
-      api.message_compose(
+      api.message.compose(
         {
           type: 'pull-request',
           project: msg.key,
@@ -285,247 +291,249 @@ exports.create = function (api) {
 
 
 
-  return {
-    message_content: function (msg, sbot) {
-      var c = msg.value.content
+  return { 
+    message: {
+      content: function (msg, sbot) {
+        var c = msg.value.content
 
-      if(c.type === 'git-repo') {
-        var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
-        var forksT
-        var div = h('div',
-          h('p', h('code', 'ssb://' + msg.key)),
-          h('div.git-table-wrapper', {style: {'max-height': '12em'}},
-            h('table',
-              branchesT = tableRows(h('tr',
-                h('th', 'branch'),
-                h('th', 'commit'),
-                h('th', 'last update'))),
-              tagsT = tableRows(h('tr',
-                h('th', 'tag'),
-                h('th', 'commit'),
-                h('th', 'last update'))))),
-          h('div.git-table-wrapper', {style: {'max-height': '16em'}},
-            h('table',
-              openIssuesT = tableRows(h('tr',
-                h('th', 'open issues'))),
-              closedIssuesT = tableRows(h('tr',
-                h('th', 'closed issues'))))),
-          h('div.git-table-wrapper', {style: {'max-height': '16em'}},
-            h('table',
-              openPRsT = tableRows(h('tr',
-                h('th', 'open pull requests'))),
-              closedPRsT = tableRows(h('tr',
-                h('th', 'closed pull requests'))))),
-          h('div.git-table-wrapper',
-            h('table',
-              forksT = tableRows(h('tr',
-                h('th', 'forks'))))),
-          h('div', h('a', {href: '#', onclick: function (e) {
-            e.preventDefault()
-            this.parentNode.replaceChild(issueForm(msg), this)
-          }}, 'New Issue…')),
-          newPullRequestButton.call(this, msg)
-        )
+        if(c.type === 'git-repo') {
+          var branchesT, tagsT, openIssuesT, closedIssuesT, openPRsT, closedPRsT
+          var forksT
+          var div = h('div',
+            h('p', h('code', 'ssb://' + msg.key)),
+            h('div.git-table-wrapper', {style: {'max-height': '12em'}},
+              h('table',
+                branchesT = tableRows(h('tr',
+                  h('th', 'branch'),
+                  h('th', 'commit'),
+                  h('th', 'last update'))),
+                tagsT = tableRows(h('tr',
+                  h('th', 'tag'),
+                  h('th', 'commit'),
+                  h('th', 'last update'))))),
+            h('div.git-table-wrapper', {style: {'max-height': '16em'}},
+              h('table',
+                openIssuesT = tableRows(h('tr',
+                  h('th', 'open issues'))),
+                closedIssuesT = tableRows(h('tr',
+                  h('th', 'closed issues'))))),
+            h('div.git-table-wrapper', {style: {'max-height': '16em'}},
+              h('table',
+                openPRsT = tableRows(h('tr',
+                  h('th', 'open pull requests'))),
+                closedPRsT = tableRows(h('tr',
+                  h('th', 'closed pull requests'))))),
+            h('div.git-table-wrapper',
+              h('table',
+                forksT = tableRows(h('tr',
+                  h('th', 'forks'))))),
+            h('div', h('a', {href: '#', onclick: function (e) {
+              e.preventDefault()
+              this.parentNode.replaceChild(issueForm(msg), this)
+            }}, 'New Issue…')),
+            newPullRequestButton.call(this, msg)
+          )
 
-        pull(getRefs(msg), pull.drain(function (ref) {
-          var name = ref.realname || ref.name
-          var author = ref.link && ref.link.value.author
-          var parts = /^refs\/(heads|tags)\/(.*)$/.exec(name) || []
-          var shortName = parts[2]
-          var t
-          if(parts[1] === 'heads') t = branchesT
-          else if(parts[1] === 'tags') t = tagsT
-          if(t) t.append(h('tr',
-            h('td', shortName,
-              ref.conflict ? [
-                h('br'),
-                h('a', {href: '#'+author}, api.about_name(author))
-              ] : ''),
-            h('td', h('code', ref.hash)),
-            h('td', messageTimestampLink(ref.link))))
-        }, function (err) {
-          if(err) console.error(err)
-        }))
+          pull(getRefs(msg), pull.drain(function (ref) {
+            var name = ref.realname || ref.name
+            var author = ref.link && ref.link.value.author
+            var parts = /^refs\/(heads|tags)\/(.*)$/.exec(name) || []
+            var shortName = parts[2]
+            var t
+            if(parts[1] === 'heads') t = branchesT
+            else if(parts[1] === 'tags') t = tagsT
+            if(t) t.append(h('tr',
+              h('td', shortName,
+                ref.conflict ? [
+                  h('br'),
+                  h('a', {href: '#'+author}, api.about.name(author))
+                ] : ''),
+              h('td', h('code', ref.hash)),
+              h('td', messageTimestampLink(ref.link))))
+          }, function (err) {
+            if(err) console.error(err)
+          }))
 
-        // list issues and pull requests
-        pull(
-          api.sbot_links({
-            reverse: true,
-            dest: msg.key,
-            rel: 'project',
-            values: true
-          }),
-          paramap(function (link, cb) {
-            getIssueState(link.key, function (err, state) {
-              if(err) return cb(err)
-              link.state = state
-              cb(null, link)
+          // list issues and pull requests
+          pull(
+            api.sbot.links({
+              reverse: true,
+              dest: msg.key,
+              rel: 'project',
+              values: true
+            }),
+            paramap(function (link, cb) {
+              getIssueState(link.key, function (err, state) {
+                if(err) return cb(err)
+                link.state = state
+                cb(null, link)
+              })
+            }),
+            pull.drain(function (link) {
+              var c = link.value.content
+              var title = c.title || (c.text ? c.text.length > 70
+                ? c.text.substr(0, 70) + '…'
+                : c.text : link.key)
+              var author = link.value.author
+              var t = c.type === 'pull-request'
+                ? link.state === 'open' ? openPRsT : closedPRsT
+                : link.state === 'open' ? openIssuesT : closedIssuesT
+              t.append(h('tr',
+                h('td',
+                  h('a', {href: '#'+link.key}, title), h('br'),
+                  h('small',
+                    'opened ', messageTimestampLink(link),
+                    ' by ', h('a', {href: '#'+author}, api.about.name(author))))))
+            }, function (err) {
+              if (err) console.error(err)
             })
-          }),
-          pull.drain(function (link) {
-            var c = link.value.content
-            var title = c.title || (c.text ? c.text.length > 70
-              ? c.text.substr(0, 70) + '…'
-              : c.text : link.key)
-            var author = link.value.author
-            var t = c.type === 'pull-request'
-              ? link.state === 'open' ? openPRsT : closedPRsT
-              : link.state === 'open' ? openIssuesT : closedIssuesT
-            t.append(h('tr',
-              h('td',
-                h('a', {href: '#'+link.key}, title), h('br'),
-                h('small',
-                  'opened ', messageTimestampLink(link),
-                  ' by ', h('a', {href: '#'+author}, api.about_name(author))))))
-          }, function (err) {
-            if (err) console.error(err)
+          )
+
+          // list forks
+          pull(
+            getForks(msg.key),
+            pull.drain(function (fork) {
+              forksT.append(h('tr', h('td',
+                repoLink(fork.id),
+                ' by ', h('a', {href: '#'+fork.author}, api.about.name(fork.author)))))
+            }, function (err) {
+              if (err) console.error(err)
+            })
+          )
+
+          return div
+        }
+
+        if(c.type === 'git-update') {
+          return [
+            c.refs ? h('ul', Object.keys(c.refs).map(function (ref) {
+              var rev = c.refs[ref]
+              return h('li',
+                shortRefName(ref) + ': ',
+                rev ? h('code', rev) : h('em', 'deleted'))
+            })) : null,
+            Array.isArray(c.commits) ? [
+              h('ul',
+                c.commits.map(function (commit) {
+                  return h('li',
+                    typeof commit.sha1 === 'string' ?
+                      [h('code', commit.sha1.substr(0, 8)), ' '] : null,
+                    commit.title ?
+                      h('q', commit.title) : null)
+                }),
+                c.commits_more > 0 ?
+                  h('li', '+ ', c.commits_more, ' more') : null)
+            ] : null,
+            Array.isArray(c.issues) ? c.issues.map(function (issue) {
+              if (issue.merged === true)
+                return h('p', 'Merged ', api.message.link(issue.link), ' in ',
+                  h('code', issue.object), ' ', h('q', issue.label))
+              if (issue.open === false)
+                return h('p', 'Closed ', api.message.link(issue.link), ' in ',
+                  h('code', issue.object), ' ', h('q', issue.label))
+            }) : null,
+            newPullRequestButton.call(this, msg)
+          ]
+        }
+
+        if(c.type === 'issue-edit'
+         || (c.type === 'post' && c.text === '')) {
+          return h('div',
+            c.issue ? renderIssueEdit(c) : null,
+            c.issues ? c.issues.map(renderIssueEdit) : null)
+        }
+
+        if(c.type === 'issue') {
+          return h('div',
+            c.title ? h('h4', c.title) : '',
+            api.helpers.markdown(c)
+          )
+        }
+
+        if(c.type === 'pull-request') {
+          return h('div',
+            c.title ? h('h4', c.title) : '',
+            api.helpers.markdown(c)
+          )
+        }
+      },
+
+      title: function (msg) {
+        var c = msg.value.content
+
+        if(c.type === 'git-repo') {
+          return h('div', [
+            h('div', 'git repo ', repoName(msg.key)),
+            c.upstream ? h('br') : '',
+            c.upstream ? h('div', 'fork of ', repoLink(c.upstream)) : ''
+          ])
+        }
+
+        if(c.type === 'git-update') {
+          return h('div', 'pushed to ', repoLink(c.repo))
+        }
+
+        if(c.type === 'issue-edit') {
+          return
+        }
+
+        if(c.type === 'issue') {
+          return h('div', 'opened issue on ', repoLink(c.project))
+        }
+
+        if(c.type === 'pull-request') {
+          return h('div', 'opened pull-request ', [
+            'to ', repoLink(c.repo), ':', c.branch, ' ',
+            'from ', repoLink(c.head_repo), ':', c.head_branch
+          ])
+        }
+      },
+
+      meta: function (msg, sbot) {
+        var type = msg.value.content.type
+        if (type === 'issue' || type === 'pull-request') {
+          var el = h('em', '...')
+          // TODO: update if issue is changed
+          getIssueState(msg.key, function (err, state) {
+            if (err) return console.error(err)
+            el.textContent = state
           })
-        )
+          return el
+        }
+      },
 
-        // list forks
-        pull(
-          getForks(msg.key),
-          pull.drain(function (fork) {
-            forksT.append(h('tr', h('td',
-              repoLink(fork.id),
-              ' by ', h('a', {href: '#'+fork.author}, api.about_name(fork.author)))))
-          }, function (err) {
-            if (err) console.error(err)
-          })
-        )
-
-        return div
-      }
-
-      if(c.type === 'git-update') {
-        return [
-          c.refs ? h('ul', Object.keys(c.refs).map(function (ref) {
-            var rev = c.refs[ref]
-            return h('li',
-              shortRefName(ref) + ': ',
-              rev ? h('code', rev) : h('em', 'deleted'))
-          })) : null,
-          Array.isArray(c.commits) ? [
-            h('ul',
-              c.commits.map(function (commit) {
-                return h('li',
-                  typeof commit.sha1 === 'string' ?
-                    [h('code', commit.sha1.substr(0, 8)), ' '] : null,
-                  commit.title ?
-                    h('q', commit.title) : null)
-              }),
-              c.commits_more > 0 ?
-                h('li', '+ ', c.commits_more, ' more') : null)
-          ] : null,
-          Array.isArray(c.issues) ? c.issues.map(function (issue) {
-            if (issue.merged === true)
-              return h('p', 'Merged ', api.message_link(issue.link), ' in ',
-                h('code', issue.object), ' ', h('q', issue.label))
-            if (issue.open === false)
-              return h('p', 'Closed ', api.message_link(issue.link), ' in ',
-                h('code', issue.object), ' ', h('q', issue.label))
-          }) : null,
-          newPullRequestButton.call(this, msg)
-        ]
-      }
-
-      if(c.type === 'issue-edit'
-       || (c.type === 'post' && c.text === '')) {
-        return h('div',
-          c.issue ? renderIssueEdit(c) : null,
-          c.issues ? c.issues.map(renderIssueEdit) : null)
-      }
-
-      if(c.type === 'issue') {
-        return h('div',
-          c.title ? h('h4', c.title) : '',
-          api.markdown(c)
-        )
-      }
-
-      if(c.type === 'pull-request') {
-        return h('div',
-          c.title ? h('h4', c.title) : '',
-          api.markdown(c)
-        )
-      }
-    },
-
-    message_title: function (msg) {
-      var c = msg.value.content
-
-      if(c.type === 'git-repo') {
-        return h('div', [
-          h('div', 'git repo ', repoName(msg.key)),
-          c.upstream ? h('br') : '',
-          c.upstream ? h('div', 'fork of ', repoLink(c.upstream)) : ''
-        ])
-      }
-
-      if(c.type === 'git-update') {
-        return h('div', 'pushed to ', repoLink(c.repo))
-      }
-
-      if(c.type === 'issue-edit') {
-        return
-      }
-
-      if(c.type === 'issue') {
-        return h('div', 'opened issue on ', repoLink(c.project))
-      }
-
-      if(c.type === 'pull-request') {
-        return h('div', 'opened pull-request ', [
-          'to ', repoLink(c.repo), ':', c.branch, ' ',
-          'from ', repoLink(c.head_repo), ':', c.head_branch
-        ])
-      }
-    },
-
-    message_meta: function (msg, sbot) {
-      var type = msg.value.content.type
-      if (type === 'issue' || type === 'pull-request') {
-        var el = h('em', '...')
-        // TODO: update if issue is changed
-        getIssueState(msg.key, function (err, state) {
-          if (err) return console.error(err)
-          el.textContent = state
-        })
-        return el
-      }
-    },
-
-    message_action: function (msg, sbot) {
-      var c = msg.value.content
-      if(c.type === 'issue' || c.type === 'pull-request') {
-        var isOpen
-        var a = h('a', {href: '#', onclick: function (e) {
-          e.preventDefault()
-          api.message_confirm({
-            type: 'issue-edit',
-            root: msg.key,
-            issues: [{
-              link: msg.key,
-              open: !isOpen
-            }]
-          }, function (err, msg) {
-            if(err) return alert(err)
-            if(!msg) return
-            isOpen = msg.value.content.open
+      action: function (msg, sbot) {
+        var c = msg.value.content
+        if(c.type === 'issue' || c.type === 'pull-request') {
+          var isOpen
+          var a = h('a', {href: '#', onclick: function (e) {
+            e.preventDefault()
+            api.message.confirm({
+              type: 'issue-edit',
+              root: msg.key,
+              issues: [{
+                link: msg.key,
+                open: !isOpen
+              }]
+            }, function (err, msg) {
+              if(err) return alert(err)
+              if(!msg) return
+              isOpen = msg.value.content.open
+              update()
+            })
+          }})
+          getIssueState(msg.key, function (err, state) {
+            if (err) return console.error(err)
+            isOpen = state === 'open'
             update()
           })
-        }})
-        getIssueState(msg.key, function (err, state) {
-          if (err) return console.error(err)
-          isOpen = state === 'open'
-          update()
-        })
-        function update() {
-          a.textContent = c.type === 'pull-request'
-            ? isOpen ? 'Close Pull Request' : 'Reopen Pull Request'
-            : isOpen ? 'Close Issue' : 'Reopen Issue'
+          function update() {
+            a.textContent = c.type === 'pull-request'
+              ? isOpen ? 'Close Pull Request' : 'Reopen Pull Request'
+              : isOpen ? 'Close Issue' : 'Reopen Issue'
+          }
+          return a
         }
-        return a
       }
     }
   }

@@ -1,14 +1,17 @@
 const fs = require('fs')
-const h = require('hyperscript')
 const u = require('../../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  message_compose: 'first',
-  sbot_log: 'first',
+  message: {
+    render: 'first',
+    compose: 'first'
+  },
+  sbot: { log: 'first' },
+  helpers: {
+    build_scroller: 'first'
+  }
 }
 
 exports.gives = {
@@ -31,17 +34,17 @@ exports.create = function (api) {
   function screen_view (path, sbot) {
     if(path !== '/public') return 
 
-    const composer = api.message_compose({type: 'post'}, {placeholder: 'Write a public message'})
-    var { container, content } = api.build_scroller({ prepend: composer })
+    const composer = api.message.compose({type: 'post'}, {placeholder: 'Write a public message'})
+    var { container, content } = api.helpers.build_scroller({ prepend: composer })
 
     pull(
-      u.next(api.sbot_log, {old: false, limit: 100}),
-      Scroller(container, content, api.message_render, true, false)
+      u.next(api.sbot.log, {old: false, limit: 100}),
+      Scroller(container, content, api.message.render, true, false)
     )
 
     pull(
-      u.next(api.sbot_log, {reverse: true, limit: 100, live: false}),
-      Scroller(container, content, api.message_render, false, false)
+      u.next(api.sbot.log, {reverse: true, limit: 100, live: false}),
+      Scroller(container, content, api.message.render, false, false)
     )
 
     return container

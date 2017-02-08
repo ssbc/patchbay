@@ -2,10 +2,8 @@ const fs = require('fs')
 const h = require('../../h')
 const human = require('human-time')
 
-exports.needs = {}
-
 exports.gives = {
-  timestamp: true,
+  helpers: { timestamp: true },
   mcss: true
 }
 
@@ -16,7 +14,7 @@ exports.create = function () {
   }, 60e3)
 
   return {
-    timestamp,
+    helpers: { timestamp },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 

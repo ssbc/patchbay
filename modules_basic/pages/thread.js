@@ -19,17 +19,20 @@ function once (cont) {
 }
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  message_name: 'first',
-  message_compose: 'first',
-  message_unbox: 'first',
-  sbot_get: 'first',
-  sbot_links: 'first'
+  helpers: { build_scroller: 'first', },
+  message: {
+    render: 'first',
+    name: 'first',
+    compose: 'first',
+    unbox: 'first'
+  },
+  sbot: {
+    get: 'first',
+    links: 'first'
+  }
 }
 
 exports.gives = 'screen_view'
-
 
 exports.create = function (api) {
 
@@ -37,13 +40,13 @@ exports.create = function (api) {
     //in this case, it's inconvienent that panel only takes
     //a stream. maybe it would be better to accept an array?
 
-    api.sbot_get(root, function (err, value) {
+    api.sbot.get(root, function (err, value) {
       if (err) return cb(err)
       var msg = {key: root, value: value}
   //    if(value.content.root) return getThread(value.content.root, cb)
 
       pull(
-        api.sbot_links({rel: 'root', dest: root, values: true, keys: true}),
+        api.sbot.links({rel: 'root', dest: root, values: true, keys: true}),
         pull.collect(function (err, ary) {
           if(err) return cb(err)
           ary.unshift(msg)
@@ -62,15 +65,15 @@ exports.create = function (api) {
         branch: id //mutated when thread is loaded.
       }
 
-      var composer = api.message_compose(meta, {shrink: false, placeholder: 'Write a reply'})
-      var { container, content } = api.build_scroller({ append: composer })
+      var composer = api.message.compose(meta, {shrink: false, placeholder: 'Write a reply'})
+      var { container, content } = api.helpers.build_scroller({ append: composer })
 
-      api.message_name(id, function (err, name) {
+      api.message.name(id, function (err, name) {
         container.title = name
       })
 
       pull(
-        api.sbot_links({
+        api.sbot.links({
           rel: 'root', dest: id, keys: true, old: false
         }),
         pull.drain(function (msg) {
@@ -89,11 +92,11 @@ exports.create = function (api) {
 
           //decrypt
           thread = thread.map(function (msg) {
-            return 'string' === typeof msg.value.content ? api.message_unbox(msg) : msg
+            return 'string' === typeof msg.value.content ? api.message.unbox(msg) : msg
           })
 
           if(err) return content.appendChild(h('pre', err.stack))
-          sort(thread).map(api.message_render).filter(Boolean).forEach(function (el) {
+          sort(thread).map(api.message.render).filter(Boolean).forEach(function (el) {
             content.appendChild(el)
           })
 

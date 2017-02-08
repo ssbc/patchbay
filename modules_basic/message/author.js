@@ -3,24 +3,26 @@ const h = require('../../h')
 const { when }= require('@mmckegg/mutant')
 
 exports.needs = {
-  about_link: 'first',
-  about_image: 'first',
-  about_name: 'first',
-  timestamp: 'first'
+  about: {
+    link: 'first',
+    image: 'first',
+    name: 'first'
+  },
+  helpers: { timestamp: 'first' }
 }
 
 exports.gives = {
-  message_author: true,
+  message: { author: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_author,
+    message: { author },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_author (msg, opts = {}) {
+  function author (msg, opts = {}) {
     var { size = 'small' } = opts
     var { value } = msg
     var { author } = value
@@ -29,10 +31,10 @@ exports.create = function (api) {
       className: `-${size}`
     }, [
       when(size !== 'mini',
-        h('section -image', api.about_link(author, api.about_image(author, 'thumbnail')))
+        h('section -image', api.about.link(author, api.about.image(author, 'thumbnail')))
       ),
-      h('section -name', api.about_link(author, api.about_name(author))),
-      h('section -timestamp', api.timestamp(msg))
+      h('section -name', api.about.link(author, api.about.name(author))),
+      h('section -timestamp', api.helpers.timestamp(msg))
     ])
   }
 }

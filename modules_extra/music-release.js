@@ -5,13 +5,17 @@ var ref = require('ssb-ref');
 
 //render a message
 
-exports.gives = 'message_content'
+exports.gives = {
+  message: { content: true }
+}
 
 exports.create = function () {
+  return {
+    message: { content }
+  }
 
-  return function(msg, sbot) {
-      if (msg.value.content.type !== 'music-release')
-          return;
+  function content (msg, sbot) {
+      if (msg.value.content.type !== 'music-release') return
 
       var v = msg.value.content;
       return h('div',

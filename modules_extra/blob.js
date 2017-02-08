@@ -3,12 +3,12 @@ const h = require('../h')
 const ref = require('ssb-ref')
 
 exports.needs = {
-  blob_url: 'first'
+  helpers: { blob_url: 'first' }
 }
 
 exports.gives = {
-  'screen_view': true,
-  'mcss': true
+  screen_view: true,
+  mcss: true
 }
 
 exports.create = (api) => {
@@ -22,7 +22,7 @@ exports.create = (api) => {
     
     return h('Blob', { id: path, title: path.slice(0, 9) + '...' }, [
       h('iframe', {
-        src: api.blob_url(path),
+        src: api.helpers.blob_url(path),
         sandbox: ''
       })
     ])

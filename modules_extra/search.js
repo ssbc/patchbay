@@ -7,10 +7,16 @@ const Scroller = require('pull-scroll')
 const TextNodeSearcher = require('text-node-searcher')
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  sbot_log: 'first',
-  sbot_fulltext_search: 'first'
+  helpers: {
+    build_scroller: 'first'
+  },
+  message: {
+    render: 'first'
+  },
+  sbot: {
+    log: 'first',
+    fulltext_search: 'first'
+  }
 }
 
 exports.gives = {
@@ -115,30 +121,30 @@ exports.create = function (api) {
         ])
       )
     ])
-    var { container, content } = api.build_scroller({ prepend: searchHeader })
+    var { container, content } = api.helpers.build_scroller({ prepend: searchHeader })
     container.id = path // helps tabs find this tab
 
     function renderMsg(msg) {
-      var el = api.message_render(msg)
+      var el = api.message.render(msg)
       highlight(el, createOrRegExp(query))
       return el
     }
 
     pull(
-      api.sbot_log({old: false}),
+      api.sbot.log({old: false}),
       pull.filter(matchesQuery),
       Scroller(container, content, renderMsg, true, false)
     )
 
     pull(
-      u.next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
+      u.next(api.sbot.fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
       fallback((err) => {
         if (err === true) {
           search.fulltext.isDone.set(true)
         } else if (/^no source/.test(err.message)) {
           search.isLinear.set(true)
           return pull(
-            u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+            u.next(api.sbot.log, {reverse: true, limit: 500, live: false}),
             pull.through(() => searched.set(searched()+1)),
             pull.filter(matchesQuery)
           )

@@ -9,11 +9,17 @@ const {
 } = require('@mmckegg/mutant')
 
 exports.needs = {
-  about_image_link: 'first',
-  about_name_link: 'first',
-  build_scroller: 'first',
-  sbot_gossip_peers: 'first',
-  sbot_gossip_connect: 'first'
+  about: {
+    image_link: 'first',
+    name_link: 'first'
+  },
+  helpers: {
+    build_scroller: 'first'
+  },
+  sbot: {
+    gossip_peers: 'first',
+    gossip_connect: 'first'
+  }
 }
 
 exports.gives = {
@@ -141,10 +147,10 @@ exports.create = function (api) {
 
         return h('NetworkConnection', [
           h('section.avatar', [
-            api.about_image_link(key()),
+            api.about.image_link(key()),
           ]),
           h('section.name', [
-            api.about_name_link(key()),
+            api.about.name_link(key()),
           ]),
           h('section.type', [
             computed(peer, getType),
@@ -164,7 +170,7 @@ exports.create = function (api) {
             when(isConnected, null,
               h('button', {
                 'ev-click': () => {
-                  api.sbot_gossip_connect(peer(), (err) => {
+                  api.sbot.gossip_connect(peer(), (err) => {
                     if(err) console.error(err)
                     else console.log('connected to', peer())
                   })
@@ -197,7 +203,7 @@ exports.create = function (api) {
     ])
 
     // doesn't use the scroller, just a styling convenience
-    const { container } = api.build_scroller({ prepend: network })
+    const { container } = api.helpers.build_scroller({ prepend: network })
     return container
   }
 }

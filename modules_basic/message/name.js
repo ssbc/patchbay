@@ -4,14 +4,23 @@ function title (s) {
   return m && (m[1].length == 40 ? m[1]+'...' : m[1])
 }
 
-exports.needs = { sbot_get: 'first' }
-exports.gives = 'message_name'
+exports.needs = {
+  sbot: { get: 'first' }
+}
+
+exports.gives = {
+  message: { name: true }
+}
 
 //TODO: rewrite as observable?
 
 exports.create = function (api) {
-  return function (id, cb) {
-    api.sbot_get(id, function (err, value) {
+  return {
+    message: { name }
+  }
+
+  function name (id, cb) {
+    api.sbot.get(id, function (err, value) {
       if(err && err.name == 'NotFoundError')
         return cb(null, id.substring(0, 10)+'...(missing)')
       if(value.content.type === 'post' && 'string' === typeof value.content.text)

@@ -6,19 +6,24 @@ var ref = require('ssb-ref');
 //render a message
 
 exports.needs = {
-  blob_url: 'first'
+  helpers: { blob_url: 'first' }
 }
 
-exports.gives = 'message_content'
+exports.gives = {
+  message: { content: true }
+}
 
 exports.create = function (api) {
-  return function(msg, sbot) {
-    if (msg.value.content.type !== 'music-release-cc')
-        return;
+  return {
+    message: { content }
+  }
+  
+  function content (msg, sbot) {
+    if (msg.value.content.type !== 'music-release-cc') return
 
     var tracks = msg.value.content.tracks;
     return h('div',
-      h('img', { "src" : api.blob_url(msg.value.content.cover) }),
+      h('img', { "src" : api.helpers.blob_url(msg.value.content.cover) }),
       h('h1', msg.value.content.title),
       h('ol',
         Object.keys(tracks).map(function(k) {
@@ -27,7 +32,7 @@ exports.create = function (api) {
             h("br"),
             h('audio', {
                 "controls" : true,
-                "src" : api.blob_url(t.link)
+                "src" : api.helpers.blob_url(t.link)
             })
           )
         })

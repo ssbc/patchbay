@@ -1,8 +1,6 @@
 var h = require('hyperscript')
 
-exports.needs = {
-  screen_view: 'first'
-}
+exports.needs = { screen_view: 'first' }
 
 exports.gives = 'screen_view'
 

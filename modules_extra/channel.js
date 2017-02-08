@@ -4,15 +4,23 @@ var Scroller = require('pull-scroll')
 var mfr = require('map-filter-reduce')
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  message_compose: 'first',
-  sbot_log: 'first',
-  sbot_query: 'first',
+  helpers: {
+    build_scroller: 'first'
+  },
+  message: {
+    render: 'first',
+    compose: 'first'
+  },
+  sbot: {
+    log: 'first',
+    query: 'first',
+  }
 }
 
 exports.gives = {
-  message_meta: true,
+  message: {
+    meta: true
+  },
   screen_view: true,
   connection_status: true,
   suggest_search: true,
@@ -32,7 +40,9 @@ exports.create = function (api) {
   }}
 
   return {
-    message_meta,
+    message: {
+      meta
+    },
     screen_view,
     connection_status,
     suggest_search,
@@ -40,7 +50,7 @@ exports.create = function (api) {
     suggest_channel
   }
 
-  function message_meta (msg) {
+  function meta (msg) {
     var chan = msg.value.content.channel
     if (chan)
       return h('a', {
@@ -53,8 +63,8 @@ exports.create = function (api) {
     if(path[0] === '#') {
       var channel = path.substr(1)
 
-      var composer = api.message_compose({type: 'post', channel: channel})
-      var { container, content } = api.build_scroller({ prepend: composer })
+      var composer = api.message.compose({type: 'post', channel: channel})
+      var { container, content } = api.helpers.build_scroller({ prepend: composer })
 
       function matchesChannel(msg) {
         if (msg.sync) console.error('SYNC', msg)
@@ -63,16 +73,16 @@ exports.create = function (api) {
       }
 
       pull(
-        api.sbot_log({old: false}),
+        api.sbot.log({old: false}),
         pull.filter(matchesChannel),
-        Scroller(container, content, api.message_render, true, false)
+        Scroller(container, content, api.message.render, true, false)
       )
 
       pull(
-        api.sbot_query({reverse: true, query: [
+        api.sbot.query({reverse: true, query: [
           {$filter: {value: {content: {channel: channel}}}}
         ]}),
-        Scroller(container, content, api.message_render, false, false)
+        Scroller(container, content, api.message.render, false, false)
       )
 
       return container
@@ -85,7 +95,7 @@ exports.create = function (api) {
     channels = []
 
     pull(
-      api.sbot_query({query: [filter, map, reduce]}),
+      api.sbot.query({query: [filter, map, reduce]}),
       pull.collect(function (err, chans) {
         if (err) return console.error(err)
         channels = chans.concat(channels)
@@ -93,7 +103,7 @@ exports.create = function (api) {
     )
 
     pull(
-      api.sbot_log({old: false}),
+      api.sbot.log({old: false}),
       mfr.filter(filter),
       mfr.map(map),
       pull.drain(function (chan) {

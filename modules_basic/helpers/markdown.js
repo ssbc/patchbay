@@ -4,18 +4,20 @@ const h = require('../../h')
 const ref = require('ssb-ref')
 
 exports.needs = {
-  blob_url: 'first',
-  emoji_url: 'first'
+  helpers: {
+    blob_url: 'first',
+    emoji_url: 'first'
+  }
 }
 
 exports.gives = {
-  markdown: true,
+  helpers: { markdown: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    markdown,
+    helpers: { markdown },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -33,7 +35,7 @@ exports.create = function (api) {
     md.innerHTML = renderer.block(content.text, {
       emoji: renderEmoji,
       toUrl: (id) => {
-        if(ref.isBlob(id)) return api.blob_url(id)
+        if(ref.isBlob(id)) return api.helpers.blob_url(id)
         return '#'+(mentions[id]?mentions[id]:id)
       },
       imageLink: (id) => '#' + id
@@ -44,7 +46,7 @@ exports.create = function (api) {
   }
 
   function renderEmoji(emoji) {
-    var url = api.emoji_url(emoji)
+    var url = api.helpers.emoji_url(emoji)
     if (!url) return ':' + emoji + ':'
     return '<img src="' + encodeURI(url) + '"'
       + ' alt=":' + escape(emoji) + ':"'

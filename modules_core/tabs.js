@@ -11,11 +11,13 @@ function ancestor (el) {
 }
 
 exports.needs = {
-  build_scroller: 'first',
   screen_view: 'first',
-  search_box: 'first',
   menu: 'first',
-  external_confirm:'first'
+  helpers: {
+    build_scroller: 'first',
+    external_confirm:'first',
+  },
+  search_box: 'first'
 }
 
 exports.gives = 'screen_view'
@@ -91,7 +93,7 @@ exports.create = function (api) {
 
       //open external links.
       //this ought to be made into something more runcible
-      if(link.href && open.isExternal(link.href)) return api.external_confirm(link.href)
+      if(link.href && open.isExternal(link.href)) return api.helpers.external_confirm(link.href)
 
       if(tabs.has(path))
         return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
@@ -176,7 +178,7 @@ exports.create = function (api) {
     var {
       container: errors,
       content: errorsContent 
-    } = api.build_scroller()
+    } = api.helpers.build_scroller()
 
     // remove loader error handler
     if (window.onError) {

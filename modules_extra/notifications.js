@@ -8,12 +8,16 @@ var cont = require('cont')
 var ref = require('ssb-ref')
 
 exports.needs = {
-  build_scroller: 'first',
-  message_render: 'first',
-  sbot_log: 'first',
-  sbot_get: 'first',
-  sbot_user_feed: 'first',
-  message_unbox: 'first'
+  helpers: { build_scroller: 'first', },
+  message: {
+    render: 'first',
+    unbox: 'first'
+  },
+  sbot: {
+    log: 'first',
+    get: 'first',
+    user_feed: 'first'
+  }
 }
 
 
@@ -27,7 +31,7 @@ exports.create = function (api) {
     return pull(
       pull.map(function (msg) {
         return msg.value && 'string' === typeof msg.value.content ?
-          api.message_unbox(msg) : msg
+          api.message.unbox(msg) : msg
       }),
       pull.filter(Boolean)
     )
@@ -43,7 +47,7 @@ exports.create = function (api) {
       if (!id) return cb(null, false)
       if (typeof id === 'object' && typeof id.link === 'string') id = id.link
       if (!ref.isMsg(id)) return cb(null, false)
-      api.sbot_get(id, function (err, msg) {
+      api.sbot.get(id, function (err, msg) {
         if (err && err.name == 'NotFoundError') cb(null, false)
         else if (err) cb(err)
         else if (msg.content.type === 'issue' || msg.content.type === 'pull-request')
@@ -106,7 +110,7 @@ exports.create = function (api) {
   }
 
   function getFirstMessage(feedId, cb) {
-    api.sbot_user_feed({id: feedId, gte: 0, limit: 1})(null, cb)
+    api.sbot.user_feed({id: feedId, gte: 0, limit: 1})(null, cb)
   }
 
   return {
@@ -128,18 +132,18 @@ exports.create = function (api) {
           }
         })
 
-        var { container, content } = api.build_scroller()
+        var { container, content } = api.helpers.build_scroller()
 
         pull(
-          u.next(api.sbot_log, {old: false, limit: 100}),
+          u.next(api.sbot.log, {old: false, limit: 100}),
           unbox(),
           notifications(ids),
           pull.filter(),
-          Scroller(container, content, api.message_render, true, false)
+          Scroller(container, content, api.message.render, true, false)
         )
 
         pull(
-          u.next(api.sbot_log, {reverse: true, limit: 100, live: false}),
+          u.next(api.sbot.log, {reverse: true, limit: 100, live: false}),
           unbox(),
           notifications(ids),
           pull.filter(),
@@ -147,7 +151,7 @@ exports.create = function (api) {
             // abort stream after we pass the oldest messages of our feeds
             return !oldest ? true : msg.value.timestamp > oldest
           }),
-          Scroller(container, content, api.message_render, false, false)
+          Scroller(container, content, api.message.render, false, false)
         )
 
         return container

@@ -2,33 +2,45 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 
 exports.needs = {
-  about_name: 'first',
-  message_confirm: 'first',
-  message_link: 'first',
-  sbot_links: 'first'
+  about: { name: 'first' },
+  message: {
+    confirm: 'first',
+    link: 'first'
+  },
+  sbot: { links: 'first' }
 }
 
 exports.gives = {
-  message_content: true,
-  message_content_mini: true,
-  message_meta: true,
-  message_action: true
+  message: {
+    content: true,
+    content_mini: true,
+    meta: true,
+    action: true
+  }
 }
 
 exports.create = function (api) {
-  var exports = {}
+  return { 
+    message: {
+      content,
+      content_mini: content,
+      meta,
+      action
+    }
+  }
 
-  exports.message_content =
-  exports.message_content_mini = function (msg, sbot) {
+
+  function content (msg, sbot) {
     if(msg.value.content.type !== 'vote') return
     var link = msg.value.content.vote.link
     return [
-        msg.value.content.vote.value > 0 ? 'dug' : 'undug',
-        ' ', api.message_link(link)
-      ]
+      msg.value.content.vote.value > 0 ? 'dug' : 'undug',
+      ' ',
+      api.message.link(link)
+    ]
   }
 
-  exports.message_meta = function (msg, sbot) {
+  function meta (msg, sbot) {
     var digs = h('a')
 
     var votes = []
@@ -49,7 +61,7 @@ exports.create = function (api) {
       : Array(votes.length).fill(symbol).join('')
 
     pull(
-      pull.values(votes.map(vote => api.about_name(vote.source))),
+      pull.values(votes.map(vote => api.about.name(vote.source))),
       pull.collect((err, ary) => {
         if (err) console.error(err)
         digs.title = 'Dug by:\n' + ary.map(x => x.innerHTML).join("\n")
@@ -59,7 +71,7 @@ exports.create = function (api) {
     return digs
   }
 
-  exports.message_action = function (msg, sbot) {
+  function action (msg, sbot) {
     if(msg.value.content.type !== 'vote')
       return h('a.dig', {href: '#', onclick: function () {
         var dig = {
@@ -74,9 +86,9 @@ exports.create = function (api) {
         }
         //TODO: actually publish...
 
-        api.message_confirm(dig)
+        api.message.confirm(dig)
       }}, 'Dig')
 
   }
-  return exports
 }
+

@@ -2,7 +2,9 @@ var h = require('hyperscript')
 var pull = require('pull-stream')
 var HJSON = require('hjson')
 
-exports.needs = { sbot_query: 'first' }
+exports.needs = { 
+  sbot: { query: 'first' }
+}
 
 exports.gives = {
   menu_items: true,
@@ -46,7 +48,7 @@ exports.create = function (api) {
           console.log(query)
 
           stream = pull(
-            api.sbot_query({query: query, limit: 100}),
+            api.sbot.query({query: query, limit: 100}),
             pull.drain(function (data) {
               output.appendChild(h('pre.query__data',
                 JSON.stringify(data, null, 2)

@@ -7,21 +7,23 @@ const mentions = require('ssb-mentions')
 exports.needs = {
   suggest_mentions: 'map', //<-- THIS MUST BE REWRITTEN
   suggest_channel: 'map',
-  build_suggest_box: 'first',
-  publish: 'first',
-  message_content: 'first',
-  message_confirm: 'first',
-  file_input: 'first'
+  file_input: 'first',
+  message: {
+    content: 'first',
+    confirm: 'first',
+    publish: 'first',
+  },
+  helpers: { build_suggest_box: 'first', }
 }
 
 exports.gives = {
-  'message_compose': true,
-  'mcss': true
+  message: { compose: true },
+  mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_compose,
+    message: { compose },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -33,7 +35,7 @@ exports.create = function (api) {
       shrink: boolean. set to false, to make composer not shrink (or hide controls) when unfocused.
   */
 
-  function message_compose (meta = {}, opts = {}, cb) {
+  function compose (meta = {}, opts = {}, cb) {
     if(!meta.type) throw new Error('message must have type')
 
     if('function' === typeof cb) {
@@ -127,10 +129,10 @@ exports.create = function (api) {
           if (cb) cb(err)
           else alert(err.message)
         }
-        return api.message_confirm(meta, done)
+        return api.message.confirm(meta, done)
       }
 
-      api.message_confirm(content, done)
+      api.message.confirm(content, done)
 
       function done (err, msg) {
         publishBtn.disabled = false
@@ -154,8 +156,8 @@ exports.create = function (api) {
     var publishBtn = h('button', {'ev-click': publish}, 'Publish' )
     var actions = h('section.actions', [ fileInput, publishBtn ])
 
-    api.build_suggest_box(textArea, api.suggest_mentions)
-    api.build_suggest_box(channelInput, api.suggest_channel)
+    api.helpers.build_suggest_box(textArea, api.suggest_mentions)
+    api.helpers.build_suggest_box(channelInput, api.suggest_channel)
 
     var composer = h('Compose', {
       classList: [ when(isExpanded, '-expanded', '-contracted') ]

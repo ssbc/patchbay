@@ -9,25 +9,26 @@ const {
 
 
 exports.needs = {
-  about_image_link: 'first',
-  contact_action: 'map',
-  follows: 'first',
-  followers: 'first'
+  about: { image_link: 'first' },
+  contact: {
+    action: 'map',
+    follows: 'first',
+    followers: 'first'
+  }
 }
 
 exports.gives = {
-  contact_relationships: true,
+  contact: { relationships: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return { 
-    contact_relationships,
+    contact: { relationships },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function contact_relationships (id) {
-
+  function relationships (id) {
     var rawFollows = MutantArray()
     var rawFollowers = MutantArray()
     var friends = computed([rawFollows, rawFollowers], (follows, followers) => {
@@ -42,7 +43,7 @@ exports.create = function (api) {
     })
 
     pull(
-      api.follows(id),
+      api.contact.follows(id),
       unique(), 
       drain(
         peer => rawFollows.push(peer), 
@@ -50,7 +51,7 @@ exports.create = function (api) {
       )
     )
     pull(
-      api.followers(id),
+      api.contact.followers(id),
       unique(), 
       drain(
         peer => rawFollowers.push(peer), 
@@ -63,19 +64,19 @@ exports.create = function (api) {
       h('header', 'Relationships'),
       h('div.your-status', [
         h('header', 'Your status'),
-        h('section.action', api.contact_action(id))
+        h('section.action', api.contact.action(id))
       ]),
       h('div.friends', [
         h('header', 'Friends'),
-        h('section', map(friends, id => api.about_image_link(id)))
+        h('section', map(friends, id => api.about.image_link(id)))
       ]),
       h('div.follows', [
         h('header', 'Follows'),
-        h('section', map(follows, id => api.about_image_link(id)))
+        h('section', map(follows, id => api.about.image_link(id)))
       ]),
       h('div.followers', [
         h('header', 'Followers'),
-        h('section', map(followers, id => api.about_image_link(id)))
+        h('section', map(followers, id => api.about.image_link(id)))
       ])
     ])
   }

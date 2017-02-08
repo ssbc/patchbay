@@ -2,21 +2,21 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.needs = {
-  message_name: 'first'
+  message: { name: 'first' }
 }
 
 exports.gives = {
-  message_backlinks: true,
+  message: { backlinks: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_backlinks,
+    message: { backlinks },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_backlinks (msg) {
+  function backlinks (msg) {
     var links = []
     for(var k in CACHE) {
       var _msg = CACHE[k]
@@ -33,7 +33,7 @@ exports.create = function (api) {
 
     var hrefList = h('ul')
     links.forEach(link => {
-      api.message_name(link, (err, name) => {
+      api.message.name(link, (err, name) => {
         if (err) throw err
         hrefList.appendChild(h('li',
           h('a -backlink', { href: `#${link}` }, name)

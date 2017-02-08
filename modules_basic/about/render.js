@@ -3,24 +3,30 @@ const h = require('../../h')
 const { when } = require('@mmckegg/mutant')
 
 exports.needs = {
-  blob_url: 'first',
-  markdown: 'first'
+  helpers: { 
+    blob_url: 'first',
+    markdown: 'first'
+  }
 }
 
 exports.gives = {
-  mcss: true,
-  message_content: true,
-  message_content_mini: true
+  message: {
+    content: true,
+    content_mini: true
+  },
+  mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_content,
-    message_content_mini,
+    message: {
+      content,
+      content_mini
+    },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_content (msg) {
+  function content (msg) {
     if (msg.value.content.type !== 'about') return
 
     var { content: about, author: authorId } = msg.value
@@ -35,7 +41,7 @@ exports.create = function (api) {
     ])
   }
 
-  function message_content_mini (msg) {
+  function content_mini (msg) {
     if (msg.value.content.type !== 'about') return
 
     var { content: about, author: authorId } = msg.value
@@ -73,7 +79,7 @@ exports.create = function (api) {
       h('section', h(
         'a -image',
         { href: `#${aboutId}` },
-        h('img', { src: api.blob_url(image) })
+        h('img', { src: api.helpers.blob_url(image) })
       ))
     ])
   }
@@ -85,7 +91,7 @@ exports.create = function (api) {
         'self-describes as',
         ['describes ', targetLink(aboutId), ' as']
       )),
-      h('section', api.markdown(description))
+      h('section', api.helpers.markdown(description))
     ])
   }
 }

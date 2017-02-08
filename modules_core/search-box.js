@@ -5,7 +5,7 @@ const fs = require('fs')
 
 exports.needs = {
   suggest_search: 'map', //REWRITE
-  build_suggest_box: 'first'
+  helpers: { build_suggest_box: 'first' }
 }
 
 exports.gives = {
@@ -55,7 +55,7 @@ exports.create = function (api) {
       }
     }
 
-    const suggestBox = api.build_suggest_box(input, api.suggest_search)
+    const suggestBox = api.helpers.build_suggest_box(input, api.suggest_search)
 
     return search
   }

@@ -1,16 +1,16 @@
 const lightbox = require('hyperlightbox')
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 const open = require('open-external')
 
 exports.gives = {
-  external_confirm: true,
+  helpers: { external_confirm: true },
   mcss:true
 }
 
 exports.create = function (api) {
   return {
-    external_confirm,
+    helpers: { external_confirm },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 

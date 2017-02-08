@@ -9,24 +9,30 @@ exports.needs = {
 //  message_link: 'first',
 //  message_confirm: 'first',
 //  sbot_links: 'first',
-  blob_url: 'first'
+  helpers:{ 
+    blob_url: 'first'
+  }
 }
 
-exports.gives = 'message_content'
+exports.gives = {
+  message: { content: true }
+}
 
 exports.create = function (api) {
+  return {
+    message: { content }
+  }
 
-  return function(msg) {
-    if (msg.value.content.type !== 'audio-mp3')
-        return;
+  function content (msg) {
+    if (msg.value.content.type !== 'audio-mp3') return
 
     var v = msg.value.content;
     return h('div',
         h('h2', "(" + v.Track + ") " + v.Title),
-        // h('img', { "src" : api.blob_url(v.cover) }),
+        // h('img', { "src" : api.helpers.blob_url(v.cover) }),
         h('audio', {
                  "controls" : true,
-                 "src" : api.blob_url(v.link)
+                 "src" : api.helpers.blob_url(v.link)
              }))
     // h('dl',
     //          Object.keys(v).map(function(k) {

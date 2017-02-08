@@ -2,34 +2,40 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.needs = {
-  about_name: 'first',
-  about_link: 'first',
-  message_action: 'map',
-  message_author: 'first',
-  message_backlinks: 'first',
-  message_content: 'first',
-  message_content_mini: 'first',
-  message_title: 'first',
-  message_link: 'first',
-  message_meta: 'map',
+  about: {
+    name: 'first',
+    link: 'first'
+  },
+  message: {
+    action: 'map',
+    author: 'first',
+    backlinks: 'first',
+    content: 'first',
+    content_mini: 'first',
+    title: 'first',
+    link: 'first',
+    meta: 'map'
+  }
 }
 
 exports.gives = {
-  message_render: true,
+  message: { render: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_render,
+    message: {
+      render
+    },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_render (msg) {
-    var content = api.message_content_mini(msg)
+  function render (msg) {
+    var content = api.message.content_mini(msg)
     if (content) return mini(msg, content)
 
-    content = api.message_content(msg)
+    content = api.message.content(msg)
     if (!content) return mini(msg, message_content_mini_fallback(msg))
 
     var msgEl = h('Message', {
@@ -38,13 +44,13 @@ exports.create = function (api) {
         tabindex: '0'
       }
     }, [
-      h('header.author', api.message_author(msg)),
-      h('section.title', api.message_title(msg)),
-      h('section.meta', api.message_meta(msg)),
+      h('header.author', api.message.author(msg)),
+      h('section.title', api.message.title(msg)),
+      h('section.meta', api.message.meta(msg)),
       h('section.content', content),
       h('section.raw-content'),
-      h('section.action', api.message_action(msg)),
-      h('footer.backlinks', api.message_backlinks(msg))
+      h('section.action', api.message.action(msg)),
+      h('footer.backlinks', api.message.backlinks(msg))
     ])
     return msgEl
 
@@ -74,8 +80,8 @@ exports.create = function (api) {
         tabindex: '0'
       }
     }, [
-      h('header.author', api.message_author(msg, { size: 'mini' })),
-      h('section.meta', api.message_meta(msg)),
+      h('header.author', api.message.author(msg, { size: 'mini' })),
+      h('section.meta', api.message.meta(msg)),
       h('section.content', el),
       h('section.raw-content')
     ])

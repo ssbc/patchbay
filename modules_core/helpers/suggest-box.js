@@ -1,19 +1,17 @@
 const fs = require('fs')
-const h = require('../h')
+const h = require('../../h')
 const onload = require('on-load')
 const { para } = require('cont')
 const Suggest = require('suggest-box')
 
-exports.needs = {}
-
 exports.gives = {
-  build_suggest_box: true,
+  helpers: { build_suggest_box: true },
   css: true
 }
 
 exports.create = function (api) {
   return {
-    build_suggest_box,
+    helpers: { build_suggest_box },
     css: () => fs.readFileSync(__filename.replace(/js$/, 'css'), 'utf8') // NOTE css
   }
 

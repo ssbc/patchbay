@@ -2,7 +2,9 @@ var h = require('hyperscript');
 
 //render a message
 
-exports.needs = { blob_url: 'first' }
+exports.needs = { 
+  helpers: { blob_url: 'first' }
+}
 exports.gives = 'message_content'
 
 exports.create = function (api) {
@@ -13,7 +15,7 @@ exports.create = function (api) {
     var v = msg.value.content;
     return h('div',
         // h('h2', "(" + v.Track + ") " + v.Title),
-        h('img', { "src" : api.blob_url(v.link) }))
+        h('img', { "src" : api.helpers.blob_url(v.link) }))
 
     // h('dl',
     //          Object.keys(v).map(function(k) {

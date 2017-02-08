@@ -3,32 +3,36 @@ var h = require('hyperscript')
 //render a message
 
 exports.needs = {
-  message_link: 'first',
-  markdown: 'first'
+  message: { link: 'first' },
+  helpers: { markdown: 'first' }
 }
 
 exports.gives = {
-  message_content: true,
-  message_title: true
+  message: {
+    content: true,
+    title: true
+  }
 }
 
 exports.create = function (api) {
   return {
-    message_content,
-    message_title
+    message: {
+      content,
+      title
+    }
   }
 
-  function message_content (data) {
+  function content (data) {
     if(!data.value.content || !data.value.content.text) return
 
     return h('div',
-      api.markdown(data.value.content)
+      api.helpers.markdown(data.value.content)
     )
   }
 
-  function message_title (data) {
+  function title (data) {
     var root = data.value.content && data.value.content.root
-    return !root ? null : h('span', 're: ', api.message_link(root))
+    return !root ? null : h('span', 're: ', api.message.link(root))
   }
 }
 
