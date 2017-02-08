@@ -4,12 +4,18 @@ var { id } = require('../../keys')
 
 
 exports.needs = {
-  about_image_name_link: 'first',
-  about_edit: 'first',
-  invite_parse: 'first',
-  invite_accept: 'first',
-  sbot_progress: 'first',
-  sbot_query: 'first'
+  about: {
+    edit: 'first',
+    image_name_link: 'first'
+  },
+  invite: {
+    parse: 'first',
+    accept: 'first'
+  }
+  sbot: {
+    progress: 'first',
+    query: 'first'
+  }
 }
 
 exports.gives = {
@@ -143,7 +149,7 @@ exports.create = function (api) {
         h('h1', 'welcome to patchbay!'),
         h('div',
           'please choose avatar image and name',
-          api.about_edit(id)
+          api.about.edit(id)
         ),
         h('h2', 'join network'),
         invite_form(),

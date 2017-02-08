@@ -6,7 +6,7 @@ const h = require('../../h')
 const u = require('../../util')
 
 exports.needs = {
-  about_edit: 'first',
+  about: { edit: 'first' },
   build_scroller: 'first',
   sbot_user_feed: 'first',
   message_render: 'first',
@@ -32,7 +32,7 @@ exports.create = function (api) {
 
 
     const profile =  h('Profile', [
-      h('section.edit', api.about_edit(id)),
+      h('section.edit', api.about.edit(id)),
       h('section.relationships', api.contact_relationships(id)),
       h('section.activity', [
         h('header', 'Activity')

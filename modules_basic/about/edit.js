@@ -38,17 +38,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  about_edit: true,
+  about: { edit: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    about_edit,
+    about: { edit },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function about_edit (id) {
+  function edit (id) {
 
     var avatar = Struct({
       original: Value(visualize(new Buffer(id.substring(1), 'base64'), 256).src),
