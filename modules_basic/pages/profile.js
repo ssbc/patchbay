@@ -17,17 +17,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  screen_view: true,
+  page: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    screen_view,
+    page,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function screen_view (id) {
+  function page (id) {
     //TODO: header of user info, avatars, names, follows.
 
     if(!ref.isFeed(id)) return

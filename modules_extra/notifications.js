@@ -23,7 +23,7 @@ exports.needs = {
 
 exports.gives = {
   builtin_tabs: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function (api) {
@@ -118,7 +118,7 @@ exports.create = function (api) {
       return ['/notifications']
     },
 
-    screen_view: function (path) {
+    page: function (path) {
       if(path === '/notifications') {
         var ids = {}
         var oldest

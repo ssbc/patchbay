@@ -14,7 +14,7 @@ exports.needs = {
 
 exports.gives = {
   menu_items: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function (api) {
@@ -23,7 +23,7 @@ exports.create = function (api) {
       return h('a', {href: '#/git-ssb'}, '/git-ssb')
     },
 
-    screen_view: function (path, sbot) {
+    page: function (path, sbot) {
       if(path === '/git-ssb') {
 
         var { container, content } = api.helpers.build_scroller()

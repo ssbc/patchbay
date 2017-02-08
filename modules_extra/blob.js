@@ -7,17 +7,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  screen_view: true,
+  page: true,
   mcss: true
 }
 
 exports.create = (api) => {
   return {
-    screen_view,
+    page,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function screen_view (path) {
+  function page (path) {
     if(!ref.isBlob(path)) return 
     
     return h('Blob', { id: path, title: path.slice(0, 9) + '...' }, [

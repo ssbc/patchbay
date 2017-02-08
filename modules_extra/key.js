@@ -2,7 +2,7 @@ var h = require('hyperscript')
 
 exports.gives = {
   menu_items: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function (api) {
@@ -10,7 +10,7 @@ exports.create = function (api) {
     menu_items: function () {
       return h('a', {href: '#/key'}, '/key')
     },
-    screen_view: function (path, sbot) {
+    page: function (path, sbot) {
       if(path === '/key') {
         if(process.title === 'browser') {
           var importKey = h('textarea', {placeholder: 'import an existing public/private key', name: 'textarea'})

@@ -3,7 +3,7 @@ var h = require('hyperscript')
 exports.gives = {
   menu_items: true,
   builtin_tabs: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function () {
@@ -17,7 +17,7 @@ exports.create = function () {
       return ['/versions']
     },
 
-    screen_view: function (path) {
+    page: function (path) {
       if(path !== '/versions') return
 
       if('undefined' === typeof WebBoot)

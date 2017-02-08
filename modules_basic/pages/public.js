@@ -16,14 +16,14 @@ exports.needs = {
 
 exports.gives = {
   builtin_tabs: true,
-  screen_view: true,
+  page: true,
   // mcss: true
 }
 
 exports.create = function (api) {
   return {
     builtin_tabs,
-    screen_view,
+    page,
     // mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -31,7 +31,7 @@ exports.create = function (api) {
     return ['/public']
   }
 
-  function screen_view (path, sbot) {
+  function page (path, sbot) {
     if(path !== '/public') return 
 
     const composer = api.message.compose({type: 'post'}, {placeholder: 'Write a public message'})

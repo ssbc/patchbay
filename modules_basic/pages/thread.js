@@ -32,7 +32,7 @@ exports.needs = {
   }
 }
 
-exports.gives = 'screen_view'
+exports.gives = 'page'
 
 exports.create = function (api) {
 

@@ -9,7 +9,7 @@ exports.needs = {
 exports.gives = {
   menu_items: true,
   builtin_tabs: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function (api) {
@@ -23,7 +23,7 @@ exports.create = function (api) {
       return ['/query']
     },
 
-    screen_view: function (path) {
+    page: function (path) {
       if(path != '/query') return
       var output, status, editor, stream, query
 

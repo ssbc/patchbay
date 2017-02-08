@@ -11,7 +11,7 @@ function ancestor (el) {
 }
 
 exports.needs = {
-  screen_view: 'first',
+  page: 'first',
   menu: 'first',
   helpers: {
     build_scroller: 'first',
@@ -20,7 +20,7 @@ exports.needs = {
   search_box: 'first'
 }
 
-exports.gives = 'screen_view'
+exports.gives = 'page'
 
 exports.create = function (api) {
   return function (path) {
@@ -42,7 +42,7 @@ exports.create = function (api) {
         return true
       }
 
-      const el = api.screen_view(path)
+      const el = api.page(path)
       if (!el) return
 
       if(!el.title) el.title = path
@@ -68,7 +68,7 @@ exports.create = function (api) {
       saved = ['/public', '/private', '/notifications', '/data']
 
     saved.forEach(function (path) {
-      var el = api.screen_view(path)
+      var el = api.page(path)
       if(!el) return
       el.id = el.id || path
       if (!el) return
@@ -98,7 +98,7 @@ exports.create = function (api) {
       if(tabs.has(path))
         return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
 
-      var el = api.screen_view(path)
+      var el = api.page(path)
       if(el) {
         el.id = el.id || path
         el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))

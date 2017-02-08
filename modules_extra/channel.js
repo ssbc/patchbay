@@ -21,7 +21,7 @@ exports.gives = {
   message: {
     meta: true
   },
-  screen_view: true,
+  page: true,
   connection_status: true,
   suggest_search: true,
   suggest_mentions: true,
@@ -43,7 +43,7 @@ exports.create = function (api) {
     message: {
       meta
     },
-    screen_view,
+    page,
     connection_status,
     suggest_search,
     suggest_mentions,
@@ -59,7 +59,7 @@ exports.create = function (api) {
       }, '#'+chan)
   }
 
-  function screen_view (path) {
+  function page (path) {
     if(path[0] === '#') {
       var channel = path.substr(1)
 

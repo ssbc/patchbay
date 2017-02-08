@@ -17,14 +17,14 @@ exports.needs = {
 exports.gives = {
   invite_parse: true, // TODO move these to helpers?
   invite_accept: true,
-  screen_view: true
+  page: true
 }
 
 exports.create = function (api) {
   return {
     invite_parse,
     invite_accept,
-    screen_view
+    page
   }
 
   function invite_parse (invite) {
@@ -77,7 +77,7 @@ exports.create = function (api) {
     })
   }
 
-  function screen_view (invite) {
+  function page (invite) {
 
     var data = ref.parseInvite(invite)
     if(!data) return

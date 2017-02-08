@@ -63,7 +63,7 @@ created above using: index.html#ws://localhost:8989....
 
 To add a new message type, add add a js to `./modules/` that
 exports a function named `message_content` (it should return an html element)
-To add a new tab, export a function named `screen_view` (returns an html element)
+To add a new tab, export a function named `page` (returns an html element)
 
 To add a new detail, that appears above a message,
 export a function named `message_meta`.

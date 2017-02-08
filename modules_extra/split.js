@@ -1,8 +1,8 @@
 var h = require('hyperscript')
 
-exports.needs = { screen_view: 'first' }
+exports.needs = { page: 'first' }
 
-exports.gives = 'screen_view'
+exports.gives = 'page'
 
 exports.create = function (api) {
 
@@ -13,7 +13,7 @@ exports.create = function (api) {
 
     return h('div.row',
       m[1].split(',').map(function (e) {
-        return api.screen_view(e.trim())
+        return api.page(e.trim())
       }).filter(Boolean)
     )
   }

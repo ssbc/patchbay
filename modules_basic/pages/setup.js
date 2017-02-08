@@ -20,7 +20,7 @@ exports.gives = {
   setup_is_fresh_install: true,
   progress_bar: true,
   setup_joined_network: true,
-  screen_view: true
+  page: true
 }
 
 //maybe this could show the pubs, or
@@ -45,7 +45,7 @@ exports.create = function (api) {
     setup_is_fresh_install,
     progress_bar,
     setup_joined_network,
-    screen_view
+    page
   }
 
   //test whether we are connected to the ssb network.
@@ -135,7 +135,7 @@ exports.create = function (api) {
     return joined
   }
 
-  function screen_view (path) {
+  function page (path) {
     if(path !== '/setup') return
 
     //set up an avatar

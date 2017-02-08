@@ -20,7 +20,7 @@ exports.needs = {
 }
 
 exports.gives = {
-  screen_view: true,
+  page: true,
   mcss: true
 }
 
@@ -83,11 +83,11 @@ function fallback(reader) {
 exports.create = function (api) {
 
   return {
-    screen_view,
+    page,
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function screen_view (path) {
+  function page (path) {
     if (path[0] !== '?') return
 
     var queryStr = path.substr(1).trim()

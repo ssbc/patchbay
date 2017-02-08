@@ -30,7 +30,7 @@ exports.needs = {
 
 exports.gives = {
   builtin_tabs: true,
-  screen_view: true,
+  page: true,
   message: {
     meta: true,
     content_mini: true,
@@ -54,7 +54,7 @@ exports.create = function (api) {
 
   return {
     builtin_tabs,
-    screen_view,
+    page,
     message: {
       meta,
       content_mini
@@ -66,7 +66,7 @@ exports.create = function (api) {
     return ['/private']
   }
 
-  function screen_view (path) {
+  function page (path) {
     if(path !== '/private') return
 
     var composer = api.message.compose(
