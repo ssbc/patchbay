@@ -48,7 +48,7 @@ exports.create = function (api) {
   function suggest_search (query) {
     return function (cb) {
       if(/^@\w/.test(query)) {
-        api.signified(query, (err, names) => {
+        api.about.signified(query, (err, names) => {
           if(err) return cb(err)
 
           cb(null, names.map(e => {
@@ -58,13 +58,13 @@ exports.create = function (api) {
               subtitle: `(${rank}) ${id.substring(0,10)}`,
               value: id,
               rank,
-              image: api.about_image_src(id),
+              image: api.about.image_src(id),
               showBoth: true
             }
           }))
         })
       } else if (/^%\w/.test(query)) {
-        api.signified(query, (err, names) => {
+        api.about.signified(query, (err, names) => {
           if(err) return cb(err)
 
           cb(null, names.map(e => {
