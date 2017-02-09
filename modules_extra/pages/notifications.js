@@ -1,11 +1,13 @@
 'use strict'
 var h = require('hyperscript')
-var u = require('../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 var paramap = require('pull-paramap')
 var cont = require('cont')
 var ref = require('ssb-ref')
+
+var u = require('../../util')
+var id = require('../../keys').id
 
 exports.needs = {
   helpers: { build_scroller: 'first', },
@@ -123,7 +125,6 @@ exports.create = function (api) {
         var ids = {}
         var oldest
 
-        var id = require('../keys').id
         ids[id] = true
         getFirstMessage(id, function (err, msg) {
           if (err) return console.error(err)

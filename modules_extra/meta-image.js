@@ -5,14 +5,20 @@ var h = require('hyperscript');
 exports.needs = { 
   helpers: { blob_url: 'first' }
 }
-exports.gives = 'message_content'
+exports.gives = {
+  message: { content: true }
+}
 
 exports.create = function (api) {
-  return function(msg, sbot) {
-    if (msg.value.content.type !== 'meta-image')
-        return;
+  return {
+    message: { content }
+  }
 
-    var v = msg.value.content;
+  function content (msg, sbot) {
+    if (msg.value.content.type !== 'meta-image') return
+
+    var v = msg.value.content
+
     return h('div',
         // h('h2', "(" + v.Track + ") " + v.Title),
         h('img', { "src" : api.helpers.blob_url(v.link) }))

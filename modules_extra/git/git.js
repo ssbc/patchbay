@@ -5,10 +5,11 @@ var paramap = require('pull-paramap')
 var cat = require('pull-cat')
 var human = require('human-time')
 var combobox = require('hypercombo')
-
 var getAvatar = require('ssb-avatar')
 var KVGraph = require('kvgraph')
 var mergeRepo = require('ssb-git/merge')
+
+var self_id = require('../../keys').id
 
 exports.needs = {
   about: { name: 'first' },
@@ -33,9 +34,6 @@ exports.gives = {
     title: true
   }
 }
-
-
-var self_id = require('../keys').id
 
 function shortRefName(ref) {
   return ref.replace(/^refs\/(heads|tags)\//, '')

@@ -1,6 +1,6 @@
 const fs = require('fs')
 // const { isVisible } = require('is-visible')
-const h = require('../h')
+const h = require('../../h')
 const human = require('human-time')
 
 const {

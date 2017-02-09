@@ -1,5 +1,5 @@
 var h = require('hyperscript')
-var u = require('../util')
+var u = require('../../util')
 var pull = require('pull-stream')
 var Scroller = require('pull-scroll')
 

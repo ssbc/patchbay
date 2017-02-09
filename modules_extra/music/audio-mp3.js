@@ -1,6 +1,6 @@
 var markdown = require('ssb-markdown');
 var h = require('hyperscript');
-var u = require('../util');
+var u = require('../../util');
 var ref = require('ssb-ref');
 
 //render a message
