@@ -1,8 +1,8 @@
 const Tabs = require('hypertabs')
-const h = require('../h')
-const keyscroll = require('../keyscroll')
 const open = require('open-external')
 const { webFrame, remote } = require('electron') || {}
+const h = require('../../h')
+const keyscroll = require('../../keyscroll')
 
 function ancestor (el) {
   if(!el) return
