@@ -105,7 +105,7 @@ exports.create = function (api) {
         following: !you_follow
       }
 
-      api.message_confirm(msg, (err, msg) => {
+      api.message.confirm(msg, (err, msg) => {
         if (err) return console.error(err)
 
         you_follow = !you_follow

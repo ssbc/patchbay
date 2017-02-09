@@ -52,7 +52,7 @@ exports.create = function (api) {
   function setup_is_fresh_install (cb) {
     //test by checking whether you have any friends following you?
     pull(
-      api.sbot_query({query: followers_query(id), limit: 1, live: false}),
+      api.sbot.query({query: followers_query(id), limit: 1, live: false}),
       pull.collect(function (err, ary) {
         cb(err, !!ary.length)
       })
@@ -101,7 +101,7 @@ exports.create = function (api) {
     liquid.style.width = '0%'
 
     pull(
-      api.sbot_progress(),
+      api.sbot.progress(),
       pull.drain(function (e) {
         liquid.style.width = Math.round((e.progress/e.total)*100)+'%'
       })
@@ -122,12 +122,12 @@ exports.create = function (api) {
     var joined = h('div.setup__joined', label, followers)
 
     pull(
-      api.sbot_query({query: followers_query(id), limit: 5, live: true, sync: false}),
+      api.sbot.query({query: followers_query(id), limit: 5, live: true, sync: false}),
       pull.drain(function (follower) {
         if(follower.sync) return
         label.textContent = 'connected to network via...'
         followers.appendChild(
-          api.about_image_name_link(follower.value.author, 'thumbnail')
+          api.about.image_name_link(follower.value.author, 'thumbnail')
         )
       })
     )

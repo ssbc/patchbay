@@ -37,7 +37,7 @@ exports.create = function (api) {
 
     onProgress('Connecting...')
 
-    api.sbot_gossip_connect(data.remote, function (err) {
+    api.sbot.gossip_connect(data.remote, function (err) {
       if(err) console.log(err)
     })
 
@@ -67,7 +67,7 @@ exports.create = function (api) {
           if(process.title === 'browser')
             localStorage.remote = data.remote
 
-          api.sbot_publish({
+          api.sbot.publish({
             type: 'contact',
             contact: data.key,
             following: true,

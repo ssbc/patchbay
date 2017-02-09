@@ -193,7 +193,7 @@ exports.create = function (api) {
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
 
-      api.message_confirm(msg, (err, data) => {
+      api.message.confirm(msg, (err, data) => {
         if (err) return console.error(err)
 
         if (newName) name.original.set('@'+newName)

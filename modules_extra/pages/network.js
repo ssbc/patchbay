@@ -29,10 +29,6 @@ exports.gives = {
   mcss: true
 }
 
-//sbot_gossip_connect
-//sbot_gossip_add
-
-
 function legacyToMultiServer(addr) {
   return 'net:'+addr.host + ':'+addr.port + '~shs:'+addr.key.substring(1).replace('.ed25519','')
 }
@@ -230,7 +226,7 @@ function obs_gossip_peers (api) {
   return mutantMap(sortedIds, state.get)
 
   function refresh () {
-    api.sbot_gossip_peers((err, peers) => {
+    api.sbot.gossip_peers((err, peers) => {
       peers.forEach(data => {
         var id = legacyToMultiServer(data)
         var current = state.get(id)
