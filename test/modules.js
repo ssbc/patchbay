@@ -5,17 +5,6 @@ const path = require('path')
 
 process.env.ssb_appname = 'test'
 
-console.log(path.join( __dirname, '../modules_core'))
-
-
-console.log(`
-/////////
-// CURRENTLY TEST BROKEN
-//
-// It's bulk-require. I've tried using bulkify but it it does not seem to play well with brfs
-/////////
-`)
-
 // list these sets from most specifc to most general
 const module_sets = [
   { name: 'modules_core', modules: require('../modules_core') },
