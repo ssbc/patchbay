@@ -2,7 +2,7 @@ const Tabs = require('hypertabs')
 const h = require('../h')
 const keyscroll = require('../keyscroll')
 const open = require('open-external')
-const { webFrame, remote } = require('electron')
+const { webFrame, remote } = require('electron') || {}
 
 function ancestor (el) {
   if(!el) return
@@ -202,7 +202,6 @@ exports.create = function (api) {
     })
 
     if (process.versions.electron) {
-      
       window.addEventListener('mousewheel', ev => {
         const { ctrlKey, deltaY } = ev
         if (ctrlKey) {

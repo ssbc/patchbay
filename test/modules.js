@@ -18,9 +18,9 @@ console.log(`
 
 // list these sets from most specifc to most general
 const module_sets = [
-  { name: 'modules_core', modules: bulk(path.join(__dirname, '..'), ['modules_core/**/*.js']) },
-  { name: 'modules_basic', modules: bulk(path.join(__dirname, '..'), ['modules_basic/**/*.js']) },
-  { name: 'modules_extra', modules: bulk(path.join(__dirname, '..'), ['modules_extra/**/*.js']) }
+  { name: 'modules_core', modules: require('../modules_core') },
+  { name: 'modules_basic', modules: require('../modules_basic') },
+  { name: 'modules_extra', modules: require('../modules_extra') }
 ]
 
 module_sets.forEach((set, i, sets) => {
@@ -31,7 +31,7 @@ module_sets.forEach((set, i, sets) => {
 
 
   test(set.name + ' has no outside deps', t => {
-    t.ok(combine.apply(activeSets))
+    t.ok(combine(...activeSets))
     t.end()
   })
 })
