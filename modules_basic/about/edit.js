@@ -8,7 +8,7 @@ const h = require('../../h')
 const {
   Value, Array: MutantArray, Dict: MutantObject, Struct,
   map, computed, when, dictToCollection
-} = require('@mmckegg/mutant')
+} = require('mutant')
 const pull = require('pull-stream')
 const getAvatar = require('ssb-avatar')
 const ref = require('ssb-ref')

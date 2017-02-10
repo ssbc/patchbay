@@ -1,6 +1,6 @@
 const fs = require('fs')
 const h = require('../h')
-const { Value } = require('@mmckegg/mutant')
+const { Value } = require('mutant')
 const insertCss = require('insert-css')
 
 exports.needs = {

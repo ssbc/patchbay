@@ -1,9 +1,9 @@
 const fs = require('fs')
 const h = require('../../h')
-const { when } = require('@mmckegg/mutant')
+const { when } = require('mutant')
 
 exports.needs = {
-  helpers: { 
+  helpers: {
     blob_url: 'first',
     markdown: 'first'
   }
