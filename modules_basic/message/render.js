@@ -35,7 +35,9 @@ exports.create = function (api) {
     var msgEl = h('Message', {
       'ev-keydown': navigateToMessageOnEnter,
       attributes: {
-        tabindex: '0'
+        tabindex: '0',
+        'data-key': msg.key,
+        'data-text': msg.value.content.text
       }
     }, [
       h('header.author', api.message_author(msg)),
@@ -71,7 +73,8 @@ exports.create = function (api) {
   function mini(msg, el) {
     return h('Message -mini', {
       attributes: {
-        tabindex: '0'
+        tabindex: '0',
+        'data-key': msg.key
       }
     }, [
       h('header.author', api.message_author(msg, { size: 'mini' })),

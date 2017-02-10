@@ -2,13 +2,7 @@ const Tabs = require('hypertabs')
 const h = require('../h')
 const keyscroll = require('../keyscroll')
 const open = require('open-external')
-const { webFrame, remote } = require('electron')
-
-function ancestor (el) {
-  if(!el) return
-  if(el.tagName !== 'A') return ancestor(el.parentElement)
-  return el
-}
+const { webFrame, remote, clipboard } = require('electron')
 
 exports.needs = {
   build_error: 'first',
@@ -80,7 +74,7 @@ exports.create = function (api) {
 
     //handle link clicks
     window.onclick = function (ev) {
-      var link = ancestor(ev.target)
+      var link = ancestorAnchor(ev.target)
       if(!link) return
       var path = link.hash.substring(1)
 
@@ -223,11 +217,42 @@ exports.create = function (api) {
             remote.getCurrentWindow().inspectElement(ev.x, ev.y)
           }
         }))
+
+        var message = ancestorMessage(ev.target)
+        if (message && message.dataset.key) {
+          menu.append(new MenuItem({
+            label: 'Copy id',
+            click: () => clipboard.writeText(message.dataset.key)
+          }))
+        }
+        if (message && message.dataset.text) {
+          menu.append(new MenuItem({
+            label: 'Copy text',
+            click: () => clipboard.writeText(message.dataset.text)
+          }))
+        }
         menu.popup(remote.getCurrentWindow())
       })
     }
 
     return tabs
   }
-
 }
+
+function ancestorAnchor (el) {
+  if(!el) return
+  if(el.tagName !== 'A') return ancestorAnchor(el.parentElement)
+  return el
+}
+
+function ancestorMessage (el) {
+  if(!el) return
+  if(!el.classList.contains('Message')) {
+    if (el.parentElement)
+      return ancestorMessage(el.parentElement)
+    else
+      return null
+  }
+  return el
+}
+
