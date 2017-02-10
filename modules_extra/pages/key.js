@@ -7,9 +7,10 @@ exports.gives = {
 
 exports.create = function (api) {
   return {
-    menu_items: function () {
-      return h('a', {href: '#/key'}, '/key')
-    },
+    menu_items: () => h('a', {
+      href: '#/key',
+      style: { order: 99 }
+    }, '/key'),
     page: function (path, sbot) {
       if(path === '/key') {
         if(process.title === 'browser') {
@@ -43,7 +44,7 @@ exports.create = function (api) {
               )
             )
           )
-        } else { 
+        } else {
           return h('p', 'Your key is saved at .ssb/secret')
         }
       }

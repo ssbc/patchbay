@@ -16,7 +16,7 @@ exports.create = function (api) {
 
   return {
     menu_items: function () {
-      return h('a', {href:'#/query'}, '/query')
+      // return h('a', {href:'#/query'}, '/query')
     },
 
     builtin_tabs: function () {

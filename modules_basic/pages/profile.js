@@ -4,9 +4,10 @@ const fs = require('fs')
 const pull = require('pull-stream')
 const h = require('../../h')
 const u = require('../../util')
+const self_id = require('../../keys').id
 
 exports.needs = {
-  about: { 
+  about: {
     edit: 'first',
     signifier: 'first'
   },
@@ -18,12 +19,17 @@ exports.needs = {
 
 exports.gives = {
   page: true,
+  menu_items: true,
   mcss: true
 }
 
 exports.create = function (api) {
   return {
     page,
+    menu_items: () => h('a', {
+      href: '#'+self_id,
+      style: { order: 1 }
+    }, '/profile'),
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
@@ -43,7 +49,7 @@ exports.create = function (api) {
     ])
 
     var { container, content } = api.helpers.build_scroller({ prepend: profile })
-          
+
     api.about.signifier(id, function (_, names) {
       if(names.length) container.title = names[0].name
     })

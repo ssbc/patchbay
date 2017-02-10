@@ -10,6 +10,7 @@ exports.create = function () {
 
   return {
     menu_items: function () {
+      if('undefined' === typeof WebBoot) return
       return h('a', {href: '#/versions'}, '/versions')
     },
 
