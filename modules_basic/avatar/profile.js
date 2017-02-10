@@ -5,7 +5,7 @@ const { unique, drain } = pull
 const {
   Array: MutantArray,
   map, computed, when, dictToCollection
-} = require('@mmckegg/mutant')
+} = require('mutant')
 
 
 exports.needs = {

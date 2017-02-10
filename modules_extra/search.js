@@ -1,6 +1,6 @@
 const h = require('../h')
 const fs = require('fs')
-const { Struct, Value, when, computed } = require('@mmckegg/mutant')
+const { Struct, Value, when, computed } = require('mutant')
 const u = require('../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')

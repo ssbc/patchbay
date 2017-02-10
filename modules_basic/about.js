@@ -1,6 +1,6 @@
 const fs = require('fs')
 const h = require('../h')
-const { when } = require('@mmckegg/mutant')
+const { when } = require('mutant')
 
 exports.needs = {
   blob_url: 'first',
