@@ -1,7 +1,7 @@
 'use strict'
 const fs = require('fs')
 const h = require('../h')
-const { Value, when } = require('@mmckegg/mutant')
+const { Value, when } = require('mutant')
 const mentions = require('ssb-mentions')
 
 exports.needs = {

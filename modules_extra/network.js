@@ -6,7 +6,7 @@ const human = require('human-time')
 const {
   Struct, Value, Dict,
   dictToCollection, map: mutantMap, when, computed
-} = require('@mmckegg/mutant')
+} = require('mutant')
 
 exports.needs = {
   avatar_image_link: 'first',
@@ -214,7 +214,7 @@ function obs_gossip_peers (api) {
   })
 
   refresh()
-  
+
   var sortedIds = computed([state], (state) => {
     return Object.keys(state).sort((a, b) => {
       return peerListSort(state[a], state[b])
@@ -258,4 +258,3 @@ function Peer () {
 
   return peer
 }
-
