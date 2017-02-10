@@ -3,6 +3,7 @@ module.exports = {
   'blob-url':         require('./blob-url'),
   'crypto':           require('./crypto'),
   'external-confirm': require('./external-confirm'),
+  'error': require('./error'),
   'file-input':       require('./file-input'),
   'menu':             require('./menu'),
   'names':            require('./names'),

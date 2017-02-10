@@ -1,0 +1,25 @@
+Error {
+  padding: 1rem
+
+  header {
+    color: red
+    font-weight: 600
+  }
+
+  pre {
+    padding: 1rem
+    border: 1px gainsboro solid
+  }
+}
+
+Scroller -errors {
+  div.wrapper {
+    width: initial
+    max-width: 100%
+
+    section.content div {
+      border: none
+    }
+  }
+}
+
