@@ -1,7 +1,7 @@
 {
   "name": "patchbay",
   "description": "a pluggable patchwork",
-  "version": "6.9.3",
+  "version": "6.9.4",
   "homepage": "https://github.com/ssbc/patchbay",
   "repository": {
     "type": "git",
