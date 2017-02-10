@@ -1,6 +1,6 @@
 Timestamp {
   a {
-    $textSubtle
+    _textSubtle
     font-size: .8rem
   }
 }

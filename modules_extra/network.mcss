@@ -33,7 +33,7 @@ NetworkConnection {
     top: 3.5rem
 
     font-size: .8rem
-    $textSubtle
+    _textSubtle
   }
 
   section.name {
@@ -46,7 +46,7 @@ NetworkConnection {
     flex-basis: 100%
 
     font-size: .8rem
-    $textSubtle
+    _textSubtle
   }
 
   section.source {
@@ -94,7 +94,7 @@ NetworkConnection {
     display: flex
 
     font-size: .8rem
-    $textSubtle
+    _textSubtle
 
     div.rtt {
       flex-basis: 8rem
@@ -111,7 +111,7 @@ NetworkConnection {
     flex-basis: 100%
 
     font-size: .8rem
-    $textSubtle
+    _textSubtle
   }
 }
 

@@ -1,14 +1,14 @@
 
 const mixins = `
-  $textPrimary {
+  _textPrimary {
     color: #222
   }
 
-  $textSubtle {
+  _textSubtle {
     color: gray
   }
 
-  $backgroundPrimary {
+  _backgroundPrimary {
     background-color: #50aadf
   }
 `

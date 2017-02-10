@@ -22,7 +22,7 @@ Profile {
       header {
         flex-basis: 100%
         
-        $textSubtle
+        _textSubtle
         font-size: .9rem
         
         margin-bottom: .2rem
@@ -31,7 +31,7 @@ Profile {
       section a {
         margin-right: .2rem
 
-        img { $avatar-small }
+        img { _avatar-small }
       }
     }
 
@@ -46,7 +46,7 @@ Profile {
         margin: 0 .2rem 0.2rem 0
 
         img { 
-          $avatar-large
+          _avatar-large
         }
       }
     }
@@ -59,12 +59,12 @@ Profile {
   }
 }
 
-$avatar-large {
+_avatar-large {
   width: 56px
   height: 56px
 }
 
-$avatar-small {
+_avatar-small {
   width: 32px
   height: 32px
 }

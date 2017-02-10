@@ -47,7 +47,7 @@ Compose {
       }
 
       ::before {
-        $composeButton
+        _composeButton
         padding-top: .3rem
 
         content: '📎'
@@ -65,7 +65,7 @@ Compose {
     }
 
     button {
-      $composeButton
+      _composeButton
 
       text-transform: uppercase
       font-weight: bold
@@ -105,7 +105,7 @@ Compose {
 
 }
 
-$composeButton {
+_composeButton {
   background: #fff
   color: #666
   border: 1px solid #bbb
