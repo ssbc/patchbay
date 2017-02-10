@@ -11,19 +11,4 @@ App {
 }
 
 
-Error {
-  padding: 1rem
-
-  h1 {
-    color: red
-  }
-
-  big {
-  }
-  
-  pre {
-    padding: 1rem
-    border: 1px gainsboro solid
-  }
-}
 
