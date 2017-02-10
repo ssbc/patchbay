@@ -11,8 +11,9 @@ function isRelated(value, name) {
 exports.needs = {
   about: {
     image_name_link: 'first',
+    name_link: 'first',
     name: 'first',
-    link: 'first',
+    link: 'first'
   },
   message: { confirm: 'first' },
   contact: { follower_of: 'first' }
