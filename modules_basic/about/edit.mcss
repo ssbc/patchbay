@@ -28,6 +28,7 @@ AboutEditor {
 
   section.lightbox {
     position: absolute
+    z-index: 40
   }
 
   section.avatar {
@@ -71,7 +72,7 @@ AboutEditor {
         flex-basis: 100%
 
         font-size: .9rem
-        $textSubtle
+        _textSubtle
 
         margin-bottom: .2rem
       }
@@ -82,7 +83,7 @@ AboutEditor {
 
     section.avatars {
       img {
-        $avatar-large
+        _avatar-large
         margin: 0 .15rem 0.2rem 0
 
         cursor: pointer
@@ -92,7 +93,7 @@ AboutEditor {
         position: relative
 
         input[type="file"] {
-          $avatar-large
+          _avatar-large
           color: transparent
 
           ::-webkit-file-upload-button {
@@ -173,7 +174,7 @@ AboutEditor {
 
       button.confirm {
         color: #fff
-        $backgroundPrimary
+        _backgroundPrimary
         border: none
       }
     }

@@ -5,7 +5,7 @@ Follow {
   }
 
   label {
-    $textSubtle
+    _textSubtle
   }
 }
 

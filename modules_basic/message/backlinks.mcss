@@ -3,7 +3,7 @@ MessageBacklinks {
   margin-top: .5rem
 
   header {
-    $textSubtle
+    _textSubtle
   }
 
   ul {
@@ -12,7 +12,7 @@ MessageBacklinks {
     li {
       a {
         -backlink {
-          $textSubtle
+          _textSubtle
 
         }
       }

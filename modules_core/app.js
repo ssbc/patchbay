@@ -1,6 +1,6 @@
 const fs = require('fs')
 const h = require('../h')
-const { Value } = require('@mmckegg/mutant')
+const { Value } = require('mutant')
 const insertCss = require('insert-css')
 
 exports.needs = {
@@ -41,7 +41,7 @@ exports.create = function (api) {
 }
 
 // function displayError (e) {
-//   document.body.querySelector('.\\.content').appendChild(
+//   document.body.querySelector('.content').appendChild(
 //     h('div.page', [
 //       h('Error', { title: e.message }, [
 //         h('h1', e.message),

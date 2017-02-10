@@ -1,14 +1,8 @@
 const Tabs = require('hypertabs')
 const open = require('open-external')
-const { webFrame, remote } = require('electron') || {}
-const h = require('../../h')
+const { webFrame, remote, clipboard } = require('electron') || {}
 const keyscroll = require('../../keyscroll')
-
-function ancestor (el) {
-  if(!el) return
-  if(el.tagName !== 'A') return ancestor(el.parentElement)
-  return el
-}
+const h = require('../../h')
 
 exports.needs = {
   page: 'first',
@@ -47,7 +41,7 @@ exports.create = function (api) {
       if (!el) return
 
       if(!el.title) el.title = path
-      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .content'))
       tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
@@ -73,7 +67,7 @@ exports.create = function (api) {
       if(!el) return
       el.id = el.id || path
       if (!el) return
-      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .content'))
       if(el) tabs.add(el, false, false)
     })
 
@@ -82,7 +76,7 @@ exports.create = function (api) {
 
     //handle link clicks
     window.onclick = function (ev) {
-      var link = ancestor(ev.target)
+      var link = ancestorAnchor(ev.target)
       if(!link) return
       var path = link.hash.substring(1)
 
@@ -102,7 +96,7 @@ exports.create = function (api) {
       var el = api.page(path)
       if(el) {
         el.id = el.id || path
-        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+        el.scroll = keyscroll(el.querySelector('.Scroller .content'))
         tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
   //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       }
@@ -224,11 +218,42 @@ exports.create = function (api) {
             remote.getCurrentWindow().inspectElement(ev.x, ev.y)
           }
         }))
+
+        var message = ancestorMessage(ev.target)
+        if (message && message.dataset.key) {
+          menu.append(new MenuItem({
+            label: 'Copy id',
+            click: () => clipboard.writeText(message.dataset.key)
+          }))
+        }
+        if (message && message.dataset.text) {
+          menu.append(new MenuItem({
+            label: 'Copy text',
+            click: () => clipboard.writeText(message.dataset.text)
+          }))
+        }
         menu.popup(remote.getCurrentWindow())
       })
     }
 
     return tabs
   }
-
 }
+
+function ancestorAnchor (el) {
+  if(!el) return
+  if(el.tagName !== 'A') return ancestorAnchor(el.parentElement)
+  return el
+}
+
+function ancestorMessage (el) {
+  if(!el) return
+  if(!el.classList.contains('Message')) {
+    if (el.parentElement)
+      return ancestorMessage(el.parentElement)
+    else
+      return null
+  }
+  return el
+}
+

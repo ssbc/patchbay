@@ -1,8 +1,8 @@
 'use strict'
 const fs = require('fs')
-const { Value, when } = require('@mmckegg/mutant')
-const h = require('../../h')
 const mentions = require('ssb-mentions')
+const { Value, when } = require('mutant')
+const h = require('../../h')
 
 exports.needs = {
   suggest_mentions: 'map', //<-- THIS MUST BE REWRITTEN
