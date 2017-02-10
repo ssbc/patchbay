@@ -22,7 +22,8 @@ exports.create = function (api) {
     window.onhashchange = () => view.set(getView())
     document.body.appendChild(screen)
 
-    window.addEventListener('error', window.onError = displayError)
+    // tabs (another core module) currently handles this
+    // window.addEventListener('error', window.onError = displayError)
 
     return screen
   }
@@ -33,19 +34,19 @@ exports.create = function (api) {
   }
 }
 
-function displayError (e) {
-  document.body.querySelector('.\\.content').appendChild(
-    h('div.page', [
-      h('Error', { title: e.message }, [
-        h('h1', e.message),
-        h('big', [
-          h('code', e.filename + ':' + e.lineno)
-        ]),
-        h('pre', e.error
-          ? (e.error.stack || e.error.toString())
-          : e.toString()
-        )
-      ])
-    ])
-  )
-}
+// function displayError (e) {
+//   document.body.querySelector('.\\.content').appendChild(
+//     h('div.page', [
+//       h('Error', { title: e.message }, [
+//         h('h1', e.message),
+//         h('big', [
+//           h('code', e.filename + ':' + e.lineno)
+//         ]),
+//         h('pre', e.error
+//           ? (e.error.stack || e.error.toString())
+//           : e.toString()
+//         )
+//       ])
+//     ])
+//   )
+// }

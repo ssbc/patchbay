@@ -14,6 +14,7 @@ exports.needs = {
   page: 'first',
   menu: 'first',
   helpers: {
+    build_error: 'first',
     build_scroller: 'first',
     external_confirm:'first',
   },
@@ -176,25 +177,26 @@ exports.create = function (api) {
 
     // errors tab
     var {
-      container: errors,
+      container: errorsScroller,
       content: errorsContent 
     } = api.helpers.build_scroller()
 
-    // remove loader error handler
-    if (window.onError) {
-      window.removeEventListener('error', window.onError)
-      delete window.onError
-    }
+    errorsScroller.id = '/errors'
+    errorsScroller.classList.add('-errors')
+
+    // remove loader error handler (currently disabled)
+    // if (window.onError) {
+    //   window.removeEventListener('error', window.onError)
+    //   delete window.onError
+    // }
 
     // put errors in a tab
     window.addEventListener('error', ev => {
       const err = ev.error || ev
-      if(!tabs.has('errors'))
-        tabs.add(errors, false)
-      const el = h('div.message', [
-        h('strong', err.message),
-        h('pre', err.stack)
-      ])
+      if(!tabs.has('/errors'))
+        tabs.add(errorsScroller, false)
+
+      const el = api.helpers.build_error(err)
       if (errorsContent.firstChild)
         errorsContent.insertBefore(el, errorsContent.firstChild)
       else
