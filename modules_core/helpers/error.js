@@ -2,14 +2,12 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.gives = {
-  helpers: { build_error: true },
-  mcss: true
+  helpers: { build_error: true }
 }
 
 exports.create = function (api) {
   return {
-    helpers: { build_error },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    helpers: { build_error }
   }
 
   function build_error (err) {
@@ -18,6 +16,5 @@ exports.create = function (api) {
       h('pre', err.stack)
     ])
   }
-    
-}
 
+}

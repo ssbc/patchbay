@@ -19,16 +19,14 @@ exports.needs = {
 }
 
 exports.gives = {
-  message: { render: true },
-  mcss: true
+  message: { render: true }
 }
 
 exports.create = function (api) {
   return {
     message: {
       render
-    },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    }
   }
 
   function render (msg) {
@@ -92,4 +90,3 @@ exports.create = function (api) {
 function message_content_mini_fallback(msg)  {
   return h('code', msg.value.content.type)
 }
-

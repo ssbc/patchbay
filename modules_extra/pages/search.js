@@ -1,6 +1,6 @@
 const h = require('../../h')
 const fs = require('fs')
-const { Struct, Value, when, computed } = require('@mmckegg/mutant')
+const { Struct, Value, when, computed } = require('mutant')
 const u = require('../../util')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -20,8 +20,7 @@ exports.needs = {
 }
 
 exports.gives = {
-  page: true,
-  mcss: true
+  page: true
 }
 
 var whitespace = /\s+/
@@ -83,8 +82,7 @@ function fallback(reader) {
 exports.create = function (api) {
 
   return {
-    page,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function page (path) {
@@ -157,4 +155,3 @@ exports.create = function (api) {
     return container
   }
 }
-

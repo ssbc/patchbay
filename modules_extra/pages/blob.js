@@ -7,19 +7,17 @@ exports.needs = {
 }
 
 exports.gives = {
-  page: true,
-  mcss: true
+  page: true
 }
 
 exports.create = (api) => {
   return {
-    page,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function page (path) {
-    if(!ref.isBlob(path)) return 
-    
+    if(!ref.isBlob(path)) return
+
     return h('Blob', { id: path, title: path.slice(0, 9) + '...' }, [
       h('iframe', {
         src: api.helpers.blob_url(path),
@@ -28,4 +26,3 @@ exports.create = (api) => {
     ])
   }
 }
-

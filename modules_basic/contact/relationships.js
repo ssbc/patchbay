@@ -5,7 +5,7 @@ const { unique, drain } = pull
 const {
   Array: MutantArray,
   map, computed, when, dictToCollection
-} = require('@mmckegg/mutant')
+} = require('mutant')
 
 
 exports.needs = {
@@ -18,14 +18,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  contact: { relationships: true },
-  mcss: true
+  contact: { relationships: true }
 }
 
 exports.create = function (api) {
-  return { 
-    contact: { relationships },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+  return {
+    contact: { relationships }
   }
 
   function relationships (id) {
@@ -44,17 +42,17 @@ exports.create = function (api) {
 
     pull(
       api.contact.follows(id),
-      unique(), 
+      unique(),
       drain(
-        peer => rawFollows.push(peer), 
+        peer => rawFollows.push(peer),
         (err, data) => console.log('follows drain done', err, data)
       )
     )
     pull(
       api.contact.followers(id),
-      unique(), 
+      unique(),
       drain(
-        peer => rawFollowers.push(peer), 
+        peer => rawFollowers.push(peer),
         (err, data) => console.log('followers drain done', err, data)
       )
     )

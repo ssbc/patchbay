@@ -15,7 +15,6 @@
     "test": "browserify -d test/modules.js | tape-run"
   },
   "dependencies": {
-    "@mmckegg/mutant": "^3.12.0",
     "brfs": "^1.4.3",
     "bulk-require": "^1.0.0",
     "bulkify": "^1.4.2",
@@ -23,6 +22,7 @@
     "dataurl-": "^0.1.0",
     "depject": "^3.1.4",
     "es2040": "^1.2.4",
+    "evalify": "github:mmckegg/evalify#fix-relative-paths",
     "hjson": "^2.0.3",
     "human-time": "0.0.1",
     "hypercombo": "0.1.0",
@@ -39,6 +39,7 @@
     "micro-css": "^0.6.2",
     "mime-types": "^2.1.11",
     "moment": "^2.13.0",
+    "mutant": "~3.12.0",
     "on-load": "^3.2.0",
     "open-external": "^0.1.1",
     "peaks.js": "^0.4.7",
@@ -83,7 +84,15 @@
     "transform": [
       "bulkify",
       "brfs",
-      "es2040"
+      "es2040",
+      [
+        "evalify",
+        {
+          "files": [
+            "styles/index.js"
+          ]
+        }
+      ]
     ]
   },
   "browser": {

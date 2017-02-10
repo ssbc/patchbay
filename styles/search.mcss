@@ -3,14 +3,25 @@ Search {
   border-bottom: solid 1px gainsboro
 
   header {
-    h1 { 
+    h1 {
     }
+  }
+
+  input {
+    height: 1.4rem
+    border-radius: .1rem
+
+    padding-left: .7rem
+    padding-right: .5rem
+
+    margin-left: 1em
+    /* margin-right: 1em */
   }
 
   section.details {
     display: flex
     justify-content: space-between
-    
+
     font-family: monospace
 
     div.searched {}
@@ -18,5 +29,3 @@ Search {
   }
 
 }
-
-

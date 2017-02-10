@@ -1,6 +1,6 @@
 'use strict'
 const fs = require('fs')
-const { Value, when } = require('@mmckegg/mutant')
+const { Value, when } = require('mutant')
 const h = require('../../h')
 const mentions = require('ssb-mentions')
 
@@ -17,14 +17,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  message: { compose: true },
-  mcss: true
+  message: { compose: true }
 }
 
 exports.create = function (api) {
   return {
-    message: { compose },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    message: { compose }
   }
 
   /*
