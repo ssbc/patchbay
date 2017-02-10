@@ -17,14 +17,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  message: { compose: true },
-  mcss: true
+  message: { compose: true }
 }
 
 exports.create = function (api) {
   return {
-    message: { compose },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    message: { compose }
   }
 
   /*

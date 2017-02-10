@@ -4,14 +4,12 @@ const h = require('../../h')
 const open = require('open-external')
 
 exports.gives = {
-  helpers: { external_confirm: true },
-  mcss:true
+  helpers: { external_confirm: true }
 }
 
 exports.create = function (api) {
   return {
-    helpers: { external_confirm },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    helpers: { external_confirm }
   }
 
   function external_confirm (href) {

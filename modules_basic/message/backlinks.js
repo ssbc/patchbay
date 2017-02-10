@@ -6,14 +6,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  message: { backlinks: true },
-  mcss: true
+  message: { backlinks: true }
 }
 
 exports.create = function (api) {
   return {
-    message: { backlinks },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    message: { backlinks }
   }
 
   function backlinks (msg) {

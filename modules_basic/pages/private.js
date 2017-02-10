@@ -35,7 +35,6 @@ exports.gives = {
     meta: true,
     content_mini: true,
   }
-  // mcss: true
 }
 
 exports.create = function (api) {
@@ -58,8 +57,7 @@ exports.create = function (api) {
     message: {
       meta,
       content_mini
-    },
-    // mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    }
   }
 
   function builtin_tabs () {
@@ -139,4 +137,3 @@ exports.create = function (api) {
     }
   }
 }
-

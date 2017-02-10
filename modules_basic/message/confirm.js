@@ -13,14 +13,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  message: { confirm: true },
-  mcss: true
+  message: { confirm: true }
 }
 
 exports.create = function (api) {
   return {
-    message: { confirm },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    message: { confirm }
   }
 
   function confirm (content, cb) {
@@ -72,4 +70,3 @@ exports.create = function (api) {
     okay.focus()
   }
 }
-

@@ -20,8 +20,7 @@ exports.needs = {
 }
 
 exports.gives = {
-  page: true,
-  mcss: true
+  page: true
 }
 
 var whitespace = /\s+/
@@ -83,8 +82,7 @@ function fallback(reader) {
 exports.create = function (api) {
 
   return {
-    page,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function page (path) {

@@ -11,14 +11,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  helpers: { markdown: true },
-  mcss: true
+  helpers: { markdown: true }
 }
 
 exports.create = function (api) {
   return {
-    helpers: { markdown },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    helpers: { markdown }
   }
 
   function markdown (content) {
@@ -55,4 +53,3 @@ exports.create = function (api) {
   }
 
 }
-

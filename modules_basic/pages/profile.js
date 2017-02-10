@@ -6,7 +6,7 @@ const h = require('../../h')
 const u = require('../../util')
 
 exports.needs = {
-  about: { 
+  about: {
     edit: 'first',
     signifier: 'first'
   },
@@ -17,14 +17,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  page: true,
-  mcss: true
+  page: true
 }
 
 exports.create = function (api) {
   return {
-    page,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function page (id) {
@@ -43,7 +41,7 @@ exports.create = function (api) {
     ])
 
     var { container, content } = api.helpers.build_scroller({ prepend: profile })
-          
+
     api.about.signifier(id, function (_, names) {
       if(names.length) container.title = names[0].name
     })
@@ -68,4 +66,3 @@ exports.create = function (api) {
     return container
   }
 }
-

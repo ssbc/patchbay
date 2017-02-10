@@ -9,17 +9,15 @@ exports.needs = {
 }
 
 exports.gives = {
-  search_box: true,
-  mcss: true
+  search_box: true
 }
 
 exports.create = function (api) {
 
   return {
-    search_box,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    search_box
   }
-  
+
   function search_box (go) {
     const input = h('input', {
       type: 'search',
@@ -61,4 +59,3 @@ exports.create = function (api) {
   }
 
 }
-

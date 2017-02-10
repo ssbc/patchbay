@@ -23,8 +23,7 @@ exports.gives = {
     content: true,
     content_mini: true
   },
-  contact: { action: true },
-  mcss: true
+  contact: { action: true }
 }
 
 exports.create = function (api) {
@@ -35,8 +34,7 @@ exports.create = function (api) {
     },
     contact: {
       action
-    },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    }
   }
 
   function content_mini (msg) {
@@ -58,7 +56,7 @@ exports.create = function (api) {
       var relation = isRelated(following, 'follows')
       if(blocking) relation = 'blocks'
       return h('div.contact', [
-        relation, 
+        relation,
         api.about.name_link(contact, 'thumbnail')
       ])
     }
@@ -86,9 +84,9 @@ exports.create = function (api) {
       : you_follow                ? '- you are following'
       :                             ''
       )
-      
+
       // wait till finished loading before offering follow options
-      if (you_follow === undefined) return 
+      if (you_follow === undefined) return
       followBtn.textContent = you_follow ? 'unfollow' : 'follow'
     }
 
@@ -112,7 +110,7 @@ exports.create = function (api) {
         update()
       })
     }
-    
+
   }
   return exports
 }

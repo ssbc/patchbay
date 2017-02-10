@@ -3,8 +3,7 @@ const h = require('../../h')
 const human = require('human-time')
 
 exports.gives = {
-  helpers: { timestamp: true },
-  mcss: true
+  helpers: { timestamp: true }
 }
 
 exports.create = function () {
@@ -14,8 +13,7 @@ exports.create = function () {
   }, 60e3)
 
   return {
-    helpers: { timestamp },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    helpers: { timestamp }
   }
 
   function updateTimestampEl (el) {

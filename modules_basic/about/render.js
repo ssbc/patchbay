@@ -13,8 +13,7 @@ exports.gives = {
   message: {
     content: true,
     content_mini: true
-  },
-  mcss: true
+  }
 }
 
 exports.create = function (api) {
@@ -22,8 +21,7 @@ exports.create = function (api) {
     message: {
       content,
       content_mini
-    },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    }
   }
 
   function content (msg) {

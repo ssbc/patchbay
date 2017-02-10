@@ -1,3 +1,5 @@
+const insertCss = require('insert-css')
+
 // polyfills
 require('setimmediate')
 
@@ -8,3 +10,5 @@ require('depject')(
   require('./modules_core')
 ).app[0]()
 
+// imports styles/*.css|*.mcss
+insertCss(require('./styles'))

@@ -1,0 +1,11 @@
+$textPrimary {
+  color: #222
+}
+
+$textSubtle {
+  color: gray
+}
+
+$backgroundPrimary {
+  background-color: #50aadf
+}

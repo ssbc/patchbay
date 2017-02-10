@@ -16,15 +16,13 @@ exports.needs = {
 
 exports.gives = {
   builtin_tabs: true,
-  page: true,
-  // mcss: true
+  page: true
 }
 
 exports.create = function (api) {
   return {
     builtin_tabs,
-    page,
-    // mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function builtin_tabs () {
@@ -32,7 +30,7 @@ exports.create = function (api) {
   }
 
   function page (path, sbot) {
-    if(path !== '/public') return 
+    if(path !== '/public') return
 
     const composer = api.message.compose({type: 'post'}, {placeholder: 'Write a public message'})
     var { container, content } = api.helpers.build_scroller({ prepend: composer })
@@ -50,4 +48,3 @@ exports.create = function (api) {
     return container
   }
 }
-

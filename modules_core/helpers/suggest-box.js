@@ -5,14 +5,12 @@ const { para } = require('cont')
 const Suggest = require('suggest-box')
 
 exports.gives = {
-  helpers: { build_suggest_box: true },
-  css: true
+  helpers: { build_suggest_box: true }
 }
 
 exports.create = function (api) {
   return {
-    helpers: { build_suggest_box },
-    css: () => fs.readFileSync(__filename.replace(/js$/, 'css'), 'utf8') // NOTE css
+    helpers: { build_suggest_box }
   }
 
   function build_suggest_box (inputNode, asyncSuggesters, opts = {}) {
@@ -38,4 +36,3 @@ exports.create = function (api) {
     }
   }
 }
-

@@ -2,14 +2,12 @@ const fs = require('fs')
 const h = require('../../h')
 
 exports.gives = {
-  helpers: { build_scroller: true },
-  mcss: true
+  helpers: { build_scroller: true }
 }
 
 exports.create = function (api) {
   return {
-    helpers: { build_scroller },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    helpers: { build_scroller }
   }
 
   function build_scroller ({ prepend = [], append = [] } = {}) {
@@ -29,4 +27,3 @@ exports.create = function (api) {
     }
   }
 }
-

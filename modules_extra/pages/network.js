@@ -25,8 +25,7 @@ exports.needs = {
 exports.gives = {
   menu_items: true,
   builtin_tabs: true,
-  page: true,
-  mcss: true
+  page: true
 }
 
 function legacyToMultiServer(addr) {
@@ -127,8 +126,7 @@ exports.create = function (api) {
   return {
     menu_items: () => h('a', {href: '#/network'}, '/network'),
     builtin_tabs: () => ['/network'],
-    page,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    page
   }
 
   function page (path) {

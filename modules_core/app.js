@@ -1,27 +1,21 @@
 const fs = require('fs')
 const h = require('../h')
 const { Value } = require('mutant')
-const insertCss = require('insert-css')
 
 exports.needs = {
-  page: 'first',
-  styles: 'first'
+  page: 'first'
 }
 
 exports.gives = {
-  app: true,
-  mcss: true
+  app: true
 }
 
 exports.create = function (api) {
   return {
-    app,
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    app
   }
 
   function app () {
-    process.nextTick(() => insertCss(api.styles()))
-
     var view = Value(getView())
     var screen = h('App', view)
 
@@ -55,4 +49,3 @@ function displayError (e) {
     ])
   )
 }
-

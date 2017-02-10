@@ -40,14 +40,12 @@ exports.needs = {
 }
 
 exports.gives = {
-  about: { edit: true },
-  mcss: true
+  about: { edit: true }
 }
 
 exports.create = function (api) {
   return {
-    about: { edit },
-    mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
+    about: { edit }
   }
 
   function edit (id) {
@@ -207,4 +205,3 @@ exports.create = function (api) {
   }
 
 }
-
