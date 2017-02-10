@@ -24,7 +24,7 @@ exports.create = function (api) {
 
         // HACK (mw) yo we need a better way to replace the content
         var msgEl = this.parentNode.parentNode
-        var msgContentEl = msgEl.querySelector('.\\.raw-content')
+        var msgContentEl = msgEl.querySelector('.raw-content')
         if (clicked) {
           // move away the content
           while (el = msgContentEl.firstChild)

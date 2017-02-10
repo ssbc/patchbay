@@ -41,7 +41,7 @@ exports.create = function (api) {
 }
 
 // function displayError (e) {
-//   document.body.querySelector('.\\.content').appendChild(
+//   document.body.querySelector('.content').appendChild(
 //     h('div.page', [
 //       h('Error', { title: e.message }, [
 //         h('h1', e.message),

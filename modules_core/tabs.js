@@ -45,7 +45,7 @@ exports.create = function (api) {
       if (!el) return
 
       if(!el.title) el.title = path
-      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .content'))
       tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
@@ -71,7 +71,7 @@ exports.create = function (api) {
       if(!el) return
       el.id = el.id || path
       if (!el) return
-      el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+      el.scroll = keyscroll(el.querySelector('.Scroller .content'))
       if(el) tabs.add(el, false, false)
     })
 
@@ -100,7 +100,7 @@ exports.create = function (api) {
       var el = api.screen_view(path)
       if(el) {
         el.id = el.id || path
-        el.scroll = keyscroll(el.querySelector('.Scroller .\\.content'))
+        el.scroll = keyscroll(el.querySelector('.Scroller .content'))
         tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
   //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       }
