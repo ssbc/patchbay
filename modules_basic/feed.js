@@ -25,10 +25,10 @@ exports.create = function (api) {
     const profile = h('div', api.avatar_profile(id))
     var { container, content } = api.build_scroller({ prepend: [profile, h('header', 'Activity')] })
           
-    api.signifier(id, function (_, names) {
+    container.id = id
+    api.signifier(id, (_, names) => {
       if(names.length) container.title = names[0].name
     })
-    container.id = id
 
     pull(
       api.sbot_user_feed({id: id, old: false, live: true}),

@@ -34,7 +34,8 @@ exports.needs = {
   sbot_blobs_add: 'first',
   blob_url: 'first',
   sbot_links: 'first',
-  avatar_name: 'first'
+  avatar_name: 'first',
+  signifier: 'first'
 }
 
 exports.gives = {
@@ -76,15 +77,25 @@ exports.create = function (api) {
       pull.drain(image => images.push(image) )
     )
 
-    var namesRecord = MutantObject()
+    const namesRecord = MutantObject()
     // TODO constrain query to one name per peer?
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
-      pull.map(e => e.value.content.name),
-      pull.filter(Boolean),
-      pull.drain(name => {
-        var n = namesRecord.get(name) || 0
-        namesRecord.put(name, n+1)
+      pull.map(e => ({
+        alias: e.value.content.name,
+        author: e.source
+      })),
+      pull.filter(e => e.alias),
+      pull.drain(e => {
+        const authors = namesRecord.get(e.alias) || MutantArray()
+        const authorName = Value(e.author)
+
+        api.signifier(e.author, (_, names) => {
+          if (names.length) authorName.set(names[0].name)
+        })
+
+        authors.push(authorName)
+        namesRecord.put(e.alias, authors)
       })
     )
     var names = dictToCollection(namesRecord)
@@ -132,10 +143,17 @@ exports.create = function (api) {
         h('section.names', [
           h('header', 'Names'),
           h('section', [
-            map(names, n => h('div', { 'ev-click': () => name.new.set(n.key()) }, [
-              h('div.name', n.key),
-              h('div.count', n.value)
-            ])),
+            map(names, n => {
+              const { key: alias, value: authors } = n
+              const title = computed(authors, a => 'Asserted by:\n\t' + a.join('\n\t'))
+              return h('div', {
+                'ev-click': () => name.new.set(alias()),
+                title
+              }, [
+              h('div.alias', alias),
+              h('div.count', computed(authors, a => a.length))
+              ])
+            }),
             h('input', {
               placeholder: ' + another name',
               'ev-keyup': e => name.new.set(e.target.value)
