@@ -33,77 +33,77 @@ var ssbKeys = require('ssb-keys')
 
 var cache = CACHE = {}
 
-module.exports = {
-  needs: {
-    connection_status: 'map'
-  },
-  gives: {
+exports.needs = { connection_status: 'map' }
+
+exports.gives = {
 //    connection_status: true,
-    sbot_blobs_add: true,
-    sbot_links: true,
-    sbot_links2: true,
-    sbot_query: true,
-    sbot_fulltext_search: true,
-    sbot_get: true,
-    sbot_log: true,
-    sbot_user_feed: true,
-    sbot_gossip_peers: true,
-    sbot_gossip_connect: true,
-    sbot_progress: true,
-    sbot_publish: true,
-    sbot_whoami: true
-  },
+  sbot: {
+    blobs_add: true,
+    links: true,
+    links2: true,
+    query: true,
+    fulltext_search: true,
+    get: true,
+    log: true,
+    user_feed: true,
+    gossip_peers: true,
+    gossip_connect: true,
+    progress: true,
+    publish: true,
+    whoami: true
+  }
+}
 
-//module.exports = {
-  create: function (api) {
+exports.create = function (api) {
 
-    var opts = createConfig()
-    var sbot = null
-    var connection_status = []
+  var opts = createConfig()
+  var sbot = null
+  var connection_status = []
 
-    var rec = { 
-      sync: () => {},
-      async: () => {},
-      source: () => {},
+  var rec = { 
+    sync: () => {},
+    async: () => {},
+    source: () => {},
+  }
+
+  var rec = Reconnect(function (isConn) {
+    function notify (value) {
+      isConn(value); api.connection_status(value) //.forEach(function (fn) { fn(value) })
     }
 
-    var rec = Reconnect(function (isConn) {
-      function notify (value) {
-        isConn(value); api.connection_status(value) //.forEach(function (fn) { fn(value) })
-      }
+    createClient(keys, {
+      manifest: require('../manifest.json'),
+      remote: require('../config')().remote,
+      caps: config.caps
+    }, function (err, _sbot) {
+      if(err)
+        return notify(err)
 
-      createClient(keys, {
-        manifest: require('../manifest.json'),
-        remote: require('../config')().remote,
-        caps: config.caps
-      }, function (err, _sbot) {
-        if(err)
-          return notify(err)
-
-        sbot = _sbot
-        sbot.on('closed', function () {
-          sbot = null
-          notify(new Error('closed'))
-        })
-
-        notify()
+      sbot = _sbot
+      sbot.on('closed', function () {
+        sbot = null
+        notify(new Error('closed'))
       })
+
+      notify()
     })
+  })
 
-    var internal = {
-      getLatest: rec.async(function (id, cb) {
-        sbot.getLatest(id, cb)
-      }),
-      add: rec.async(function (msg, cb) {
-        sbot.add(msg, cb)
-      })
-    }
+  var internal = {
+    getLatest: rec.async(function (id, cb) {
+      sbot.getLatest(id, cb)
+    }),
+    add: rec.async(function (msg, cb) {
+      sbot.add(msg, cb)
+    })
+  }
 
-    var feed = createFeed(internal, keys, {remote: true})
+  var feed = createFeed(internal, keys, {remote: true})
 
-    return {
-      connection_status: connection_status,
-      sbot_blobs_add: rec.sink(function (cb) {
+  return {
+    // connection_status,
+    sbot: {
+      blobs_add: rec.sink(function (cb) {
         return pull(
           Hash(function (err, id) {
             if(err) return cb(err)
@@ -122,16 +122,16 @@ module.exports = {
           sbot.blobs.add()
         )
       }),
-      sbot_links: rec.source(function (query) {
+      links: rec.source(function (query) {
         return sbot.links(query)
       }),
-      sbot_links2: rec.source(function (query) {
+      links2: rec.source(function (query) {
         return sbot.links2.read(query)
       }),
-      sbot_query: rec.source(function (query) {
+      query: rec.source(function (query) {
         return sbot.query.read(query)
       }),
-      sbot_log: rec.source(function (opts) {
+      log: rec.source(function (opts) {
         return pull(
           sbot.createLogStream(opts),
           pull.through(function (e) {
@@ -139,13 +139,13 @@ module.exports = {
           })
         )
       }),
-      sbot_user_feed: rec.source(function (opts) {
+      user_feed: rec.source(function (opts) {
         return sbot.createUserStream(opts)
       }),
-      sbot_fulltext_search: rec.source(function (opts) {
+      fulltext_search: rec.source(function (opts) {
         return sbot.fulltext.search(opts)
       }),
-      sbot_get: rec.async(function (key, cb) {
+      get: rec.async(function (key, cb) {
         if('function' !== typeof cb)
           throw new Error('cb must be function')
         if(CACHE[key]) cb(null, CACHE[key])
@@ -154,17 +154,17 @@ module.exports = {
           cb(null, CACHE[key] = value)
         })
       }),
-      sbot_gossip_peers: rec.async(function (cb) {
+      gossip_peers: rec.async(function (cb) {
         sbot.gossip.peers(cb)
       }),
       //liteclient won't have permissions for this
-      sbot_gossip_connect: rec.async(function (opts, cb) {
+      gossip_connect: rec.async(function (opts, cb) {
         sbot.gossip.connect(opts, cb)
       }),
-      sbot_progress: rec.source(function () {
+      progress: rec.source(function () {
         return sbot.replicate.changes()
       }),
-      sbot_publish: rec.async(function (content, cb) {
+      publish: rec.async(function (content, cb) {
         if(content.recps)
           content = ssbKeys.box(content, content.recps.map(function (e) {
             return ref.isFeed(e) ? e : e.link
@@ -184,17 +184,10 @@ module.exports = {
           cb && cb(err, msg)
         })
       }),
-      sbot_whoami: rec.async(function (cb) {
+      whoami: rec.async(function (cb) {
         sbot.whoami(cb)
       })
     }
   }
 }
-
-
-
-
-
-
-
 

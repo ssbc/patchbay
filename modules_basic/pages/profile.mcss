@@ -1,0 +1,21 @@
+Profile {
+
+  section.edit {
+
+  }
+
+  section.relationships {
+
+  }
+
+  section.activity {
+    header {
+    }
+  }
+
+  /* for scroller content */
+  div { 
+  }
+
+}
+

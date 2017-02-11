@@ -1,10 +1,15 @@
 var h = require('hyperscript')
 
-exports.gives = 'message_meta'
-
+exports.gives = {
+  message: { meta: true }
+}
 
 exports.create = function (api) {
-  return function (msg) {
+  return {
+    message: { meta }
+  }
+
+  function meta (msg) {
     var tmp = h('div')
     var el
     var pre

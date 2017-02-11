@@ -1,0 +1,172 @@
+var h = require('hyperscript')
+var pull = require('pull-stream')
+var Scroller = require('pull-scroll')
+var mfr = require('map-filter-reduce')
+
+exports.needs = {
+  helpers: {
+    build_scroller: 'first'
+  },
+  message: {
+    render: 'first',
+    compose: 'first'
+  },
+  sbot: {
+    log: 'first',
+    query: 'first',
+  }
+}
+
+exports.gives = {
+  message: {
+    meta: true
+  },
+  page: true,
+  connection_status: true,
+  suggest_search: true,
+  suggest_mentions: true,
+  suggest_channel: true
+}
+
+exports.create = function (api) {
+
+  var channels
+
+  var filter = {$filter: {value: {content: {channel: {$gt: ''}}}}}
+  var map = {$map: {'name': ['value', 'content', 'channel']}}
+  var reduce = {$reduce: {
+    name: 'name',
+    rank: {$count: true}
+  }}
+
+  return {
+    message: {
+      meta
+    },
+    page,
+    connection_status,
+    suggest_search,
+    suggest_mentions,
+    suggest_channel
+  }
+
+  function meta (msg) {
+    var chan = msg.value.content.channel
+    if (chan)
+      return h('a', {
+        href: '##'+chan,
+        style: { order: 98 },
+      }, '#'+chan)
+  }
+
+  function page (path) {
+    if(path[0] === '#') {
+      var channel = path.substr(1)
+
+      var composer = api.message.compose({type: 'post', channel: channel})
+      var { container, content } = api.helpers.build_scroller({ prepend: composer })
+
+      function matchesChannel(msg) {
+        if (msg.sync) console.error('SYNC', msg)
+        var c = msg && msg.value && msg.value.content
+        return c && c.channel === channel
+      }
+
+      pull(
+        api.sbot.log({old: false}),
+        pull.filter(matchesChannel),
+        Scroller(container, content, api.message.render, true, false)
+      )
+
+      pull(
+        api.sbot.query({reverse: true, query: [
+          {$filter: {value: {content: {channel: channel}}}}
+        ]}),
+        Scroller(container, content, api.message.render, false, false)
+      )
+
+      return container
+    }
+  }
+
+  function connection_status (err) {
+    if(err) return
+
+    channels = []
+
+    pull(
+      api.sbot.query({query: [filter, map, reduce]}),
+      pull.collect(function (err, chans) {
+        if (err) return console.error(err)
+        channels = chans.concat(channels)
+      })
+    )
+
+    pull(
+      api.sbot.log({old: false}),
+      mfr.filter(filter),
+      mfr.map(map),
+      pull.drain(function (chan) {
+        var c = channels.find(function (e) {
+          return e.name === chan.name
+        })
+        if (c) c.rank++
+        else channels.push(chan)
+      })
+    )
+  }
+
+  function suggest_search (query) {
+    return function (cb) {
+      if(!/^#\w/.test(query)) return cb()
+
+      cb(null, channels.filter(function (chan) {
+        return ('#'+chan.name).substring(0, query.length) === query
+      })
+      .map(function (chan) {
+        var name = '#'+chan.name
+        return {
+          title: name,
+          subtitle: '(' + chan.rank + ')',
+          value: name
+        }
+      }))
+    }
+  }
+
+  function suggest_mentions (query) {
+    return function (cb) {
+      if(!/^#\w/.test(query)) return cb()
+
+      cb(null, channels.filter(function (chan) {
+        return ('#'+chan.name).substring(0, query.length) === query
+      })
+      .map(function (chan) {
+        var name = '#'+chan.name
+        return {
+          title: name,
+          subtitle: '(' + chan.rank + ')',
+          value: '['+name+']('+name+')'
+        }
+      }))
+    }
+  }
+
+  function suggest_channel (query) {
+    return function (cb) {
+      if (!/^#\w/.test(query)) return cb()
+
+      cb(null, channels.filter(function (chan) {
+        return (`#${chan.name}`).substring(0, query.length) === query
+      })
+      .map(function (chan) {
+        var name = `#${chan.name}`
+        return {
+          title: name,
+          subtitle: `(${chan.rank})`,
+          value: `#${name.substr(1)}`
+        }
+      }))
+    }
+  }
+}

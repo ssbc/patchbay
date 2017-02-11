@@ -4,7 +4,7 @@ const { Value } = require('mutant')
 const insertCss = require('insert-css')
 
 exports.needs = {
-  screen_view: 'first',
+  page: 'first',
   styles: 'first'
 }
 
@@ -36,7 +36,7 @@ exports.create = function (api) {
 
   function getView () {
     const view = window.location.hash.substring(1) || 'tabs'
-    return api.screen_view(view)
+    return api.page(view)
   }
 }
 

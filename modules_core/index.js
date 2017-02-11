@@ -1,17 +1,2 @@
-module.exports = {
-  'app':              require('./app'),
-  'blob-url':         require('./blob-url'),
-  'crypto':           require('./crypto'),
-  'external-confirm': require('./external-confirm'),
-  'error': require('./error'),
-  'file-input':       require('./file-input'),
-  'menu':             require('./menu'),
-  'names':            require('./names'),
-  'tabs':             require('./tabs'),
-  'sbot':             require('./sbot'),
-  'search-box':       require('./search-box'),
-  'style':            require('./style'),
-  'suggest-box':      require('./suggest-box'),
-  'suggest-mentions': require('./suggest-mentions')
-}
+module.exports = require('bulk-require')(__dirname, ['**/!(index).js'])
 

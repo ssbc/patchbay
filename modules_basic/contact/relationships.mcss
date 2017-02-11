@@ -1,0 +1,64 @@
+Relationships {
+  header {
+    margin-bottom: .8rem
+    border-bottom: 1px gainsboro solid
+  }
+
+  div {
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    align-content: flex-start
+
+    min-height: 5rem
+    margin-bottom: 2rem
+
+    header {
+      flex-basis: 100%
+      
+      _textSubtle
+      font-size: .9rem
+      
+      margin-bottom: .2rem
+    }
+
+    section a {
+      margin-right: .2rem
+
+      img { _avatar-small }
+    }
+  }
+
+  div.your-status {
+    margin: 0 
+    section.action {
+    }
+  }
+
+  div.friends {
+    section a {
+      margin: 0 .2rem 0.2rem 0
+
+      img { 
+        _avatar-large
+      }
+    }
+  }
+
+  div.follows {
+  }
+
+  div.followers {
+  }
+}
+
+_avatar-large {
+  width: 56px
+  height: 56px
+}
+
+_avatar-small {
+  width: 32px
+  height: 32px
+}
+

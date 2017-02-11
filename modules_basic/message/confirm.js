@@ -5,24 +5,25 @@ var self_id = require('../../keys').id
 //publish or add
 
 exports.needs = {
-  publish: 'first',
-  message_render: 'first',
-  avatar: 'first',
-  message_meta: 'map'
+  about: { image_name_link: 'first' },
+  message: {
+    publish: 'first',
+    render: 'first'
+  }
 }
 
 exports.gives = {
-  message_confirm: true,
+  message: { confirm: true },
   mcss: true
 }
 
 exports.create = function (api) {
   return {
-    message_confirm,
+    message: { confirm },
     mcss: () => fs.readFileSync(__filename.replace(/js$/, 'mcss'), 'utf8')
   }
 
-  function message_confirm (content, cb) {
+  function confirm (content, cb) {
 
     cb = cb || function () {}
 
@@ -43,7 +44,7 @@ exports.create = function (api) {
     var okay = h('button.okay',  {
       'ev-click': () => {
         lb.remove()
-        api.publish(content, cb)
+        api.message.publish(content, cb)
       }},
       'okay'
     )
@@ -64,7 +65,7 @@ exports.create = function (api) {
       h('header -preview_description', [
         h('h1', 'Preview')
       ]),
-      h('section -message_preview', api.message_render(msg)),
+      h('section -message_preview', api.message.render(msg)),
       h('section -actions', [cancel, okay])
     ]))
 
