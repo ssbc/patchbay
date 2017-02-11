@@ -68,17 +68,32 @@ exports.create = function (api) {
       new: Value()
     })
 
-    var images = MutantArray()
+    const imagesRecord = MutantObject()
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
-      pull.map(e => e.value.content.image),
-      pull.filter(e => e && 'string' == typeof e.link),
-      pull.unique('link'),
-      pull.drain(image => images.push(image) )
+      pull.map(e => ({
+        avatar: e.value.content.image,
+        author: e.source
+      })),
+      pull.filter(e => e.avatar && 'string' == typeof e.avatar.link),
+      pull.drain(e => {
+        const alias = imagesRecord.get(e.avatar.link) 
+          || Struct({
+            image: e.avatar, // this is the full image record
+            authors: MutantArray()
+          })
+
+        const authorName = Value(e.author)
+        api.signifier(e.author, (_, names) => {
+          if (names.length) authorName.set(names[0].name)
+        })
+
+        alias.authors.push(authorName)
+        imagesRecord.put(e.avatar.link, alias)
+      })
     )
 
     const namesRecord = MutantObject()
-    // TODO constrain query to one name per peer?
     pull(
       api.sbot_links({dest: id, rel: 'about', values: true}),
       pull.map(e => ({
@@ -99,6 +114,7 @@ exports.create = function (api) {
       })
     )
     var names = dictToCollection(namesRecord)
+    var images = dictToCollection(imagesRecord)
 
     var lb = hyperlightbox()
 
@@ -132,10 +148,15 @@ exports.create = function (api) {
         h('header', 'Aliases'),
         h('section.avatars', [
           h('header', 'Avatars'),
-          map(images, image => h('img', {
-            'src': api.blob_url(image),
-            'ev-click': () => avatar.new.set(image)
-          })),
+          map(images, imageAlias => {
+            const { value: alias } = imageAlias
+            const title = computed(alias.authors, a => 'Asserted by:\n\t' + a.join('\n\t'))
+            return h('img', {
+              src: api.blob_url(alias.image()),
+              title,
+              'ev-click': () => avatar.new.set(alias.image())
+            })
+          }),
           h('div.file-upload', [
             hyperfile.asDataURL(dataUrlCallback)
           ])
@@ -147,8 +168,8 @@ exports.create = function (api) {
               const { key: alias, value: authors } = n
               const title = computed(authors, a => 'Asserted by:\n\t' + a.join('\n\t'))
               return h('div', {
-                'ev-click': () => name.new.set(alias()),
-                title
+                title,
+                'ev-click': () => name.new.set(alias())
               }, [
               h('div.alias', alias),
               h('div.count', computed(authors, a => a.length))
@@ -211,13 +232,14 @@ exports.create = function (api) {
       if (newAvatar.link) msg.image = newAvatar
 
       api.message_confirm(msg, (err, data) => {
-        if (err) return console.error(err)
+        if (err) return console.error('error confirming profile update', err)
 
-        if (newName) name.original.set('@'+newName)
-        if (newAvatar.link) avatar.original.set(api.blob_url(newAvatar.link))
+        if (data) {
+          if (newName) name.original.set('@'+newName)
+          if (newAvatar.link) avatar.original.set(api.blob_url(newAvatar.link))
+        }
 
         clearNewSelections()
-
         // TODO - update aliases displayed
       })
     }
