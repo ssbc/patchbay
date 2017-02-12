@@ -1,7 +1,9 @@
+const pull = require('pull-stream')
 
 exports.needs = {
   h: 'first',
-  message_render: 'first'
+  message_render: 'first',
+  sbot_log: 'first'
 }
 
 exports.gives = {
@@ -15,7 +17,14 @@ exports.create = function (api) {
   }
 
   function page () {
-    return h('section', Array(5).fill('~').map(m => api.message_render(m)))
+    const container = h('div') 
+
+    pull(
+      api.sbot_log({reverse: true, limit: 10}),
+      pull.drain(msg => container.appendChild(api.message_render(msg)))
+    )
+
+    return container
   }
 }
 

@@ -27,8 +27,11 @@ exports.create = function (api) {
 
   function message_render (msg) {
     const { h } = api
+    console.log(msg)
 
-    return h('div', 'hello wrld')
+    return h('div', [
+      h('pre', JSON.stringify(msg, null, 2))
+    ])
 
     const content = api.message_content(msg)
     var msgEl = h('Message', {

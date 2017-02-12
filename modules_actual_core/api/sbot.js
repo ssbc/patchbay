@@ -40,7 +40,7 @@ module.exports = {
   gives: {
     sbot_publish: true,
     sbot_query: true,
-    sbot_user_feed: true,
+    sbot_log: true,
     connection_status: true
   },
 
@@ -117,6 +117,14 @@ module.exports = {
           else if(!cb) console.log(msg)
           cb && cb(err, msg)
         })
+      }),
+      sbot_log: rec.source(function (opts) {
+        return pull(
+          sbot.createLogStream(opts),
+          pull.through(function (e) {
+            CACHE[e.key] = CACHE[e.key] || e.value
+          })
+        )
       })
     }
   }
