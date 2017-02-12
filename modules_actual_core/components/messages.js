@@ -20,7 +20,7 @@ exports.create = function (api) {
     const container = h('div') 
 
     pull(
-      api.sbot_log({reverse: true, limit: 10}),
+      api.sbot_log({reverse: true, limit: 100}),
       pull.drain(msg => container.appendChild(api.message_render(msg)))
     )
 
