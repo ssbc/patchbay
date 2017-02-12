@@ -4,8 +4,6 @@ const onload = require('on-load')
 const { para } = require('cont')
 const Suggest = require('suggest-box')
 
-exports.needs = {}
-
 exports.gives = {
   build_suggest_box: true,
   css: true

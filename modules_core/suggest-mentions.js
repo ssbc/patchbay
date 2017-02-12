@@ -1,7 +1,5 @@
 
 exports.needs = {
-  sbot_links2: 'first',
-  blob_url: 'first',
   signified: 'first',
   builtin_tabs: 'map',
   avatar_image_src: 'first'
