@@ -38,7 +38,7 @@ function searchFilter(terms) {
     return c && (
       msg.key == terms[0] ||
       andSearch(terms.map(function (term) {
-        return new RegExp('\\b'+term+'\\b', 'i')
+        return new RegExp('\\b'+u.escapeRegExp(term)+'\\b', 'i')
       }), [c.text, c.name, c.title])
     )
   }
@@ -46,7 +46,7 @@ function searchFilter(terms) {
 
 function createOrRegExp(ary) {
   return new RegExp(ary.map(function (e) {
-    return '\\b'+e+'\\b'
+    return '\\b'+u.escapeRegExp(e)+'\\b'
   }).join('|'), 'i')
 }
 

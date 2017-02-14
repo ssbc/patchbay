@@ -47,5 +47,10 @@ exports.next = function (createStream, opts, property, range) {
   })
 }
 
+// http://stackoverflow.com/a/6969486
+exports.escapeRegExp = function (str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
 
 

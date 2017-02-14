@@ -1,6 +1,7 @@
 var pull = require('pull-stream')
 var many = require('pull-many')
 var mfr = require('map-filter-reduce')
+var u = require('../util')
 
 function all(stream, cb) {
   pull(stream, pull.collect(cb))
@@ -171,7 +172,7 @@ exports.create = function (api) {
   })
 
   exports.signified = async(function (name) {
-    var rx = new RegExp('^'+name)
+    var rx = new RegExp('^'+u.escapeRegExp(name))
     return rank(names.filter(function (e) { return rx.test(e.name) }))
   })
 
