@@ -1,0 +1,33 @@
+{
+  "name": "picknmix",
+  "version": "0.0.1",
+  "description": "patchbay 2? building on patchcore",
+  "main": "index.js",
+  "scripts": {
+    "start": "electro index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssbc/picknmix.git"
+  },
+  "author": "mixmix",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ssbc/picknmix/issues"
+  },
+  "homepage": "https://github.com/ssbc/picknmix#readme",
+  "dependencies": {
+    "bulk-require": "^1.0.0",
+    "depject": "^3.1.6",
+    "depnest": "^1.0.2",
+    "electro": "^2.0.3",
+    "electron": "^1.4.15",
+    "hypertabs": "^4.1.1",
+    "insert-css": "^2.0.0",
+    "micro-css": "^1.0.0",
+    "mutant": "^3.14.2",
+    "open-external": "^0.1.1",
+    "setimmediate": "^1.0.5"
+  }
+}
