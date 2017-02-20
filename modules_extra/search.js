@@ -139,7 +139,7 @@ exports.create = function (api) {
           search.isLinear.set(true)
           return pull(
             u.next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-            pull.through(() => searched.set(searched()+1)),
+            pull.through(() => search.matches.set(search.matches()+1)),
             pull.filter(matchesQuery)
           )
         }
