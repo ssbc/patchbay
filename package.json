@@ -25,9 +25,11 @@
     "electron": "^1.4.15",
     "hypertabs": "^4.1.1",
     "insert-css": "^2.0.0",
+    "libnested": "^1.2.1",
     "micro-css": "^1.0.0",
     "mutant": "^3.14.2",
     "open-external": "^0.1.1",
+    "read-directory": "^2.0.0",
     "setimmediate": "^1.0.5"
   }
 }
