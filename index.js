@@ -11,7 +11,7 @@ const sockets = combine(
   // require(patchgit)
   bulk(__dirname, [
     'main/**/*.js',
-    'router/html/page/**/*.js',
+    'router/**/*.js',
     'styles/**/*.js'
   ]),
   require('patchcore')

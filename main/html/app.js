@@ -1,6 +1,7 @@
 const { Value, h } = require('mutant')
 const nest = require('depnest')
 const insertCss = require('insert-css')
+const Tabs = require('hypertabs')
 
 exports.gives = nest('main.html.app')
 
@@ -16,24 +17,71 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    // var view = Value(getView())
-    var view = 'hello!'
-    var screen = h('App', view)
+    var view = Value('loading...')
+    var App = h('App', view)
 
-    // window.onhashchange = () => view.set(getView())
-    // document.body.appendChild(screen)
+    var tabs = Tabs() // optional onSelect cb
+    ;['/public', '/private', '/notifications'].forEach(addPage(tabs))
+    tabs.select(0)
 
-    return screen
+    view.set(tabs)
+    // catchClick(app, (link, { ctrlKey: change, isExternal }) => {
+    //   if (tabs.has(link)) tabs.select(link)
+    //   else addPage(tabs, change)(link)
+
+    //   // TODO add external-links module
+    // })
+
+    return App
   }
 
-  // function getView () {
-  //   const view = window.location.hash.substring(1) || 'tabs'
-  //   return api.page(view)
-  // }
+  function addPage (tabs, change, split) {
+    return function (link) {
+      const page = api.router.html.page(link)
+      if (!page) return
+
+      page.id = page.id || link
+      tabs.add(page, change, split)
+    }
+  }
 }
 
 function values (object) {
   const keys = Object.keys(object)
   return keys.map(k => object[k])
+}
+
+// TODO - replace with extracted module
+var Url = require('url')
+
+function catchClick (root, cb) {
+  root.addEventListener('click', (ev) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    if (ev.defaultPrevented) return
+
+    var anchor = null
+    for (var n = ev.target; n.parentNode; n = n.parentNode) {
+      if (n.nodeName === 'A') {
+        anchor = n
+        break
+      }
+    }
+    if (!anchor) return true
+
+    var href = anchor.getAttribute('href')
+    if (!href) return
+
+    var url = Url.parse(href)
+    var opts = {
+      altKey: ev.altKey,
+      ctrlKey: ev.ctrlKey,
+      metaKey: ev.metaKey,
+      shiftKey: ev.shiftKey,
+      isExternal: !!url.host
+    }
+
+    cb(href, opts)
+  })
 }
 
