@@ -19,7 +19,7 @@
   "homepage": "https://github.com/ssbc/picknmix#readme",
   "dependencies": {
     "bulk-require": "^1.0.0",
-    "depject": "^3.1.6",
+    "depject": "^3.2.0",
     "depnest": "^1.0.2",
     "electro": "^2.0.3",
     "electron": "^1.4.15",

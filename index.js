@@ -1,4 +1,6 @@
 const combine = require('depject')
+const entry = require('depject/entry')
+const nest = require('depnest')
 const bulk = require('bulk-require')
 
 // polyfills
@@ -8,20 +10,15 @@ require('setimmediate')
 const sockets = combine(
   // require(patchgit)
   bulk(__dirname, [
-    'page/**/*.js',
-    'app/**/*.js'
+    'main/**/*.js',
+    'router/html/page/**/*.js',
+    'styles/**/*.js'
   ]),
   require('patchcore')
 )
 
-const app = entry(sockets)
+const api = entry(sockets, nest('main.html.app', 'first'))
 
-app()
-
-
-
-
-function entry (sockets) {
-  return sockets.app.html.render[0]()
-}
+const app = api.main.html.app()
+document.body.appendChild(app)
 

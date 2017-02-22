@@ -1,40 +1,38 @@
+const { h } = require('mutant')
 const Tabs = require('hypertabs')
 const open = require('open-external')
 const { webFrame, remote, clipboard } = require('electron') || {}
 const nest = require('depnest')
 
-const keyscroll = require('../../keyscroll')
-const h = require('../../h')
+// const keyscroll = require('../../keyscroll')
 
 exports.needs = nest({
-  'page.html.render': 'first',
-  'app.html.menu': 'first',
-  helpers: {
-    build_error: 'first',
-    build_scroller: 'first',
-    external_confirm:'first',
-  },
-  'app.html.search_box': 'first'
+  'router.html.page': 'first'
+  // 'app.html.menu': 'first',
+  // helpers: {
+  //   build_error: 'first',
+  //   build_scroller: 'first',
+  //   external_confirm:'first',
+  // },
+  // 'app.html.search_box': 'first'
 })
 
-exports.gives = nest('page.html.render')
+exports.gives = nest('router.html.tabs')
 
 exports.create = function (api) {
   return function (path) {
-    if(path !== 'tabs') return
-
     function setSelected (indexes) {
       const ids = indexes.map(index => tabs.get(index).content.id)
-      if(search)
-        if(ids.length > 1)
-          search.input.value = 'split('+ids.join(',')+')'
+      if (search)
+        if (ids.length > 1)
+          search.input.value = 'split(' + ids.join(',') + ')'
         else
           search.input.value = ids[0]
     }
 
     const tabs = Tabs(setSelected)
     const search = api.search_box((path, change) => {
-      if(tabs.has(path)) {
+      if (tabs.has(path)) {
         tabs.select(path)
         return true
       }
@@ -42,8 +40,8 @@ exports.create = function (api) {
       const el = api.page(path)
       if (!el) return
 
-      if(!el.title) el.title = path
-      el.scroll = keyscroll(el.querySelector('.Scroller .content'))
+      if (!el.title) el.title = path
+      // el.scroll = keyscroll(el.querySelector('.Scroller .content'))
       tabs.add(el, change)
 //      localStorage.openTabs = JSON.stringify(tabs.tabs)
       return change
@@ -61,42 +59,42 @@ exports.create = function (api) {
   //  try { saved = JSON.parse(localStorage.openTabs) }
   //  catch (_) { }
 
-    if(!saved || saved.length < 3)
+    if (!saved || saved.length < 3)
       saved = ['/public', '/private', '/notifications']
 
     saved.forEach(function (path) {
       var el = api.page(path)
-      if(!el) return
+      if (!el) return
       el.id = el.id || path
       if (!el) return
       el.scroll = keyscroll(el.querySelector('.Scroller .content'))
-      if(el) tabs.add(el, false, false)
+      if (el) tabs.add(el, false, false)
     })
 
     tabs.select(0)
     search.input.value = null // start with an empty field to show placeholder
 
-    //handle link clicks
+    // handle link clicks
     window.onclick = function (ev) {
       var link = ancestorAnchor(ev.target)
-      if(!link) return
+      if (!link) return
       var path = link.hash.substring(1)
 
       ev.preventDefault()
       ev.stopPropagation()
 
-      //let the application handle this link
+      // let the application handle this link
       if (link.getAttribute('href') === '#') return
 
-      //open external links.
-      //this ought to be made into something more runcible
-      if(link.href && open.isExternal(link.href)) return api.helpers.external_confirm(link.href)
+      // open external links.
+      // this ought to be made into something more runcible
+      if (link.href && open.isExternal(link.href)) return api.helpers.external_confirm(link.href)
 
-      if(tabs.has(path))
+      if (tabs.has(path))
         return tabs.select(path, !ev.ctrlKey, !!ev.shiftKey)
 
       var el = api.page(path)
-      if(el) {
+      if (el) {
         el.id = el.id || path
         el.scroll = keyscroll(el.querySelector('.Scroller .content'))
         tabs.add(el, !ev.ctrlKey, !!ev.shiftKey)
@@ -120,7 +118,7 @@ exports.create = function (api) {
         gPressed = false
       }
 
-      switch(ev.keyCode) {
+      switch (ev.keyCode) {
         // scroll through tabs
         case 72: // h
           return tabs.selectRelative(-1)
@@ -139,7 +137,7 @@ exports.create = function (api) {
             var sel = tabs.selected
             var i = sel.reduce(function (a, b) { return Math.min(a, b) })
             tabs.remove(sel)
-            tabs.select(Math.max(i-1, 0))
+            tabs.select(Math.max(i - 1, 0))
           }
           return
 
@@ -174,7 +172,7 @@ exports.create = function (api) {
     // errors tab
     var {
       container: errorsScroller,
-      content: errorsContent 
+      content: errorsContent
     } = api.helpers.build_scroller()
 
     errorsScroller.id = '/errors'
@@ -189,7 +187,7 @@ exports.create = function (api) {
     // put errors in a tab
     window.addEventListener('error', ev => {
       const err = ev.error || ev
-      if(!tabs.has('/errors'))
+      if (!tabs.has('/errors'))
         tabs.add(errorsScroller, false)
 
       const el = api.helpers.build_error(err)
@@ -243,14 +241,14 @@ exports.create = function (api) {
 }
 
 function ancestorAnchor (el) {
-  if(!el) return
-  if(el.tagName !== 'A') return ancestorAnchor(el.parentElement)
+  if (!el) return
+  if (el.tagName !== 'A') return ancestorAnchor(el.parentElement)
   return el
 }
 
 function ancestorMessage (el) {
-  if(!el) return
-  if(!el.classList.contains('Message')) {
+  if (!el) return
+  if (!el.classList.contains('Message')) {
     if (el.parentElement)
       return ancestorMessage(el.parentElement)
     else
@@ -258,5 +256,4 @@ function ancestorMessage (el) {
   }
   return el
 }
-
 
