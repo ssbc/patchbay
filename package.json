@@ -28,8 +28,16 @@
     "libnested": "^1.2.1",
     "micro-css": "^1.0.0",
     "mutant": "^3.16.0",
+    "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
+    "pull-cat": "^1.1.11",
+    "pull-next": "0.0.2",
+    "pull-scroll": "^1.0.3",
+    "pull-stream": "^3.5.0",
     "read-directory": "^2.0.0",
-    "setimmediate": "^1.0.5"
+    "setimmediate": "^1.0.5",
+    "ssb-mentions": "^0.1.1",
+    "suggest-box": "^2.2.3",
+    "xtend": "^4.0.1"
   }
 }

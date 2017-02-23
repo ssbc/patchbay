@@ -10,9 +10,7 @@ require('setimmediate')
 const sockets = combine(
   // require(patchgit)
   bulk(__dirname, [
-    'main/**/*.js',
-    'router/**/*.js',
-    'styles/**/*.js'
+    '!(node_modules|junk)/**/*.js'
   ]),
   require('patchcore')
 )
