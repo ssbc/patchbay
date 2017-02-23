@@ -1,4 +1,4 @@
-const { Value, h } = require('mutant')
+const { h } = require('mutant')
 const nest = require('depnest')
 const insertCss = require('insert-css')
 const Tabs = require('hypertabs')
@@ -17,20 +17,17 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    var view = Value('loading...')
-    var App = h('App', view)
-
     var tabs = Tabs() // optional onSelect cb
+    var App = h('App', tabs)
     ;['/public', '/private', '/notifications'].forEach(addPage(tabs))
     tabs.select(0)
 
-    view.set(tabs)
-    // catchClick(app, (link, { ctrlKey: change, isExternal }) => {
-    //   if (tabs.has(link)) tabs.select(link)
-    //   else addPage(tabs, change)(link)
+    catchClick(App, (link, { ctrlKey: change, isExternal }) => {
+      if (tabs.has(link)) tabs.select(link)
+      else addPage(tabs, change)(link)
 
-    //   // TODO add external-links module
-    // })
+      // TODO add external-links module
+    })
 
     return App
   }
