@@ -9,8 +9,10 @@ exports.gives = nest('router.html.page')
 
 exports.needs = nest({
   'sbot.pull.log': 'first',
-  'message.html.compose': 'first',
-  'message.html.render': 'first',
+  'message.html': {
+    compose: 'first',
+    render: 'first',
+  },
   'main.html.scroller': 'first'
 })
 
