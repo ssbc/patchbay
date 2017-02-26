@@ -24,7 +24,7 @@ Hypertabs {
         min-width: 3.5rem
         font-size: .9rem
         background-color: #efefef
-        overflow-x: hidden
+        overflow: hidden
 
         padding: 0 .4rem
         margin-left: .6rem

@@ -56,6 +56,7 @@ var Url = require('url')
 
 function catchClick (root, cb) {
   root.addEventListener('click', (ev) => {
+    if (ev.target.tagName === 'INPUT' && ev.target.type === 'file') return
     if (ev.defaultPrevented) return // TODO check this is in the right place
     ev.preventDefault()
     ev.stopPropagation()

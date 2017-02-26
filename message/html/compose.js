@@ -31,17 +31,13 @@ exports.create = function (api) {
     var blurTimeout = null
 
     var expanded = computed([shrink, focused, hasContent], (shrink, focused, hasContent) => {
-      if (!shrink || hasContent) {
-        return true
-      } else {
-        return focused
-      }
+      if (!shrink || hasContent) return true
+
+      return focused
     })
 
     var textArea = h('textarea', {
-      'ev-input': function () {
-        hasContent.set(!!textArea.value)
-      },
+      'ev-input': () => hasContent.set(!!textArea.value),
       'ev-blur': () => {
         clearTimeout(blurTimeout)
         blurTimeout = setTimeout(() => focused.set(false), 200)
@@ -54,15 +50,17 @@ exports.create = function (api) {
       files.push(file)
       filesById[file.link] = file
 
-      var embed = file.type.indexOf('image/') === 0 ? '!' : ''
+      var embed = file.type.match(/^image/) ? '!' : ''
+      var spacer = embed ? '\n' : ' '
+      var insertLink = spacer + embed + '[' + file.name + ']' + '(' + file.link + ')' + spacer
 
-      textArea.value += embed + `[${file.name}](${file.link})`
+      var pos = textArea.selectionStart
+      textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
+
       console.log('added:', file)
     })
 
-    fileInput.onclick = function () {
-      hasContent.set(true)
-    }
+    fileInput.onclick = () => hasContent.set(true)
 
     var publishBtn = h('button', { 'ev-click': publish }, 'Publish')
 

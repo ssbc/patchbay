@@ -31,15 +31,15 @@ Compose {
     display: flex
     flex-direction: row
     align-items: baseline
+    justify-content: space-between
 
     margin-top: .4rem
 
     input[type="file"] {
-      flex-grow: 1
 
       padding: .5rem 0
 
-      width: 5.5rem
+      width: 2.5rem
       color: transparent
 
       ::-webkit-file-upload-button {
