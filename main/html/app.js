@@ -22,9 +22,12 @@ exports.create = function (api) {
     ;['/public', '/private', '/notifications'].forEach(addPage(tabs))
     tabs.select(0)
 
-    catchClick(App, (link, { ctrlKey: change, isExternal }) => {
+    catchClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
       if (tabs.has(link)) tabs.select(link)
-      else addPage(tabs, change)(link)
+      else {
+        const changeTab = !openBackground
+        addPage(tabs, changeTab)(link)
+      }
 
       // TODO add external-links module
     })
@@ -53,9 +56,9 @@ var Url = require('url')
 
 function catchClick (root, cb) {
   root.addEventListener('click', (ev) => {
+    if (ev.defaultPrevented) return // TODO check this is in the right place
     ev.preventDefault()
     ev.stopPropagation()
-    if (ev.defaultPrevented) return
 
     var anchor = null
     for (var n = ev.target; n.parentNode; n = n.parentNode) {
