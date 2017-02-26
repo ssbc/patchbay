@@ -19,7 +19,7 @@ exports.gives = nest('message.html.compose')
 
 exports.create = function (api) {
   return nest('message.html.compose', compose)
-    
+
   function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
     var files = []
     var filesById = {}

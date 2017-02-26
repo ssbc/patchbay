@@ -4,9 +4,9 @@
   "description": "patchbay 2? building on patchcore",
   "main": "index.js",
   "scripts": {
+    "lint": "standard",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
-    "start": "electro index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electro index.js"
   },
   "repository": {
     "type": "git",
@@ -41,5 +41,8 @@
     "ssb-mentions": "^0.1.1",
     "suggest-box": "^2.2.3",
     "xtend": "^4.0.1"
+  },
+  "devDependencies": {
+    "standard": "^8.6.0"
   }
 }

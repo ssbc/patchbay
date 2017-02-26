@@ -56,4 +56,3 @@ function clone (obj) {
   return _obj
 }
 
-

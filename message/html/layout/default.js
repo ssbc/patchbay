@@ -15,9 +15,9 @@ exports.needs = nest({
 exports.gives = nest('message.html.layout')
 
 exports.create = (api) => {
-  return nest('message.html.layout', message_layout)
+  return nest('message.html.layout', messageLayout)
 
-  function message_layout (msg, opts) {
+  function messageLayout (msg, opts) {
     if (!(opts.layout === undefined || opts.layout === 'default')) return
 
     return h('Message', [

@@ -1,4 +1,3 @@
-const { h } = require('mutant')
 const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -10,18 +9,21 @@ exports.needs = nest({
   'feed.pull.public': 'first',
   'message.html': {
     compose: 'first',
-    render: 'first',
+    render: 'first'
   },
   'main.html.scroller': 'first'
 })
 
 exports.create = function (api) {
   return nest('router.html.page', publicPage)
-    
+
   function publicPage (path) {
     if (path !== '/public') return
 
-    const composer = api.message.html.compose({ meta: { type: 'post' }, placeholder: 'Write a public message'})
+    const composer = api.message.html.compose({
+      meta: { type: 'post' },
+      placeholder: 'Write a public message'
+    })
     const { container, content } = api.main.html.scroller({ prepend: composer })
 
     pull(

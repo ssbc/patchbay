@@ -1,4 +1,3 @@
-const { h } = require('mutant')
 const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
@@ -13,23 +12,23 @@ exports.needs = nest({
   'main.html.scroller': 'first',
   'message.html': {
     compose: 'first',
-    render: 'first',
-  },
+    render: 'first'
+  }
 })
 
 exports.create = function (api) {
   return nest('router.html.page', privatePage)
-  
+
   function privatePage (path) {
     if (path !== '/private') return
 
     const id = api.keys.sync.id()
 
     const composer = api.message.html.compose({
-      meta: { type: 'post' }, 
+      meta: { type: 'post' },
       prepublish: meta => {
         meta.recps = [id, ...meta.mentions]
-          .filter(m => ref.isFeed(typeof m  === 'string' ? m : m.link))
+          .filter(m => ref.isFeed(typeof m === 'string' ? m : m.link))
         return meta
       },
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}

@@ -4,9 +4,9 @@ const nest = require('depnest')
 exports.gives = nest('main.html.scroller')
 
 exports.create = function (api) {
-  return nest('main.html.scroller', build_scroller)
+  return nest('main.html.scroller', Scroller)
 
-  function build_scroller ({ prepend = [], append = [] } = {}) {
+  function Scroller ({ prepend = [], append = [] } = {}) {
     const content = h('section.content')
 
     const container = h('Scroller', { style: { overflow: 'auto' } }, [
