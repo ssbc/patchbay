@@ -4,6 +4,7 @@
   "description": "patchbay 2? building on patchcore",
   "main": "index.js",
   "scripts": {
+    "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
     "start": "electro index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

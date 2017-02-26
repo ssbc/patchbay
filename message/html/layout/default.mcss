@@ -1,6 +1,6 @@
 Message {
-  padding: 1rem .5rem 1rem 7.5rem
-  min-height: 5rem
+  padding: 1rem .5rem 1rem 6rem
+  /* min-height: 5rem */
 
   position: relative
   display: flex
@@ -8,18 +8,35 @@ Message {
   flex-wrap: wrap
   justify-content: flex-end
 
-  header.author {
+  section.avatar {
     position: absolute
     left: .5rem
+    
+    img {
+      width: 4rem
+      height: 4rem
+    }
   }
 
-  section.title {
-    flex-grow: 1
-    font-size: .9rem
+  section.timestamp {
+    position: absolute
+    left: .5rem
+    top: 5rem
+
+    a {
+      font-size: .8rem
+      _textSubtle
+    }
+  }
+
+  header.author {
+    margin-right: .4rem
   }
 
   section.meta {
     display: flex
+    flex-grow: 1
+    justify-content: flex-end
     align-items: center
     * {
       margin-left: .4rem
@@ -29,7 +46,7 @@ Message {
       _textSubtle
     }
  
-  /* this is for private message_meta, TODO find a better home */
+    /* this is for private message_meta, TODO find a better home */
     (img) {
       height: 1.8rem
       width: 1.8rem
@@ -37,8 +54,15 @@ Message {
     }
   }
 
+  section.title {
+    flex-basis: 100%
+    font-size: .9rem
+  }
+
   section.content {
     flex-basis: 100%
+
+    margin-top: .4rem
 
     (img) {
       max-width: 100%
@@ -77,32 +101,4 @@ Message {
   }
 
 
-  -mini {
-    font-size: .9rem
-    justify-content: flex-start
-    padding: .25rem .5rem
-    min-height: inherit
-
-    header.author {
-      order: 0
-      position: initial
-      left: initial
-      min-width: 7rem
-    }
-
-    section.content {
-      order: 1
-      flex-basis: initial
-      flex-grow: 1
-    }
-
-    section.meta {
-      order: 2
-    }
-
-    section.raw-content {
-      order: 3
-      margin-left: 0
-    }
-  }
 }

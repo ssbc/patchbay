@@ -9,9 +9,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   // require(patchgit)
-  bulk(__dirname, [
-    '!(node_modules|junk)/**/*.js'
-  ]),
+  bulk(__dirname, [ '!(node_modules|junk)/**/*.js' ]),
   require('patchcore')
 )
 
