@@ -11,6 +11,7 @@ exports.gives = nest({
 // menu_items
 
 exports.needs = nest({
+  'about.html.edit': 'first',
   'about.obs': {
     'name': 'first'
     // 'description': 'first',
@@ -39,7 +40,7 @@ exports.create = function (api) {
     if (!ref.isFeed(id)) return
 
     const profile =  h('Profile', [
-      // h('section.edit', api.about.edit(id)),
+      h('section.edit', api.about.html.edit(id)),
       // h('section.relationships', api.contact.relationships(id)),
       h('section.activity', [
         h('header', 'Activity')

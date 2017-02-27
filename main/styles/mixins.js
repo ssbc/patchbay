@@ -25,5 +25,15 @@ _textSubtle {
 _backgroundPrimary {
   background-color: #50aadf
 }
+
+_avatarLarge {
+  width: 56px
+  height: 56px
+}
+
+_avatarSmall {
+  width: 32px
+  height: 32px
+}
 `
 

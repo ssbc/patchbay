@@ -103,5 +103,23 @@ button:hover {
 highlight {
   background: #ff8;
 }
+
+/* lightbox - used in message-confirm */
+
+div.lightbox {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 50px;
+  overflow: auto;
+  width: 600px;
+  max-width: 100%;
+  padding: 25px;
+  margin: auto;
+  z-index: 2;
+  background: #f5f5f5;
+  border: 1px solid #eee;
+  border-radius: .2em;
+}
 `
 
