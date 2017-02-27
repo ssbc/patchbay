@@ -1,10 +1,5 @@
 const nest = require('depnest')
-const pull = require('pull-stream')
-const { unique, drain } = pull
-const {
-  h, Array: MutantArray,
-  map, computed, when, dictToCollection
-} = require('mutant')
+const { h, map, computed } = require('mutant')
 
 exports.gives = nest('contact.html.relationships')
 
@@ -23,13 +18,13 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest({ 
+  return nest({
     'contact.html.relationships': relationships
   })
 
   function relationships (id) {
-    var rawFollowing = api.contact.obs.following(id) 
-    var rawFollowers = api.contact.obs.followers(id) 
+    var rawFollowing = api.contact.obs.following(id)
+    var rawFollowers = api.contact.obs.followers(id)
 
     var friends = computed([rawFollowing, rawFollowers], (following, followers) => {
       return [...following].filter(follow => followers.has(follow))
@@ -43,8 +38,8 @@ exports.create = function (api) {
     })
 
     function imageLink (id) {
-      return h('a', 
-        { href: id, title: computed(api.about.obs.name(id), name => '@'+name) },
+      return h('a',
+        { href: id, title: computed(api.about.obs.name(id), name => '@' + name) },
         api.about.html.image(id)
       )
     }
@@ -53,7 +48,7 @@ exports.create = function (api) {
     return h('Relationships', [
       h('header', 'Relationships'),
       h('div.your-status', [
-        h('header', 'Your status'),
+        h('header', 'Your status')
         // h('section.action', api.contact.action(id))
       ]),
       h('div.friends', [
@@ -70,6 +65,5 @@ exports.create = function (api) {
       ])
     ])
   }
-
 }
 

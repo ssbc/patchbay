@@ -18,10 +18,10 @@ function crop (d, cb) {
   return h('AboutImageEditor', [
     h('header', 'Click and drag to crop your avatar.'),
     canvas,
-    //canvas.selection,
+    // canvas.selection,
     h('section.actions', [
-      h('button.cancel', {'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
-      h('button.okay', {'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
+      h('button.cancel', { 'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
+      h('button.okay', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
     ])
   ])
 }
@@ -29,7 +29,7 @@ function crop (d, cb) {
 exports.needs = nest({
   'about.obs.name': 'first',
   'keys.sync.id': 'first',
-  'blob.sync.url':'first',
+  'blob.sync.url': 'first',
   sbot: {
     'async.addBlob': 'first',
     'pull.links': 'first'
@@ -41,7 +41,7 @@ exports.gives = nest('about.html.edit')
 
 exports.create = function (api) {
   return nest({
-    'about.html.edit': edit 
+    'about.html.edit': edit
   })
 
   function edit (id) {
@@ -54,13 +54,14 @@ exports.create = function (api) {
 
     getAvatar({ links }, api.keys.sync.id(), id, (err, _avatar) => {
       if (err) return console.error(err)
-      //don't show user has already selected an avatar.
-      if(ref.isBlob(_avatar.image))
+      // don't show user has already selected an avatar.
+      if (ref.isBlob(_avatar.image)) {
         avatar.original.set(api.blob.sync.url(_avatar.image))
+      }
     })
 
     var name = Struct({
-      original: computed(api.about.obs.name(id), name => '@'+name),
+      original: computed(api.about.obs.name(id), name => '@' + name),
       new: Value()
     })
 
@@ -68,9 +69,9 @@ exports.create = function (api) {
     pull(
       links({dest: id, rel: 'about', values: true}),
       pull.map(e => e.value.content.image),
-      pull.filter(e => e && 'string' == typeof e.link),
+      pull.filter(e => e && typeof e.link === 'string'),
       pull.unique('link'),
-      pull.drain(image => images.push(image) )
+      pull.drain(image => images.push(image))
     )
 
     var namesRecord = MutantObject()
@@ -81,7 +82,7 @@ exports.create = function (api) {
       pull.filter(Boolean),
       pull.drain(name => {
         var n = namesRecord.get(name) || 0
-        namesRecord.put(name, n+1)
+        namesRecord.put(name, n + 1)
       })
     )
     var names = dictToCollection(namesRecord)
@@ -101,7 +102,7 @@ exports.create = function (api) {
     })
 
     var displayedName = computed([name], name => {
-      if (name.new) return '@'+name.new
+      if (name.new) return '@' + name.new
       else return name.original
     })
 
@@ -109,9 +110,9 @@ exports.create = function (api) {
       h('section.lightbox', lb),
       h('section.avatar', [
         h('section', [
-          h('img', { src: avatarSrc }),
+          h('img', { src: avatarSrc })
         ]),
-        h('footer', displayedName),
+        h('footer', displayedName)
       ]),
       h('section.description', description),
       h('section.aliases', [
@@ -148,15 +149,17 @@ exports.create = function (api) {
 
     function dataUrlCallback (data) {
       var el = crop(data, (err, data) => {
-        if(data) {
+        if (err) throw err
+
+        if (data) {
           var _data = dataurl.parse(data)
           pull(
             pull.once(_data.data),
             api.sbot.async.addBlob((err, hash) => {
-              //TODO. Alerts are EVIL.
-              //I use them only in a moment of weakness.
+              // TODO. Alerts are EVIL.
+              // I use them only in a moment of weakness.
 
-              if(err) return alert(err.stack)
+              if (err) return alert(err.stack)
               avatar.new.set({
                 link: hash,
                 size: _data.data.length,
@@ -192,7 +195,7 @@ exports.create = function (api) {
       api.message.confirm(msg, (err, data) => {
         if (err) return console.error(err)
 
-        if (newName) name.original.set('@'+newName)
+        if (newName) name.original.set('@' + newName)
         if (newAvatar.link) avatar.original.set(api.blob.sync.url(newAvatar.link))
 
         clearNewSelections()
@@ -201,7 +204,5 @@ exports.create = function (api) {
       })
     }
   }
-
 }
-
 

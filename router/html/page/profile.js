@@ -27,7 +27,6 @@ exports.needs = nest({
   'sbot.pull.userFeed': 'first'
 })
 
-
 exports.create = function (api) {
   return nest({
     'router.html.page': page
@@ -40,7 +39,7 @@ exports.create = function (api) {
   function page (id) {
     if (!ref.isFeed(id)) return
 
-    const profile =  h('Profile', [
+    const profile = h('Profile', [
       h('section.edit', api.about.html.edit(id)),
       h('section.relationships', api.contact.html.relationships(id)),
       h('section.activity', [
@@ -51,8 +50,8 @@ exports.create = function (api) {
 
     var { container, content } = api.main.html.scroller({ prepend: profile })
 
-    const name = api.about.obs.name(id) 
-    watch(name, name => container.title = '@'+name)
+    const name = api.about.obs.name(id)
+    watch(name, function (name) { container.title = '@' + name })
     container.id = id
 
     pull(
@@ -60,7 +59,7 @@ exports.create = function (api) {
       Scroller(container, content, api.message.html.render, true, false)
     )
 
-    //how to handle when have scrolled past the start???
+    // how to handle when have scrolled past the start???
 
     pull(
       next(api.sbot.pull.userFeed, { id: id, reverse: true, limit: 50, live: false }, ['value', 'sequence']),
@@ -71,5 +70,4 @@ exports.create = function (api) {
     return container
   }
 }
-
 
