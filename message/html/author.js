@@ -1,5 +1,5 @@
-const h = require('mutant/h')
 const nest = require('depnest')
+const { h } = require('mutant')
 
 exports.gives = nest('message.html.author')
 

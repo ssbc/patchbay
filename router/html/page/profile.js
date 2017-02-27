@@ -20,6 +20,7 @@ exports.needs = nest({
     // 'names',
     // 'images',
   },
+  'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
   'main.html.scroller': 'first',
   'message.html.render': 'first',
@@ -41,7 +42,7 @@ exports.create = function (api) {
 
     const profile =  h('Profile', [
       h('section.edit', api.about.html.edit(id)),
-      // h('section.relationships', api.contact.relationships(id)),
+      h('section.relationships', api.contact.html.relationships(id)),
       h('section.activity', [
         h('header', 'Activity')
         // ideally the scroller content would go in here
