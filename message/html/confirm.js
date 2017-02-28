@@ -1,19 +1,17 @@
 const nest = require('depnest')
 const lightbox = require('hyperlightbox')
 const { h } = require('mutant')
-//publish or add
+// publish or add
 
 exports.gives = nest('message.html.confirm')
 
 exports.needs = nest({
-  // about: { image_name_link: 'first' },
   message: {
     'async.publish': 'first',
     'html.render': 'first'
   },
-  'keys.sync.id': 'first',
+  'keys.sync.id': 'first'
 })
-
 
 exports.create = function (api) {
   return nest({
@@ -21,14 +19,13 @@ exports.create = function (api) {
   })
 
   function confirm (content, cb) {
-
     cb = cb || function () {}
 
     var lb = lightbox()
     document.body.appendChild(lb)
 
     var msg = {
-      key: "DRAFT",
+      key: 'DRAFT',
       value: {
         author: api.keys.sync.id(),
         previous: null,
@@ -38,7 +35,7 @@ exports.create = function (api) {
       }
     }
 
-    var okay = h('button.okay',  {
+    var okay = h('button.okay', {
       'ev-click': () => {
         lb.remove()
         api.message.async.publish(content, cb)
@@ -55,7 +52,7 @@ exports.create = function (api) {
     )
 
     okay.addEventListener('keydown', function (ev) {
-      if(ev.keyCode === 27) cancel.click() //escape
+      if (ev.keyCode === 27) cancel.click() // escape
     })
 
     lb.show(h('MessageConfirm', [
@@ -69,5 +66,4 @@ exports.create = function (api) {
     okay.focus()
   }
 }
-
 

@@ -8,14 +8,12 @@ const {
   map, computed, when, dictToCollection
 } = require('mutant')
 const pull = require('pull-stream')
-const getAvatar = require('ssb-avatar')
-const ref = require('ssb-ref')
-const visualize = require('visualize-buffer')
 
 exports.gives = nest('about.html.edit')
 
 exports.needs = nest({
   'about.obs.name': 'first',
+  'about.obs.imageUrl': 'first',
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
@@ -30,27 +28,21 @@ exports.create = function (api) {
     'about.html.edit': edit
   })
 
+  // TODO refactor this to use obs better
   function edit (id) {
     var avatar = Struct({
-      original: Value(visualize(new Buffer(id.substring(1), 'base64'), 256).src),
+      current: api.about.obs.imageUrl(id),
       new: MutantObject()
     })
 
     const links = api.sbot.pull.links
 
-    getAvatar({ links }, api.keys.sync.id(), id, (err, _avatar) => {
-      if (err) return console.error(err)
-      // don't show user has already selected an avatar.
-      if (ref.isBlob(_avatar.image)) {
-        avatar.original.set(api.blob.sync.url(_avatar.image))
-      }
-    })
-
     var name = Struct({
-      original: Value('@' + api.about.obs.name(id)()),
+      current: api.about.obs.name(id),
       new: Value()
     })
 
+    // TODO use patchcores observable images + names
     var images = MutantArray()
     pull(
       links({dest: id, rel: 'about', values: true}),
@@ -84,12 +76,12 @@ exports.create = function (api) {
 
     var avatarSrc = computed([avatar], avatar => {
       if (avatar.new.link) return api.blob.sync.url(avatar.new.link)
-      else return avatar.original
+      else return avatar.current
     })
 
     var displayedName = computed([name], name => {
       if (name.new) return '@' + name.new
-      else return name.original
+      else return '@' + name.current
     })
 
     return h('AboutEditor', [
@@ -180,9 +172,6 @@ exports.create = function (api) {
 
       api.message.html.confirm(msg, (err, data) => {
         if (err) return console.error(err)
-
-        if (newName) name.original.set('@' + newName)
-        if (newAvatar.link) avatar.original.set(api.blob.sync.url(newAvatar.link))
 
         clearNewSelections()
 

@@ -42,10 +42,8 @@
     "pull-stream": "^3.5.0",
     "read-directory": "^2.0.0",
     "setimmediate": "^1.0.5",
-    "ssb-avatar": "^0.2.0",
     "ssb-mentions": "^0.1.1",
     "suggest-box": "^2.2.3",
-    "visualize-buffer": "0.0.1",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
