@@ -134,10 +134,8 @@ exports.create = function (api) {
           pull(
             pull.once(_data.data),
             api.sbot.async.addBlob((err, hash) => {
-              // TODO. Alerts are EVIL.
-              // I use them only in a moment of weakness.
+              if (err) throw err // TODO check if this is safely caught by error catcher
 
-              if (err) return alert(err.stack)
               avatar.new.set({
                 link: hash,
                 size: _data.data.length,

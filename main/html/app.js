@@ -6,6 +6,7 @@ const Tabs = require('hypertabs')
 exports.gives = nest('main.html.app')
 
 exports.needs = nest({
+  'main.html.error': 'first',
   'router.html.page': 'first',
   'styles.css': 'reduce'
 })
@@ -19,30 +20,38 @@ exports.create = function (api) {
 
     var tabs = Tabs() // optional onSelect cb
     var App = h('App', tabs)
-    ;['/public', '/private', '/notifications'].forEach(addPage(tabs))
-    tabs.select(0)
 
-    catchClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
-      if (tabs.has(link)) tabs.select(link)
-      else {
-        const changeTab = !openBackground
-        addPage(tabs, changeTab)(link)
-      }
-
-      // TODO add external-links module
-    })
-
-    return App
-  }
-
-  function addPage (tabs, change, split) {
-    return function (link) {
+    function addPage (link, change, split) {
       const page = api.router.html.page(link)
       if (!page) return
 
       page.id = page.id || link
       tabs.add(page, change, split)
     }
+    const initialTabs = ['/public', '/private', '/notifications']
+    initialTabs.forEach(r => addPage(r))
+    tabs.select(0)
+
+    catchClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
+      if (tabs.has(link)) tabs.select(link)
+      else {
+        const changeTab = !openBackground
+        addPage(link, changeTab)
+      }
+
+      // TODO add external-links module
+    })
+
+    // Catch errors
+    var { container: errorPage, content: errorList } = api.router.html.page('/errors')
+    window.addEventListener('error', ev => {
+      if (!tabs.has('/errors')) tabs.add(errorPage, true)
+
+      const error = api.main.html.error(ev.error || ev)
+      errorList.appendChild(error)
+    })
+
+    return App
   }
 }
 

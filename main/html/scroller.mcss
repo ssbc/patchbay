@@ -22,3 +22,14 @@ Scroller {
   }
 }
 
+Scroller -errors {
+  div.wrapper {
+    width: initial
+    max-width: 100%
+
+    section.content div {
+      border: none
+    }
+  }
+}
+
