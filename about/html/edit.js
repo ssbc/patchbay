@@ -12,32 +12,18 @@ const getAvatar = require('ssb-avatar')
 const ref = require('ssb-ref')
 const visualize = require('visualize-buffer')
 
-function crop (d, cb) {
-  var canvas = hypercrop(h('img', {src: d}))
-
-  return h('AboutImageEditor', [
-    h('header', 'Click and drag to crop your avatar.'),
-    canvas,
-    // canvas.selection,
-    h('section.actions', [
-      h('button.cancel', { 'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
-      h('button.okay', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
-    ])
-  ])
-}
+exports.gives = nest('about.html.edit')
 
 exports.needs = nest({
   'about.obs.name': 'first',
-  'keys.sync.id': 'first',
   'blob.sync.url': 'first',
+  'keys.sync.id': 'first',
+  'message.html.confirm': 'first',
   sbot: {
     'async.addBlob': 'first',
     'pull.links': 'first'
   }
-  // 'message.confirm': 'first',
 })
-
-exports.gives = nest('about.html.edit')
 
 exports.create = function (api) {
   return nest({
@@ -61,7 +47,7 @@ exports.create = function (api) {
     })
 
     var name = Struct({
-      original: computed(api.about.obs.name(id), name => '@' + name),
+      original: Value('@' + api.about.obs.name(id)()),
       new: Value()
     })
 
@@ -192,7 +178,7 @@ exports.create = function (api) {
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
 
-      api.message.confirm(msg, (err, data) => {
+      api.message.html.confirm(msg, (err, data) => {
         if (err) return console.error(err)
 
         if (newName) name.original.set('@' + newName)
@@ -204,5 +190,19 @@ exports.create = function (api) {
       })
     }
   }
+}
+
+function crop (d, cb) {
+  var canvas = hypercrop(h('img', {src: d}))
+
+  return h('AboutImageEditor', [
+    h('header', 'Click and drag to crop your avatar.'),
+    canvas,
+    // canvas.selection,
+    h('section.actions', [
+      h('button.cancel', { 'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
+      h('button.okay', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
+    ])
+  ])
 }
 
