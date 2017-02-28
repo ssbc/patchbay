@@ -57,6 +57,10 @@ Message {
   section.title {
     flex-basis: 100%
     font-size: .9rem
+
+    span, span a {
+      _textSubtle
+    }
   }
 
   section.content {
