@@ -7,6 +7,7 @@ exports.gives = nest('main.html.app')
 
 exports.needs = nest({
   'main.html.error': 'first',
+  'main.html.externalConfirm': 'first',
   'router.html.page': 'first',
   'styles.css': 'reduce'
 })
@@ -33,13 +34,13 @@ exports.create = function (api) {
     tabs.select(0)
 
     catchClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
+      if (isExternal) api.main.html.externalConfirm(link)
+
       if (tabs.has(link)) tabs.select(link)
       else {
         const changeTab = !openBackground
         addPage(link, changeTab)
       }
-
-      // TODO add external-links module
     })
 
     // Catch errors

@@ -10,7 +10,7 @@ exports.needs = nest({
 
 exports.create = (api) => {
   return nest('message.html.meta', likes)
-  
+
   function likes (msg) {
     const symbol = '\u2713' // tick  🗸
 
@@ -22,7 +22,7 @@ exports.create = (api) => {
     )
 
     var names = map(likes, id => api.about.obs.name(id))
-    var title = computed(names, names => names.map(n => '@'+n).join('\n'))
+    var title = computed(names, names => names.map(n => '@' + n).join('\n'))
 
     return h('a.likes', { title }, body)
   }
