@@ -38,6 +38,11 @@ sbot plugins.install ssb-fulltext # for faster searches (optional)
 # restart sbot server (go back to previous tab and kill it)
 ```
 
+Restart your sbot, then (optionally) use an invite code. This will give you your first friend, from which point you can find others:
+```
+ sbot invite.accept LONG_INVITE_CODE_MAYBE_IN_QUOTES
+```
+
 Install Patchbay (an interface for the your scuttlebutt database)
 
 ```sh
