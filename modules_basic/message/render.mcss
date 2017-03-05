@@ -1,6 +1,6 @@
 Message {
   padding: 1rem .5rem 1rem 7.5rem
-  min-height: 5rem
+  min-height: 5.6rem
 
   position: relative
   display: flex
