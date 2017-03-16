@@ -30,8 +30,17 @@ Relationships {
   }
 
   div.your-status {
+    justify-content: flex-start
+    align-items: center
+
     margin: 0 
+
     section.action {
+      button { margin-left: 0 }
+
+    }
+    section.status {
+    
     }
   }
 
