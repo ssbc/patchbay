@@ -35,7 +35,7 @@
     "mutant": "^3.16.0",
     "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
-    "patchcore": "^0.3.4",
+    "patchcore": "^0.4.3",
     "pull-cat": "^1.1.11",
     "pull-next": "0.0.2",
     "pull-scroll": "^1.0.3",
