@@ -46,7 +46,7 @@ exports.create = function (api) {
       })
 
       recentSuggestions = map(
-        computed(recentlyUpdated, (items) => Array.from(items).slice(0, 10) ),
+        computed(recentlyUpdated, (items) => Array.from(items).slice(0, 10)),
         suggestion,
         {idle: true}
       )

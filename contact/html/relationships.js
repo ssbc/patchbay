@@ -61,17 +61,17 @@ exports.create = function (api) {
 
     return h('Relationships', [
       h('header', 'Relationships'),
-      when(id !== myId, 
+      when(id !== myId,
         h('div.your-status', [
           h('header', 'Your status'),
           h('section.action', [
-            when(ImFollowing.sync, 
-              when(IFollowThem, 
+            when(ImFollowing.sync,
+              when(IFollowThem,
                 h('button', { 'ev-click': api.contact.async.unfollow }, 'Unfollow'),
                 h('button', { 'ev-click': api.contact.async.follow }, 'Follow')
               ),
               h('button', { disabled: 'disabled' }, 'Loading...')
-            ),
+            )
           ]),
           when(ImFollowing.sync, h('section.status', relationshipStatus))
         ])
