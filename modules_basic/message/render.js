@@ -26,28 +26,34 @@ exports.create = function (api) {
   }
 
   function message_render (msg) {
-    var content = api.message_content_mini(msg)
-    if (content) return mini(msg, content)
+    try {
+      var content = api.message_content_mini(msg)
+      if (content) return mini(msg, content)
 
-    content = api.message_content(msg)
-    if (!content) return mini(msg, message_content_mini_fallback(msg))
+      content = api.message_content(msg)
 
-    var msgEl = h('Message', {
-      'ev-keydown': navigateToMessageOnEnter,
-      attributes: {
-        tabindex: '0',
-        'data-key': msg.key,
-        'data-text': msg.value.content.text
-      }
-    }, [
-      h('header.author', api.message_author(msg)),
-      h('section.title', api.message_title(msg)),
-      h('section.meta', api.message_meta(msg)),
-      h('section.content', content),
-      h('section.raw-content'),
-      h('section.action', api.message_action(msg)),
-      h('footer.backlinks', api.message_backlinks(msg))
-    ])
+      if (!content) return mini(msg, message_content_mini_fallback(msg))
+
+      var msgEl = h('Message', {
+        'ev-keydown': navigateToMessageOnEnter,
+        attributes: {
+          tabindex: '0',
+          'data-key': msg.key,
+          'data-text': msg.value.content.text
+        }
+      }, [
+        h('header.author', api.message_author(msg)),
+        h('section.title', api.message_title(msg)),
+        h('section.meta', api.message_meta(msg)),
+        h('section.content', content),
+        h('section.raw-content'),
+        h('section.action', api.message_action(msg)),
+        h('footer.backlinks', api.message_backlinks(msg))
+      ])
+    } catch (err) {
+      return mini(msg,  h('div.error', 'Error: '+err.message))
+    }
+
     return msgEl
 
     function navigateToMessageOnEnter (ev) {
@@ -89,4 +95,6 @@ exports.create = function (api) {
 function message_content_mini_fallback(msg)  {
   return h('code', msg.value.content.type)
 }
+
+
 
