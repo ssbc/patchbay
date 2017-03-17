@@ -9,7 +9,11 @@ exports.gives = 'avatar_name'
 exports.create = function (api) {
 
   return function name (id) {
-    var n = h('span', id ? id.substring(0, 10) : "")
+
+    if('string' !== typeof id)
+      throw new Error('avatar id must be a string')
+
+    var n = h('span', id  ? id.substring(0, 10) : JSON.stringify(id))
 
     //choose the most popular name for this person.
     //for anything like this you'll see I have used sbot.links2
@@ -26,4 +30,6 @@ exports.create = function (api) {
   }
 
 }
+
+
 
