@@ -15,7 +15,7 @@ exports.needs = nest({
 })
 exports.create = function (api) {
   return nest('router.html.page', (path) => {
-    if (path !== '/mentions') return
+    if (path !== '/notifications') return
     const id = api.keys.sync.id()
     const mentions = api.feed.pull.mentions(id)
 

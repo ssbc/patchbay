@@ -29,7 +29,7 @@ exports.create = function (api) {
       page.id = page.id || link
       tabs.add(page, change, split)
     }
-    const initialTabs = ['/public', '/private', '/mentions']
+    const initialTabs = ['/public', '/private', '/notifications']
     initialTabs.forEach(r => addPage(r))
     tabs.select(0)
 
