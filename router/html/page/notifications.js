@@ -5,13 +5,13 @@ const next = require('../../../junk/next-stepper')
 
 exports.gives = nest('router.html.page')
 exports.needs = nest({
-  'keys.sync.id': 'first',
-  'feed.pull.mentions': 'first',
-  'feed.pull.public': 'first',
-  'message.html': {
-    render: 'first'
+  'feed.pull': {
+    mentions: 'first',
+    public: 'first'
   },
-  'main.html.scroller': 'first'
+  'keys.sync.id': 'first',
+  'main.html.scroller': 'first',
+  'message.html.render': 'first'    
 })
 exports.create = function (api) {
   return nest('router.html.page', (path) => {
