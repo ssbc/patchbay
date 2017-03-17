@@ -67,8 +67,8 @@ exports.create = function (api) {
           h('section.action', [
             when(ImFollowing.sync,
               when(IFollowThem,
-                h('button', { 'ev-click': api.contact.async.unfollow }, 'Unfollow'),
-                h('button', { 'ev-click': api.contact.async.follow }, 'Follow')
+                h('button', { 'ev-click': () => api.contact.async.unfollow(id) }, 'Unfollow'),
+                h('button', { 'ev-click': () => api.contact.async.follow(id) }, 'Follow')
               ),
               h('button', { disabled: 'disabled' }, 'Loading...')
             )
