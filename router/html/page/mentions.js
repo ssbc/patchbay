@@ -15,19 +15,19 @@ exports.needs = nest({
 })
 exports.create = function (api) {
   return nest('router.html.page', (path) => {
-    if (path !== '/notifications') return
+    if (path !== '/mentions') return
     const id = api.keys.sync.id()
     const mentions = api.feed.pull.mentions(id)
 
     const { container, content } = api.main.html.scroller({})
 
     pull(
-      mentions({old: false, limit: 100}),
+      next(mentions, {old: false, limit: 100}),
       Scroller(container, content, api.message.html.render, true, false)
     )
 
     pull(
-      mentions({reverse: true, limit: 100, live: false}),
+      next(mentions, {reverse: true, limit: 100, live: false}),
       Scroller(container, content, api.message.html.render, false, false)
     )
     return container
