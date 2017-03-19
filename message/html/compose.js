@@ -12,7 +12,7 @@ exports.needs = nest({
     names: 'first',
     url: 'first'
   },
-  'message.async.publish': 'first'
+  'message.html.confirm': 'first'
 })
 
 exports.gives = nest('message.html.compose')
@@ -159,7 +159,7 @@ exports.create = function (api) {
         else throw err
       }
 
-      return api.message.async.publish(meta, done)
+      return api.message.html.confirm(meta, done)
 
       function done (err, msg) {
         publishBtn.disabled = false
