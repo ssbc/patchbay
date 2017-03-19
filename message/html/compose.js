@@ -23,7 +23,9 @@ exports.create = function (api) {
   function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
     var files = []
     var filesById = {}
-    var focused = Value(false)
+    var channelInputFocused = Value(false)
+    var textAreaFocused = Value(false)
+    var focused = computed([channelInputFocused, textAreaFocused], (a, b) => a || b) 
     var hasContent = Value(false)
     var getProfileSuggestions = api.about.async.suggest()
     var getChannelSuggestions = api.channel.async.suggest()
@@ -36,13 +38,27 @@ exports.create = function (api) {
       return focused
     })
 
+    var channelInput = h('input.channel', {
+      'ev-input': () => hasContent.set(!!channelInput.value),
+      'ev-keyup': ev => ev.target.value = ev.target.value.replace(/^#*([\w@%&])/, '#$1'), 
+      'ev-blur': () => {
+        clearTimeout(blurTimeout)
+        blurTimeout = setTimeout(() => channelInputFocused.set(false), 200)
+      },
+      'ev-focus': send(channelInputFocused.set, true),
+      placeholder: '#channel (optional)',
+      value: meta.channel ? `#${meta.channel}` : '',
+      disabled: meta.channel ? true : false,
+      title: meta.channel ? 'Reply is in same channel as original message' : '',
+    })
+
     var textArea = h('textarea', {
       'ev-input': () => hasContent.set(!!textArea.value),
       'ev-blur': () => {
         clearTimeout(blurTimeout)
-        blurTimeout = setTimeout(() => focused.set(false), 200)
+        blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
       },
-      'ev-focus': send(focused.set, true),
+      'ev-focus': send(textAreaFocused.set, true),
       placeholder
     })
 
@@ -72,15 +88,23 @@ exports.create = function (api) {
     var composer = h('Compose', {
       classList: when(expanded, '-expanded', '-contracted')
     }, [
+      channelInput,
       textArea,
       actions
     ])
 
+    addSuggest(channelInput, (inputText, cb) => {
+      if (inputText[0] === '#') {
+        cb(null, getChannelSuggestions(inputText.slice(1)))
+      } 
+    }, {cls: 'SuggestBox'})
+
     addSuggest(textArea, (inputText, cb) => {
       if (inputText[0] === '@') {
         cb(null, getProfileSuggestions(inputText.slice(1)))
-      } else if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
+      // TODO - fix inline channel mentions
+      // } else if (inputText[0] === '#') {
+      //   cb(null, getChannelSuggestions(inputText.slice(1))) 
       } else if (inputText[0] === ':') {
         // suggest emojis
         var word = inputText.slice(1)
@@ -110,6 +134,10 @@ exports.create = function (api) {
 
       meta = extend(resolve(meta), {
         text: textArea.value,
+        channel: (channelInput.value.startsWith('#')
+          ? channelInput.value.substr(1).trim()
+          : channelInput.value.trim()
+        ) || null,
         mentions: mentions(textArea.value).map(mention => {
           // merge markdown-detected mention with file info
           var file = filesById[mention.link]
