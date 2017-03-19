@@ -75,7 +75,7 @@ Message {
 
   section.raw-content {
     margin-left: -7rem
-    flex-basis: 130%
+    flex-basis: 118%
     pre {
       border: 1px gainsboro solid
       padding: .8rem

@@ -1,5 +1,5 @@
-const { h } = require('mutant')
 var nest = require('depnest')
+const { h, Value } = require('mutant')
 
 exports.needs = nest({
   'message.html': {
@@ -20,14 +20,16 @@ exports.create = (api) => {
   function messageLayout (msg, opts) {
     if (!(opts.layout === undefined || opts.layout === 'default')) return
 
+    var rawMessage = Value(null)
+
     return h('Message', [
       h('section.avatar', {}, api.about.html.image(msg.value.author)),
       h('section.timestamp', {}, api.message.html.timestamp(msg)),
       h('header.author', {}, api.message.html.author(msg)),
-      h('section.meta', {}, api.message.html.meta(msg)),
+      h('section.meta', {}, api.message.html.meta(msg, { rawMessage })),
       h('section.title', {}, opts.title),
       h('section.content', {}, opts.content),
-      h('section.raw-content'),
+      h('section.raw-content', rawMessage),
       h('section.actions', {}, api.message.html.action(msg)),
       h('footer.backlinks', {}, api.message.html.backlinks(msg))
     ])
