@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, computed, map } = require('mutant')
+const { h } = require('mutant')
 
 exports.gives = nest('message.html.meta')
 
@@ -20,7 +20,7 @@ exports.create = (api) => {
         order: 99,
         color: '#a8a8a8',
         'font-size': '1rem',
-        cursor: 'pointer',
+        cursor: 'pointer'
       },
       'ev-click': () => (rawMessage() === null)
         ? rawMessage.set(buildRawMsg(msg))

@@ -78,12 +78,11 @@ exports.create = function (api) {
         meta.root = thread[0].value.content.root || thread[0].key
         meta.channel = thread[0].value.content.channel
 
-        // TODO - re-enable with channel-picker
-        // if (meta.channel) {
-        //   const channelInput = composer.querySelector('input')
-        //   channelInput.value = `#${meta.channel}`
-        //   channelInput.disabled = true
-        // }
+        if (meta.channel) {
+          const channelInput = composer.querySelector('input')
+          channelInput.value = `#${meta.channel}`
+          channelInput.disabled = true
+        }
 
         const priv = thread[0].value['private']
         const recps = thread[0].value.content.recps

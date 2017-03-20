@@ -25,7 +25,7 @@ exports.create = function (api) {
     var filesById = {}
     var channelInputFocused = Value(false)
     var textAreaFocused = Value(false)
-    var focused = computed([channelInputFocused, textAreaFocused], (a, b) => a || b) 
+    var focused = computed([channelInputFocused, textAreaFocused], (a, b) => a || b)
     var hasContent = Value(false)
     var getProfileSuggestions = api.about.async.suggest()
     var getChannelSuggestions = api.channel.async.suggest()
@@ -40,7 +40,9 @@ exports.create = function (api) {
 
     var channelInput = h('input.channel', {
       'ev-input': () => hasContent.set(!!channelInput.value),
-      'ev-keyup': ev => ev.target.value = ev.target.value.replace(/^#*([\w@%&])/, '#$1'), 
+      'ev-keyup': ev => {
+        ev.target.value = ev.target.value.replace(/^#*([\w@%&])/, '#$1')
+      },
       'ev-blur': () => {
         clearTimeout(blurTimeout)
         blurTimeout = setTimeout(() => channelInputFocused.set(false), 200)
@@ -48,8 +50,8 @@ exports.create = function (api) {
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
       value: meta.channel ? `#${meta.channel}` : '',
-      disabled: meta.channel ? true : false,
-      title: meta.channel ? 'Reply is in same channel as original message' : '',
+      disabled: !!meta.channel,
+      title: meta.channel ? 'Reply is in same channel as original message' : ''
     })
 
     var textArea = h('textarea', {
@@ -96,7 +98,7 @@ exports.create = function (api) {
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
         cb(null, getChannelSuggestions(inputText.slice(1)))
-      } 
+      }
     }, {cls: 'SuggestBox'})
 
     addSuggest(textArea, (inputText, cb) => {
@@ -104,7 +106,7 @@ exports.create = function (api) {
         cb(null, getProfileSuggestions(inputText.slice(1)))
       // TODO - fix inline channel mentions
       // } else if (inputText[0] === '#') {
-      //   cb(null, getChannelSuggestions(inputText.slice(1))) 
+      //   cb(null, getChannelSuggestions(inputText.slice(1)))
       } else if (inputText[0] === ':') {
         // suggest emojis
         var word = inputText.slice(1)

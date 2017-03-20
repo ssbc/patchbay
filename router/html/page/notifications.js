@@ -11,7 +11,7 @@ exports.needs = nest({
   },
   'keys.sync.id': 'first',
   'main.html.scroller': 'first',
-  'message.html.render': 'first'    
+  'message.html.render': 'first'
 })
 exports.create = function (api) {
   return nest('router.html.page', (path) => {
