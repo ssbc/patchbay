@@ -6,6 +6,7 @@ const ref = require('ssb-ref')
 
 exports.gives = nest('router.html.page')
 
+// TODO - seperate out public and private thread rendering
 exports.needs = nest({
   // 'feed.pull.public': 'first',
   'keys.sync.id': 'first',
