@@ -20,7 +20,7 @@ exports.create = function (api) {
   return nest('router.html.page', channelView)
 
   function channelView (path) {
-    if (path[0] !== '#') return
+    if (path && !path.match(/#\w+/)) return
 
     var channel = path.substr(1)
 
