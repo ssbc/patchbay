@@ -97,12 +97,12 @@ exports.create = function (api) {
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)).map(s => {
-          s.value = s.id
-          return s
-        }))
+        cb(null, getChannelSuggestions(inputText.slice(1)))
       }
     }, {cls: 'SuggestBox'})
+    channelInput.addEventListener('suggestselect', ev => {
+      channelInput.value = ev.detail.id  // HACK : this over-rides the markdown value
+    })
 
     addSuggest(textArea, (inputText, cb) => {
       if (inputText[0] === '@') {

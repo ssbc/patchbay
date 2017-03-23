@@ -35,8 +35,10 @@ exports.create = function (api) {
       }
     })
     input.addEventListener('suggestselect', ev => {
-      if (go(input.value.trim(), !ev.ctrlKey))
-        input.blur()
+      input.value = ev.detail.id  // HACK : this over-rides the markdown value
+
+      // if (go(input.value.trim(), !ev.ctrlKey))
+      //   input.blur()
     })
     const search = h('Search', input)
 
@@ -54,15 +56,9 @@ exports.create = function (api) {
 
     addSuggest(input, (inputText, cb) => {
       if (inputText[0] === '@') {
-        cb(null, getProfileSuggestions(inputText.slice(1)).map(s => {
-          s.value = s.id 
-          return s
-        }))
+        cb(null, getProfileSuggestions(inputText.slice(1)))
       } else if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)).map(s => {
-          s.value = s.id
-          return s
-        }))
+        cb(null, getChannelSuggestions(inputText.slice(1)))
       }
     }, {cls: 'SuggestBox'})
 
