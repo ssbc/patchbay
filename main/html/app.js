@@ -6,8 +6,11 @@ const Tabs = require('hypertabs')
 exports.gives = nest('main.html.app')
 
 exports.needs = nest({
-  'main.html.error': 'first',
-  'main.html.externalConfirm': 'first',
+  'main.html': {
+    error: 'first',
+    externalConfirm: 'first',
+    search: 'first'
+  },
   'router.html.page': 'first',
   'styles.css': 'reduce'
 })
@@ -19,8 +22,30 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    var tabs = Tabs() // optional onSelect cb
-    var App = h('App', tabs)
+    function onSelect (indexes) {
+      const ids = indexes.map(index => tabs.get(index).content.id)
+      if (!search) { console.log('boo') ; return }
+
+      if (ids.length > 1) search.input.value = 'split('+ids.join(',')+')'
+      else search.input.value = ids[0]
+    }
+    const search = api.main.html.search((path, change) => {
+      if (tabs.has(path)) {
+        tabs.select(path)
+        return true
+      }
+
+      var page = addPage(path, true, false)
+      // const el = api.screen_view(path)
+      // if (!el) return
+      // if(!el.title) el.title = path
+ 
+      // el.scroll = keyscroll(el.querySelector('.Scroller .content'))
+      // tabs.add(el, change)
+      return change
+    })
+    const tabs = Tabs(onSelect, { append: h('div.extra', [ search ]) })
+    const App = h('App', tabs)
 
     function addPage (link, change, split) {
       const page = api.router.html.page(link)

@@ -65,7 +65,6 @@ function subscribedCaption (id, subscribed) {
 }
 
 function mention (id) {
-  return `#${id}`
-  // return `[#${id}](#${id})` // TODO fix inline links to channels
+  return `[#${id}](#${id})`
 }
 

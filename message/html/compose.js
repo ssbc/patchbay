@@ -97,16 +97,18 @@ exports.create = function (api) {
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
+        cb(null, getChannelSuggestions(inputText.slice(1)).map(s => {
+          s.value = s.id
+          return s
+        }))
       }
     }, {cls: 'SuggestBox'})
 
     addSuggest(textArea, (inputText, cb) => {
       if (inputText[0] === '@') {
         cb(null, getProfileSuggestions(inputText.slice(1)))
-      // TODO - fix inline channel mentions
-      // } else if (inputText[0] === '#') {
-      //   cb(null, getChannelSuggestions(inputText.slice(1)))
+      } else if (inputText[0] === '#') {
+        cb(null, getChannelSuggestions(inputText.slice(1)))
       } else if (inputText[0] === ':') {
         // suggest emojis
         var word = inputText.slice(1)
