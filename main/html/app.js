@@ -24,7 +24,7 @@ exports.create = function (api) {
 
     function onSelect (indexes) {
       const ids = indexes.map(index => tabs.get(index).content.id)
-      if (!search) { console.log('boo') ; return }
+      if (!search) { console.log('THERE SHOULD BE A SEARCH, GOT', search) ; return }
 
       if (ids.length > 1) search.input.value = 'split('+ids.join(',')+')'
       else search.input.value = ids[0]
@@ -36,15 +36,9 @@ exports.create = function (api) {
       }
 
       var page = addPage(path, true, false)
-      // const el = api.screen_view(path)
-      // if (!el) return
-      // if(!el.title) el.title = path
- 
-      // el.scroll = keyscroll(el.querySelector('.Scroller .content'))
-      // tabs.add(el, change)
       return change
     })
-    const tabs = Tabs(onSelect, { append: h('div.extra', [ search ]) })
+    const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search ]) })
     const App = h('App', tabs)
 
     function addPage (link, change, split) {
@@ -55,7 +49,7 @@ exports.create = function (api) {
       tabs.add(page, change, split)
     }
     const initialTabs = ['/public', '/private', '/notifications']
-    initialTabs.forEach(r => addPage(r))
+    initialTabs.forEach(p => addPage(p))
     tabs.select(0)
 
     catchClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
