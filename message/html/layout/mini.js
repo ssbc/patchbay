@@ -19,7 +19,10 @@ exports.create = (api) => {
     var rawMessage = Value(null)
 
     return h('div', {
-      classList: 'Message -mini'
+      classList: 'Message -mini',
+      attributes: {
+        tabindex: '0'
+      }
     }, [
       h('header.author', {}, api.message.html.author(msg, { size: 'mini' })),
       h('section.timestamp', {}, api.message.html.timestamp(msg)),

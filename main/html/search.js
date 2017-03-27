@@ -34,6 +34,7 @@ exports.create = function (api) {
         }
       }
     })
+    input.go = go // crude navigation api
     input.addEventListener('suggestselect', ev => {
       input.value = ev.detail.id  // HACK : this over-rides the markdown value
 

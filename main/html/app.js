@@ -14,6 +14,9 @@ exports.needs = nest({
       error: 'first',
       externalConfirm: 'first',
       search: 'first'
+    },
+    sync: {
+      catchKeyboardShortcut: 'first'
     }
   },
   'router.html.page': 'first',
@@ -33,7 +36,7 @@ exports.create = function (api) {
         return true
       }
 
-      var page = addPage(path, true, false)
+      addPage(path, true, false)
       return change
     })
     const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search ]) })
@@ -54,6 +57,9 @@ exports.create = function (api) {
     const initialTabs = ['/public', '/private', '/notifications']
     initialTabs.forEach(p => addPage(p))
     tabs.select(0)
+
+    // Catch keyboard shortcuts
+    api.main.sync.catchKeyboardShortcut(window, tabs, search)
 
     // Catch link clicks
     api.main.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
