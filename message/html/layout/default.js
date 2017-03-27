@@ -43,7 +43,7 @@ exports.create = (api) => {
 
     function navigateToMessageOnEnter (ev) {
       // on enter (or 'o'), hit first meta.
-      if(!(ev.keyCode == 13 || ev.keyCode == 79)) return 
+      if (!(ev.keyCode === 13 || ev.keyCode === 79)) return
 
       // unless in an input
       if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA') return

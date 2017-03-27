@@ -37,6 +37,5 @@ exports.create = function (api) {
       cb(href, opts)
     })
   }
-
 }
 

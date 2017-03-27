@@ -1,5 +1,4 @@
 const nest = require('depnest')
-const Url = require('url')
 
 exports.gives = nest('main.sync.catchKeyboardShortcut')
 
@@ -10,17 +9,20 @@ exports.create = function (api) {
     var gPressed = false
 
     root.addEventListener('keydown', (ev) => {
-      if (ev.target.nodeName === 'INPUT') return 
+      if (ev.target.nodeName === 'INPUT') return
       if (ev.target.nodeName === 'TEXTAREA') return
 
       // scroll to top
-      if (ev.keyCode == 71) { // g
-        if (!gPressed) return gPressed = true
-        var el = tabs.get(tabs.selected[0]).firstChild.scroll('first')
+      if (ev.keyCode === 71) { // g
+        if (!gPressed) {
+          gPressed = true
+          return
+        }
+        tabs.get(tabs.selected[0]).firstChild.scroll('first')
       }
       gPressed = false
 
-      switch(ev.keyCode) {
+      switch (ev.keyCode) {
 
         // scroll through messages
         case 74: // j
@@ -40,34 +42,29 @@ exports.create = function (api) {
             var sel = tabs.selected
             var i = sel.reduce(function (a, b) { return Math.min(a, b) })
             tabs.remove(sel)
-            tabs.select(Math.max(i-1, 0))
+            tabs.select(Math.max(i - 1, 0))
           }
           return
 
         // activate the search field
         case 191: // /
-          if (ev.shiftKey)
-            search.activate('?', ev)
-          else
-            search.activate('/', ev)
+          if (ev.shiftKey) search.activate('?', ev)
+          else search.activate('/', ev)
           return
 
         // navigate to a feed
         case 50: // 2
-          if (ev.shiftKey)
-            search.activate('@', ev)
+          if (ev.shiftKey) search.activate('@', ev)
           return
 
         // navigate to a channel
         case 51: // 3
-          if (ev.shiftKey)
-            search.activate('#', ev)
+          if (ev.shiftKey) search.activate('#', ev)
           return
 
         // navigate to a message
         case 53: // 5
-          if (ev.shiftKey)
-            search.activate('%', ev)
+          if (ev.shiftKey) search.activate('%', ev)
           return
       }
     })

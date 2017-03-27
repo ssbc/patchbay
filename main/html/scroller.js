@@ -36,7 +36,7 @@ function keyscroll (container) {
 
   function onActivateChild (ev) {
     for (var el = ev.target; el; el = el.parentNode) {
-      if (el.parentNode == container) {
+      if (el.parentNode === container) {
         curMsgEl = el
         return
       }
@@ -51,7 +51,7 @@ function keyscroll (container) {
   }
 
   return function scroll (d) {
-    selectChild((!curMsgEl || d == 'first') ? container.firstChild
+    selectChild((!curMsgEl || d === 'first') ? container.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || container.firstChild
       : d > 0 ? curMsgEl.nextElementSibling || container.lastChild
       : curMsgEl)

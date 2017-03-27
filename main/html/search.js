@@ -10,11 +10,9 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-
   return nest('main.html.search', search)
-  
-  function search (go) {
 
+  function search (go) {
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
@@ -24,8 +22,9 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            if (go(input.value.trim(), !ev.ctrlKey))
+            if (go(input.value.trim(), !ev.ctrlKey)) {
               input.blur()
+            }
             return
           case 27: // escape
             ev.preventDefault()
@@ -65,8 +64,5 @@ exports.create = function (api) {
 
     return search
   }
-
 }
-
-
 
