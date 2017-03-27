@@ -12,8 +12,11 @@ const pull = require('pull-stream')
 exports.gives = nest('about.html.edit')
 
 exports.needs = nest({
-  'about.obs.name': 'first',
-  'about.obs.imageUrl': 'first',
+  'about.obs': {
+    name: 'first',
+    imageUrl: 'first',
+    description: 'first'
+  },
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
@@ -67,9 +70,6 @@ exports.create = function (api) {
 
     var lb = hyperlightbox()
 
-    // TODO load this in, make this editable
-    var description = ''
-
     var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
       return name || avatar.link
     })
@@ -80,8 +80,8 @@ exports.create = function (api) {
     })
 
     var displayedName = computed([name], name => {
-      if (name.new) return '@' + name.new
-      else return '@' + name.current
+      if (name.new) return name.new
+      else return name.current
     })
 
     return h('AboutEditor', [
@@ -92,7 +92,7 @@ exports.create = function (api) {
         ]),
         h('footer', displayedName)
       ]),
-      h('section.description', description),
+      h('section.description', api.about.obs.description(id)),
       h('section.aliases', [
         h('header', 'Aliases'),
         h('section.avatars', [
