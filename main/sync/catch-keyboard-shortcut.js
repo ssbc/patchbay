@@ -10,7 +10,7 @@ exports.create = function (api) {
 
     root.addEventListener('keydown', (ev) => {
       isTextFieldEvent(ev)
-        ? textFieldShortcuts(ev, opts)
+        ? textFieldShortcuts(ev)
         : genericShortcuts(ev, opts) 
     })
   }
@@ -20,7 +20,7 @@ exports.create = function (api) {
 
 function isTextFieldEvent (ev) {
   const tag = ev.target.nodeName
-  return  (tag === 'INPUT' || tag === 'TEXTAREA')
+  return (tag === 'INPUT' || tag === 'TEXTAREA')
 }
 
 function textFieldShortcuts (ev) {
@@ -31,8 +31,8 @@ function textFieldShortcuts (ev) {
     
 function genericShortcuts (ev, { tabs, search }) {
 
-  // scroll to top
-  if (ev.keyCode === 71) { // g
+  // Messages
+  if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
       gPressed = true
       return
@@ -43,20 +43,22 @@ function genericShortcuts (ev, { tabs, search }) {
 
   switch (ev.keyCode) {
 
-    // scroll through messages
-    case 74: // j
+    // Messages (cont'd)
+    case 74: // j = older
       return tabs.get(tabs.selected[0]).firstChild.scroll(1)
-    case 75: // k
+    case 75: // k = newer
       return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
+    case 13: // enter = open
+      return goToMessage(ev)
+    case 79: // o = open
+      return goToMessage(ev)
 
-    // scroll through tabs
-    case 72: // h
+    // Tabs
+    case 72: // h = left
       return tabs.selectRelative(-1)
-    case 76: // l
+    case 76: // l = right
       return tabs.selectRelative(1)
-
-    // close current tab
-    case 88: // x
+    case 88: // x = close
       if (tabs.selected) {
         var sel = tabs.selected
         var i = sel.reduce(function (a, b) { return Math.min(a, b) })
@@ -65,25 +67,30 @@ function genericShortcuts (ev, { tabs, search }) {
       }
       return
 
-    // activate the search field
-    case 191: // /
+    // Search 
+    case 191: // / = routes search
       if (ev.shiftKey) search.activate('?', ev)
       else search.activate('/', ev)
       return
-
-    // navigate to a feed
-    case 50: // 2
+    case 50: // @ = mention search
       if (ev.shiftKey) search.activate('@', ev)
       return
-
-    // navigate to a channel
-    case 51: // 3
+    case 51: // # = channel search
       if (ev.shiftKey) search.activate('#', ev)
       return
-
-    // navigate to a message
-    case 53: // 5
+    case 53: // % = message search
       if (ev.shiftKey) search.activate('%', ev)
       return
   }
 }
+
+
+function goToMessage (ev) {
+  const msg = ev.target
+  if (!msg.classList.contains('Message')) return
+
+  // this uses a crudely exported nav api
+  const search = document.querySelector('input[type=search]')
+  search.go(msg.dataset.root)
+}
+

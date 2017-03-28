@@ -23,10 +23,10 @@ exports.create = (api) => {
     var rawMessage = Value(null)
 
     return h('Message', {
-      'ev-keydown': navigateToMessageOnEnter,
       attributes: {
         tabindex: '0', // needed to be able to navigate and show focus()
         'data-key': msg.key,
+        'data-root': msg.value.content.root,
         'data-text': msg.value.content.text
       }
     }, [
@@ -40,18 +40,6 @@ exports.create = (api) => {
       h('section.actions', {}, api.message.html.action(msg)),
       h('footer.backlinks', {}, api.message.html.backlinks(msg))
     ])
-
-    function navigateToMessageOnEnter (ev) {
-      // on enter (or 'o'), hit first meta.
-      if (!(ev.keyCode === 13 || ev.keyCode === 79)) return
-
-      // unless in an input
-      if (ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'TEXTAREA') return
-
-      // this uses a crudely exported nav api
-      const search = document.querySelector('input[type=search]')
-      search.go(msg.value.content.root)
-    }
   }
 }
 
