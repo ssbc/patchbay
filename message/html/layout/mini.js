@@ -24,8 +24,8 @@ exports.create = (api) => {
         tabindex: '0'
       }
     }, [
-      h('header.author', {}, api.message.html.author(msg, { size: 'mini' })),
       h('section.timestamp', {}, api.message.html.timestamp(msg)),
+      h('header.author', {}, api.message.html.author(msg, { size: 'mini' })),
       h('section.meta', {}, api.message.html.meta(msg, { rawMessage })),
       h('section.content', {}, opts.content),
       h('section.raw-content', rawMessage)

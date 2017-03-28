@@ -5,14 +5,14 @@ Message {
     padding: .25rem .5rem
     min-height: inherit
 
-    header.author {
+    section.timestamp {
       order: 0
       position: initial
       left: initial
       min-width: 5.5rem
     }
 
-    section.timestamp {
+    header.author {
       order: 1
       margin-right: .5rem
       
@@ -20,6 +20,7 @@ Message {
       left: initial
       top: initial
     }
+
 
     section.content {
       order: 2
