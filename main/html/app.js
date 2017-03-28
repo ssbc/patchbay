@@ -59,7 +59,7 @@ exports.create = function (api) {
     tabs.select(0)
 
     // Catch keyboard shortcuts
-    api.main.sync.catchKeyboardShortcut(window, tabs, search)
+    api.main.sync.catchKeyboardShortcut(window, { tabs, search })
 
     // Catch link clicks
     api.main.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {

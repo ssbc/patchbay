@@ -12,6 +12,7 @@ exports.needs = nest({
     names: 'first',
     url: 'first'
   },
+  'main.sync.catchKeyboardShortcut': 'first',
   'message.html.confirm': 'first'
 })
 
@@ -63,6 +64,7 @@ exports.create = function (api) {
       'ev-focus': send(textAreaFocused.set, true),
       placeholder
     })
+    textArea.publish = publish // clunky api for the keyboard shortcut to target
 
     var fileInput = api.blob.html.input(file => {
       files.push(file)
