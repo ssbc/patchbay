@@ -52,6 +52,9 @@ function genericShortcuts (ev, { tabs, search }) {
       return goToMessage(ev)
     case 79: // o = open
       return goToMessage(ev)
+    case 192: // ` = toggle raw message view
+      return toggleRawMessage(ev)
+
 
     // Tabs
     case 72: // h = left
@@ -92,5 +95,13 @@ function goToMessage (ev) {
   // this uses a crudely exported nav api
   const search = document.querySelector('input[type=search]')
   search.go(msg.dataset.root)
+}
+
+function toggleRawMessage (ev) {
+  const msg = ev.target
+  if (!msg.classList.contains('Message')) return
+
+  // this uses a crudely exported nav api
+  msg.querySelector('.meta .toggle-raw-msg').click()
 }
 

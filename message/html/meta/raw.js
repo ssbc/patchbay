@@ -16,6 +16,7 @@ exports.create = (api) => {
   function raw (msg, { rawMessage } = {}) {
     return h('a', {
       title: 'View raw data',
+      classList: 'toggle-raw-msg',
       style: {
         order: 99,
         color: '#a8a8a8',
