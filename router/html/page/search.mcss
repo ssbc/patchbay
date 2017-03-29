@@ -1,0 +1,20 @@
+Search {
+  padding: .5rem
+  border-bottom: solid 1px gainsboro
+
+  header {
+    h1 { 
+    }
+  }
+
+  section.details {
+    display: flex
+    justify-content: space-between
+    
+    font-family: monospace
+
+    div.searched {}
+    div.matched {}
+  }
+}
+
