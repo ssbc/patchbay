@@ -76,9 +76,9 @@ exports.create = function (api) {
   return nest('router.html.page', searchPage)
 
   function searchPage (path) {
-    if (path[0] !== '?') return
+    if (path.match(/^[@#%\/]/)) return
 
-    var queryStr = path.substr(1).trim()
+    var queryStr = path.replace(/^\??/, '').trim()
     var query = queryStr.split(whitespace)
     var matchesQuery = searchFilter(query)
 
