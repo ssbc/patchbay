@@ -42,6 +42,7 @@
     "pull-stream": "^3.5.0",
     "read-directory": "^2.0.0",
     "setimmediate": "^1.0.5",
+    "ssb-horcrux": "0.0.1",
     "ssb-mentions": "^0.1.1",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",

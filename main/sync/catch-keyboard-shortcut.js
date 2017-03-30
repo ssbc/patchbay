@@ -11,7 +11,7 @@ exports.create = function (api) {
     root.addEventListener('keydown', (ev) => {
       isTextFieldEvent(ev)
         ? textFieldShortcuts(ev)
-        : genericShortcuts(ev, opts) 
+        : genericShortcuts(ev, opts)
     })
   }
 }
@@ -25,12 +25,11 @@ function isTextFieldEvent (ev) {
 
 function textFieldShortcuts (ev) {
   if (ev.keyCode === 13 && ev.ctrlKey) {
-    ev.target.publish()  //expects the textField to have a publish method
+    ev.target.publish()  // expects the textField to have a publish method
   }
 }
-    
-function genericShortcuts (ev, { tabs, search }) {
 
+function genericShortcuts (ev, { tabs, search }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -55,7 +54,6 @@ function genericShortcuts (ev, { tabs, search }) {
     case 192: // ` = toggle raw message view
       return toggleRawMessage(ev)
 
-
     // Tabs
     case 72: // h = left
       return tabs.selectRelative(-1)
@@ -70,7 +68,7 @@ function genericShortcuts (ev, { tabs, search }) {
       }
       return
 
-    // Search 
+    // Search
     case 191: // / = routes search
       if (ev.shiftKey) search.activate('?', ev)
       else search.activate('/', ev)
@@ -86,7 +84,6 @@ function genericShortcuts (ev, { tabs, search }) {
       return
   }
 }
-
 
 function goToMessage (ev) {
   const msg = ev.target

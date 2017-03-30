@@ -11,54 +11,54 @@ exports.gives = nest('router.html.page')
 exports.needs = nest({
   'main.html.scroller': 'first',
   'message.html.render': 'first',
-  'sbot.pull.log': 'first',
+  'sbot.pull.log': 'first'
   // sbot_fulltext_search: 'first' // TODO add to core?
 })
 
 var whitespace = /\s+/
 
-function andSearch(terms, inputs) {
-  for(var i = 0; i < terms.length; i++) {
+function andSearch (terms, inputs) {
+  for (var i = 0; i < terms.length; i++) {
     var match = false
-    for(var j = 0; j < inputs.length; j++) {
-      if(terms[i].test(inputs[j])) match = true
+    for (var j = 0; j < inputs.length; j++) {
+      if (terms[i].test(inputs[j])) match = true
     }
-    //if a term was not matched by anything, filter this one
-    if(!match) return false
+    // if a term was not matched by anything, filter this one
+    if (!match) return false
   }
   return true
 }
 
-function searchFilter(terms) {
+function searchFilter (terms) {
   return function (msg) {
     var c = msg && msg.value && msg.value.content
     return c && (
-      msg.key == terms[0] ||
+      msg.key === terms[0] ||
       andSearch(terms.map(function (term) {
-        return new RegExp('\\b'+term+'\\b', 'i')
+        return new RegExp('\\b' + term + '\\b', 'i')
       }), [c.text, c.name, c.title])
     )
   }
 }
 
-function createOrRegExp(ary) {
+function createOrRegExp (ary) {
   return new RegExp(ary.map(function (e) {
-    return '\\b'+e+'\\b'
+    return '\\b' + e + '\\b'
   }).join('|'), 'i')
 }
 
-function highlight(el, query) {
+function highlight (el, query) {
   var searcher = new TextNodeSearcher({container: el})
   searcher.query = query
   searcher.highlight()
   return el
 }
 
-function fallback(reader) {
+function fallback (reader) {
   var fallbackRead
   return function (read) {
     return function (abort, cb) {
-      read(abort, function next(end, data) {
+      read(abort, function next (end, data) {
         if (end && reader && (fallbackRead = reader(end))) {
           reader = null
           read = fallbackRead
@@ -72,7 +72,6 @@ function fallback(reader) {
 }
 
 exports.create = function (api) {
-
   return nest('router.html.page', searchPage)
 
   function searchPage (path) {
@@ -95,7 +94,6 @@ exports.create = function (api) {
     const hasNoFulltextMatches = computed([search.fulltext.isDone, search.matches],
       (done, matches) => done && matches === 0)
 
-
     const searchHeader = h('Search', [
       h('header', h('h1', query.join(' '))),
       when(search.isLinear,
@@ -112,7 +110,7 @@ exports.create = function (api) {
     var { container, content } = api.main.html.scroller({ prepend: searchHeader })
     container.id = path // helps tabs find this tab
 
-    function renderMsg(msg) {
+    function renderMsg (msg) {
       var el = api.message.html.render(msg)
       highlight(el, createOrRegExp(query))
       return el
@@ -128,7 +126,7 @@ exports.create = function (api) {
     search.isLinear.set(true)
     pull(
       next(api.sbot.pull.log, {reverse: true, limit: 500, live: false}),
-      pull.through(() => search.linear.checked.set(search.linear.checked()+1)),
+      pull.through(() => search.linear.checked.set(search.linear.checked() + 1)),
       pull.filter(matchesQuery),
     // </Temp>
     // TODO - reinstate fulltext search
@@ -146,7 +144,7 @@ exports.create = function (api) {
     //       )
     //     }
     //   }),
-      pull.through(() => search.matches.set(search.matches()+1)),
+      pull.through(() => search.matches.set(search.matches() + 1)),
       Scroller(container, content, renderMsg, false, false)
     )
 
