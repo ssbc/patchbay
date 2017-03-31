@@ -63,7 +63,7 @@ exports.create = function (api) {
 
     // Catch link clicks
     api.main.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
-      if (isExternal) api.main.html.externalConfirm(link)
+      if (isExternal) return api.main.html.externalConfirm(link)
 
       if (tabs.has(link)) tabs.select(link)
       else {
