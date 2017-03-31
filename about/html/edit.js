@@ -20,6 +20,7 @@ exports.needs = nest({
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
+  'message.html.markdown': 'first',
   sbot: {
     'async.addBlob': 'first',
     'pull.links': 'first'
@@ -92,7 +93,10 @@ exports.create = function (api) {
         ]),
         h('footer', displayedName)
       ]),
-      h('section.description', api.about.obs.description(id)),
+      h('section.description', computed(api.about.obs.description(id), (descr)=>{
+        if (descr == null) return "" // TODO: should be in patchcore, I think...
+        return api.message.html.markdown(descr)
+      })),
       h('section.aliases', [
         h('header', 'Aliases'),
         h('section.avatars', [
