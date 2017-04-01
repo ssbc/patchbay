@@ -11,8 +11,10 @@ exports.gives = nest('router.html.page')
 exports.needs = nest({
   'main.html.scroller': 'first',
   'message.html.render': 'first',
-  'sbot.pull.log': 'first'
-  // sbot_fulltext_search: 'first' // TODO add to core?
+  'sbot.pull': {
+    log: 'first',
+    search: 'first'
+  }
 })
 
 var whitespace = /\s+/
@@ -122,28 +124,20 @@ exports.create = function (api) {
       Scroller(container, content, renderMsg, true, false)
     )
 
-    // <Temp>
-    search.isLinear.set(true)
     pull(
-      next(api.sbot.pull.log, {reverse: true, limit: 500, live: false}),
-      pull.through(() => search.linear.checked.set(search.linear.checked() + 1)),
-      pull.filter(matchesQuery),
-    // </Temp>
-    // TODO - reinstate fulltext search
-    // pull(
-    //   next(api.sbot_fulltext_search, {query: queryStr, reverse: true, limit: 500, live: false}),
-    //   fallback((err) => {
-    //     if (err === true) {
-    //       search.fulltext.isDone.set(true)
-    //     } else if (/^no source/.test(err.message)) {
-    //       search.isLinear.set(true)
-    //       return pull(
-    //         next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-    //         pull.through(() => search.linear.checked.set(search.linear.checked()+1)),
-    //         pull.filter(matchesQuery)
-    //       )
-    //     }
-    //   }),
+      next(api.sbot.pull.search, {query: queryStr, reverse: true, limit: 500, live: false}),
+      fallback((err) => {
+        if (err === true) {
+          search.fulltext.isDone.set(true)
+        } else if (/^no source/.test(err.message)) {
+          search.isLinear.set(true)
+          return pull(
+            next(api.sbot_log, {reverse: true, limit: 500, live: false}),
+            pull.through(() => search.linear.checked.set(search.linear.checked()+1)),
+            pull.filter(matchesQuery)
+          )
+        }
+      }),
       pull.through(() => search.matches.set(search.matches() + 1)),
       Scroller(container, content, renderMsg, false, false)
     )
