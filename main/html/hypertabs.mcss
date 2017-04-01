@@ -73,7 +73,7 @@ Hypertabs {
 
     }
 
-    div.extra {
+    div.navExtra {
       display: flex
       align-items: center
     }

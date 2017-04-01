@@ -13,6 +13,7 @@ exports.needs = nest({
     html: {
       error: 'first',
       externalConfirm: 'first',
+      menu: 'first',
       search: 'first'
     },
     sync: {
@@ -30,7 +31,7 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const search = api.main.html.search((path, change) => {
+    const handleSelection = (path, change) => {
       if (tabs.has(path)) {
         tabs.select(path)
         return true
@@ -38,8 +39,11 @@ exports.create = function (api) {
 
       addPage(path, true, false)
       return change
-    })
-    const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search ]) })
+    }
+    const search = api.main.html.search(handleSelection)
+    const menu = api.main.html.menu(handleSelection)
+
+    const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search, menu ]) })
     function onSelect (indexes) {
       search.input.value = tabs.get(indexes[0]).content.id
     }

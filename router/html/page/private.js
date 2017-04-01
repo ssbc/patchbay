@@ -1,10 +1,16 @@
 const nest = require('depnest')
+const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const next = require('../../../junk/next-stepper')
 const ref = require('ssb-ref')
 
-exports.gives = nest('router.html.page')
+exports.gives = nest({
+  'router.html': {
+    page: true,
+    simpleRoute: true
+  }
+})
 
 exports.needs = nest({
   'feed.pull.private': 'first',
@@ -17,10 +23,24 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('router.html.page', privatePage)
+  const route = '/private'
+
+  return nest({
+    'router.html': {
+      page: privatePage,
+      simpleRoute: menuItem
+    }
+  })
+
+  function menuItem (handleClick) {
+    return h('a', {
+      style: { order: 2 },
+      'ev-click': () => handleClick(route)
+    }, route)
+  }
 
   function privatePage (path) {
-    if (path !== '/private') return
+    if (path !== route) return
 
     const id = api.keys.sync.id()
 

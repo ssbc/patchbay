@@ -93,8 +93,8 @@ exports.create = function (api) {
         ]),
         h('footer', displayedName)
       ]),
-      h('section.description', computed(api.about.obs.description(id), (descr)=>{
-        if (descr == null) return "" // TODO: should be in patchcore, I think...
+      h('section.description', computed(api.about.obs.description(id), (descr) => {
+        if (descr == null) return '' // TODO: should be in patchcore, I think...
         return api.message.html.markdown(descr)
       })),
       h('section.aliases', [

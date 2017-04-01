@@ -1,0 +1,29 @@
+Menu {
+  background-color: #0088cc
+  width: 1rem 
+  height: 1rem
+
+  div {
+    display: none
+
+    position: absolute
+    top: .5em
+    right: 0
+    padding-top: .5em
+    padding-bottom: .5em
+    padding-right: 1em
+    padding-left: 1em
+    background: #f5f5f5
+    border: 1px solid #eee
+    z-index: 5
+
+  }
+
+  -active {
+    div {
+      display: flex
+      flex-direction: column
+    }
+  }
+}
+

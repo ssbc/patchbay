@@ -6,19 +6,16 @@ const { h, watch } = require('mutant')
 const next = require('../../../junk/next-stepper')
 
 exports.gives = nest({
-  'router.html.page': true
+  'router.html': {
+    page: true,
+    simpleRoute: true
+  }
 })
-// menu_items
 
 exports.needs = nest({
   'about.html.edit': 'first',
   'about.obs': {
     'name': 'first'
-    // 'description': 'first',
-    // 'image': 'first',
-    // 'imageUrl',
-    // 'names',
-    // 'images',
   },
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
@@ -29,14 +26,20 @@ exports.needs = nest({
 
 exports.create = function (api) {
   return nest({
-    'router.html.page': page
+    'router.html': {
+      page: profilePage,
+      simpleRoute: menuItem
+    }
   })
-  // menu_items: () => h('a', {
-  //   href: '#'+self_id,
-  //   style: { order: 1 }
-  // }, '/profile')
 
-  function page (id) {
+  function menuItem (handleClick) {
+    return h('a', {
+      style: { order: 0 },
+      'ev-click': () => handleClick(api.keys.sync.id())
+    }, '/profile')
+  }
+
+  function profilePage (id) {
     if (!ref.isFeed(id)) return
 
     const profile = h('Profile', [
