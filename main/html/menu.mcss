@@ -1,7 +1,10 @@
 Menu {
   background-color: #0088cc
-  width: 1rem 
-  height: 1rem
+  width: .7rem 
+  height: .7rem
+  border-radius: 1rem
+
+  margin-right: .5rem
 
   div {
     display: none
