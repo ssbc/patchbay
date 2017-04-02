@@ -92,14 +92,14 @@ function goToMessage (ev, tabs) {
   // this uses a crudely exported nav api
   const search = document.querySelector('input[type=search]')
 
-  const { root, key } = msg.dataset
-  if (!root) return search.go(key)
+  const { root, id } = msg.dataset
+  if (!root) return search.go(id)
 
   search.go(root)
-  scrollDownToMessage(key, tabs)
+  scrollDownToMessage(id, tabs)
 }
 
-function scrollDownToMessage (key, tabs) {
+function scrollDownToMessage (id, tabs) {
   tabs.get(tabs.selected[0]).firstChild.scroll('first')
   locateKey()
 
@@ -107,7 +107,7 @@ function scrollDownToMessage (key, tabs) {
     const msg = tabs.get(tabs.selected[0]).firstChild.scroll(1)
     if (msg === undefined) return setTimeout(locateKey, 100)
 
-    if (msg && msg.dataset && msg.dataset.key === key) return
+    if (msg && msg.dataset && msg.dataset.id === id) return
 
     locateKey()
   }

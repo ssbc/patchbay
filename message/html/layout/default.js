@@ -22,14 +22,11 @@ exports.create = (api) => {
 
     var rawMessage = Value(null)
 
-    const attributes = {
-      tabindex: '0', // needed to be able to navigate and show focus()
-      'data-key': msg.key,
-      'data-text': msg.value.content.text
-    }
-    if (msg.value.content.root) attributes['data-root'] = msg.value.content.root
-
-    return h('Message', { attributes }, [
+    return h('Message', {
+      attributes: {
+        tabindex: '0' // needed to be able to navigate and show focus()
+      }
+    }, [
       h('section.avatar', {}, api.about.html.image(msg.value.author)),
       h('section.timestamp', {}, api.message.html.timestamp(msg)),
       h('header.author', {}, api.message.html.author(msg)),

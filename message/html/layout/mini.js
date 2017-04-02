@@ -18,8 +18,7 @@ exports.create = (api) => {
 
     var rawMessage = Value(null)
 
-    return h('div', {
-      classList: 'Message -mini',
+    return h('Message -mini', {
       attributes: {
         tabindex: '0'
       }
