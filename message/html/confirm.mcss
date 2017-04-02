@@ -20,8 +20,8 @@ MessageConfirm {
           }
         }
 
-        section.action {
-          display: none
+        section.actions {
+          visibility: hidden
         }
       }
     }
