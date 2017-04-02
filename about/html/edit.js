@@ -135,20 +135,19 @@ exports.create = function (api) {
 
         if (data) {
           var _data = dataurl.parse(data)
-          pull(
-            pull.once(_data.data),
-            api.sbot.async.addBlob((err, hash) => {
-              if (err) throw err // TODO check if this is safely caught by error catcher
 
-              avatar.new.set({
-                link: hash,
-                size: _data.data.length,
-                type: _data.mimetype,
-                width: 512,
-                height: 512
-              })
+          
+          api.sbot.async.addBlob(pull.once(_data.data), (err, hash) => {
+            if (err) throw err // TODO check if this is safely caught by error catcher
+
+            avatar.new.set({
+              link: hash,
+              size: _data.data.length,
+              type: _data.mimetype,
+              width: 512,
+              height: 512
             })
-          )
+          })
         }
         lb.close()
       })

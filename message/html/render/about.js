@@ -30,7 +30,9 @@ exports.create = function (api) {
 
   function renderContent (msg) {
     const { author, content } = msg.value
-    const { about, name, description, image } = content
+    var { about, name, description, image } = content
+
+    if (image && ref.isBlob(image.link)) image = image.link
 
     if (!ref.isFeed(about)) {
       return [
