@@ -48,9 +48,9 @@ function genericShortcuts (ev, { tabs, search }) {
     case 75: // k = newer
       return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
     case 13: // enter = open
-      return goToMessage(ev)
+      return goToMessage(ev, tabs)
     case 79: // o = open
-      return goToMessage(ev)
+      return goToMessage(ev, tabs)
     case 192: // ` = toggle raw message view
       return toggleRawMessage(ev)
 
@@ -85,13 +85,32 @@ function genericShortcuts (ev, { tabs, search }) {
   }
 }
 
-function goToMessage (ev) {
+function goToMessage (ev, tabs) {
   const msg = ev.target
   if (!msg.classList.contains('Message')) return
 
   // this uses a crudely exported nav api
   const search = document.querySelector('input[type=search]')
-  search.go(msg.dataset.root)
+
+  const { root, key } = msg.dataset
+  if (!root) return search.go(key)
+
+  search.go(root)
+  scrollDownToMessage(key, tabs)
+}
+
+function scrollDownToMessage (key, tabs) {
+  tabs.get(tabs.selected[0]).firstChild.scroll('first')
+  locateKey()
+
+  function locateKey () {
+    const msg = tabs.get(tabs.selected[0]).firstChild.scroll(1)
+    if (msg === undefined) return setTimeout(locateKey, 100)
+
+    if (msg && msg.dataset && msg.dataset.key === key) return
+
+    locateKey ()
+  }
 }
 
 function toggleRawMessage (ev) {

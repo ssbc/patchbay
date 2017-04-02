@@ -55,5 +55,7 @@ function keyscroll (container) {
       : d < 0 ? curMsgEl.previousElementSibling || container.firstChild
       : d > 0 ? curMsgEl.nextElementSibling || container.lastChild
       : curMsgEl)
+
+    return curMsgEl
   }
 }

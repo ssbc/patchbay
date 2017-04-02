@@ -10,9 +10,9 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('main.html.searchBar', search)
+  return nest('main.html.searchBar', searchBar)
 
-  function search (go) {
+  function searchBar (go) {
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
