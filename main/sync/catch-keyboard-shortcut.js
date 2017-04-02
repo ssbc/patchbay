@@ -109,7 +109,7 @@ function scrollDownToMessage (key, tabs) {
 
     if (msg && msg.dataset && msg.dataset.key === key) return
 
-    locateKey ()
+    locateKey()
   }
 }
 
