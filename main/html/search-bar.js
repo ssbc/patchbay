@@ -2,7 +2,7 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const addSuggest = require('suggest-box')
 
-exports.gives = nest('main.html.search')
+exports.gives = nest('main.html.searchBar')
 
 exports.needs = nest({
   'about.async.suggest': 'first',
@@ -10,7 +10,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('main.html.search', search)
+  return nest('main.html.searchBar', search)
 
   function search (go) {
     const getProfileSuggestions = api.about.async.suggest()
@@ -40,7 +40,7 @@ exports.create = function (api) {
       // if (go(input.value.trim(), !ev.ctrlKey))
       //   input.blur()
     })
-    const search = h('Search', input)
+    const search = h('SearchBar', input)
 
     search.input = input
     search.activate = (sigil, ev) => {

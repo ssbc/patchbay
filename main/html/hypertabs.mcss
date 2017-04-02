@@ -26,7 +26,7 @@ Hypertabs {
         background-color: #efefef
         overflow: hidden
 
-        padding: 0 .4rem
+        padding: 0
         margin-left: .6rem
         border: 1px gainsboro solid
         border-bottom: none
@@ -35,6 +35,9 @@ Hypertabs {
           color: #222
           background-color: #fff
 
+          a.link {
+            max-width: calc(100% - 2rem)
+          }
           a.close {
             visibility: visible
           }
@@ -59,16 +62,33 @@ Hypertabs {
           flex-shrink: 0
           overflow-x: hidden
           min-width: 0
-          max-width: 90%
+          max-width: calc(100% - 1.4rem)
           white-space: nowrap
           text-overflow: ellipsis
 
-          padding: 0.5rem .2rem
+          padding: .5rem 0 .5rem .6rem
         }
 
         a.close {
           visibility: hidden
+          font-family: monospace
+          line-height: 1rem
+          width: .9rem
+          height: .9rem
+          /* border-radius: 1rem */
+
+          margin-right: .3rem
+
+          display: flex
+          justify-content: center
+
+          :hover {
+            background: #aaaaaa
+            color: #fff
+            font-weight: 600
+          }
         }
+
       }
 
     }

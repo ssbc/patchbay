@@ -14,7 +14,7 @@ exports.needs = nest({
       error: 'first',
       externalConfirm: 'first',
       menu: 'first',
-      search: 'first'
+      searchBar: 'first'
     },
     sync: {
       catchKeyboardShortcut: 'first'
@@ -40,7 +40,7 @@ exports.create = function (api) {
       addPage(path, true, false)
       return change
     }
-    const search = api.main.html.search(handleSelection)
+    const search = api.main.html.searchBar(handleSelection)
     const menu = api.main.html.menu(handleSelection)
 
     const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search, menu ]) })
