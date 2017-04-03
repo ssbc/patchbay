@@ -136,7 +136,6 @@ exports.create = function (api) {
         if (data) {
           var _data = dataurl.parse(data)
 
-          
           api.sbot.async.addBlob(pull.once(_data.data), (err, hash) => {
             if (err) throw err // TODO check if this is safely caught by error catcher
 

@@ -17,7 +17,9 @@ exports.create = function (api) {
   var suggestions = null
   var recentSuggestions = null
 
-  return nest('about.async.suggest', function () {
+  return nest('about.async.suggest', suggest)
+
+  function suggest () {
     loadSuggestions()
     return function (word) {
       if (!word) {
@@ -28,32 +30,32 @@ exports.create = function (api) {
         })
       }
     }
-  })
+  }
 
   function loadSuggestions () {
-    if (!suggestions) {
-      var id = api.keys.sync.id()
-      var following = api.contact.obs.following(id)
-      var recentlyUpdated = api.feed.obs.recent()
-      var contacts = computed([following, recentlyUpdated], function (a, b) {
-        var result = Array.from(a)
-        b.forEach((item, i) => {
-          if (!result.includes(item)) {
-            result.push(item)
-          }
-        })
-        return result
-      })
+    if (suggestions) return
 
-      recentSuggestions = map(
-        computed(recentlyUpdated, (items) => Array.from(items).slice(0, 10)),
-        suggestion,
-        {idle: true}
-      )
-      suggestions = map(contacts, suggestion, {idle: true})
-      watch(recentSuggestions)
-      watch(suggestions)
-    }
+    var id = api.keys.sync.id()
+    var following = api.contact.obs.following(id)
+    var recentlyUpdated = api.feed.obs.recent()
+    var contacts = computed([following, recentlyUpdated], (a, b) => {
+      var result = Array.from(a)
+      b.forEach(item => {
+        if (!result.includes(item)) {
+          result.push(item)
+        }
+      })
+      return result
+    })
+
+    recentSuggestions = map(
+      computed(recentlyUpdated, (items) => Array.from(items).slice(0, 10)),
+      suggestion,
+      {idle: true}
+    )
+    suggestions = map(contacts, suggestion, {idle: true})
+    watch(recentSuggestions)
+    watch(suggestions)
   }
 
   function suggestion (id) {
