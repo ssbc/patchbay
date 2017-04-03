@@ -1,11 +1,12 @@
 var nest = require('depnest')
-var { Struct, map, computed, watch } = require('mutant')
+var { Struct, map, concat, dictToCollection, computed, watch } = require('mutant')
 
 exports.gives = nest('about.async.suggest')
 
 exports.needs = nest({
   'about.obs': {
     name: 'first',
+    names: 'first',
     imageUrl: 'first'
   },
   'contact.obs.following': 'first',
@@ -53,9 +54,48 @@ exports.create = function (api) {
       suggestion,
       {idle: true}
     )
-    suggestions = map(contacts, suggestion, {idle: true})
+
+    const suggestionsRecord = computed(contacts, contacts => {
+      var result = {}
+      contacts.forEach(contact => {
+        result[contact] = api.about.obs.names(contact)
+      })
+
+      return result
+    })
+
+    const mapableSuggestions = dictToCollection(suggestionsRecord)
+    suggestions = concat(
+      map(mapableSuggestions, pluralSuggestions, {idle: true})
+    )
+
     watch(recentSuggestions)
     watch(suggestions)
+  }
+
+
+  function pluralSuggestions (item) {
+    const { key, value } = item
+
+    const id = key()
+    const names = computed(value, v => Object.keys(v))
+
+    return map(names, name => {
+      const subtitle = computed([api.about.obs.name(id)], commonName => {
+        return name.toLowerCase() === commonName.toLowerCase()
+          ? id.substring(0, 10)
+          : `${commonName} ${id.substring(0, 10)}`
+      })
+
+      return Struct({
+        title: name,
+        id,
+        subtitle,
+        value: computed([name, id], mention),
+        image: api.about.obs.imageUrl(id),
+        showBoth: true
+      })
+    })
   }
 
   function suggestion (id) {
