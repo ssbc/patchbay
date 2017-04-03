@@ -1,5 +1,5 @@
 var nest = require('depnest')
-var { Struct, map, concat, dictToCollection, computed, watch } = require('mutant')
+var { Struct, map, concat, dictToCollection, computed, lookup, watch } = require('mutant')
 
 exports.gives = nest('about.async.suggest')
 
@@ -55,18 +55,12 @@ exports.create = function (api) {
       {idle: true}
     )
 
-    const suggestionsRecord = computed(contacts, contacts => {
-      var result = {}
-      contacts.forEach(contact => {
-        result[contact] = api.about.obs.names(contact)
-      })
-
-      return result
+    const suggestionsRecord = lookup(contacts, contact => {
+      return [contact, api.about.obs.names(contact)]
     })
 
-    const mapableSuggestions = dictToCollection(suggestionsRecord)
     suggestions = concat(
-      map(mapableSuggestions, pluralSuggestions, {idle: true})
+      map(dictToCollection(suggestionsRecord), pluralSuggestions, {idle: true})
     )
 
     watch(recentSuggestions)
