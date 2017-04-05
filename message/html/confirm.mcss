@@ -14,14 +14,12 @@ MessageConfirm {
           div {
             section {
               -timestamp {
-                display: none
               }
             }
           }
         }
 
         section.actions {
-          visibility: hidden
         }
       }
     }

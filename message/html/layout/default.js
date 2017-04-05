@@ -1,5 +1,6 @@
-var nest = require('depnest')
+const nest = require('depnest')
 const { h, Value } = require('mutant')
+const { isMsg } = require('ssb-ref')
 
 exports.needs = nest({
   'message.html': {
@@ -20,6 +21,9 @@ exports.create = (api) => {
   function messageLayout (msg, opts) {
     if (!(opts.layout === undefined || opts.layout === 'default')) return
 
+    var { author, timestamp, meta, action, backlinks } = api.message.html
+    if (!isMsg(msg)) action = () => {}
+
     var rawMessage = Value(null)
 
     return h('Message', {
@@ -28,14 +32,14 @@ exports.create = (api) => {
       }
     }, [
       h('section.avatar', {}, api.about.html.image(msg.value.author)),
-      h('section.timestamp', {}, api.message.html.timestamp(msg)),
-      h('header.author', {}, api.message.html.author(msg)),
-      h('section.meta', {}, api.message.html.meta(msg, { rawMessage })),
+      h('section.timestamp', {}, timestamp(msg)),
+      h('header.author', {}, author(msg)),
+      h('section.meta', {}, meta(msg, { rawMessage })),
       h('section.title', {}, opts.title),
       h('section.content', {}, opts.content),
       h('section.raw-content', rawMessage),
-      h('section.actions', {}, api.message.html.action(msg)),
-      h('footer.backlinks', {}, api.message.html.backlinks(msg))
+      h('section.actions', {}, action(msg)),
+      h('footer.backlinks', {}, backlinks(msg))
     ])
   }
 }

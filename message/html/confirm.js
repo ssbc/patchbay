@@ -51,7 +51,7 @@ exports.create = function (api) {
       'cancel'
     )
 
-    okay.addEventListener('keydown', function (ev) {
+    okay.addEventListener('keydown', (ev) => {
       if (ev.keyCode === 27) cancel.click() // escape
     })
 
