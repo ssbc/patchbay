@@ -14,7 +14,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   // git,
-  // horcrux,
+  horcrux,
   patchbay,
   patchcore
 )
