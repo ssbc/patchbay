@@ -1,7 +1,7 @@
 {
   "name": "picknmix",
-  "version": "0.0.1",
-  "description": "patchbay 2? building on patchcore",
+  "version": "7.0.0",
+  "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
