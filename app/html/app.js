@@ -3,10 +3,10 @@ const nest = require('depnest')
 const insertCss = require('insert-css')
 const Tabs = require('hypertabs')
 
-exports.gives = nest('main.html.app')
+exports.gives = nest('app.html.app')
 
 exports.needs = nest({
-  main: {
+  app: {
     async: {
       catchLinkClick: 'first'
     },
@@ -14,18 +14,18 @@ exports.needs = nest({
       error: 'first',
       externalConfirm: 'first',
       menu: 'first',
+      page: 'first',
       searchBar: 'first'
     },
     sync: {
       catchKeyboardShortcut: 'first'
     }
   },
-  'router.html.page': 'first',
   'styles.css': 'reduce'
 })
 
 exports.create = function (api) {
-  return nest('main.html.app', app)
+  return nest('app.html.app', app)
 
   function app () {
     const css = values(api.styles.css()).join('\n')
@@ -40,8 +40,8 @@ exports.create = function (api) {
       addPage(path, true, false)
       return change
     }
-    const search = api.main.html.searchBar(handleSelection)
-    const menu = api.main.html.menu(handleSelection)
+    const search = api.app.html.searchBar(handleSelection)
+    const menu = api.app.html.menu(handleSelection)
 
     const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search, menu ]) })
     function onSelect (indexes) {
@@ -51,7 +51,7 @@ exports.create = function (api) {
     const App = h('App', tabs)
 
     function addPage (link, change, split) {
-      const page = api.router.html.page(link)
+      const page = api.app.html.page(link)
       if (!page) return
 
       page.id = page.id || link
@@ -63,11 +63,11 @@ exports.create = function (api) {
     tabs.select(0)
 
     // Catch keyboard shortcuts
-    api.main.sync.catchKeyboardShortcut(window, { tabs, search })
+    api.app.sync.catchKeyboardShortcut(window, { tabs, search })
 
     // Catch link clicks
-    api.main.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
-      if (isExternal) return api.main.html.externalConfirm(link)
+    api.app.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
+      if (isExternal) return api.app.html.externalConfirm(link)
 
       if (tabs.has(link)) tabs.select(link)
       else {
@@ -77,11 +77,11 @@ exports.create = function (api) {
     })
 
     // Catch errors
-    var { container: errorPage, content: errorList } = api.router.html.page('/errors')
+    var { container: errorPage, content: errorList } = api.app.html.page('/errors')
     window.addEventListener('error', ev => {
       if (!tabs.has('/errors')) tabs.add(errorPage, true)
 
-      const error = api.main.html.error(ev.error || ev)
+      const error = api.app.html.error(ev.error || ev)
       errorList.appendChild(error)
     })
 

@@ -6,9 +6,9 @@ const { h, watch } = require('mutant')
 const next = require('../../../junk/next-stepper')
 
 exports.gives = nest({
-  'router.html': {
+  'app.html': {
     page: true,
-    simpleRoute: true
+    menuItem: true
   }
 })
 
@@ -19,16 +19,16 @@ exports.needs = nest({
   },
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
-  'main.html.scroller': 'first',
+  'app.html.scroller': 'first',
   'message.html.render': 'first',
   'sbot.pull.userFeed': 'first'
 })
 
 exports.create = function (api) {
   return nest({
-    'router.html': {
+    'app.html': {
       page: profilePage,
-      simpleRoute: menuItem
+      menuItem: menuItem
     }
   })
 
@@ -51,7 +51,7 @@ exports.create = function (api) {
       ])
     ])
 
-    var { container, content } = api.main.html.scroller({ prepend: profile })
+    var { container, content } = api.app.html.scroller({ prepend: profile })
 
     const name = api.about.obs.name(id)
     watch(name, function (name) { container.title = '@' + name })

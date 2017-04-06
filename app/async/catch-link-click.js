@@ -1,10 +1,10 @@
 const nest = require('depnest')
 const Url = require('url')
 
-exports.gives = nest('main.async.catchLinkClick')
+exports.gives = nest('app.async.catchLinkClick')
 
 exports.create = function (api) {
-  return nest('main.async.catchLinkClick', catchLinkClick)
+  return nest('app.async.catchLinkClick', catchLinkClick)
 
   function catchLinkClick (root, cb) {
     root.addEventListener('click', (ev) => {

@@ -4,13 +4,13 @@ const pull = require('pull-stream')
 const sort = require('ssb-sort')
 const ref = require('ssb-ref')
 
-exports.gives = nest('router.html.page')
+exports.gives = nest('app.html.page')
 
 // TODO - seperate out public and private thread rendering
 exports.needs = nest({
   // 'feed.pull.public': 'first',
   'keys.sync.id': 'first',
-  'main.html.scroller': 'first',
+  'app.html.scroller': 'first',
   message: {
     html: {
       compose: 'first',
@@ -26,7 +26,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('router.html.page', threadPage)
+  return nest('app.html.page', threadPage)
 
   function threadPage (id) {
     if (!ref.isMsg(id)) return
@@ -41,7 +41,7 @@ exports.create = function (api) {
       placeholder: 'Write a reply',
       shrink: false
     })
-    const { container, content } = api.main.html.scroller({ append: composer })
+    const { container, content } = api.app.html.scroller({ append: composer })
     api.message.async.name(id, (err, name) => {
       if (err) throw err
       container.title = name

@@ -2,11 +2,11 @@ const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 
-exports.gives = nest('router.html.page')
+exports.gives = nest('app.html.page')
 
 exports.needs = nest({
   'feed.pull.channel': 'first',
-  'main.html.scroller': 'first',
+  'app.html.scroller': 'first',
   message: {
     html: {
       compose: 'first',
@@ -17,7 +17,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('router.html.page', channelView)
+  return nest('app.html.page', channelView)
 
   function channelView (path) {
     if (path && !path.match(/#\w+/)) return
@@ -25,7 +25,7 @@ exports.create = function (api) {
     var channel = path.substr(1)
 
     var composer = api.message.html.compose({ meta: { type: 'post', channel } })
-    var { container, content } = api.main.html.scroller({ prepend: composer })
+    var { container, content } = api.app.html.scroller({ prepend: composer })
 
     var openChannelSource = api.feed.pull.channel(channel)
 

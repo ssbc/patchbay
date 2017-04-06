@@ -6,10 +6,10 @@ const TextNodeSearcher = require('text-node-searcher')
 
 const next = require('../../../junk/next-stepper')
 
-exports.gives = nest('router.html.page')
+exports.gives = nest('app.html.page')
 
 exports.needs = nest({
-  'main.html.scroller': 'first',
+  'app.html.scroller': 'first',
   'message.html.render': 'first',
   'sbot.pull': {
     log: 'first',
@@ -74,7 +74,7 @@ function fallback (reader) {
 }
 
 exports.create = function (api) {
-  return nest('router.html.page', searchPage)
+  return nest('app.html.page', searchPage)
 
   function searchPage (path) {
     if (path.match(/^[@#%\/]/)) return
@@ -109,7 +109,7 @@ exports.create = function (api) {
         ])
       )
     ])
-    var { container, content } = api.main.html.scroller({ prepend: searchHeader })
+    var { container, content } = api.app.html.scroller({ prepend: searchHeader })
     container.id = path // helps tabs find this tab
 
     function renderMsg (msg) {

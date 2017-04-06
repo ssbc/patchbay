@@ -1,10 +1,10 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 
-exports.gives = nest('main.html.scroller')
+exports.gives = nest('app.html.scroller')
 
 exports.create = function (api) {
-  return nest('main.html.scroller', Scroller)
+  return nest('app.html.scroller', Scroller)
 
   function Scroller ({ prepend = [], append = [] } = {}) {
     const content = h('section.content')

@@ -3,10 +3,10 @@ const lightbox = require('hyperlightbox')
 const { h } = require('mutant')
 const open = require('open-external')
 
-exports.gives = nest('main.html.externalConfirm')
+exports.gives = nest('app.html.externalConfirm')
 
 exports.create = function (api) {
-  return nest('main.html.externalConfirm', externalConfirm)
+  return nest('app.html.externalConfirm', externalConfirm)
 
   function externalConfirm (href) {
     var lb = lightbox()

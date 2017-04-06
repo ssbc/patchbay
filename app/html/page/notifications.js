@@ -5,57 +5,55 @@ const Scroller = require('pull-scroll')
 const next = require('../../../junk/next-stepper')
 
 exports.gives = nest({
-  'router.html': {
+  'app.html': {
     page: true,
-    simpleRoute: true
+    menuItem: true
   }
 })
 
 exports.needs = nest({
-  'feed.pull.public': 'first',
-  'message.html': {
-    compose: 'first',
-    render: 'first'
+  'feed.pull': {
+    mentions: 'first',
+    public: 'first'
   },
-  'main.html.scroller': 'first'
+  'keys.sync.id': 'first',
+  'app.html.scroller': 'first',
+  'message.html.render': 'first'
 })
 
 exports.create = function (api) {
-  const route = '/public'
+  const route = '/notifications'
 
   return nest({
-    'router.html': {
-      page: publicPage,
-      simpleRoute: menuItem
+    'app.html': {
+      page: notificationsPage,
+      menuItem: menuItem
     }
   })
 
   function menuItem (handleClick) {
     return h('a', {
-      style: { order: 1 },
+      style: { order: 3 },
       'ev-click': () => handleClick(route)
     }, route)
   }
 
-  function publicPage (path) {
+  function notificationsPage (path) {
     if (path !== route) return
+    const id = api.keys.sync.id()
+    const mentions = api.feed.pull.mentions(id)
 
-    const composer = api.message.html.compose({
-      meta: { type: 'post' },
-      placeholder: 'Write a public message'
-    })
-    const { container, content } = api.main.html.scroller({ prepend: composer })
+    const { container, content } = api.app.html.scroller({})
 
     pull(
-      next(api.feed.pull.public, {old: false, limit: 100}),
+      next(mentions, {old: false, limit: 100}),
       Scroller(container, content, api.message.html.render, true, false)
     )
 
     pull(
-      next(api.feed.pull.public, {reverse: true, limit: 100, live: false}),
+      next(mentions, {reverse: true, limit: 100, live: false}),
       Scroller(container, content, api.message.html.render, false, false)
     )
-
     return container
   }
 }

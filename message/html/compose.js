@@ -4,6 +4,8 @@ const mentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
 
+exports.gives = nest('message.html.compose')
+
 exports.needs = nest({
   'about.async.suggest': 'first',
   'blob.html.input': 'first',
@@ -12,11 +14,8 @@ exports.needs = nest({
     names: 'first',
     url: 'first'
   },
-  'main.sync.catchKeyboardShortcut': 'first',
   'message.html.confirm': 'first'
 })
-
-exports.gives = nest('message.html.compose')
 
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })

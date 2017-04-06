@@ -2,12 +2,12 @@ const nest = require('depnest')
 const ref = require('ssb-ref')
 const { h } = require('mutant')
 
-exports.gives = nest('router.html.page')
+exports.gives = nest('app.html.page')
 
 exports.needs = nest('blob.sync.url', 'first')
 
 exports.create = (api) => {
-  return nest('router.html.page', blobView)
+  return nest('app.html.page', blobView)
 
   function blobView (path) {
     if (!ref.isBlob(path)) return

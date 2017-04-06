@@ -14,13 +14,13 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   // git,
-  horcrux,
+  // horcrux,
   patchbay,
   patchcore
 )
 
-const api = entry(sockets, nest('main.html.app', 'first'))
+const api = entry(sockets, nest('app.html.app', 'first'))
 
-const app = api.main.html.app()
+const app = api.app.html.app()
 document.body.appendChild(app)
 

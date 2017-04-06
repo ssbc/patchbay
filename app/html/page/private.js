@@ -6,16 +6,16 @@ const next = require('../../../junk/next-stepper')
 const ref = require('ssb-ref')
 
 exports.gives = nest({
-  'router.html': {
+  'app.html': {
     page: true,
-    simpleRoute: true
+    menuItem: true
   }
 })
 
 exports.needs = nest({
   'feed.pull.private': 'first',
   'keys.sync.id': 'first',
-  'main.html.scroller': 'first',
+  'app.html.scroller': 'first',
   'message.html': {
     compose: 'first',
     render: 'first'
@@ -26,9 +26,9 @@ exports.create = function (api) {
   const route = '/private'
 
   return nest({
-    'router.html': {
+    'app.html': {
       page: privatePage,
-      simpleRoute: menuItem
+      menuItem: menuItem
     }
   })
 
@@ -53,7 +53,7 @@ exports.create = function (api) {
       },
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
     )
-    const { container, content } = api.main.html.scroller({ prepend: composer })
+    const { container, content } = api.app.html.scroller({ prepend: composer })
 
     pull(
       next(api.feed.pull.private, {old: false, limit: 100}),

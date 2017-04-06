@@ -1,9 +1,9 @@
 const nest = require('depnest')
 
-exports.gives = nest('main.sync.catchKeyboardShortcut')
+exports.gives = nest('app.sync.catchKeyboardShortcut')
 
 exports.create = function (api) {
-  return nest('main.sync.catchKeyboardShortcut', catchKeyboardShortcut)
+  return nest('app.sync.catchKeyboardShortcut', catchKeyboardShortcut)
 
   function catchKeyboardShortcut (root, opts) {
     var gPressed = false
