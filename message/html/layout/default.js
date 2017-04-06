@@ -22,7 +22,7 @@ exports.create = (api) => {
     if (!(opts.layout === undefined || opts.layout === 'default')) return
 
     var { author, timestamp, meta, action, backlinks } = api.message.html
-    if (!isMsg(msg)) action = () => {}
+    if (!isMsg(msg.key)) action = () => {}
 
     var rawMessage = Value(null)
 
