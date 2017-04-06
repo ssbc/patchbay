@@ -1,0 +1,15 @@
+SearchBar {
+  input {
+    height: 1.4rem
+
+    padding-left: .7rem
+    padding-right: .5rem
+
+    margin-left: 1rem
+
+    border: 1px #dcdcdc solid;
+    border-radius: 0
+    font-size: .9rem;
+  }
+}
+

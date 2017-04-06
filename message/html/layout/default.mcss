@@ -1,0 +1,108 @@
+Message {
+  padding: 1rem .5rem 1rem 6rem
+  /* min-height: 5rem */
+
+  position: relative
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: flex-end
+
+  section.avatar {
+    position: absolute
+    left: .5rem
+    
+    img {
+      width: 4rem
+      height: 4rem
+    }
+  }
+
+  section.timestamp {
+    position: absolute
+    left: .5rem
+    top: 5rem
+
+    a {
+      font-size: .8rem
+      _textSubtle
+    }
+  }
+
+  header.author {
+    margin-right: .4rem
+  }
+
+  section.meta {
+    display: flex
+    flex-grow: 1
+    justify-content: flex-end
+    align-items: center
+    * {
+      margin-left: .4rem
+    }
+
+    a {
+      _textSubtle
+    }
+ 
+    /* this is for private message_meta, TODO find a better home */
+    (img) {
+      height: 1.8rem
+      width: 1.8rem
+      margin: 0 .2rem -.2rem
+    }
+  }
+
+  section.title {
+    flex-basis: 100%
+    font-size: .9rem
+
+    span, span a {
+      _textSubtle
+    }
+  }
+
+  section.content {
+    flex-basis: 100%
+
+    margin-top: .4rem
+
+    (img) {
+      max-width: 100%
+    }
+  }
+
+  section.raw-content {
+    margin-left: -7rem
+    flex-basis: 118%
+    pre {
+      border: 1px gainsboro solid
+      padding: .8rem
+
+      span {
+        font-weight: 600
+      }
+      a {
+        word-break: break-all
+      }
+    }
+  }
+
+  section.actions {
+    flex-basis: 100%
+    display: flex
+    justify-content: flex-end
+
+    font-size: .9rem
+    a {
+      margin-left: .5em
+    }
+  }
+
+  footer.backlinks {
+    flex-basis: 100%
+  }
+
+
+}

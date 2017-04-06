@@ -1,0 +1,34 @@
+ExternalConfirm {
+  header {
+    font-weight: 600
+    margin-bottom: .5rem
+  }
+
+  section.prompt {
+    background: #fff
+    padding: 1rem
+    margin-bottom: 1rem
+
+    div.question{
+
+    }
+
+    pre.link {
+
+    }
+  }
+
+  section.actions {
+    display: flex
+    justify-content: flex-end
+
+    button.cancel {
+
+    }
+    button.okay {
+      margin-right: 0
+
+    }
+  }
+}
+

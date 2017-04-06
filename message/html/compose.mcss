@@ -1,0 +1,117 @@
+Compose {
+  display: flex
+  flex-direction: column
+
+  padding: 1rem .5rem 1rem 6rem
+
+  textarea {
+    border: 1px solid gainsboro
+    border-top-left-radius: 0
+    border-top-right-radius: 0
+  }
+
+  input.channel {
+    border: 1px solid gainsboro
+    border-bottom: none
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
+    padding: .5rem
+
+    :focus {
+      outline: none
+      box-shadow: none
+    }
+    :disabled {
+      background-color: #f1f1f1
+      cursor: not-allowed
+    }
+  }
+
+  section.actions {
+    display: flex
+    flex-direction: row
+    align-items: baseline
+    justify-content: space-between
+
+    margin-top: .4rem
+
+    input[type="file"] {
+
+      padding: .5rem 0
+
+      width: 2.5rem
+      height: 1.5rem
+      color: transparent
+
+      ::-webkit-file-upload-button {
+        visibility: hidden
+      }
+
+      ::before {
+        _composeButton
+        padding-top: .3rem
+
+        content: '📎'
+        font-size: 1rem
+
+        outline: none
+        white-space: nowrap
+        -webkit-user-select: none
+      }
+
+      :active, :focus {
+        outline: none
+        box-shadow: none
+      }
+    }
+
+    button {
+      _composeButton
+
+      text-transform: uppercase
+      font-weight: bold
+      font-size: .7rem
+    }
+  }
+
+  -expanded {
+    textarea {
+      height: 200px
+      transition: height .15s ease-out
+    }
+
+    input.channel {
+      display: flex
+    }
+
+    section.actions {
+      display: flex
+    }
+  }
+
+  -contracted {
+    textarea {
+      height: 50px
+      transition: height .15s ease-in
+    }
+
+    input.channel {
+      display: none
+    }
+
+    section.actions {
+      display: none
+    }
+  }
+
+}
+
+_composeButton {
+  background: #fff
+  color: #666
+  border: 1px solid #bbb
+  border-radius: .5rem
+  padding: .5rem
+  margin: 0
+  cursor: pointer
+}
