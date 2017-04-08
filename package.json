@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
-    "start": "electro index.js"
+    "start": "electro index.js -- --title patchbay --width 1200 --height 900 --webPreferences.zoomFactor 1.25"
   },
   "repository": {
     "type": "git",
