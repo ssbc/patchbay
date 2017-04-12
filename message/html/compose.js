@@ -1,6 +1,6 @@
 const { h, when, send, resolve, Value, computed } = require('mutant')
 const nest = require('depnest')
-const mentions = require('ssb-mentions')
+const ssbMentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
 
@@ -137,22 +137,28 @@ exports.create = function (api) {
     function publish () {
       publishBtn.disabled = true
 
-      meta = extend(resolve(meta), {
-        text: textArea.value,
-        channel: (channelInput.value.startsWith('#')
-          ? channelInput.value.substr(1).trim()
-          : channelInput.value.trim()
-        ) || null,
-        mentions: mentions(textArea.value).map(mention => {
-          // merge markdown-detected mention with file info
-          var file = filesById[mention.link]
-          if (file) {
-            if (file.type) mention.type = file.type
-            if (file.size) mention.size = file.size
-          }
-          return mention
-        })
+      const channel = channelInput.value.startsWith('#')
+        ? channelInput.value.substr(1).trim()
+        : channelInput.value.trim()
+      const mentions = ssbMentions(textArea.value).map(mention => {
+        // merge markdown-detected mention with file info
+        var file = filesById[mention.link]
+        if (file) {
+          if (file.type) mention.type = file.type
+          if (file.size) mention.size = file.size
+        }
+        return mention
       })
+        
+      meta = extend(resolve(meta), { 
+        text: textArea.value,
+        channel,
+        mentions
+      })
+
+      if (!channel) delete meta.channel
+      if (!mentions.length) delete meta.mentions
+      if (meta.recps && meta.recps.length === 0) delete meta.recps
 
       try {
         if (typeof prepublish === 'function') {

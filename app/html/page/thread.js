@@ -1,16 +1,16 @@
-var { h } = require('mutant')
+const { h, Struct, Value, Array: MutantArray, when, computed, map } = require('mutant')
 const nest = require('depnest')
 const pull = require('pull-stream')
 const sort = require('ssb-sort')
-const ref = require('ssb-ref')
+const { isMsg, isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.html.page')
 
-// TODO - seperate out public and private thread rendering
 exports.needs = nest({
-  // 'feed.pull.public': 'first',
-  'keys.sync.id': 'first',
+  'about.html.avatar': 'first',
   'app.html.scroller': 'first',
+  'contact.obs.following': 'first',
+  'keys.sync.id': 'first',
   message: {
     html: {
       compose: 'first',
@@ -29,19 +29,49 @@ exports.create = function (api) {
   return nest('app.html.page', threadPage)
 
   function threadPage (id) {
-    if (!ref.isMsg(id)) return
+    if (!isMsg(id)) return
 
-    var meta = {
+    var isPrivate = Value(false)
+    var contactWarning = Value(false)
+    var meta = Struct({
       type: 'post',
-      root: id,
-      branch: id // mutated when thread is loaded.
+      root: Value(id),
+      branch: Value(id),
+      channel: Value(),
+      recps: MutantArray()
+    })
+    const myId = api.keys.sync.id()
+    const ImFollowing = api.contact.obs.following(myId)
+    const header = when(isPrivate, [
+      h('section.recipients', map(meta.recps, r => {
+        const id = isFeed(r) ? r : r.link
+        // if (id === myId) return null 
+
+        var className
+        if (contactIsTrouble(id)) {
+          className = 'warning'
+          contactWarning.set(true)
+        }
+        return h('div', { className }, api.about.html.avatar(id))
+      })),
+      when(contactWarning,
+        h('section.info -warning', 'There is a person in this thread you do not follow (bordered in red). If you think you know this person it might be worth checking their profile to confirm they are who they say they are.'),
+        h('section.info', 'These are the other participants in this thread. Once a private thread is started you cannot add people to it.')
+      )
+    ])
+    function contactIsTrouble (id) {
+      if (id === myId) return false
+      if (Array.from(ImFollowing()).includes(id)) return false
+      return true
     }
+
     const composer = api.message.html.compose({
-      meta,
+      meta: meta(),
       placeholder: 'Write a reply',
       shrink: false
     })
-    const { container, content } = api.app.html.scroller({ append: composer })
+    const { container, content } = api.app.html.scroller({ prepend: header, append: composer })
+    container.classList.add('Thread')
     api.message.async.name(id, (err, name) => {
       if (err) throw err
       container.title = name
@@ -63,33 +93,31 @@ exports.create = function (api) {
         content.innerHTML = ''
 
         // decrypt
-        thread = thread.map(msg => {
-          return typeof msg.value.content === 'string'
-            ? api.message.sync.unbox(msg)
-            : msg
-        })
+        if (thread.some(isEncrypted)) isPrivate.set(true)
+        thread = thread.map(decrypt)
 
         sort(thread)
           .map(api.message.html.render)
           .filter(Boolean)
           .forEach(el => content.appendChild(el))
 
-        var branches = sort.heads(thread)
-        meta.branch = branches.length > 1 ? branches : branches[0]
-        meta.root = thread[0].value.content.root || thread[0].key
-        meta.channel = thread[0].value.content.channel
+        const branches = sort.heads(thread)
+        meta.branch.set(branches.length > 1 ? branches : branches[0])
 
-        if (meta.channel) {
+        const { content: someContent, author: someAuthor } = thread[0].value
+        const { root, channel, recps } = someContent 
+        meta.root.set(root || thread[0].key)
+        meta.channel.set(channel)
+
+        if (channel) {
           const channelInput = composer.querySelector('input')
-          channelInput.value = `#${meta.channel}`
+          channelInput.value = `#${channel}`
           channelInput.disabled = true
         }
 
-        const priv = thread[0].value['private']
-        const recps = thread[0].value.content.recps
-        if (priv) {
-          if (recps) meta.recps = recps
-          else meta.recps = [thread[0].value.author, api.keys.sync.id()]
+        if (isPrivate()) {
+          if (recps) meta.recps.set(recps)
+          else meta.recps.set([someAuthor, api.keys.sync.id()])
         }
       })
     }
@@ -97,6 +125,12 @@ exports.create = function (api) {
     loadThread()
 
     return container
+  }
+
+  function decrypt (msg) {
+    return isEncrypted(msg)
+      ? api.message.sync.unbox(msg)
+      : msg
   }
 
   function getThread (root, cb) {
@@ -120,5 +154,9 @@ exports.create = function (api) {
       )
     })
   }
+}
+
+function isEncrypted (msg) {
+  return typeof msg.value.content === 'string'
 }
 

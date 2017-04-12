@@ -12,9 +12,7 @@ Message {
     position: absolute
     left: .5rem
     
-    img {
-      width: 4rem
-      height: 4rem
+    a img {
     }
   }
 
