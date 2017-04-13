@@ -1,4 +1,4 @@
-const { h, Struct, Value, Array: MutantArray, when, computed, map } = require('mutant')
+const { h, Struct, Value, Array: MutantArray, when, map } = require('mutant')
 const nest = require('depnest')
 const pull = require('pull-stream')
 const sort = require('ssb-sort')
@@ -104,7 +104,7 @@ exports.create = function (api) {
         meta.branch.set(branches.length > 1 ? branches : branches[0])
 
         const { content: someContent, author: someAuthor } = thread[0].value
-        const { root, channel, recps } = someContent 
+        const { root, channel, recps } = someContent
         meta.root.set(root || thread[0].key)
         meta.channel.set(channel)
 

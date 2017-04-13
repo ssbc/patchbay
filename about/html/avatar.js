@@ -13,7 +13,7 @@ exports.needs = nest({
 
 exports.create = function (api) {
   return nest('about.html.avatar', avatar)
-  
+
   function avatar (id) {
     return api.about.html.link(id,
       h('img', {

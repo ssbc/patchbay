@@ -149,8 +149,8 @@ exports.create = function (api) {
         }
         return mention
       })
-        
-      meta = extend(resolve(meta), { 
+
+      meta = extend(resolve(meta), {
         text: textArea.value,
         channel,
         mentions
