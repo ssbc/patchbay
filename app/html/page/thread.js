@@ -45,7 +45,6 @@ exports.create = function (api) {
     const header = when(isPrivate, [
       h('section.recipients', map(meta.recps, r => {
         const id = isFeed(r) ? r : r.link
-        // if (id === myId) return null 
 
         var className
         if (contactIsTrouble(id)) {
