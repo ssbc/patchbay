@@ -10,7 +10,7 @@ exports.needs = nest({
     action: 'map',
     timestamp: 'first'
   },
-  'about.html.image': 'first'
+  'about.html.avatar': 'first'
 })
 
 exports.gives = nest('message.html.layout')
@@ -31,7 +31,7 @@ exports.create = (api) => {
         tabindex: '0' // needed to be able to navigate and show focus()
       }
     }, [
-      h('section.avatar', {}, api.about.html.image(msg.value.author)),
+      h('section.avatar', {}, api.about.html.avatar(msg.value.author)),
       h('section.timestamp', {}, timestamp(msg)),
       h('header.author', {}, author(msg)),
       h('section.meta', {}, meta(msg, { rawMessage })),

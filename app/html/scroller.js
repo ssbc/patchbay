@@ -6,8 +6,8 @@ exports.gives = nest('app.html.scroller')
 exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
-  function Scroller ({ prepend = [], append = [] } = {}) {
-    const content = h('section.content')
+  function Scroller ({ prepend = [], content = null, append = [] } = {}) {
+    content = content || h('section.content')
 
     const container = h('Scroller', { style: { overflow: 'auto' } }, [
       h('div.wrapper', [
@@ -44,8 +44,9 @@ function keyscroll (container) {
   }
 
   function selectChild (el) {
-    if (!el) return
-    (el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    if (!el) { return }
+
+    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
     el.focus()
     curMsgEl = el
   }
