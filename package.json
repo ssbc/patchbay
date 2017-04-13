@@ -20,6 +20,12 @@
     "url": "git+https://github.com/ssbc/picknmix.git"
   },
   "author": "mixmix",
+  "maintainers": [
+    "ahdinosaur",
+    "cel",
+    "dominictarr",
+    "mmckegg"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ssbc/picknmix/issues"
