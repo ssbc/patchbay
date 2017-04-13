@@ -1,7 +1,5 @@
-const { h, Struct, Value, Array: MutantArray, when, map } = require('mutant')
+const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
-const pull = require('pull-stream')
-const sort = require('ssb-sort')
 const { isMsg, isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.html.page')
@@ -10,6 +8,7 @@ exports.needs = nest({
   'about.html.avatar': 'first',
   'app.html.scroller': 'first',
   'contact.obs.following': 'first',
+  'feed.obs.thread': 'first',
   'keys.sync.id': 'first',
   message: {
     html: {
@@ -31,19 +30,19 @@ exports.create = function (api) {
   function threadPage (id) {
     if (!isMsg(id)) return
 
-    var isPrivate = Value(false)
-    var contactWarning = Value(false)
-    var meta = Struct({
-      type: 'post',
-      root: Value(id),
-      branch: Value(id),
-      channel: Value(),
-      recps: MutantArray()
-    })
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
+    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(id)
+    const meta = Struct({
+      type: 'post',
+      root: rootId,
+      branch: lastId,
+      channel,
+      recps
+    })
+    const contactWarning = Value(false)
     const header = when(isPrivate, [
-      h('section.recipients', map(meta.recps, r => {
+      h('section.recipients', map(recps, r => {
         const id = isFeed(r) ? r : r.link
 
         var className
@@ -65,97 +64,28 @@ exports.create = function (api) {
     }
 
     const composer = api.message.html.compose({
-      meta: meta(),
+      meta,
       placeholder: 'Write a reply',
       shrink: false
     })
-    const { container, content } = api.app.html.scroller({ prepend: header, append: composer })
+    const content = h('section.content', map(messages, m => {
+      return api.message.html.render(resolve(m))
+    }))
+    const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
+
     container.classList.add('Thread')
     api.message.async.name(id, (err, name) => {
       if (err) throw err
       container.title = name
     })
 
-    // TODO rewrite with obs
-    pull(
-      api.sbot.pull.links({ rel: 'root', dest: id, keys: true, old: false }),
-      pull.drain(msg => loadThread(), () => {}) // redraw thread
-    )
-
-    function loadThread () {
-      getThread(id, (err, thread) => {
-        if (err) return content.appendChild(h('pre', err.stack))
-
-        // would probably be better keep an id for each message element
-        // (i.e. message key) and then update it if necessary.
-        // also, it may have moved (say, if you received a missing message)
-        content.innerHTML = ''
-
-        // decrypt
-        if (thread.some(isEncrypted)) isPrivate.set(true)
-        thread = thread.map(decrypt)
-
-        sort(thread)
-          .map(api.message.html.render)
-          .filter(Boolean)
-          .forEach(el => content.appendChild(el))
-
-        const branches = sort.heads(thread)
-        meta.branch.set(branches.length > 1 ? branches : branches[0])
-
-        const { content: someContent, author: someAuthor } = thread[0].value
-        const { root, channel, recps } = someContent
-        meta.root.set(root || thread[0].key)
-        meta.channel.set(channel)
-
-        if (channel) {
-          const channelInput = composer.querySelector('input')
-          channelInput.value = `#${channel}`
-          channelInput.disabled = true
-        }
-
-        if (isPrivate()) {
-          if (recps) meta.recps.set(recps)
-          else meta.recps.set([someAuthor, api.keys.sync.id()])
-        }
-      })
-    }
-
-    loadThread()
+    onceTrue(channel, ch => {
+      const channelInput = composer.querySelector('input')
+      channelInput.value = `#${ch}`
+      channelInput.disabled = true
+    })
 
     return container
   }
-
-  function decrypt (msg) {
-    return isEncrypted(msg)
-      ? api.message.sync.unbox(msg)
-      : msg
-  }
-
-  function getThread (root, cb) {
-    // in this case, it's inconvienent that panel only takes
-    // a stream. maybe it would be better to accept an array?
-
-    api.sbot.async.get(root, (err, value) => {
-      if (err) return cb(err)
-
-      var msg = { key: root, value }
-      // if (value.content.root) return getThread(value.content.root, cb)
-
-      pull(
-        api.sbot.pull.links({ rel: 'root', dest: root, values: true, keys: true }),
-        pull.collect((err, ary) => {
-          if (err) return cb(err)
-          ary.unshift(msg)
-
-          cb(null, ary)
-        })
-      )
-    })
-  }
-}
-
-function isEncrypted (msg) {
-  return typeof msg.value.content === 'string'
 }
 

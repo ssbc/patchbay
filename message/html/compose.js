@@ -49,9 +49,8 @@ exports.create = function (api) {
       },
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
-      value: meta.channel ? `#${meta.channel}` : '',
-      disabled: !!meta.channel,
-      title: meta.channel ? 'Reply is in same channel as original message' : ''
+      disabled: when(meta.channel, true),
+      title: when(meta.channel, 'Reply is in same channel as original message')
     })
 
     var textArea = h('textarea', {
@@ -63,7 +62,7 @@ exports.create = function (api) {
       'ev-focus': send(textAreaFocused.set, true),
       placeholder
     })
-    textArea.publish = publish // clunky api for the keyboard shortcut to target
+    textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
     var fileInput = api.blob.html.input(file => {
       files.push(file)
