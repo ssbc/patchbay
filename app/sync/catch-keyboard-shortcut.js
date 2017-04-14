@@ -104,12 +104,11 @@ function scrollDownToMessage (id, tabs) {
   locateKey()
 
   function locateKey () {
-    const msg = tabs.get(tabs.selected[0]).firstChild.scroll(1)
-    if (msg === undefined) return setTimeout(locateKey, 100)
+    const msg = tabs.get(tabs.selected[0]).querySelector(`[data-id='${id}']`)
+    if (msg === null) return setTimeout(locateKey, 100)
 
-    if (msg && msg.dataset && msg.dataset.id === id) return
-
-    locateKey()
+    ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
+    msg.focus()
   }
 }
 

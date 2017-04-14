@@ -55,12 +55,21 @@ npm install
 From inside the patchbay repo folder, 
 
 ```sh
+npm install -g electron electro
 npm run rebuild
 npm start
 ```
 
-
 ## Running in the browser
+
+_this is incomplete_
+
+From inside the patchbay repo folder, 
+
+```
+npm install -g browserify indexhtmlify
+mkdir -p build && browserify main.js | indexhtmlify --title patchbay > build/index.html
+```
 
 Make sure scuttlebot is allowing private connections. Stop any running sbot server, restart it with the `--allowPrivate` option and create a new modern invite:
 
@@ -73,7 +82,6 @@ From inside the patchbay repo folder, run `npm run lite`.
 
 Lastly open `build/index.html` in a browser and append the invite
 created above using: index.html#ws://localhost:8989....
-
 
 ## How to add a feature
 

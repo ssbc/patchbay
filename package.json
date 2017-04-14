@@ -1,6 +1,6 @@
 {
-  "name": "picknmix",
-  "version": "7.1.0",
+  "name": "patchbay",
+  "version": "7.3.1",
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
@@ -8,23 +8,36 @@
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
     "start": "electro index.js -- --title patchbay --width 1200 --height 900 --webPreferences.zoomFactor 1.25"
   },
+  "browserify": {
+    "transform": [
+      "bulkify",
+      "read-directory/transform",
+      "es2040"
+    ]
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssbc/picknmix.git"
+    "url": "git+https://github.com/ssbc/patchbay.git"
   },
   "author": "mixmix",
+  "maintainers": [
+    "ahdinosaur",
+    "cel",
+    "dominictarr",
+    "mmckegg"
+  ],
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ssbc/picknmix/issues"
+    "url": "https://github.com/ssbc/patchbay/issues"
   },
-  "homepage": "https://github.com/ssbc/picknmix#readme",
+  "homepage": "https://github.com/ssbc/patchbay#readme",
   "dependencies": {
     "bulk-require": "^1.0.0",
+    "bulkify": "^1.4.2",
     "dataurl-": "^0.1.0",
     "depject": "^3.2.0",
     "depnest": "^1.0.2",
-    "electro": "^2.0.3",
-    "electron": "^1.4.15",
+    "es2040": "^1.2.5",
     "hypercrop": "^1.1.0",
     "hyperfile": "^2.0.0",
     "hyperlightbox": "^1.0.0",
@@ -35,7 +48,7 @@
     "mutant": "^3.16.0",
     "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
-    "patchcore": "^0.4.8",
+    "patchcore": "^0.5.0",
     "pull-cat": "^1.1.11",
     "pull-next": "0.0.2",
     "pull-scroll": "^1.0.3",

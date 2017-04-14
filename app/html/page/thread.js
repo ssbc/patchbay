@@ -1,16 +1,15 @@
-var { h } = require('mutant')
+const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
-const pull = require('pull-stream')
-const sort = require('ssb-sort')
-const ref = require('ssb-ref')
+const { isMsg, isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.html.page')
 
-// TODO - seperate out public and private thread rendering
 exports.needs = nest({
-  // 'feed.pull.public': 'first',
-  'keys.sync.id': 'first',
+  'about.html.avatar': 'first',
   'app.html.scroller': 'first',
+  'contact.obs.following': 'first',
+  'feed.obs.thread': 'first',
+  'keys.sync.id': 'first',
   message: {
     html: {
       compose: 'first',
@@ -29,96 +28,64 @@ exports.create = function (api) {
   return nest('app.html.page', threadPage)
 
   function threadPage (id) {
-    if (!ref.isMsg(id)) return
+    if (!isMsg(id)) return
 
-    var meta = {
+    const myId = api.keys.sync.id()
+    const ImFollowing = api.contact.obs.following(myId)
+    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(id)
+    const meta = Struct({
       type: 'post',
-      root: id,
-      branch: id // mutated when thread is loaded.
+      root: rootId,
+      branch: lastId,
+      channel,
+      recps
+    })
+    const contactWarning = Value(false)
+    const header = when(isPrivate, [
+      h('section.recipients', map(recps, r => {
+        const id = isFeed(r) ? r : r.link
+
+        var className
+        if (contactIsTrouble(id)) {
+          className = 'warning'
+          contactWarning.set(true)
+        }
+        return h('div', { className }, api.about.html.avatar(id))
+      })),
+      when(contactWarning,
+        h('section.info -warning', 'There is a person in this thread you do not follow (bordered in red). If you think you know this person it might be worth checking their profile to confirm they are who they say they are.'),
+        h('section.info', 'These are the other participants in this thread. Once a private thread is started you cannot add people to it.')
+      )
+    ])
+    function contactIsTrouble (id) {
+      if (id === myId) return false
+      if (Array.from(ImFollowing()).includes(id)) return false
+      return true
     }
+
     const composer = api.message.html.compose({
       meta,
       placeholder: 'Write a reply',
       shrink: false
     })
-    const { container, content } = api.app.html.scroller({ append: composer })
+    const content = h('section.content', map(messages, m => {
+      return api.message.html.render(resolve(m))
+    }))
+    const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
+
+    container.classList.add('Thread')
     api.message.async.name(id, (err, name) => {
       if (err) throw err
       container.title = name
     })
 
-    // TODO rewrite with obs
-    pull(
-      api.sbot.pull.links({ rel: 'root', dest: id, keys: true, old: false }),
-      pull.drain(msg => loadThread(), () => {}) // redraw thread
-    )
-
-    function loadThread () {
-      getThread(id, (err, thread) => {
-        if (err) return content.appendChild(h('pre', err.stack))
-
-        // would probably be better keep an id for each message element
-        // (i.e. message key) and then update it if necessary.
-        // also, it may have moved (say, if you received a missing message)
-        content.innerHTML = ''
-
-        // decrypt
-        thread = thread.map(msg => {
-          return typeof msg.value.content === 'string'
-            ? api.message.sync.unbox(msg)
-            : msg
-        })
-
-        sort(thread)
-          .map(api.message.html.render)
-          .filter(Boolean)
-          .forEach(el => content.appendChild(el))
-
-        var branches = sort.heads(thread)
-        meta.branch = branches.length > 1 ? branches : branches[0]
-        meta.root = thread[0].value.content.root || thread[0].key
-        meta.channel = thread[0].value.content.channel
-
-        if (meta.channel) {
-          const channelInput = composer.querySelector('input')
-          channelInput.value = `#${meta.channel}`
-          channelInput.disabled = true
-        }
-
-        const priv = thread[0].value['private']
-        const recps = thread[0].value.content.recps
-        if (priv) {
-          if (recps) meta.recps = recps
-          else meta.recps = [thread[0].value.author, api.keys.sync.id()]
-        }
-      })
-    }
-
-    loadThread()
+    onceTrue(channel, ch => {
+      const channelInput = composer.querySelector('input')
+      channelInput.value = `#${ch}`
+      channelInput.disabled = true
+    })
 
     return container
-  }
-
-  function getThread (root, cb) {
-    // in this case, it's inconvienent that panel only takes
-    // a stream. maybe it would be better to accept an array?
-
-    api.sbot.async.get(root, (err, value) => {
-      if (err) return cb(err)
-
-      var msg = { key: root, value }
-      // if (value.content.root) return getThread(value.content.root, cb)
-
-      pull(
-        api.sbot.pull.links({ rel: 'root', dest: root, values: true, keys: true }),
-        pull.collect((err, ary) => {
-          if (err) return cb(err)
-          ary.unshift(msg)
-
-          cb(null, ary)
-        })
-      )
-    })
   }
 }
 

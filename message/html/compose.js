@@ -1,6 +1,6 @@
 const { h, when, send, resolve, Value, computed } = require('mutant')
 const nest = require('depnest')
-const mentions = require('ssb-mentions')
+const ssbMentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
 
@@ -49,9 +49,8 @@ exports.create = function (api) {
       },
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
-      value: meta.channel ? `#${meta.channel}` : '',
-      disabled: !!meta.channel,
-      title: meta.channel ? 'Reply is in same channel as original message' : ''
+      disabled: when(meta.channel, true),
+      title: when(meta.channel, 'Reply is in same channel as original message')
     })
 
     var textArea = h('textarea', {
@@ -63,7 +62,7 @@ exports.create = function (api) {
       'ev-focus': send(textAreaFocused.set, true),
       placeholder
     })
-    textArea.publish = publish // clunky api for the keyboard shortcut to target
+    textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
     var fileInput = api.blob.html.input(file => {
       files.push(file)
@@ -137,22 +136,28 @@ exports.create = function (api) {
     function publish () {
       publishBtn.disabled = true
 
+      const channel = channelInput.value.startsWith('#')
+        ? channelInput.value.substr(1).trim()
+        : channelInput.value.trim()
+      const mentions = ssbMentions(textArea.value).map(mention => {
+        // merge markdown-detected mention with file info
+        var file = filesById[mention.link]
+        if (file) {
+          if (file.type) mention.type = file.type
+          if (file.size) mention.size = file.size
+        }
+        return mention
+      })
+
       meta = extend(resolve(meta), {
         text: textArea.value,
-        channel: (channelInput.value.startsWith('#')
-          ? channelInput.value.substr(1).trim()
-          : channelInput.value.trim()
-        ) || null,
-        mentions: mentions(textArea.value).map(mention => {
-          // merge markdown-detected mention with file info
-          var file = filesById[mention.link]
-          if (file) {
-            if (file.type) mention.type = file.type
-            if (file.size) mention.size = file.size
-          }
-          return mention
-        })
+        channel,
+        mentions
       })
+
+      if (!channel) delete meta.channel
+      if (!mentions.length) delete meta.mentions
+      if (meta.recps && meta.recps.length === 0) delete meta.recps
 
       try {
         if (typeof prepublish === 'function') {
