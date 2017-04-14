@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssbc/picknmix.git"
+    "url": "git+https://github.com/ssbc/patchbay.git"
   },
   "author": "mixmix",
   "maintainers": [
@@ -28,9 +28,9 @@
   ],
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ssbc/picknmix/issues"
+    "url": "https://github.com/ssbc/patchbay/issues"
   },
-  "homepage": "https://github.com/ssbc/picknmix#readme",
+  "homepage": "https://github.com/ssbc/patchbay#readme",
   "dependencies": {
     "bulk-require": "^1.0.0",
     "bulkify": "^1.4.2",
