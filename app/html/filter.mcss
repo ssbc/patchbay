@@ -1,0 +1,38 @@
+Filter {
+  position: absolute
+  top: 3rem
+  left: 1rem
+
+  display: flex
+  flex-direction: column
+
+  i.fa-filter {
+    font-size: 1.4rem
+    color: grey
+    cursor: pointer
+
+    -active {
+      color: #000
+    }
+  }
+
+  section {
+    margin-top: 1rem
+    padding: .5rem
+    background-color: #fff
+    border: 1px gainsboro solid
+    z-index: 100
+
+    display: flex
+    flex-direction: column
+
+    a {
+      i {
+        width: 1.2rem
+      }
+
+    }
+
+  }
+}
+
