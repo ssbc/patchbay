@@ -1,36 +1,53 @@
 Filter {
-  position: absolute
-  top: 3rem
-  left: 1rem
-
   display: flex
   flex-direction: column
 
   i.fa-filter {
+    position: absolute
+    top: 3rem
+    right: 2rem
+
     font-size: 1.4rem
-    color: grey
+    color: #b3b3b3
     cursor: pointer
 
     -active {
-      color: #000
+      color: #555
     }
   }
 
-  section {
-    margin-top: 1rem
+  div {
+    margin: 0 .5rem .5rem .5rem
     padding: .5rem
     background-color: #fff
     border: 1px gainsboro solid
-    z-index: 100
 
-    display: flex
-    flex-direction: column
+    -hidden {
+      height: 0
+      display: none
+    }
 
-    a {
-      i {
-        width: 1.2rem
+    header {
+      font-weight: 600
+    }
+
+    section {
+      display: flex
+      flex-wrap: wrap
+      justify-content: space-between
+
+      div {
+        cursor: pointer
+        label {
+          margin-right: .4rem
+        }
+        i {
+        }
+        input {
+          border: 1px gainsboro solid
+          font-size: 1rem
+        }
       }
-
     }
 
   }

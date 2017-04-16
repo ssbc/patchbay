@@ -11,7 +11,7 @@ Scroller {
     align-self: center
 
     flex: 1 1
-    max-width: 780px
+    width: 780px
 
     section.content {
       div {

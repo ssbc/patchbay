@@ -51,7 +51,7 @@ exports.create = function (api) {
       placeholder: 'Write a public message'
     })
 
-    const { container, content } = api.app.html.scroller({ prepend: [filterMenu, composer] })
+    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
     // TODO : build a pull-stream which has seperate state + rendering
     function draw () {
