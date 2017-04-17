@@ -13,14 +13,12 @@ exports.needs = nest({
   'keys.sync.id': 'first'
 })
 
-
 exports.create = function (api) {
   return nest({
     'app.html.filter': Filter
   })
 
   function Filter (draw) {
-
     const showFilters = Value(false)
 
     const myId = api.keys.sync.id()
@@ -38,10 +36,10 @@ exports.create = function (api) {
       }
     })
 
-    const filterMenu = h('Filter', [ 
-      h('i', { 
-         classList: when(showFilters, 'fa fa-filter -active', 'fa fa-filter'),
-        'ev-click': () => showFilters.set(!showFilters()) 
+    const filterMenu = h('Filter', [
+      h('i', {
+        classList: when(showFilters, 'fa fa-filter -active', 'fa fa-filter'),
+        'ev-click': () => showFilters.set(!showFilters())
       }),
       h('div', { className: when(showFilters, '', '-hidden') }, [
         h('header', [
@@ -64,7 +62,7 @@ exports.create = function (api) {
           ]),
           h('div', { 'ev-click': draw }, [
             h('label', 'refresh'),
-            h('i.fa.fa-refresh') , 
+            h('i.fa.fa-refresh')
           ])
         ])
       ])
@@ -73,7 +71,7 @@ exports.create = function (api) {
     // NOTE: suggest needs to be added after the input has a parent
     const getProfileSuggestions = api.about.async.suggest()
     addSuggest(authorInput, (inputText, cb) => {
-      if (inputText[0] === '@') inputText = inputText.slice(1) 
+      if (inputText[0] === '@') inputText = inputText.slice(1)
       cb(null, getProfileSuggestions(inputText))
     }, {cls: 'SuggestBox'})
     authorInput.addEventListener('suggestselect', ev => {
@@ -82,14 +80,14 @@ exports.create = function (api) {
 
     function followFilter (msg) {
       if (!onlyPeopleIFollow()) return true
-      
+
       return Array.from(peopleIFollow()).includes(msg.value.author)
-    } 
+    }
 
     function authorFilter (msg) {
       if (!onlyAuthor()) return true
 
-      return msg.value.author === onlyAuthor() 
+      return msg.value.author === onlyAuthor()
     }
 
     var downScrollAborter
@@ -132,4 +130,4 @@ exports.create = function (api) {
     }
   }
 }
-    
+

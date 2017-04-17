@@ -57,7 +57,7 @@ exports.create = function (api) {
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
     )
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ]  })
+    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ] })
 
     function draw () {
       resetFeed({ container, content })

@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, when } = require('mutant')
+const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const next = require('../../../junk/next-stepper')
@@ -42,7 +42,6 @@ exports.create = function (api) {
 
   function publicPage (path) {
     if (path !== route) return
-
 
     const composer = api.message.html.compose({
       meta: { type: 'post' },

@@ -127,7 +127,6 @@ exports.create = function (api) {
     pull(
       next(api.sbot.pull.search, {query: queryStr, reverse: true, limit: 500, live: false}),
       fallback((err) => {
-        if (err) debugger
         if (err === true) {
           search.fulltext.isDone.set(true)
         } else if (/^no source/.test(err.message)) {
