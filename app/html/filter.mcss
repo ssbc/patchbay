@@ -28,7 +28,12 @@ Filter {
     }
 
     header {
+      margin-bottom: .4rem
+
       font-weight: 600
+      i {
+        margin-left: .4rem
+      }
     }
 
     section {

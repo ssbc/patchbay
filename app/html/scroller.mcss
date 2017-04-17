@@ -12,6 +12,7 @@ Scroller {
 
     flex: 1 1
     width: 780px
+    padding-top: .5rem
 
     section.content {
       div {

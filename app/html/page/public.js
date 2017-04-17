@@ -44,13 +44,11 @@ exports.create = function (api) {
     if (path !== route) return
 
 
-    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-
     const composer = api.message.html.compose({
       meta: { type: 'post' },
       placeholder: 'Write a public message'
     })
-
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
     // TODO : build a pull-stream which has seperate state + rendering

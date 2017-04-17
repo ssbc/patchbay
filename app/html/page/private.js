@@ -13,9 +13,12 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.html': {
+    filter: 'first',
+    scroller: 'first'
+  },
   'feed.pull.private': 'first',
   'keys.sync.id': 'first',
-  'app.html.scroller': 'first',
   'message.html': {
     compose: 'first',
     render: 'first'
@@ -53,17 +56,25 @@ exports.create = function (api) {
       },
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
     )
-    const { container, content } = api.app.html.scroller({ prepend: composer })
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
+    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ]  })
 
-    pull(
-      next(api.feed.pull.private, {old: false, limit: 100}),
-      Scroller(container, content, api.message.html.render, true, false)
-    )
+    function draw () {
+      resetFeed({ container, content })
 
-    pull(
-      next(api.feed.pull.private, {reverse: true, limit: 100, live: false}),
-      Scroller(container, content, api.message.html.render, false, false)
-    )
+      pull(
+        next(api.feed.pull.private, {old: false, limit: 100}),
+        filterDownThrough(),
+        Scroller(container, content, api.message.html.render, true, false)
+      )
+
+      pull(
+        next(api.feed.pull.private, {reverse: true, limit: 100, live: false}),
+        filterUpThrough(),
+        Scroller(container, content, api.message.html.render, false, false)
+      )
+    }
+    draw()
 
     return container
   }

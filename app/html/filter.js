@@ -31,7 +31,7 @@ exports.create = function (api) {
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
         const author = ev.target.value
-        if (!isFeed(author)) return
+        if (author && !isFeed(author)) return
 
         onlyAuthor.set(author)
         draw()
@@ -44,7 +44,10 @@ exports.create = function (api) {
         'ev-click': () => showFilters.set(!showFilters()) 
       }),
       h('div', { className: when(showFilters, '', '-hidden') }, [
-        h('header', 'Filter'),
+        h('header', [
+          'Filter',
+          h('i.fa.fa-filter')
+        ]),
         h('section', [
           h('div', {
             'ev-click': () => {
