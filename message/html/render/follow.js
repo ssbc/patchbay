@@ -15,19 +15,19 @@ exports.create = function (api) {
   return nest('message.html.render', follow)
 
   function follow (msg, opts) {
-    if (msg.value.content.type !== 'contact') return
+    const { type, contact, following } = msg.value.content
+    if (type !== 'contact') return
+    if (!contact) return
 
     const element = api.message.html.layout(msg, extend({
-      content: renderContent(msg),
+      content: renderContent({ contact, following }),
       layout: 'mini'
     }, opts))
 
     return api.message.html.decorate(element, { msg })
   }
 
-  function renderContent (msg) {
-    const { contact, following } = msg.value.content
-
+  function renderContent ({ contact, following }) {
     return [
       following ? 'followed ' : 'unfollowed ',
       api.about.html.link(contact)
