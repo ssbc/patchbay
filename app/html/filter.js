@@ -30,6 +30,8 @@ exports.create = function (api) {
     const showAbout = Value(true)
     const showVote = Value(true)
     const showContact = Value(true)
+    const showChannel = Value(true)
+    const showPub = Value(false)
 
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
@@ -66,7 +68,9 @@ exports.create = function (api) {
             toggle({ obs: showPost, label: 'post' }),
             toggle({ obs: showVote, label: 'like' }),
             toggle({ obs: showAbout, label: 'about' }),
-            toggle({ obs: showContact, label: 'contact' })
+            toggle({ obs: showContact, label: 'contact' }),
+            toggle({ obs: showChannel, label: 'channel' }),
+            toggle({ obs: showPub, label: 'pub' })
           ])
         ])
       ])
@@ -116,6 +120,10 @@ exports.create = function (api) {
           return showAbout()
         case 'contact':
           return showContact()
+        case 'channel':
+          return showChannel()
+        case 'pub':
+          return showPub()
         default:
           return true
 
