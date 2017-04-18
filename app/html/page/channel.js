@@ -20,7 +20,7 @@ exports.create = function (api) {
   return nest('app.html.page', channelView)
 
   function channelView (path) {
-    if (path && !path.match(/#\w+/)) return
+    if (path && !path.match(/#[^\s]+/)) return
 
     var channel = path.substr(1)
 

@@ -26,6 +26,11 @@ exports.create = function (api) {
     const onlyPeopleIFollow = Value(false)
     const onlyAuthor = Value()
 
+    const showPost = Value(true)
+    const showAbout = Value(true)
+    const showVote = Value(true)
+    const showContact = Value(true)
+
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
         const author = ev.target.value
@@ -47,26 +52,37 @@ exports.create = function (api) {
           h('i.fa.fa-filter')
         ]),
         h('section', [
-          h('div', {
-            'ev-click': () => {
-              onlyPeopleIFollow.set(!onlyPeopleIFollow())
-              draw()
-            }}, [
-              h('label', 'only people i follow'),
-              h('i', { classList: when(onlyPeopleIFollow, 'fa fa-check-square-o', 'fa fa-square-o') })
-            ]
-          ),
-          h('div', [
-            h('label', 'only author'),
+          h('div.author', [
+            h('label', 'Show author'),
             authorInput
           ]),
-          h('div', { 'ev-click': draw }, [
+          toggle({ obs: onlyPeopleIFollow, label: 'Only people I follow' }),
+          h('div.refresh', { 'ev-click': draw }, [
             h('label', 'refresh'),
             h('i.fa.fa-refresh')
+          ]),
+          h('div.message-types', [
+            h('header', 'Show messages'),
+            toggle({ obs: showPost, label: 'post' }),
+            toggle({ obs: showVote, label: 'like' }),
+            toggle({ obs: showAbout, label: 'about' }),
+            toggle({ obs: showContact, label: 'contact' })
           ])
         ])
       ])
     ])
+
+    function toggle ({ obs, label }) {
+      return h('FilterToggle', {
+        'ev-click': () => {
+          obs.set(!obs())
+          draw()
+        }}, [
+          h('label', label),
+          h('i', { classList: when(obs, 'fa fa-check-square-o', 'fa fa-square-o') })
+        ]
+      )
+    }
 
     // NOTE: suggest needs to be added after the input has a parent
     const getProfileSuggestions = api.about.async.suggest()
@@ -90,13 +106,30 @@ exports.create = function (api) {
       return msg.value.author === onlyAuthor()
     }
 
+    function messageFilter (msg) {
+      switch (msg.value.content.type) {
+        case 'post':
+          return showPost()
+        case 'vote':
+          return showVote()
+        case 'about':
+          return showAbout()
+        case 'contact':
+          return showContact()
+        default:
+          return true
+
+      }
+    }
+
     var downScrollAborter
 
     function filterDownThrough () {
       return pull(
         downScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter)
+        pull.filter(authorFilter),
+        pull.filter(messageFilter)
       )
     }
 
@@ -106,7 +139,8 @@ exports.create = function (api) {
       return pull(
         upScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter)
+        pull.filter(authorFilter),
+        pull.filter(messageFilter)
       )
     }
 

@@ -7,7 +7,7 @@ Filter {
     top: 3rem
     right: 2rem
 
-    font-size: 1.4rem
+    font-size: 1.2rem
     color: #b3b3b3
     cursor: pointer
 
@@ -40,17 +40,31 @@ Filter {
       display: flex
       flex-wrap: wrap
       justify-content: space-between
+      align-items: center
 
-      div {
-        cursor: pointer
+      div.refresh {
         label {
           margin-right: .4rem
         }
-        i {
+
+      }
+
+      div.author {        
+        label {
+          margin-right: .4rem
         }
         input {
           border: 1px gainsboro solid
           font-size: 1rem
+        }
+      }
+
+      div.message-types {
+        margin: .6rem 0
+        display: flex
+        
+        header {
+          margin-right: 1rem
         }
       }
     }
@@ -58,3 +72,17 @@ Filter {
   }
 }
 
+FilterToggle {
+  cursor: pointer
+  margin-right: .8rem
+
+  display: flex
+  align-items: center
+
+  label {
+    margin-right: .4rem
+  }
+
+  i {
+  }
+}
