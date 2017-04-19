@@ -4,6 +4,7 @@ const nest = require('depnest')
 
 const git = require('patch-git')
 const horcrux = require('ssb-horcrux')
+const gatherings = require('patch-gatherings')
 const patchbay = require('./')
 const patchcore = require('patchcore')
 
@@ -13,6 +14,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   git,
+  gatherings,
   horcrux,
   patchbay,
   patchcore
