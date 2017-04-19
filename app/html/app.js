@@ -18,6 +18,7 @@ exports.needs = nest({
       searchBar: 'first'
     },
     sync: {
+      window: 'reduce',
       catchKeyboardShortcut: 'first'
     }
   },
@@ -28,6 +29,7 @@ exports.create = function (api) {
   return nest('app.html.app', app)
 
   function app () {
+    window = api.app.sync.window(window)
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
@@ -93,4 +95,5 @@ function values (object) {
   const keys = Object.keys(object)
   return keys.map(k => object[k])
 }
+
 
