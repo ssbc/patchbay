@@ -13,7 +13,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   // git,
-  {'patch-context': require('patch-context') },
+  require('patch-context'),
   horcrux,
   patchbay,
   patchcore
