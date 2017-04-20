@@ -1,5 +1,5 @@
-const { h } = require('mutant')
 const nest = require('depnest')
+const { h } = require('mutant')
 const insertCss = require('insert-css')
 const Tabs = require('hypertabs')
 
@@ -13,11 +13,11 @@ exports.needs = nest({
     html: {
       error: 'first',
       externalConfirm: 'first',
-      menu: 'first',
+      tabs: 'first',
       page: 'first',
-      searchBar: 'first'
     },
     sync: {
+      addPage: 'first',
       catchKeyboardShortcut: 'first'
     }
   },
@@ -31,39 +31,14 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const handleSelection = (path, change) => {
-      if (tabs.has(path)) {
-        tabs.select(path)
-        return true
-      }
-
-      addPage(path, true, false)
-      return change
-    }
-    const search = api.app.html.searchBar(handleSelection)
-    const menu = api.app.html.menu(handleSelection)
-
-    const tabs = Tabs(onSelect, { append: h('div.navExtra', [ search, menu ]) })
-    function onSelect (indexes) {
-      search.input.value = tabs.get(indexes[0]).content.id
-    }
+    const initialTabs = ['/public', '/private', '/notifications']
+    const tabs = api.app.html.tabs(initialTabs)
+    const { addPage } = api.app.sync
 
     const App = h('App', tabs)
 
-    function addPage (link, change, split) {
-      const page = api.app.html.page(link)
-      if (!page) return
-
-      page.id = page.id || link
-      tabs.add(page, change, split)
-    }
-
-    const initialTabs = ['/public', '/private', '/notifications']
-    initialTabs.forEach(p => addPage(p))
-    tabs.select(0)
-
     // Catch keyboard shortcuts
-    api.app.sync.catchKeyboardShortcut(window, { tabs, search })
+    api.app.sync.catchKeyboardShortcut(window, { tabs })
 
     // Catch link clicks
     api.app.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
