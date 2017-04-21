@@ -15,6 +15,11 @@ body {
   color: #222;
 }
 
+.emoji {
+  width: 16px;
+  height: 16px;
+}
+
 h1, h2, h3, h4, h5, h6, p, ul, ol {
   margin-top: .35em;
 }
