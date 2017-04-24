@@ -1,7 +1,6 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 const insertCss = require('insert-css')
-const Tabs = require('hypertabs')
 
 exports.gives = nest('app.html.app')
 
@@ -14,7 +13,7 @@ exports.needs = nest({
       error: 'first',
       externalConfirm: 'first',
       tabs: 'first',
-      page: 'first',
+      page: 'first'
     },
     sync: {
       addPage: 'first',

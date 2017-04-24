@@ -4,11 +4,7 @@ const Tabs = require('hypertabs')
 
 exports.gives = nest({
   app: {
-    'html.tabs': true,
-    sync: {
-      'goTo': true,
-      'addPage': true
-    }
+    'html.tabs': true
   }
 })
 
@@ -17,58 +13,34 @@ exports.needs = nest({
     menu: 'first',
     page: 'first',
     searchBar: 'first'
-  }
+  },
+  'app.sync.addPage': 'first'
 })
 
 exports.create = function (api) {
-
   var _tabs
 
   function tabs (initialTabs = []) {
     if (_tabs) return _tabs
 
-    const search = api.app.html.searchBar(goTo)
-    const menu = api.app.html.menu(goTo)
+    const search = api.app.html.searchBar()
+    const menu = api.app.html.menu()
     const onSelect = (indexes) => {
       search.input.value = _tabs.get(indexes[0]).content.id
     }
     _tabs = Tabs(onSelect, {
-      append: h('div.navExtra', [ search, menu ]) 
+      append: h('div.navExtra', [ search, menu ])
     })
+    _tabs.getCurrent = () => _tabs.get(_tabs.selected[0])
 
-    initialTabs.forEach(p => addPage(p))
+    // # TODO: review - this works but is strange
+    initialTabs.forEach(p => api.app.sync.addPage(p))
     _tabs.select(0)
     return _tabs
   }
 
-  function goTo (path, change) {
-    tabs()
-    if (_tabs.has(path)) {
-      _tabs.select(path)
-      return true
-    }
-
-    addPage(path, true, false)
-    return change
-  }
-
-  function addPage (link, change, split) {
-    tabs()
-    const page = api.app.html.page(link)
-    if (!page) return
-
-    page.id = page.id || link
-    _tabs.add(page, change, split)
-  }
-
   return nest({
-    app: {
-      'html.tabs': tabs,
-      sync: {
-        goTo,
-        addPage
-      }
-    }
+    'app.html.tabs': tabs
   })
 }
 

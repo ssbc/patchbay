@@ -2,21 +2,33 @@ const nest = require('depnest')
 
 exports.gives = nest('app.sync.catchKeyboardShortcut')
 
+exports.needs = nest({
+  'app.html': {
+    searchBar: 'first',
+    tabs: 'first'
+  },
+  'app.sync': {
+    goTo: 'first'
+  }
+})
+
 exports.create = function (api) {
   return nest('app.sync.catchKeyboardShortcut', catchKeyboardShortcut)
 
-  function catchKeyboardShortcut (root, opts) {
+  function catchKeyboardShortcut (root) {
     var gPressed = false
+
+    var tabs = api.app.html.tabs()
+    var search = api.app.html.searchBar()
+    var goTo = api.app.sync.goTo
 
     root.addEventListener('keydown', (ev) => {
       isTextFieldEvent(ev)
         ? textFieldShortcuts(ev)
-        : genericShortcuts(ev, opts)
+        : genericShortcuts(ev, { tabs, search, goTo })
     })
   }
 }
-
-// TODO build better apis for navigation, search, and publishing
 
 function isTextFieldEvent (ev) {
   const tag = ev.target.nodeName
@@ -29,14 +41,14 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, search }) {
+function genericShortcuts (ev, { tabs, goTo, search }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
       gPressed = true
       return
     }
-    tabs.get(tabs.selected[0]).firstChild.scroll('first')
+    tabs.getCurrent().firstChild.scroll('first')
   }
   gPressed = false
 
@@ -44,13 +56,13 @@ function genericShortcuts (ev, { tabs, search }) {
 
     // Messages (cont'd)
     case 74: // j = older
-      return tabs.get(tabs.selected[0]).firstChild.scroll(1)
+      return tabs.getCurrent().firstChild.scroll(1)
     case 75: // k = newer
-      return tabs.get(tabs.selected[0]).firstChild.scroll(-1)
+      return tabs.getCurrent().firstChild.scroll(-1)
     case 13: // enter = open
-      return goToMessage(ev, tabs)
+      return goToMessage(ev, { tabs, goTo })
     case 79: // o = open
-      return goToMessage(ev, tabs)
+      return goToMessage(ev, { tabs, goTo })
     case 192: // ` = toggle raw message view
       return toggleRawMessage(ev)
 
@@ -85,26 +97,23 @@ function genericShortcuts (ev, { tabs, search }) {
   }
 }
 
-function goToMessage (ev, tabs) {
+function goToMessage (ev, { tabs, goTo }) {
   const msg = ev.target
   if (!msg.classList.contains('Message')) return
 
-  // this uses a crudely exported nav api
-  const search = document.querySelector('input[type=search]')
-
   const { root, id } = msg.dataset
-  if (!root) return search.go(id)
+  if (!root) return goTo(id)
 
-  search.go(root)
+  goTo(root)
   scrollDownToMessage(id, tabs)
 }
 
 function scrollDownToMessage (id, tabs) {
-  tabs.get(tabs.selected[0]).firstChild.scroll('first')
+  tabs.getCurrent().firstChild.scroll('first')
   locateKey()
 
   function locateKey () {
-    const msg = tabs.get(tabs.selected[0]).querySelector(`[data-id='${id}']`)
+    const msg = tabs.getCurrent().querySelector(`[data-id='${id}']`)
     if (msg === null) return setTimeout(locateKey, 100)
 
     ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)

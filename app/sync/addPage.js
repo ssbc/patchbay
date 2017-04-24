@@ -9,9 +9,7 @@ exports.needs = nest({
 
 exports.create = function (api) {
   return nest({
-    'app.sync': {
-      addPage
-    }
+    'app.sync': { addPage }
   })
 
   // TODO : make it so error catching doesn't need this, move it into goTo
@@ -25,5 +23,4 @@ exports.create = function (api) {
     tabs.add(page, change, split)
   }
 }
-
 
