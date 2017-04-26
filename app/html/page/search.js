@@ -122,8 +122,6 @@ exports.create = function (api) {
       return el
     }
 
-
-
     function draw () {
       resetFeed({ container, content })
 
