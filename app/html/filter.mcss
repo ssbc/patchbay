@@ -2,18 +2,25 @@ Filter {
   display: flex
   flex-direction: column
 
-  i.fa-filter {
+  color: #444
+
+  i {
     position: absolute
     top: 3rem
-    right: 2rem
 
     font-size: 1.2rem
     color: #b3b3b3
     cursor: pointer
+  }
+  i.fa-filter {
+    right: 2rem
 
     -active {
       color: #555
     }
+  }
+  i.fa-angle-up {
+    left: 1rem
   }
 
   div {
@@ -42,14 +49,7 @@ Filter {
       justify-content: space-between
       align-items: center
 
-      div.refresh {
-        label {
-          margin-right: .4rem
-        }
-
-      }
-
-      div.author {        
+      div.author {
         label {
           margin-right: .4rem
         }
@@ -62,7 +62,7 @@ Filter {
       div.message-types {
         margin: .6rem 0
         display: flex
-        
+
         header {
           margin-right: 1rem
         }
