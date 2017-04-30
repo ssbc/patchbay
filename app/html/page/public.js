@@ -8,7 +8,8 @@ exports.gives = nest({
   'app.html': {
     page: true,
     menuItem: true
-  }
+  },
+  'app.sync.goTo': 'first'
 })
 
 exports.needs = nest({
@@ -33,10 +34,10 @@ exports.create = function (api) {
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 1 },
-      'ev-click': () => handleClick(route)
+      'ev-click': () => api.app.sync.goTo(route)
     }, route)
   }
 

@@ -9,7 +9,8 @@ exports.gives = nest({
   'app.html': {
     page: true,
     menuItem: true
-  }
+  },
+  'app.sync.goTo': 'first',
 })
 
 exports.needs = nest({
@@ -32,10 +33,10 @@ exports.create = function (api) {
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 0 },
-      'ev-click': () => handleClick(api.keys.sync.id())
+      'ev-click': () => api.app.sync.goTo(api.keys.sync.id())
     }, '/profile')
   }
 
