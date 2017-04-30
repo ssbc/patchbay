@@ -31,7 +31,7 @@ exports.create = function (api) {
   return nest({
     'app.html': {
       page: notificationsPage,
-      menuItem: menuItem
+      menuItem
     }
   })
 

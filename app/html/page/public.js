@@ -8,8 +8,7 @@ exports.gives = nest({
   'app.html': {
     page: true,
     menuItem: true
-  },
-  'app.sync.goTo': 'first'
+  }
 })
 
 exports.needs = nest({
@@ -17,6 +16,7 @@ exports.needs = nest({
     filter: 'first',
     scroller: 'first'
   },
+  'app.sync.goTo': 'first',
   'feed.pull.public': 'first',
   'message.html': {
     compose: 'first',
@@ -30,7 +30,7 @@ exports.create = function (api) {
   return nest({
     'app.html': {
       page: publicPage,
-      menuItem: menuItem
+      menuItem
     }
   })
 

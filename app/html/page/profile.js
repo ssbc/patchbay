@@ -9,8 +9,7 @@ exports.gives = nest({
   'app.html': {
     page: true,
     menuItem: true
-  },
-  'app.sync.goTo': 'first',
+  }
 })
 
 exports.needs = nest({
@@ -19,6 +18,7 @@ exports.needs = nest({
     'obs.name': 'first'
   },
   'app.html.scroller': 'first',
+  'app.sync.goTo': 'first',
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first',
