@@ -28,9 +28,9 @@ exports.create = function (api) {
 
     const showPost = Value(true)
     const showAbout = Value(true)
-    const showVote = Value(true)
-    const showContact = Value(true)
-    const showChannel = Value(true)
+    const showVote = Value(false)
+    const showContact = Value(false)
+    const showChannel = Value(false)
     const showPub = Value(false)
 
     const authorInput = h('input', {
