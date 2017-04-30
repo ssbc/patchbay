@@ -13,13 +13,13 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'about.html.edit': 'first',
-  'about.obs': {
-    'name': 'first'
+  'about': {
+    'html.edit': 'first',
+    'obs.name': 'first'
   },
+  'app.html.scroller': 'first',
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
-  'app.html.scroller': 'first',
   'message.html.render': 'first',
   'sbot.pull.userFeed': 'first'
 })
