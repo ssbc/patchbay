@@ -20,6 +20,9 @@ exports.create = function (api) {
   function about (msg, opts) {
     if (msg.value.content.type !== 'about') return
 
+    const { name, description, image } = msg.value.content
+    if (!name && !description && !image) return
+
     const element = api.message.html.layout(msg, extend({
       content: renderContent(msg),
       layout: 'default'
@@ -36,12 +39,18 @@ exports.create = function (api) {
     if (image && ref.isBlob(image.link)) image = image.link
     about = about || link
 
+    const metaData = [
+      when(name, h('div', [ h('strong', 'Name: '), name ])),
+      when(description, h('div', [ h('strong', 'Description: '), description ])),
+      when(image, h('img', { src: api.blob.sync.url(image) }))
+    ]
+
     if (!ref.isFeed(about)) {
       return [
         'Describes ',
         h('a', { href: about }, [about.slice(0, 7), '...']),
         ' as: ',
-        name
+        ...metaData
       ]
     }
 
@@ -51,9 +60,7 @@ exports.create = function (api) {
 
     return [
       'Declares the following about ', target,
-      when(name, h('div', [ h('strong', 'Name: '), name ])),
-      when(description, h('div', [ h('strong', 'Description: '), description ])),
-      when(image, h('img', { src: api.blob.sync.url(image) }))
+      ...metaData
     ]
   }
 }
