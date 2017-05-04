@@ -60,7 +60,7 @@ npm install
 From inside the patchbay repo folder, 
 
 ```sh
-npm install -g electron electro
+npm install -g electron electro font-awesome
 npm run rebuild
 npm start
 ```
