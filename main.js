@@ -15,7 +15,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   git,
-  bayGatherings,
+  bayGatherings, //adds menu items
   gatherings,
   horcrux,
   patchbay,
