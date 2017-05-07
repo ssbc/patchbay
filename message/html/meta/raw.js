@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h } = require('mutant')
+const { h, Value } = require('mutant')
 
 exports.gives = nest('message.html.meta')
 
@@ -13,7 +13,7 @@ exports.create = (api) => {
 
   return nest('message.html.meta', raw)
 
-  function raw (msg, { rawMessage } = {}) {
+  function raw (msg, { rawMessage } = {rawMessage: Value()}) {
     return h('a', {
       title: 'View raw data',
       classList: 'toggle-raw-msg',
