@@ -31,6 +31,12 @@ Hypertabs {
         border: 1px gainsboro solid
         border-bottom: none
 
+        :hover {
+          a.close {
+            visibility: visible
+          }
+        }
+
         -selected {
           color: #222
           background-color: #fff

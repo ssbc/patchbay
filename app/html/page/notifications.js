@@ -12,12 +12,16 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.html': {
+    filter: 'first',
+    scroller: 'first'
+  },
+  'app.sync.goTo': 'first',
   'feed.pull': {
     mentions: 'first',
     public: 'first'
   },
   'keys.sync.id': 'first',
-  'app.html.scroller': 'first',
   'message.html.render': 'first'
 })
 
@@ -27,33 +31,42 @@ exports.create = function (api) {
   return nest({
     'app.html': {
       page: notificationsPage,
-      menuItem: menuItem
+      menuItem
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 3 },
-      'ev-click': () => handleClick(route)
+      'ev-click': () => api.app.sync.goTo(route)
     }, route)
   }
 
   function notificationsPage (path) {
     if (path !== route) return
+
     const id = api.keys.sync.id()
-    const mentions = api.feed.pull.mentions(id)
 
-    const { container, content } = api.app.html.scroller({})
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
+    const { container, content } = api.app.html.scroller({ prepend: [ filterMenu ] })
 
-    pull(
-      next(mentions, {old: false, limit: 100}),
-      Scroller(container, content, api.message.html.render, true, false)
-    )
+    function draw () {
+      resetFeed({ container, content })
 
-    pull(
-      next(mentions, {reverse: true, limit: 100, live: false}),
-      Scroller(container, content, api.message.html.render, false, false)
-    )
+      pull(
+        next(api.feed.pull.mentions(id), {old: false, limit: 100}),
+        filterDownThrough(),
+        Scroller(container, content, api.message.html.render, true, false)
+      )
+
+      pull(
+        next(api.feed.pull.mentions(id), {reverse: true, limit: 100, live: false}),
+        filterUpThrough(),
+        Scroller(container, content, api.message.html.render, false, false)
+      )
+    }
+    draw()
+
     return container
   }
 }

@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h } = require('mutant')
+const { h, computed } = require('mutant')
 
 exports.gives = nest('about.html.avatar')
 
@@ -15,11 +15,14 @@ exports.create = function (api) {
   return nest('about.html.avatar', avatar)
 
   function avatar (id) {
+    const src = api.about.obs.imageUrl(id)
+    const color = computed(src, src => src.match(/^http/) ? 'rgba(0,0,0,0)' : api.about.obs.color(id))
+
     return api.about.html.link(id,
       h('img', {
         className: 'Avatar',
-        style: { 'background-color': api.about.obs.color(id) },
-        src: api.about.obs.imageUrl(id)
+        style: { 'background-color': color },
+        src
       })
     )
   }

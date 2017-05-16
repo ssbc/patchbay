@@ -8,13 +8,13 @@ Scroller {
   min-height: 0px
 
   div.wrapper {
-    flex: 1
-    max-width: 780px
-    margin-left: auto
-    margin-right: auto
+    align-self: center
+
+    flex: 1 1
+    width: 780px
+    padding-top: .5rem
 
     section.content {
-
       div {
         border-bottom: solid 1px gainsboro
       }

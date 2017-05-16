@@ -12,12 +12,16 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.html': {
+    filter: 'first',
+    scroller: 'first'
+  },
+  'app.sync.goTo': 'first',
   'feed.pull.public': 'first',
   'message.html': {
     compose: 'first',
     render: 'first'
-  },
-  'app.html.scroller': 'first'
+  }
 })
 
 exports.create = function (api) {
@@ -26,14 +30,14 @@ exports.create = function (api) {
   return nest({
     'app.html': {
       page: publicPage,
-      menuItem: menuItem
+      menuItem
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 1 },
-      'ev-click': () => handleClick(route)
+      'ev-click': () => api.app.sync.goTo(route)
     }, route)
   }
 
@@ -44,17 +48,26 @@ exports.create = function (api) {
       meta: { type: 'post' },
       placeholder: 'Write a public message'
     })
-    const { container, content } = api.app.html.scroller({ prepend: composer })
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
+    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
-    pull(
-      next(api.feed.pull.public, {old: false, limit: 100}),
-      Scroller(container, content, api.message.html.render, true, false)
-    )
+    // TODO : build a pull-stream which has seperate state + rendering
+    function draw () {
+      resetFeed({ container, content })
 
-    pull(
-      next(api.feed.pull.public, {reverse: true, limit: 100, live: false}),
-      Scroller(container, content, api.message.html.render, false, false)
-    )
+      pull(
+        next(api.feed.pull.public, {old: false, limit: 100}),
+        filterDownThrough(),
+        Scroller(container, content, api.message.html.render, true, false)
+      )
+
+      pull(
+        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}),
+        filterUpThrough(),
+        Scroller(container, content, api.message.html.render, false, false)
+      )
+    }
+    draw()
 
     return container
   }

@@ -96,6 +96,10 @@ Message {
     a {
       margin-left: .5em
     }
+
+    a.unlike {
+      _textSubtle
+    }
   }
 
   footer.backlinks {

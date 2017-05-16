@@ -1,0 +1,88 @@
+Filter {
+  display: flex
+  flex-direction: column
+
+  color: #444
+
+  i {
+    position: absolute
+    top: 3rem
+
+    font-size: 1.2rem
+    color: #b3b3b3
+    cursor: pointer
+  }
+  i.fa-filter {
+    right: 2rem
+
+    -active {
+      color: #555
+    }
+  }
+  i.fa-angle-up {
+    left: 1rem
+  }
+
+  div {
+    margin: 0 .5rem .5rem .5rem
+    padding: .5rem
+    background-color: #fff
+    border: 1px gainsboro solid
+
+    -hidden {
+      height: 0
+      display: none
+    }
+
+    header {
+      margin-bottom: .4rem
+
+      font-weight: 600
+      i {
+        margin-left: .4rem
+      }
+    }
+
+    section {
+      display: flex
+      flex-wrap: wrap
+      justify-content: space-between
+      align-items: center
+
+      div.author {
+        label {
+          margin-right: .4rem
+        }
+        input {
+          border: 1px gainsboro solid
+          font-size: 1rem
+        }
+      }
+
+      div.message-types {
+        margin: .6rem 0
+        display: flex
+
+        header {
+          margin-right: 1rem
+        }
+      }
+    }
+
+  }
+}
+
+FilterToggle {
+  cursor: pointer
+  margin-right: .8rem
+
+  display: flex
+  align-items: center
+
+  label {
+    margin-right: .4rem
+  }
+
+  i {
+  }
+}

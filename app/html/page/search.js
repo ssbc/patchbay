@@ -9,7 +9,10 @@ const next = require('../../../junk/next-stepper')
 exports.gives = nest('app.html.page')
 
 exports.needs = nest({
-  'app.html.scroller': 'first',
+  'app.html': {
+    filter: 'first',
+    scroller: 'first'
+  },
   'message.html.render': 'first',
   'sbot.pull': {
     log: 'first',
@@ -56,13 +59,13 @@ function highlight (el, query) {
   return el
 }
 
-function fallback (reader) {
+function fallback (createReader) {
   var fallbackRead
   return function (read) {
     return function (abort, cb) {
       read(abort, function next (end, data) {
-        if (end && reader && (fallbackRead = reader(end))) {
-          reader = null
+        if (end && createReader && (fallbackRead = createReader(end))) {
+          createReader = null
           read = fallbackRead
           read(abort, next)
         } else {
@@ -109,7 +112,8 @@ exports.create = function (api) {
         ])
       )
     ])
-    var { container, content } = api.app.html.scroller({ prepend: searchHeader })
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
+    const { container, content } = api.app.html.scroller({ prepend: [searchHeader, filterMenu] })
     container.id = path // helps tabs find this tab
 
     function renderMsg (msg) {
@@ -118,29 +122,37 @@ exports.create = function (api) {
       return el
     }
 
-    pull(
-      api.sbot.pull.log({old: false}),
-      pull.filter(matchesQuery),
-      Scroller(container, content, renderMsg, true, false)
-    )
+    function draw () {
+      resetFeed({ container, content })
 
-    pull(
-      next(api.sbot.pull.search, {query: queryStr, reverse: true, limit: 500, live: false}),
-      fallback((err) => {
-        if (err === true) {
-          search.fulltext.isDone.set(true)
-        } else if (/^no source/.test(err.message)) {
-          search.isLinear.set(true)
-          return pull(
-            next(api.sbot_log, {reverse: true, limit: 500, live: false}),
-            pull.through(() => search.linear.checked.set(search.linear.checked() + 1)),
-            pull.filter(matchesQuery)
-          )
-        }
-      }),
-      pull.through(() => search.matches.set(search.matches() + 1)),
-      Scroller(container, content, renderMsg, false, false)
-    )
+      pull(
+        api.sbot.pull.log({old: false}),
+        pull.filter(matchesQuery),
+        filterUpThrough(),
+        Scroller(container, content, renderMsg, true, false)
+      )
+
+      pull(
+        next(api.sbot.pull.search, {query: queryStr, reverse: true, limit: 500, live: false}),
+        fallback((err) => {
+          if (err === true) {
+            search.fulltext.isDone.set(true)
+          } else if (/^no source/.test(err.message)) {
+            search.isLinear.set(true)
+            return pull(
+              next(api.sbot.pull.log, {reverse: true, limit: 500, live: false}),
+              pull.through(() => search.linear.checked.set(search.linear.checked() + 1)),
+              pull.filter(matchesQuery)
+            )
+          }
+        }),
+        filterDownThrough(),
+        pull.through(() => search.matches.set(search.matches() + 1)),
+        Scroller(container, content, renderMsg, false, false)
+      )
+    }
+
+    draw()
 
     return container
   }
