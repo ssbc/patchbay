@@ -5,14 +5,18 @@ const addSuggest = require('suggest-box')
 exports.gives = nest('app.html.searchBar')
 
 exports.needs = nest({
+  'app.sync.goTo': 'first',
   'about.async.suggest': 'first',
   'channel.async.suggest': 'first'
 })
 
 exports.create = function (api) {
-  return nest('app.html.searchBar', searchBar)
+  var _search
 
-  function searchBar (go) {
+  return nest('app.html.searchBar', function searchBar () {
+    if (_search) return _search
+
+    const goTo = api.app.sync.goTo
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
@@ -22,7 +26,7 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            if (go(input.value.trim(), !ev.ctrlKey)) {
+            if (goTo(input.value.trim(), !ev.ctrlKey)) {
               input.blur()
             }
             return
@@ -33,17 +37,16 @@ exports.create = function (api) {
         }
       }
     })
-    input.go = go // crude navigation api
     input.addEventListener('suggestselect', ev => {
       input.value = ev.detail.id  // HACK : this over-rides the markdown value
 
-      // if (go(input.value.trim(), !ev.ctrlKey))
+      // if (goTo(input.value.trim(), !ev.ctrlKey))
       //   input.blur()
     })
-    const search = h('SearchBar', input)
 
-    search.input = input
-    search.activate = (sigil, ev) => {
+    _search = h('SearchBar', input)
+    _search.input = input
+    _search.activate = (sigil, ev) => {
       input.focus()
       ev.preventDefault()
       if (input.value[0] === sigil) {
@@ -62,7 +65,7 @@ exports.create = function (api) {
       }
     }, {cls: 'SuggestBox'})
 
-    return search
-  }
+    return _search
+  })
 }
 

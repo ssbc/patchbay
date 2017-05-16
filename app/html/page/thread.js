@@ -69,7 +69,7 @@ exports.create = function (api) {
       shrink: false
     })
     const content = h('section.content', map(messages, m => {
-      return api.message.html.render(resolve(m))
+      return api.message.html.render(resolve(m), {pageId: id})
     }))
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 

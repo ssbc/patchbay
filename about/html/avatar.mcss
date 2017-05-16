@@ -1,4 +1,6 @@
 Avatar {
   width: 4rem
   height: 4rem
+
+  transition: background-color .15s ease-out
 }

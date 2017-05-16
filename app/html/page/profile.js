@@ -13,13 +13,14 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'about.html.edit': 'first',
-  'about.obs': {
-    'name': 'first'
+  'about': {
+    'html.edit': 'first',
+    'obs.name': 'first'
   },
+  'app.html.scroller': 'first',
+  'app.sync.goTo': 'first',
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
-  'app.html.scroller': 'first',
   'message.html.render': 'first',
   'sbot.pull.userFeed': 'first'
 })
@@ -32,10 +33,10 @@ exports.create = function (api) {
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 0 },
-      'ev-click': () => handleClick(api.keys.sync.id())
+      'ev-click': () => api.app.sync.goTo(api.keys.sync.id())
     }, '/profile')
   }
 

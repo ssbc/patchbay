@@ -28,9 +28,9 @@ exports.create = function (api) {
 
     const showPost = Value(true)
     const showAbout = Value(true)
-    const showVote = Value(true)
-    const showContact = Value(true)
-    const showChannel = Value(true)
+    const showVote = Value(false)
+    const showContact = Value(false)
+    const showChannel = Value(false)
     const showPub = Value(false)
 
     const authorInput = h('input', {
@@ -48,6 +48,7 @@ exports.create = function (api) {
         classList: when(showFilters, 'fa fa-filter -active', 'fa fa-filter'),
         'ev-click': () => showFilters.set(!showFilters())
       }),
+      h('i.fa.fa-angle-up', { 'ev-click': draw }),
       h('div', { className: when(showFilters, '', '-hidden') }, [
         h('header', [
           'Filter',
@@ -59,10 +60,6 @@ exports.create = function (api) {
             authorInput
           ]),
           toggle({ obs: onlyPeopleIFollow, label: 'Only people I follow' }),
-          h('div.refresh', { 'ev-click': draw }, [
-            h('label', 'refresh'),
-            h('i.fa.fa-refresh')
-          ]),
           h('div.message-types', [
             h('header', 'Show messages'),
             toggle({ obs: showPost, label: 'post' }),

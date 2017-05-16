@@ -16,6 +16,7 @@ exports.needs = nest({
     filter: 'first',
     scroller: 'first'
   },
+  'app.sync.goTo': 'first',
   'feed.pull': {
     mentions: 'first',
     public: 'first'
@@ -30,14 +31,14 @@ exports.create = function (api) {
   return nest({
     'app.html': {
       page: notificationsPage,
-      menuItem: menuItem
+      menuItem
     }
   })
 
-  function menuItem (handleClick) {
+  function menuItem () {
     return h('a', {
       style: { order: 3 },
-      'ev-click': () => handleClick(route)
+      'ev-click': () => api.app.sync.goTo(route)
     }, route)
   }
 

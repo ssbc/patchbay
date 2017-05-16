@@ -5,8 +5,11 @@ const Scroller = require('pull-scroll')
 exports.gives = nest('app.html.page')
 
 exports.needs = nest({
+  'app.html': {
+    filter: 'first',
+    scroller: 'first'
+  },
   'feed.pull.channel': 'first',
-  'app.html.scroller': 'first',
   message: {
     html: {
       compose: 'first',
@@ -22,22 +25,29 @@ exports.create = function (api) {
   function channelView (path) {
     if (path && !path.match(/#[^\s]+/)) return
 
-    var channel = path.substr(1)
+    const channel = path.substr(1)
+    const composer = api.message.html.compose({ meta: { type: 'post', channel } })
+    const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
+    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
-    var composer = api.message.html.compose({ meta: { type: 'post', channel } })
-    var { container, content } = api.app.html.scroller({ prepend: composer })
+    function draw () {
+      resetFeed({ container, content })
 
-    var openChannelSource = api.feed.pull.channel(channel)
+      const openChannelSource = api.feed.pull.channel(channel)
 
-    pull(
-      openChannelSource({old: false}),
-      Scroller(container, content, api.message.html.render, true, false)
-    )
+      pull(
+        openChannelSource({old: false}),
+        filterUpThrough(),
+        Scroller(container, content, api.message.html.render, true, false)
+      )
 
-    pull(
-      openChannelSource({reverse: true}),
-      Scroller(container, content, api.message.html.render, false, false)
-    )
+      pull(
+        openChannelSource({reverse: true}),
+        filterDownThrough(),
+        Scroller(container, content, api.message.html.render, false, false)
+      )
+    }
+    draw()
 
     return container
   }

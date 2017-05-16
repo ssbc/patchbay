@@ -17,6 +17,11 @@ Libsodium has some build dependencies. On *ubuntu systems the following might he
 sudo apt-get install m4 libtool eclipse-cdt-autotools
 ```
 
+On MacOS you may need the following packages installed (in this example, via [Homebrew](https://brew.sh/)):
+```sh
+brew install libtool automake autoconf
+```
+
 Install Scuttlebot (your gossip server)
 
 ```sh
@@ -55,7 +60,7 @@ npm install
 From inside the patchbay repo folder, 
 
 ```sh
-npm install -g electron electro
+npm install -g electron electro font-awesome
 npm run rebuild
 npm start
 ```
