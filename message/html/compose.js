@@ -20,7 +20,13 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
-  function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
+  function compose (opts = {}, cb) {
+    var {
+      shrink = true,
+      meta,
+      prepublish,
+      placeholder = 'Write a message'
+    } = opts
     var files = []
     var filesById = {}
     var channelInputFocused = Value(false)
@@ -77,9 +83,10 @@ exports.create = function (api) {
       textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
 
       console.log('added:', file)
-    })
+    }, opts)
 
-    fileInput.onclick = () => hasContent.set(true)
+    if(fileInput)
+      fileInput.onclick = () => hasContent.set(true)
 
     var publishBtn = h('button', { 'ev-click': publish }, 'Publish')
 
@@ -101,6 +108,7 @@ exports.create = function (api) {
         cb(null, getChannelSuggestions(inputText.slice(1)))
       }
     }, {cls: 'SuggestBox'})
+
     channelInput.addEventListener('suggestselect', ev => {
       channelInput.value = ev.detail.id  // HACK : this over-rides the markdown value
     })
