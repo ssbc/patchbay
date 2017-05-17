@@ -49,7 +49,7 @@ exports.create = function (api) {
     const id = api.keys.sync.id()
 
     const composer = api.message.html.compose({
-      meta: { type: 'post' },
+      meta: { type: 'post', private: true, recps: [] },
       prepublish: meta => {
         meta.recps = [id, ...(meta.mentions || [])]
           .filter(m => ref.isFeed(typeof m === 'string' ? m : m.link))
