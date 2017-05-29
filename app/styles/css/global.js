@@ -26,6 +26,9 @@ blockquote {
   margin: .5rem 0;
 }
 
+blockquote p:last-child {
+  margin-bottom: .35ex;
+}
 
 .emoji {
   height: 1em;
