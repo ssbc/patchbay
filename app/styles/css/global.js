@@ -11,9 +11,21 @@ exports.create = function (api) {
 
 const globalStyles = `
 body {
-  font-family: sans-serif;
+  font-family: helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 19px;
   color: #222;
 }
+
+blockquote {
+  border-left: 4px #e0e0e0 solid;
+  color: #444;
+  padding-left: 30px;
+  background-color: #f9f9f9;
+  padding: .2rem .2rem .2rem 1rem;
+  margin: .5rem 0;
+}
+
 
 .emoji {
   height: 1em;
@@ -26,12 +38,12 @@ h1, h2, h3, h4, h5, h6, p, ul, ol {
   margin-top: .35em;
 }
 
-h1 { font-size: 1.2em; }
-h2 { font-size: 1.18em; }
-h3 { font-size: 1.15em; }
-h4 { font-size: 1.12em; }
-h5 { font-size: 1.1em; }
-h6 { font-size: 1em; }
+h1 { font-size: 1.2rem; }
+h2 { font-size: 1.18rem; }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1.12rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
 
 * {
   word-break: break-word;

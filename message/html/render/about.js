@@ -42,14 +42,16 @@ exports.create = function (api) {
     const metaData = [
       when(name, h('div', [ h('strong', 'Name: '), name ])),
       when(description, h('div', [ h('strong', 'Description: '), description ])),
-      when(image, h('img', { src: api.blob.sync.url(image) }))
+      when(image, h('img', { src: api.blob.sync.url(image), style: { 'margin-top': '.5rem' } }))
     ]
 
     if (!ref.isFeed(about)) {
       return [
-        'Describes ',
-        h('a', { href: about }, [about.slice(0, 7), '...']),
-        ' as: ',
+        h('p', [
+          'Describes ',
+          h('a', { href: about }, [about.slice(0, 7), '...']),
+          ' as: '
+        ]),
         ...metaData
       ]
     }
@@ -59,7 +61,7 @@ exports.create = function (api) {
       : api.about.html.link(about)
 
     return [
-      'Declares the following about ', target,
+      h('p', `Declares the following about ${target}`),
       ...metaData
     ]
   }
