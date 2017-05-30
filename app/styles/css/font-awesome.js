@@ -1,11 +1,12 @@
 const nest = require('depnest')
 const fs = require('fs')
-const { join } = require('path')
+const { join, dirname } = require('path')
 const { assign } = Object
+const styleResolve = require('style-resolve')
 
-// const css = fs.readFileSync(join(__dirname, '../../../node_modules/font-awesome/css/font-awesome.min.css'), 'utf8')
-const css = fs.readFileSync(join(__dirname, '../../../node_modules/font-awesome/css/font-awesome.css'), 'utf8')
-  .replace(/\.{2}/g, '../font-awesome')
+const fontCssPath = styleResolve.sync('font-awesome')
+const css = fs.readFileSync(fontCssPath, 'utf8')
+  .replace(/\.{2}/g, (match) => join(dirname(fontCssPath), match))
 
 // TODO: for patchlite, may have to convert font urls into url(data:base64: ....) format
 
