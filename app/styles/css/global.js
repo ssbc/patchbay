@@ -18,16 +18,21 @@ body {
 }
 
 blockquote {
-  border-left: 4px #e0e0e0 solid;
-  color: #444;
-  padding-left: 30px;
-  background-color: #f9f9f9;
-  padding: .2rem .2rem .2rem 1rem;
-  margin: .5rem 0;
+  border-left: 2px #ccc solid;
+  color: #666;
+  padding-left: .6rem;
+  margin-left: .6rem;
+  font-size: .85rem;
 }
 
 blockquote p:last-child {
   margin-bottom: .35ex;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: .3rem;
+  color: #444;
 }
 
 .emoji {
