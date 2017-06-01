@@ -3,7 +3,7 @@ const entry = require('depject/entry')
 const nest = require('depnest')
 
 const context = require('patch-context')
-const git = require('patch-git')
+const patchHub = require('patch-hub')
 const horcrux = require('ssb-horcrux')
 const gatherings = require('patch-gatherings')
 const bayGatherings = require('patchbay-gatherings')
@@ -16,7 +16,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   context,
-  git,
+  patchHub,
   bayGatherings, //adds menu items
   gatherings,
   horcrux,
