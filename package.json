@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "standard",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
+    "setup": "npm install electron electro",
     "start": "electro main.js"
   },
   "browserify": {
@@ -50,7 +51,7 @@
     "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
     "patch-context": "^2.0.0",
-    "patch-gatherings": "^2.3.1",
+    "patch-gatherings": "^2.4.1",
     "patch-git": "0.1.0",
     "patchbay-gatherings": "^1.1.0",
     "patchcore": "^0.5.0",
