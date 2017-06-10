@@ -61,7 +61,10 @@ exports.create = function (api) {
       : api.about.html.link(about)
 
     return [
-      h('p', `Declares the following about ${target}`),
+      h('p', [
+        'Declares the following about ',
+        target
+      ]),
       ...metaData
     ]
   }

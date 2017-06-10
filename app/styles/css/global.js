@@ -13,7 +13,7 @@ const globalStyles = `
 body {
   font-family: helvetica, sans-serif;
   font-size: 14px;
-  line-height: 19px;
+  line-height: 1.4;
   color: #222;
 }
 
@@ -42,12 +42,18 @@ pre {
   vertical-align: middle;
 }
 
-h1, h2, h3, h4, h5, h6, p, ul, ol {
+p, ul, ol {
   margin-top: .35em;
 }
 
-h1 { font-size: 1.2rem; }
-h2 { font-size: 1.18rem; }
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+h1, h2 {
+  margin-bottom: .5em
+}
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.2em; }
 h3 { font-size: 1.15rem; }
 h4 { font-size: 1.12rem; }
 h5 { font-size: 1.1rem; }

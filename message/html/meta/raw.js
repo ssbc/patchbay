@@ -20,7 +20,6 @@ exports.create = (api) => {
       style: {
         order: 99,
         color: '#a8a8a8',
-        'font-size': '1rem',
         cursor: 'pointer'
       },
       'ev-click': () => (rawMessage() === null)

@@ -55,16 +55,23 @@ exports.create = function (api) {
     function draw () {
       resetFeed({ container, content })
 
+      const ren = (msg) => {
+        if (msg.value.content.type === 'about') debugger
+        api.message.html.render(msg)
+      }
+
       pull(
         next(api.feed.pull.public, {old: false, limit: 100}),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
+        // Scroller(container, content, ren, true, false)
       )
 
       pull(
         next(api.feed.pull.public, {reverse: true, limit: 100, live: false}),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
+        // Scroller(container, content, ren, true, false)
       )
     }
     draw()

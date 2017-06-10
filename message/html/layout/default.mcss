@@ -72,7 +72,7 @@ Message {
   }
 
   section.raw-content {
-    margin-left: -7rem
+    margin-left: -5.5rem
     flex-basis: 118%
     pre {
       border: 1px gainsboro solid
