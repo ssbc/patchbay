@@ -105,7 +105,7 @@ function goToMessage (ev, { tabs, goTo }) {
   if (!root) return goTo(id)
 
   goTo(root)
-  scrollDownToMessage(id, tabs)
+  setTimeout(() => scrollDownToMessage(id, tabs), 250)
 }
 
 function scrollDownToMessage (id, tabs) {

@@ -16,7 +16,7 @@ exports.needs = nest({
   'message.html.render': 'first',
   'sbot.pull': {
     log: 'first',
-    search: 'first'
+    stream: 'first'
   }
 })
 
@@ -133,7 +133,7 @@ exports.create = function (api) {
       )
 
       pull(
-        next(api.sbot.pull.search, {query: queryStr, reverse: true, limit: 500, live: false}),
+        api.sbot.pull.stream(sbot => next(sbot.fulltext.search, {query: queryStr, reverse: true, limit: 500, live: false})),
         fallback((err) => {
           if (err === true) {
             search.fulltext.isDone.set(true)
