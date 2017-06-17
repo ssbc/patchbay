@@ -36,7 +36,7 @@ sbot server
 sbot plugins.install ssb-contacts
 sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
-sbot plugins.install ssb-fulltext # for faster searches (optional)
+sbot plugins.install ssb-fulltext # for faster searches
 
 # restart sbot server (go back to previous tab and kill it)
 ```
