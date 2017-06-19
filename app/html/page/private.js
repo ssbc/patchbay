@@ -64,13 +64,13 @@ exports.create = function (api) {
       resetFeed({ container, content })
 
       pull(
-        next(api.feed.pull.private, {old: false, limit: 100}),
+        next(api.feed.pull.private, {old: false, limit: 100}, ['value', 'timestamp']),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
       )
 
       pull(
-        next(api.feed.pull.private, {reverse: true, limit: 100, live: false}),
+        next(api.feed.pull.private, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
       )

@@ -61,14 +61,14 @@ exports.create = function (api) {
       }
 
       pull(
-        next(api.feed.pull.public, {old: false, limit: 100}),
+        next(api.feed.pull.public, {old: false, limit: 100}, ['value', 'timestamp']),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
         // Scroller(container, content, ren, true, false)
       )
 
       pull(
-        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}),
+        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
         // Scroller(container, content, ren, true, false)
