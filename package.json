@@ -51,7 +51,7 @@
     "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
     "patch-context": "^2.0.0",
-    "patch-gatherings": "^2.4.1",
+    "patch-gatherings": "^2.4.2",
     "patch-hub": "^1.1.0",
     "patchbay-gatherings": "^1.1.0",
     "patchcore": "^1.4.2",
