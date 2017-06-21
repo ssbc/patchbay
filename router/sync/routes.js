@@ -26,6 +26,7 @@ exports.create = (api) => {
     } = api.app.page
 
     const routes = [
+      ['/',              () => public()],
       ['/errors',        () => errors()],
       ['/public',        () => public()],
       ['/private',       () => private()],

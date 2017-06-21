@@ -4,7 +4,7 @@ exports.gives = nest({ 'app.sync.addPage': true })
 
 exports.needs = nest({
   'app.html.tabs': 'first',
-  'router.sync.router': 'map'
+  'router.sync.router': 'first'
 })
 
 exports.create = function (api) {
@@ -15,6 +15,11 @@ exports.create = function (api) {
   // TODO : make it so error catching doesn't need this, move it into goTo
   function addPage (path, change, split) {
     const tabs = api.app.html.tabs()
+
+    
+    // TOD (mix) : gross sheet-router hack
+    if (path[0] !== '/') path = '/'+path
+    console.log(path)
 
     const page = api.router.sync.router(path)
     if (!page) return
