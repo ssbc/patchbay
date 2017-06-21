@@ -4,7 +4,7 @@ exports.gives = nest({ 'app.sync.addPage': true })
 
 exports.needs = nest({
   'app.html.tabs': 'first',
-  'app.html.page': 'first'
+  'router.sync.router': 'map'
 })
 
 exports.create = function (api) {
@@ -13,13 +13,13 @@ exports.create = function (api) {
   })
 
   // TODO : make it so error catching doesn't need this, move it into goTo
-  function addPage (link, change, split) {
+  function addPage (path, change, split) {
     const tabs = api.app.html.tabs()
 
-    const page = api.app.html.page(link)
+    const page = api.router.sync.router(path)
     if (!page) return
 
-    page.id = page.id || link
+    page.id = page.id || path
     tabs.add(page, change, split)
   }
 }

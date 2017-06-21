@@ -1,15 +1,13 @@
 const nest = require('depnest')
-const ref = require('ssb-ref')
 const Scroller = require('pull-scroll')
 const pull = require('pull-stream')
 const { h, watch } = require('mutant')
-const next = require('../../../junk/next-stepper')
+
+const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.profile': true,
 })
 
 exports.needs = nest({
@@ -27,10 +25,8 @@ exports.needs = nest({
 
 exports.create = function (api) {
   return nest({
-    'app.html': {
-      page: profilePage,
-      menuItem: menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.profile': profilePage,
   })
 
   function menuItem () {
@@ -41,8 +37,6 @@ exports.create = function (api) {
   }
 
   function profilePage (id) {
-    if (!ref.isFeed(id)) return
-
     const profile = h('Profile', [
       h('section.edit', api.about.html.edit(id)),
       h('section.relationships', api.contact.html.relationships(id)),

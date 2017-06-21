@@ -2,7 +2,7 @@ const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
 const { isMsg, isFeed } = require('ssb-ref')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.thread')
 
 exports.needs = nest({
   'about.html.avatar': 'first',
@@ -25,11 +25,9 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('app.html.page', threadPage)
+  return nest('app.page.thread', threadPage)
 
-  function threadPage (id) {
-    if (!isMsg(id)) return
-
+  function threadPage () {
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
     const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(id)

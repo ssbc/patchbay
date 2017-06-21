@@ -2,13 +2,12 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('../../../junk/next-stepper')
+
+const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.public': true,
 })
 
 exports.needs = nest({
@@ -28,10 +27,8 @@ exports.create = function (api) {
   const route = '/public'
 
   return nest({
-    'app.html': {
-      page: publicPage,
-      menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.public': publicPage,
   })
 
   function menuItem () {
@@ -41,9 +38,7 @@ exports.create = function (api) {
     }, route)
   }
 
-  function publicPage (path) {
-    if (path !== route) return
-
+  function publicPage () {
     const composer = api.message.html.compose({
       meta: { type: 'post' },
       placeholder: 'Write a public message'

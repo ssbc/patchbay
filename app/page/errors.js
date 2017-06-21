@@ -1,17 +1,15 @@
 const nest = require('depnest')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.errors')
 
 exports.needs = nest({
   'app.html.scroller': 'first'
 })
 
 exports.create = function (api) {
-  return nest('app.html.page', errorsPage)
+  return nest('app.page.errors', errorsPage)
 
-  function errorsPage (path) {
-    if (path !== '/errors') return
-
+  function errorsPage () {
     var { container, content } = api.app.html.scroller()
 
     container.id = '/errors'

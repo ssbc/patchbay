@@ -2,13 +2,12 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('../../../junk/next-stepper')
+
+const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.notifications': true
 })
 
 exports.needs = nest({
@@ -29,10 +28,8 @@ exports.create = function (api) {
   const route = '/notifications'
 
   return nest({
-    'app.html': {
-      page: notificationsPage,
-      menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.notifications': notificationsPage
   })
 
   function menuItem () {
@@ -42,9 +39,7 @@ exports.create = function (api) {
     }, route)
   }
 
-  function notificationsPage (path) {
-    if (path !== route) return
-
+  function notificationsPage () {
     const id = api.keys.sync.id()
 
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)

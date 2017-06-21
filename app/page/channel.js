@@ -2,7 +2,7 @@ const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.channel')
 
 exports.needs = nest({
   'app.html': {
@@ -20,11 +20,9 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('app.html.page', channelView)
+  return nest('app.page.channel', channelView)
 
   function channelView (path) {
-    if (path && !path.match(/#[^\s]+/)) return
-
     const channel = path.substr(1)
     const composer = api.message.html.compose({ meta: { type: 'post', channel } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)

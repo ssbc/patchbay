@@ -13,14 +13,14 @@ exports.needs = nest({
       error: 'first',
       externalConfirm: 'first',
       tabs: 'first',
-      page: 'first'
     },
     sync: {
       window: 'reduce',
       addPage: 'first',
-      catchKeyboardShortcut: 'first'
+      catchKeyboardShortcut: 'first',
     }
   },
+  'router.sync.router': 'first',
   'styles.css': 'reduce'
 })
 
@@ -53,13 +53,13 @@ exports.create = function (api) {
     })
 
     // Catch errors
-    var { container: errorPage, content: errorList } = api.app.html.page('/errors')
-    window.addEventListener('error', ev => {
-      if (!tabs.has('/errors')) tabs.add(errorPage, true)
+    // var { container: errorPage, content: errorList } = api.router.sync.router('/errors')
+    // window.addEventListener('error', ev => {
+    //   if (!tabs.has('/errors')) tabs.add(errorPage, true)
 
-      const error = api.app.html.error(ev.error || ev)
-      errorList.appendChild(error)
-    })
+    //   const error = api.app.html.error(ev.error || ev)
+    //   errorList.appendChild(error)
+    // })
 
     return App
   }

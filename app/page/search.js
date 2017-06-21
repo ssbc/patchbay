@@ -4,9 +4,9 @@ const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const TextNodeSearcher = require('text-node-searcher')
 
-const next = require('../../../junk/next-stepper')
+const next = require('../../junk/next-stepper')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.search')
 
 exports.needs = nest({
   'app.html': {
@@ -77,11 +77,9 @@ function fallback (createReader) {
 }
 
 exports.create = function (api) {
-  return nest('app.html.page', searchPage)
+  return nest('app.page.search', searchPage)
 
   function searchPage (path) {
-    if (path.match(/^[@#%\/]/)) return
-
     var queryStr = path.replace(/^\??/, '').trim()
     var query = queryStr.split(whitespace)
     var matchesQuery = searchFilter(query)

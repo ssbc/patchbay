@@ -2,14 +2,13 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('../../../junk/next-stepper')
 const ref = require('ssb-ref')
 
+const next = require('../../junk/next-stepper')
+
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.private': true,
 })
 
 exports.needs = nest({
@@ -30,10 +29,8 @@ exports.create = function (api) {
   const route = '/private'
 
   return nest({
-    'app.html': {
-      page: privatePage,
-      menuItem: menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.private': privatePage
   })
 
   function menuItem () {
@@ -43,9 +40,7 @@ exports.create = function (api) {
     }, route)
   }
 
-  function privatePage (path) {
-    if (path !== route) return
-
+  function privatePage () {
     const id = api.keys.sync.id()
 
     const composer = api.message.html.compose({
