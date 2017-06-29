@@ -150,19 +150,19 @@ exports.create = function (api) {
         return mention
       })
 
-      meta = extend(resolve(meta), {
+      var content = extend(resolve(meta), {
         text: textArea.value,
         channel,
         mentions
       })
 
-      if (!channel) delete meta.channel
-      if (!mentions.length) delete meta.mentions
-      if (meta.recps && meta.recps.length === 0) delete meta.recps
+      if (!channel) delete content.channel
+      if (!mentions.length) delete content.mentions
+      if (content.recps && content.recps.length === 0) delete content.recps
 
       try {
         if (typeof prepublish === 'function') {
-          meta = prepublish(meta)
+          content = prepublish(content)
         }
       } catch (err) {
         publishBtn.disabled = false
@@ -170,7 +170,7 @@ exports.create = function (api) {
         else throw err
       }
 
-      return api.message.html.confirm(meta, done)
+      return api.message.html.confirm(content, done)
 
       function done (err, msg) {
         publishBtn.disabled = false
