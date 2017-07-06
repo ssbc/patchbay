@@ -1,6 +1,6 @@
 {
   "name": "patchbay",
-  "version": "7.7.0",
+  "version": "7.7.1",
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
