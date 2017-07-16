@@ -4,11 +4,9 @@ var { Struct, map, concat, dictToCollection, computed, lookup, watch, keys, reso
 exports.gives = nest('about.async.suggest')
 
 exports.needs = nest({
-  'about.obs': {
-    name: 'first',
-    names: 'first',
-    imageUrl: 'first'
-  },
+  'about.obs.groupedValues': 'first',
+  'about.obs.name': 'first',
+  'about.obs.imageUrl': 'first',
   'contact.obs.following': 'first',
   'feed.obs.recent': 'first',
   'keys.sync.id': 'first'
@@ -23,13 +21,13 @@ exports.create = function (api) {
   function suggest () {
     loadSuggestions()
     return function (word) {
-      if (!word) {
-        return recentSuggestions()
-      } else {
-        return suggestions().filter((item) => {
+      if (!word) return recentSuggestions()
+
+      return suggestions()
+        .filter((item) => {
           return item.title.toLowerCase().startsWith(word.toLowerCase())
         })
-      }
+        .reverse()
     }
   }
 
@@ -40,13 +38,10 @@ exports.create = function (api) {
     var following = api.contact.obs.following(id)
     var recentlyUpdated = api.feed.obs.recent()
     var contacts = computed([following, recentlyUpdated], (a, b) => {
-      var result = Array.from(a)
-      b.forEach(item => {
-        if (!result.includes(item)) {
-          result.push(item)
-        }
-      })
-      return result
+      var result = new Set (a)
+      b.forEach(item => result.add(item))
+
+      return Array.from(result)
     })
 
     recentSuggestions = map(
@@ -56,7 +51,7 @@ exports.create = function (api) {
     )
 
     const suggestionsRecord = lookup(contacts, contact => {
-      return [contact, keys(api.about.obs.names(contact))]
+      return [contact, keys(api.about.obs.groupedValues(contact, 'name'))]
     })
 
     suggestions = concat(

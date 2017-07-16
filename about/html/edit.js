@@ -17,6 +17,7 @@ exports.needs = nest({
     imageUrl: 'first',
     description: 'first'
   },
+  'about.obs.groupedValues': 'first',
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
@@ -46,15 +47,7 @@ exports.create = function (api) {
       new: Value()
     })
 
-    // TODO use patchcores observable images + names
-    var images = MutantArray()
-    pull(
-      links({dest: id, rel: 'about', values: true}),
-      pull.map(e => e.value.content.image),
-      pull.filter(e => e && typeof e.link === 'string'),
-      pull.unique('link'),
-      pull.drain(image => images.push(image))
-    )
+    const images = computed(api.about.obs.groupedValues(id, 'image'), Object.keys)
 
     var namesRecord = MutantObject()
     // TODO constrain query to one name per peer?
@@ -77,7 +70,7 @@ exports.create = function (api) {
 
     var avatarSrc = computed([avatar], avatar => {
       if (avatar.new.link) return api.blob.sync.url(avatar.new.link)
-      else return avatar.current
+      return avatar.current
     })
 
     var displayedName = computed([name], name => {
@@ -102,8 +95,8 @@ exports.create = function (api) {
         h('section.avatars', [
           h('header', 'Avatars'),
           map(images, image => h('img', {
-            'src': api.blob.sync.url(image.link),
-            'ev-click': () => avatar.new.set(image)
+            'src': api.blob.sync.url(image),
+            'ev-click': () => avatar.new.set({ link: image })
           })),
           h('div.file-upload', [
             hyperfile.asDataURL(dataUrlCallback)
