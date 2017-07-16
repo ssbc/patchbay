@@ -24,7 +24,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const route = '/public'
+  const page = 'public'
 
   return nest({
     'app.html.menuItem': menuItem,
@@ -34,11 +34,11 @@ exports.create = function (api) {
   function menuItem () {
     return h('a', {
       style: { order: 1 },
-      'ev-click': () => api.app.sync.goTo(route)
-    }, route)
+      'ev-click': () => api.app.sync.goTo({ page })
+    }, page)
   }
 
-  function publicPage () {
+  function publicPage (location) {
     const composer = api.message.html.compose({
       meta: { type: 'post' },
       placeholder: 'Write a public message'
@@ -71,6 +71,8 @@ exports.create = function (api) {
     }
     draw()
 
+    container.id = JSON.stringify(location)
+    container.title = page
     return container
   }
 }

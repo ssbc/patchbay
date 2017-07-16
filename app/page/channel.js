@@ -22,16 +22,16 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('app.page.channel', channelView)
 
-  function channelView (path) {
-    const channel = path.substr(1)
-    const composer = api.message.html.compose({ meta: { type: 'post', channel } })
+  function channelView ({ channel }) {
+    const channelName = channel.substr(1)
+    const composer = api.message.html.compose({ meta: { type: 'post', channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
     function draw () {
       resetFeed({ container, content })
 
-      const openChannelSource = api.feed.pull.channel(channel)
+      const openChannelSource = api.feed.pull.channel(channelName)
 
       pull(
         openChannelSource({old: false}),
@@ -47,6 +47,7 @@ exports.create = function (api) {
     }
     draw()
 
+    container.id = container.title = channel
     return container
   }
 }

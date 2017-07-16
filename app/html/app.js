@@ -32,7 +32,11 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const initialTabs = ['/public', '/private', '/notifications']
+    const initialTabs = [
+      { page: 'public' },
+      { page: 'private' },
+      { page: 'notifications' },
+    ]
     const tabs = api.app.html.tabs(initialTabs)
     const { addPage } = api.app.sync
 

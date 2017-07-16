@@ -8,15 +8,17 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  return nest('app.sync.goTo', function goTo (path, change) {
+  return nest('app.sync.goTo', function goTo (location, change) {
     const tabs = api.app.html.tabs()
 
-    if (tabs.has(path)) {
-      tabs.select(path)
+    const locationSignature = JSON.stringify(location)
+
+    if (tabs.has(locationSignature)) {
+      tabs.select(locationSignature)
       return true
     }
 
-    api.app.sync.addPage(path, true, false)
+    api.app.sync.addPage(location, true, false)
     return change
   })
 }

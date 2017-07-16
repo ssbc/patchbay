@@ -25,7 +25,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const route = '/notifications'
+  const page = 'notifications'
 
   return nest({
     'app.html.menuItem': menuItem,
@@ -35,11 +35,11 @@ exports.create = function (api) {
   function menuItem () {
     return h('a', {
       style: { order: 3 },
-      'ev-click': () => api.app.sync.goTo(route)
-    }, route)
+      'ev-click': () => api.app.sync.goTo({ page })
+    }, page)
   }
 
-  function notificationsPage () {
+  function notificationsPage (location) {
     const id = api.keys.sync.id()
 
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
@@ -62,6 +62,8 @@ exports.create = function (api) {
     }
     draw()
 
+    container.title = page 
+    container.id = JSON.stringify(location)
     return container
   }
 }

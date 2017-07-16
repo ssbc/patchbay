@@ -1,5 +1,4 @@
 const nest = require('depnest')
-const { isBlob, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.sync.routes')
 
@@ -26,26 +25,25 @@ exports.create = (api) => {
     } = api.app.page
 
     const routes = [
-      ['/',              () => public()],
-      ['/errors',        () => errors()],
-      ['/public',        () => public()],
-      ['/private',       () => private()],
-      ['/notifications', () => notifications()],
-      ['/profile',       () => profile({ id: myId })],
-      ['/:key', (params) => {
-        const { key } = params
-        if (isFeed(key))    return profile(params)
-        if (isBlob(key))    return blob(params)
-        if (isMsg(key))     return thread(params)
-        if (isChannel(key)) return channel(params)
-      }]
+      [ ({ page }) => page === 'public', public ],
+      [ ({ page }) => page === 'private', private ],
+      [ ({ page }) => page === 'notifications', notifications ],
+      [ ({ page }) => page === 'errors', errors ],
+      [ ({ page }) => page === 'profile', () => profile({ id: myId }) ],
+      // TODO - use is-my-json-valid ?
+      [ ({ blob }) => isPresent(blob), blob ],
+      [ ({ channel }) => isPresent(channel), channel ],
+      [ ({ feed }) => isPresent(feed), profile ],
+      [ ({ msg }) => isPresent(msg), thread ]
     ]
 
     return [...sofar, ...routes]
   })
 }
 
-function isChannel (str) {
-  typeof str === 'string' && str[0] === '#' && str.length > 1
+function isPresent (content) {
+  return typeof content === 'string' && content.length > 1
 }
+
+
 

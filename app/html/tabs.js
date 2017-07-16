@@ -26,7 +26,8 @@ exports.create = function (api) {
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
     const onSelect = (indexes) => {
-      search.input.value = _tabs.get(indexes[0]).content.id
+      const { id, title } = _tabs.get(indexes[0]).content
+      search.input.value = title || id
     }
     _tabs = Tabs(onSelect, {
       append: h('div.navExtra', [ search, menu ])

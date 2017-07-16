@@ -26,9 +26,10 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            if (goTo(input.value.trim(), !ev.ctrlKey)) {
-              input.blur()
-            }
+            var location = input.value.trim()
+            if (/^\//.test(location)) location = { page: location.replace(/^\//,'') }
+
+            if (goTo(location, !ev.ctrlKey)) input.blur()
             return
           case 27: // escape
             ev.preventDefault()
