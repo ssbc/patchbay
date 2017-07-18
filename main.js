@@ -10,6 +10,8 @@ const bayGatherings = require('patchbay-gatherings')
 const patchbay = require('./')
 const patchcore = require('patchcore')
 
+const ssbchess = require('ssb-chess')
+
 // polyfills
 require('setimmediate')
 
@@ -21,7 +23,8 @@ const sockets = combine(
   gatherings,
   horcrux,
   patchbay,
-  patchcore
+  patchcore,
+  ssbchess
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))
