@@ -36,7 +36,8 @@ exports.create = function (api) {
     }, '/profile')
   }
 
-  function profilePage ({ feed: id }) {
+  function profilePage (location) {
+    const { feed: id } = location
     const profile = h('Profile', [
       h('section.edit', api.about.html.edit(id)),
       h('section.relationships', api.contact.html.relationships(id)),
@@ -62,7 +63,7 @@ exports.create = function (api) {
       Scroller(container, content, api.message.html.render, false, false)
     )
 
-    container.id = id
+    container.id = JSON.stringify(location)
     watch(api.about.obs.name(id), name => { container.title = '@' + name })
     return container
   }

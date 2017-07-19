@@ -9,8 +9,9 @@ exports.needs = nest('blob.sync.url', 'first')
 exports.create = (api) => {
   return nest('app.page.blob', blobPage)
 
-  function blobPage ({ blob }) {
-    return h('Blob', { id: blob, title: blob.slice(0, 9) + '...' }, [
+  function blobPage (location) {
+    const { blob } = location
+    return h('Blob', { id: JSON.stringify(location), title: blob.slice(0, 9) + '...' }, [
       h('iframe', {
         src: api.blob.sync.url(blob),
         sandbox: ''

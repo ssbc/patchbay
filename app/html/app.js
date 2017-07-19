@@ -32,11 +32,8 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const initialTabs = [
-      { page: 'public' },
-      { page: 'private' },
-      { page: 'notifications' },
-    ]
+    const initialTabs = [ '/public', '/private', '/notifications' ]
+    // NB router converts these to { page: '/public' }
     const tabs = api.app.html.tabs(initialTabs)
     const { addPage } = api.app.sync
 

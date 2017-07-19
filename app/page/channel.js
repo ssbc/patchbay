@@ -22,7 +22,8 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('app.page.channel', channelView)
 
-  function channelView ({ channel }) {
+  function channelView (location) {
+    const { channel } = location
     const channelName = channel.substr(1)
     const composer = api.message.html.compose({ meta: { type: 'post', channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
@@ -47,7 +48,8 @@ exports.create = function (api) {
     }
     draw()
 
-    container.id = container.title = channel
+    container.id = JSON.stringify(location)
+    container.title = channel
     return container
   }
 }

@@ -25,7 +25,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const page = 'notifications'
+  const page = '/notifications'
 
   return nest({
     'app.html.menuItem': menuItem,

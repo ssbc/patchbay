@@ -9,10 +9,10 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('app.page.errors', errorsPage)
 
-  function errorsPage () {
+  function errorsPage (location) {
     var { container, content } = api.app.html.scroller()
 
-    container.id = '/errors'
+    container.id = JSON.stringify(location) 
     container.classList = ['-errors']
 
     // add a dummy entry in the list

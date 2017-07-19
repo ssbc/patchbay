@@ -24,7 +24,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const page = 'public'
+  const page = '/public'
 
   return nest({
     'app.html.menuItem': menuItem,

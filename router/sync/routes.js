@@ -25,11 +25,11 @@ exports.create = (api) => {
     } = api.app.page
 
     const routes = [
-      [ ({ page }) => page === 'public', public ],
-      [ ({ page }) => page === 'private', private ],
-      [ ({ page }) => page === 'notifications', notifications ],
-      [ ({ page }) => page === 'errors', errors ],
-      [ ({ page }) => page === 'profile', () => profile({ id: myId }) ],
+      [ ({ page }) => page === '/public', public ],
+      [ ({ page }) => page === '/private', private ],
+      [ ({ page }) => page === '/notifications', notifications ],
+      [ ({ page }) => page === '/errors', errors ],
+      [ ({ page }) => page === '/profile', () => profile({ id: myId }) ],
       // TODO - use is-my-json-valid ?
       [ ({ blob }) => isPresent(blob), blob ],
       [ ({ channel }) => isPresent(channel), channel ],

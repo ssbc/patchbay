@@ -27,8 +27,6 @@ exports.create = function (api) {
         switch (ev.keyCode) {
           case 13: // enter
             var location = input.value.trim()
-            if (/^\//.test(location)) location = { page: location.replace(/^\//,'') }
-
             if (goTo(location, !ev.ctrlKey)) input.blur()
             return
           case 27: // escape

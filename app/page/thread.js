@@ -27,7 +27,8 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
-  function threadPage ({ msg }) {
+  function threadPage (location) {
+    const { msg } = location
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
     const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(msg)
@@ -72,7 +73,7 @@ exports.create = function (api) {
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
     container.classList.add('Thread')
-    container.id = msg
+    container.id = JSON.stringify(location)
     container.title = msg
     api.message.async.name(msg, (err, name) => {
       if (err) throw err
