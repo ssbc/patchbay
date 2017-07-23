@@ -145,7 +145,7 @@ div.lightbox {
   right: 0px;
   top: 50px;
   overflow: auto;
-  width: 600px;
+  width: 780px;
   max-width: 100%;
   padding: 25px;
   margin: auto;
