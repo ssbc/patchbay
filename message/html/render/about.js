@@ -34,6 +34,7 @@ exports.create = function (api) {
   function renderContent (msg) {
     const { author, content } = msg.value
     var { about, link, name, description, image } = content
+    if (!about) return
 
     // TODO : build better normalizers
     if (image && ref.isBlob(image.link)) image = image.link
