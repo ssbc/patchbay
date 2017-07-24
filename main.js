@@ -17,14 +17,14 @@ require('setimmediate')
 
 // from more specialized to more general
 const sockets = combine(
+  ssbchess,
   context,
   patchHub,
   bayGatherings, //adds menu items
   gatherings,
   horcrux,
   patchbay,
-  patchcore,
-  ssbchess
+  patchcore
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))
