@@ -10,11 +10,14 @@ const bayGatherings = require('patchbay-gatherings')
 const patchbay = require('./')
 const patchcore = require('patchcore')
 
+const ssbchess = require('ssb-chess')
+
 // polyfills
 require('setimmediate')
 
 // from more specialized to more general
 const sockets = combine(
+  ssbchess,
   context,
   patchHub,
   bayGatherings, //adds menu items
