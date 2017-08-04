@@ -2,14 +2,15 @@ const nest = require('depnest')
 const { h, Value } = require('mutant')
 
 exports.needs = nest({
+  'about.html.avatar': 'first',
+  'keys.sync.id': 'first',
   'message.html': {
     backlinks: 'first',
     author: 'first',
     markdown: 'first',
     meta: 'map',
     timestamp: 'first'
-  },
-  'about.html.avatar': 'first',
+  }
 })
 
 exports.gives = nest('message.html.layout')
@@ -39,6 +40,8 @@ exports.create = (api) => {
       .filter(Boolean)
       .filter(id => id !== rootAuthor)
 
+    const myId = api.keys.sync.id()
+    const showNewMsg = newMsg && newMsg.value.author !== myId
 
     // TODO : MCSS styling ... actual design
     return h('Message -inbox', {
@@ -52,10 +55,12 @@ exports.create = (api) => {
       h('section.content', {}, content),
       h('section.count', { style: { padding: '5px' } }, ` (${msgCount}) `),
       h('section.others', { stlye: { height: 35 }}, others.map(avatar)),
-      h('section.content', { style: { background: '#f4f4f4' } }, [
-        'MOST RECENT REPLY: ',
-        messageContent(newMsg)
-      ]),
+      showNewMsg 
+        ? h('section.content', { style: { background: '#f4f4f4' } }, [
+          'MOST RECENT REPLY: ',
+          messageContent(newMsg)
+        ]) 
+        : '',
       h('section.raw-content', rawMessage)
     ])
   }
@@ -67,7 +72,7 @@ exports.create = (api) => {
 }
 
 function getNewestMsg (msg) {
-  if (!msg.replies || msg.replies.length === 0) return msg
+  if (!msg.replies || msg.replies.length === 0) return
 
   return msg.replies[msg.replies.length - 1]
 }
