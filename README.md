@@ -21,6 +21,12 @@ On MacOS you may need the following packages installed (in this example, via [Ho
 ```sh
 brew install libtool automake autoconf
 ```
+Install Electron
+
+```sh
+npm install electron -g
+npm install electro -g
+```
 
 Install Scuttlebot (your gossip server)
 
