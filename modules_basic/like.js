@@ -35,7 +35,7 @@ exports.create = function (api) {
     for(var k in CACHE) {
       if(CACHE[k].content.type == 'vote' &&
         (CACHE[k].content.vote == msg.key ||
-        CACHE[k].content.vote.link == msg.key
+        (CACHE[k].content.vote && CACHE[k].content.vote.link == msg.key)
         ))
         votes.push({source: CACHE[k].author, dest: k, rel: 'vote'})
     }
