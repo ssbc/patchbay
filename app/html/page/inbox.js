@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h } = require('mutant')
+const { h, Value } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const next = require('../../../junk/next-stepper')
@@ -58,8 +58,10 @@ exports.create = function (api) {
       },
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
     )
+    const newMsgCount = Value(0)
+    const newMsg = h('div', ['New Messages: ', newMsgCount])
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ] })
+    const { container, content } = api.app.html.scroller({ prepend: [ newMsg, composer, filterMenu ] })
 
     function draw () {
       resetFeed({ container, content })
@@ -67,9 +69,15 @@ exports.create = function (api) {
       pull(
         next(api.feed.pull.private, {old: false, limit: 100}, ['value', 'timestamp']),
         filterDownThrough(),
-        api.feed.pull.rollup(),
-        Scroller(container, content, render, true, false)
+        pull.drain(msg => newMsgCount.set(newMsgCount() + 1))
       )
+
+      // pull(
+      //   next(api.feed.pull.private, {old: false, limit: 100}, ['value', 'timestamp']),
+      //   filterDownThrough(),
+      //   api.feed.pull.rollup(),
+      //   Scroller(container, content, render, true, false)
+      // )
 
       pull(
         next(api.feed.pull.private, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
