@@ -21,12 +21,6 @@ On MacOS you may need the following packages installed (in this example, via [Ho
 ```sh
 brew install libtool automake autoconf
 ```
-Install Electron
-
-```sh
-npm install electron -g
-npm install electro -g
-```
 
 Install Scuttlebot (your gossip server)
 
@@ -58,6 +52,7 @@ Install Patchbay (an interface for the your scuttlebutt database)
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
+npm run setup
 npm run rebuild
 ```
 
