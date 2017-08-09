@@ -4,7 +4,7 @@ AboutImageEditor {
     margin-bottom: .5rem
   }
 
-  canvas { 
+  canvas {
     margin: 0 auto
     width: 100%
   }
@@ -51,6 +51,13 @@ AboutEditor {
   }
 
   section.description {
+    flex-basis: 40%
+    flex-grow: 1
+
+    margin-top: 1rem
+  }
+
+  section.credit {
     flex-basis: 40%
     flex-grow: 1
 
@@ -186,6 +193,3 @@ AboutEditor {
     }
   }
 }
-
-
-

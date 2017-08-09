@@ -3,6 +3,8 @@ const dataurl = require('dataurl-')
 const hyperfile = require('hyperfile')
 const hypercrop = require('hypercrop')
 const hyperlightbox = require('hyperlightbox')
+const Mutual = require('ssb-mutual')
+
 const {
   h, Value, Array: MutantArray, Dict: MutantObject, Struct,
   map, computed, when, dictToCollection
@@ -35,6 +37,8 @@ exports.create = function (api) {
 
   // TODO refactor this to use obs better
   function edit (id) {
+    var mutual = Mutual.init(api.sbot)
+
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
       new: MutantObject()
@@ -78,6 +82,21 @@ exports.create = function (api) {
       else return name.current
     })
 
+
+    var balances_div = h('div.balances')
+
+    mutual.getAccountBalances(id, (error, balances) => {
+      if (balances == null) return ''
+
+      var balance_els = [];
+      Object.keys(balances).forEach(function(key) {
+        console.log(key)
+        balances_div.appendChild(
+          h('div', `💰 ${balances[key]} ${key}`)
+        )
+      });
+    })
+
     return h('AboutEditor', [
       h('section.lightbox', lb),
       h('section.avatar', [
@@ -90,6 +109,7 @@ exports.create = function (api) {
         if (descr == null) return '' // TODO: should be in patchcore, I think...
         return api.message.html.markdown(descr)
       })),
+      h('section.credit', balances_div),
       h('section.aliases', [
         h('header', 'Aliases'),
         h('section.avatars', [
@@ -187,4 +207,3 @@ function crop (d, cb) {
     ])
   ])
 }
-
