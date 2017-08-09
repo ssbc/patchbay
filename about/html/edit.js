@@ -86,9 +86,6 @@ exports.create = function (api) {
     var balances_div = h('div.balances')
 
     mutual.getAccountBalances(id, (error, balances) => {
-      console.log("balances")
-      console.log(error)
-      console.log(balances)
       if (balances == null) return ''
 
       var balance_els = [];
