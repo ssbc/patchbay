@@ -52,6 +52,7 @@ Install Patchbay (an interface for the your scuttlebutt database)
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
+npm run setup
 npm run rebuild
 ```
 
