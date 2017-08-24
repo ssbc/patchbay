@@ -82,6 +82,7 @@ exports.create = function (api) {
       pull(
         next(api.feed.pull.private, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
         filterUpThrough(),
+        pull.filter(msg => msg.value.content.recps),
         api.feed.pull.rollup(),
         Scroller(container, content, render, false, false)
       )
