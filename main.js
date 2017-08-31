@@ -10,6 +10,7 @@ const bayGatherings = require('patchbay-gatherings')
 const patchbay = require('./')
 const patchContext = require('patch-context')
 const patchcore = require('patchcore')
+const patchSettings = require('patch-settings')
 
 // polyfills
 require('setimmediate')
@@ -23,7 +24,8 @@ const sockets = combine(
   // bayGatherings, // TODO collect gatherings into this
   patchbay,
   patchContext,
-  patchcore
+  patchcore,
+  patchSettings
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))

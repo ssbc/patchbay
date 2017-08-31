@@ -1,6 +1,7 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 const insertCss = require('insert-css')
+const electron = require('electron')
 
 exports.gives = nest('app.html.app')
 
@@ -14,7 +15,9 @@ exports.needs = nest({
   'app.sync.catchKeyboardShortcut': 'first',
   'router.sync.router': 'first',
   'router.sync.normalise': 'first',
-  'styles.css': 'reduce'
+  'styles.css': 'reduce',
+  'settings.sync.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -55,6 +58,23 @@ exports.create = function (api) {
 
       addError(ev.error || ev)
     })
+
+    window.addEventListener('resize', function(e){
+	var wc = electron.remote.getCurrentWebContents()
+	wc && wc.getZoomFactor((zf) => {
+	    api.settings.sync.set({
+		zoomFactor: zf,
+		bounds: electron.remote.getCurrentWindow().getBounds()
+	    })
+	})
+    })
+
+    var zoomFactor = api.settings.sync.get('zoom')
+    if (zoomFactor)
+	electron.remote.getCurrentWebContents().setZoomFactor(zoomFactor)
+    var bounds = api.settings.sync.get('bounds')
+    if (bounds)
+	electron.remote.getCurrentWindow().setBounds(bounds)
 
     return App
   }
