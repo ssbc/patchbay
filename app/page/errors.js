@@ -1,4 +1,5 @@
 const nest = require('depnest')
+const { h } = require('mutant')
 
 exports.gives = nest('app.page.errors')
 
@@ -12,10 +13,20 @@ exports.create = function (api) {
   function errorsPage (location) {
     var { container, content } = api.app.html.scroller()
 
-    container.classList = ['-errors']
+    container.title = '/errors'
+    container.classList = ['Errors']
+    container.id = JSON.stringify(location)
+    // note this page needs an id assigned as it's not added by addPage
 
-    // add a dummy entry in the list
+    function addError (err) {
+      const error = h('Error', [
+        h('header', err.message),
+        h('pre', err.stack)
+      ])
 
-    return { container, content }
+      content.appendChild(error)
+    }
+
+    return { container, addError }
   }
 }

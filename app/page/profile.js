@@ -11,10 +11,8 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'about': {
-    'html.edit': 'first',
-    'obs.name': 'first'
-  },
+  'about.html.edit': 'first',
+  'about.obs.name': 'first',
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'contact.html.relationships': 'first',
@@ -62,7 +60,6 @@ exports.create = function (api) {
       Scroller(container, content, api.message.html.render, false, false)
     )
 
-    container.id = JSON.stringify(location)
     watch(api.about.obs.name(id), name => { container.title = '@' + name })
     return container
   }

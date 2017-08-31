@@ -6,9 +6,9 @@ exports.gives = nest('app.html.app')
 
 exports.needs = nest({
   'app.async.catchLinkClick': 'first',
-  'app.html.error': 'first',
   'app.html.externalConfirm': 'first',
   'app.html.tabs': 'first',
+  'app.page.errors': 'first',
   'app.sync.window': 'reduce',
   'app.sync.addPage': 'first',
   'app.sync.catchKeyboardShortcut': 'first',
@@ -49,13 +49,12 @@ exports.create = function (api) {
     })
 
     // Catch errors
-    // var { container: errorPage, content: errorList } = api.router.sync.router('/errors')
-    // window.addEventListener('error', ev => {
-    //   if (!tabs.has('/errors')) tabs.add(errorPage, true)
+    var { container: errorPage, addError } = api.router.sync.router('/errors')
+    window.addEventListener('error', ev => {
+      if (!tabs.has('/errors')) tabs.add(errorPage, true)
 
-    //   const error = api.app.html.error(ev.error || ev)
-    //   errorList.appendChild(error)
-    // })
+      addError(ev.error || ev)
+    })
 
     return App
   }

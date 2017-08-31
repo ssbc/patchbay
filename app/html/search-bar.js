@@ -28,7 +28,7 @@ exports.create = function (api) {
             var location = input.value.trim()
             if (location[0] == '?') {
               location = { page: 'search', query: location.substring(1) }
-            } else if (!['@', '#', '%', '&'].includes(location[0])) {
+            } else if (!['@', '#', '%', '&', '/'].includes(location[0])) {
               location = { page: 'search', query: location }
             }
 

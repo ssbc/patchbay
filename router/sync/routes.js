@@ -29,7 +29,7 @@ exports.create = (api) => {
       [ loc => loc.page === 'private', pages.private ],
       [ loc => loc.page === 'notifications', pages.notifications ],
       [ loc => loc.page === 'errors', pages.errors ],
-      [ loc => loc.page === 'profile', () => pages.profile({ id: myId }) ],
+      [ loc => loc.page === 'profile', () => pages.profile({ feed: myId }) ],
       [ loc => loc.page === 'search' && loc.query, pages.search ],
 
       [ loc => isBlob(loc.blob), pages.blob ],
