@@ -11,16 +11,12 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'app.html': {
-    filter: 'first',
-    scroller: 'first'
-  },
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'feed.pull.public': 'first',
-  'message.html': {
-    compose: 'first',
-    render: 'first'
-  }
+  'message.html.compose': 'first',
+  'message.html.render': 'first'
 })
 
 exports.create = function (api) {
@@ -48,23 +44,21 @@ exports.create = function (api) {
     function draw () {
       resetFeed({ container, content })
 
-      const ren = (msg) => {
-        if (msg.value.content.type === 'about') debugger
-        api.message.html.render(msg)
+      const render = (msg) => {
+        // if (msg.value.content.type === 'about') debugger
+        return api.message.html.render(msg)
       }
 
       pull(
         next(api.feed.pull.public, {old: false, limit: 100}, ['value', 'timestamp']),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
-        // Scroller(container, content, ren, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
         next(api.feed.pull.public, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
-        // Scroller(container, content, ren, true, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()

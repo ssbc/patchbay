@@ -30,7 +30,6 @@ exports.create = function (api) {
           .join(' + ')
       } catch (e) {
         throw new Error('app.html.tabs expects all page ids to be stringified location objects')
-        var locationForSearchBar = id
       }
       search.input.value = locationForSearchBar
     }

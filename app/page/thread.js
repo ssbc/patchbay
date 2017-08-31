@@ -1,6 +1,6 @@
 const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
-const { isMsg, isFeed } = require('ssb-ref')
+const { isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.page.thread')
 
@@ -10,18 +10,12 @@ exports.needs = nest({
   'contact.obs.following': 'first',
   'feed.obs.thread': 'first',
   'keys.sync.id': 'first',
-  message: {
-    html: {
-      compose: 'first',
-      render: 'first'
-    },
-    'async.name': 'first',
-    'sync.unbox': 'first'
-  },
-  sbot: {
-    'async.get': 'first',
-    'pull.links': 'first'
-  }
+  'message.html.compose': 'first',
+  'message.html.render': 'first',
+  'message.async.name': 'first',
+  'message.sync.unbox': 'first',
+  'sbot.async.get': 'first',
+  'sbot.pull.links': 'first'
 })
 
 exports.create = function (api) {

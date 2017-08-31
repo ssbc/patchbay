@@ -4,7 +4,7 @@ const hyperfile = require('hyperfile')
 const hypercrop = require('hypercrop')
 const hyperlightbox = require('hyperlightbox')
 const {
-  h, Value, Array: MutantArray, Dict: MutantObject, Struct,
+  h, Value, Dict: MutantObject, Struct,
   map, computed, when, dictToCollection
 } = require('mutant')
 const pull = require('pull-stream')

@@ -8,12 +8,12 @@ exports.needs = nest({
   'app.sync.goTo': 'first'
 })
 
+var gPressed = false
+
 exports.create = function (api) {
   return nest('app.sync.catchKeyboardShortcut', catchKeyboardShortcut)
 
   function catchKeyboardShortcut (root) {
-    var gPressed = false
-
     var tabs = api.app.html.tabs()
     var search = api.app.html.searchBar()
     var goTo = api.app.sync.goTo
@@ -42,6 +42,9 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
       gPressed = true
+      window.setTimeout(() => {
+        gPressed = false
+      }, 3000)
       return
     }
     tabs.getCurrent().firstChild.scroll('first')
