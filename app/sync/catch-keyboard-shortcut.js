@@ -76,6 +76,7 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
         tabs.remove(sel)
         tabs.select(Math.max(i - 1, 0))
       }
+      // TODO add history call in here
       return
 
     // Search

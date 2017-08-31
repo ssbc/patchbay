@@ -10,6 +10,7 @@ exports.needs = nest({
     'private': 'first',
     'notifications': 'first',
     'profile': 'first',
+    'search': 'first',
     'blob': 'first',
     'thread': 'first',
     'channel': 'first'
@@ -29,8 +30,8 @@ exports.create = (api) => {
       [ loc => loc.page === 'notifications', pages.notifications ],
       [ loc => loc.page === 'errors', pages.errors ],
       [ loc => loc.page === 'profile', () => pages.profile({ id: myId }) ],
+      [ loc => loc.page === 'search' && loc.query, pages.search ],
 
-      // TODO - use is-my-json-valid ?
       [ loc => isBlob(loc.blob), pages.blob ],
       [ loc => isPresent(loc.channel), pages.channel ],
       [ loc => isFeed(loc.feed), pages.profile ],

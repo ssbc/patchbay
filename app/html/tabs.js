@@ -24,14 +24,12 @@ exports.create = function (api) {
       const { id } = _tabs.get(indexes[0]).content
 
       try {
-        const location = JSON.parse(id)
-        var locationForSearchBar = Object.keys(location)
-          .map(k => location[k])
-          .join(' + ')
+        var location = JSON.parse(id)
       } catch (e) {
         throw new Error('app.html.tabs expects all page ids to be stringified location objects')
       }
-      search.input.value = locationForSearchBar
+
+      search.input.value = buildSearchBarTermFromLocation(location)
     }
     _tabs = Tabs(onSelect, {
       append: h('div.navExtra', [ search, menu ])
@@ -48,3 +46,16 @@ exports.create = function (api) {
     'app.html.tabs': tabs
   })
 }
+
+function buildSearchBarTermFromLocation (location) {
+  if (location.page === 'search')
+    return '?'+location.query
+
+  if (location.page && Object.keys(location).length === 1) 
+    return '/'+location.page
+   
+  return Object.keys(location)
+    .map(k => location[k])
+    .join(', ')
+}
+

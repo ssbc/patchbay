@@ -15,14 +15,19 @@ exports.create = function (api) {
 
   // TODO : make it so error catching doesn't need this, move it into goTo
   function addPage (location, change, split) {
-    location = api.router.sync.normalise(location)
     const tabs = api.app.html.tabs()
-
     const page = api.router.sync.router(location)
     if (!page) return
 
     // TODO - review unique page id + naming system
-    page.id = page.id || JSON.stringify(location)
+    page.id = page.id || buildId(location)
     tabs.add(page, change, split)
   }
+
+  function buildId (location) { 
+    return JSON.stringify(
+      api.router.sync.normalise(location)
+    )
+  }
 }
+
