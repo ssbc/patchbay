@@ -3,17 +3,12 @@ const { h } = require('mutant')
 const Tabs = require('hypertabs')
 
 exports.gives = nest({
-  app: {
-    'html.tabs': true
-  }
+  'app.html.tabs': true
 })
 
 exports.needs = nest({
-  'app.html': {
-    menu: 'first',
-    page: 'first',
-    searchBar: 'first'
-  },
+  'app.html.menu': 'first',
+  'app.html.searchBar': 'first',
   'app.sync.addPage': 'first'
 })
 
@@ -35,7 +30,7 @@ exports.create = function (api) {
           .join(' + ')
       }
       catch (e) {
-        throw new Error('app/html/tabs expects all page ids to be stringified location objects')
+        throw new Error('app.html.tabs expects all page ids to be stringified location objects')
         var locationForSearchBar = id
       }
       search.input.value = locationForSearchBar 

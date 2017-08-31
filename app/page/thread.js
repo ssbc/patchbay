@@ -28,10 +28,11 @@ exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
   function threadPage (location) {
-    const { msg } = location
+    const { key } = location
+
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
-    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(msg)
+    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(key)
     const meta = Struct({
       type: 'post',
       root: rootId,
@@ -68,14 +69,13 @@ exports.create = function (api) {
       shrink: false
     })
     const content = h('section.content', map(messages, m => {
-      return api.message.html.render(resolve(m), {pageId: msg})
+      return api.message.html.render(resolve(m), {pageId: key})
     }))
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
     container.classList.add('Thread')
-    container.id = JSON.stringify(location)
-    container.title = msg
-    api.message.async.name(msg, (err, name) => {
+    container.title = key
+    api.message.async.name(key, (err, name) => {
       if (err) throw err
       container.title = name
     })

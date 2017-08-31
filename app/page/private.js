@@ -26,8 +26,6 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const page = '/private'
-
   return nest({
     'app.html.menuItem': menuItem,
     'app.page.private': privatePage
@@ -36,8 +34,8 @@ exports.create = function (api) {
   function menuItem () {
     return h('a', {
       style: { order: 2 },
-      'ev-click': () => api.app.sync.goTo({ page })
-    }, page)
+      'ev-click': () => api.app.sync.goTo({ page: 'private' })
+    }, '/private')
   }
 
   function privatePage (location) {
@@ -72,8 +70,7 @@ exports.create = function (api) {
     }
     draw()
 
-    container.title = page
-    container.id = JSON.stringify(location)
+    container.title = '/private'
     return container
   }
 }

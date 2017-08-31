@@ -1,4 +1,5 @@
 const nest = require('depnest')
+const { isBlob, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.sync.routes')
 
@@ -24,17 +25,19 @@ exports.create = (api) => {
       profile, blob, thread
     } = api.app.page
 
+    // loc = location
     const routes = [
-      [ ({ page }) => page === '/public', public ],
-      [ ({ page }) => page === '/private', private ],
-      [ ({ page }) => page === '/notifications', notifications ],
-      [ ({ page }) => page === '/errors', errors ],
-      [ ({ page }) => page === '/profile', () => profile({ id: myId }) ],
+      [ loc => loc.page === 'public', public ],
+      [ loc => loc.page === 'private', private ],
+      [ loc => loc.page === 'notifications', notifications ],
+      [ loc => loc.page === 'errors', errors ],
+      [ loc => loc.page === 'profile', () => profile({ id: myId }) ],
+
       // TODO - use is-my-json-valid ?
-      [ ({ blob }) => isPresent(blob), blob ],
-      [ ({ channel }) => isPresent(channel), channel ],
-      [ ({ feed }) => isPresent(feed), profile ],
-      [ ({ msg }) => isPresent(msg), thread ]
+      [ loc => isBlob(loc.blob), blob ],
+      [ loc => isPresent(loc.channel), channel ],
+      [ loc => isFeed(loc.feed), profile ],
+      [ loc => isMsg(loc.key), thread ]
     ]
 
     return [...sofar, ...routes]
@@ -44,6 +47,4 @@ exports.create = (api) => {
 function isPresent (content) {
   return typeof content === 'string' && content.length > 1
 }
-
-
 

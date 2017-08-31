@@ -12,7 +12,6 @@ exports.create = function (api) {
   function errorsPage (location) {
     var { container, content } = api.app.html.scroller()
 
-    container.id = JSON.stringify(location) 
     container.classList = ['-errors']
 
     // add a dummy entry in the list

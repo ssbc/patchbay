@@ -24,8 +24,6 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const page = '/public'
-
   return nest({
     'app.html.menuItem': menuItem,
     'app.page.public': publicPage,
@@ -34,8 +32,8 @@ exports.create = function (api) {
   function menuItem () {
     return h('a', {
       style: { order: 1 },
-      'ev-click': () => api.app.sync.goTo({ page })
-    }, page)
+      'ev-click': () => api.app.sync.goTo({ page: 'public' })
+    }, '/public')
   }
 
   function publicPage (location) {
@@ -71,8 +69,7 @@ exports.create = function (api) {
     }
     draw()
 
-    container.id = JSON.stringify(location)
-    container.title = page
+    container.title = '/public'
     return container
   }
 }

@@ -11,22 +11,16 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'app.html': {
-    filter: 'first',
-    scroller: 'first'
-  },
-  'app.sync.goTo': 'first',
-  'feed.pull': {
-    mentions: 'first',
-    public: 'first'
-  },
-  'keys.sync.id': 'first',
-  'message.html.render': 'first'
+  "app.html.filter": "first",
+  "app.html.scroller": "first",
+  "app.sync.goTo": "first",
+  "feed.pull.mentions": "first",
+  "feed.pull.public": "first",
+  "keys.sync.id": "first",
+  "message.html.render": "first"
 })
 
 exports.create = function (api) {
-  const page = '/notifications'
-
   return nest({
     'app.html.menuItem': menuItem,
     'app.page.notifications': notificationsPage
@@ -35,8 +29,8 @@ exports.create = function (api) {
   function menuItem () {
     return h('a', {
       style: { order: 3 },
-      'ev-click': () => api.app.sync.goTo({ page })
-    }, page)
+      'ev-click': () => api.app.sync.goTo({ page: 'notifications' })
+    }, '/notifications')
   }
 
   function notificationsPage (location) {
@@ -62,8 +56,7 @@ exports.create = function (api) {
     }
     draw()
 
-    container.title = page 
-    container.id = JSON.stringify(location)
+    container.title = '/notifications' 
     return container
   }
 }

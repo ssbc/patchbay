@@ -3,13 +3,9 @@ const nest = require('depnest')
 exports.gives = nest('app.sync.catchKeyboardShortcut')
 
 exports.needs = nest({
-  'app.html': {
-    searchBar: 'first',
-    tabs: 'first'
-  },
-  'app.sync': {
-    goTo: 'first'
-  }
+  "app.html.searchBar": "first",
+  "app.html.tabs": "first",
+  "app.sync.goTo": "first"
 })
 
 exports.create = function (api) {

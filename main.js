@@ -2,28 +2,27 @@ const combine = require('depject')
 const entry = require('depject/entry')
 const nest = require('depnest')
 
-const context = require('patch-context')
-const patchHub = require('patch-hub')
 const horcrux = require('ssb-horcrux')
+const ssbchess = require('ssb-chess')
+const patchHub = require('patch-hub')
 const gatherings = require('patch-gatherings')
 const bayGatherings = require('patchbay-gatherings')
 const patchbay = require('./')
+const patchContext = require('patch-context')
 const patchcore = require('patchcore')
-
-const ssbchess = require('ssb-chess')
 
 // polyfills
 require('setimmediate')
 
 // from more specialized to more general
 const sockets = combine(
-  ssbchess,
-  context,
-  patchHub,
-  bayGatherings, //adds menu items
-  gatherings,
-  horcrux,
+  // horcrux,
+  // ssbchess,
+  // patchHub,
+  // gatherings,
+  // bayGatherings, // TODO collect gatherings into this
   patchbay,
+  patchContext,
   patchcore
 )
 

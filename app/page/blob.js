@@ -11,6 +11,7 @@ exports.create = (api) => {
 
   function blobPage (location) {
     const { blob } = location
+
     return h('Blob', { id: JSON.stringify(location), title: blob.slice(0, 9) + '...' }, [
       h('iframe', {
         src: api.blob.sync.url(blob),
