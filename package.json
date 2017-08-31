@@ -55,7 +55,7 @@
     "patch-gatherings": "^2.4.3",
     "patch-hub": "^1.1.0",
     "patchbay-gatherings": "^1.1.2",
-    "patchcore": "^1.10.0",
+    "patchcore": "^1.10.2",
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
     "pull-next": "1.0.0",
