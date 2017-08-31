@@ -36,10 +36,10 @@ pre {
 }
 
 .emoji {
-  height: 1em;
-  width: 1em;
-  margin-bottom: .2rem;
+  height: 1.2em;
+  width: 1.2em;
   vertical-align: middle;
+  margin-top: -0.2em;
 }
 
 p, ul, ol {
@@ -145,7 +145,7 @@ div.lightbox {
   right: 0px;
   top: 50px;
   overflow: auto;
-  width: 600px;
+  width: 780px;
   max-width: 100%;
   padding: 25px;
   margin: auto;
