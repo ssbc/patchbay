@@ -148,7 +148,7 @@ exports.create = function (api) {
 
     draw()
 
-    container.title = '?'+query
+    container.title = '?' + query
     return container
   }
 }

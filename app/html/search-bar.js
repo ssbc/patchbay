@@ -26,10 +26,11 @@ exports.create = function (api) {
         switch (ev.keyCode) {
           case 13: // enter
             var location = input.value.trim()
-            if (location[0] == '?')
+            if (location[0] == '?') {
               location = { page: 'search', query: location.substring(1) }
-            else if (!['@', '#', '%', '&'].includes(location[0]))
+            } else if (!['@', '#', '%', '&'].includes(location[0])) {
               location = { page: 'search', query: location }
+            }
 
             api.app.sync.goTo(location)
             if (!ev.ctrlKey) input.blur()

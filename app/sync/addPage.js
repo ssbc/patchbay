@@ -24,10 +24,9 @@ exports.create = function (api) {
     tabs.add(page, change, split)
   }
 
-  function buildId (location) { 
+  function buildId (location) {
     return JSON.stringify(
       api.router.sync.normalise(location)
     )
   }
 }
-

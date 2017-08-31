@@ -48,14 +48,14 @@ exports.create = function (api) {
 }
 
 function buildSearchBarTermFromLocation (location) {
-  if (location.page === 'search')
-    return '?'+location.query
+  const { page, query } = location
 
-  if (location.page && Object.keys(location).length === 1) 
-    return '/'+location.page
-   
-  return Object.keys(location)
+  if (page === 'search') return '?' + query
+
+  const keys = Object.keys(location)
+  if (page && keys.length === 1) return '/' + page
+
+  return keys
     .map(k => location[k])
     .join(', ')
 }
-
