@@ -7,7 +7,7 @@
     "lint": "standard",
     "setup": "npm install electron electro -g",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
-    "start": "electro main.js"
+    "start": "electro main.js -- --title patchbay --width 1200 --height 900 --webPreferences.zoomFactor 1.25"
   },
   "browserify": {
     "transform": [
