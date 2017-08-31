@@ -38,7 +38,7 @@ exports.create = function (api) {
     var following = api.contact.obs.following(id)
     var recentlyUpdated = api.feed.obs.recent()
     var contacts = computed([following, recentlyUpdated], (a, b) => {
-      var result = new Set (a)
+      var result = new Set(a)
       b.forEach(item => result.add(item))
 
       return Array.from(result)

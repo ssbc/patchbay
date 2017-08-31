@@ -32,7 +32,6 @@ exports.create = function (api) {
           case 27: // escape
             ev.preventDefault()
             input.blur()
-            return
         }
       }
     })
@@ -67,4 +66,3 @@ exports.create = function (api) {
     return _search
   })
 }
-

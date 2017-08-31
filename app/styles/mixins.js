@@ -36,4 +36,3 @@ _avatarSmall {
   height: 32px
 }
 `
-

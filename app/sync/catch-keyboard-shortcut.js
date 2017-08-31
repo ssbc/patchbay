@@ -3,9 +3,9 @@ const nest = require('depnest')
 exports.gives = nest('app.sync.catchKeyboardShortcut')
 
 exports.needs = nest({
-  "app.html.searchBar": "first",
-  "app.html.tabs": "first",
-  "app.sync.goTo": "first"
+  'app.html.searchBar': 'first',
+  'app.html.tabs': 'first',
+  'app.sync.goTo': 'first'
 })
 
 exports.create = function (api) {
@@ -49,7 +49,6 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
   gPressed = false
 
   switch (ev.keyCode) {
-
     // Messages (cont'd)
     case 74: // j = older
       return tabs.getCurrent().firstChild.scroll(1)
@@ -89,7 +88,6 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
       return
     case 53: // % = message search
       if (ev.shiftKey) search.activate('%', ev)
-      return
   }
 }
 
@@ -124,4 +122,3 @@ function toggleRawMessage (ev) {
   // this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }
-

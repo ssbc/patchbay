@@ -7,7 +7,7 @@ const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
   'app.html.menuItem': true,
-  'app.page.public': true,
+  'app.page.public': true
 })
 
 exports.needs = nest({
@@ -26,7 +26,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.public': publicPage,
+    'app.page.public': publicPage
   })
 
   function menuItem () {
@@ -73,4 +73,3 @@ exports.create = function (api) {
     return container
   }
 }
-

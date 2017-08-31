@@ -30,4 +30,3 @@ exports.create = (api) => {
     return h('a.likes', { title }, body)
   }
 }
-

@@ -28,12 +28,11 @@ exports.create = function (api) {
         var locationForSearchBar = Object.keys(location)
           .map(k => location[k])
           .join(' + ')
-      }
-      catch (e) {
+      } catch (e) {
         throw new Error('app.html.tabs expects all page ids to be stringified location objects')
         var locationForSearchBar = id
       }
-      search.input.value = locationForSearchBar 
+      search.input.value = locationForSearchBar
     }
     _tabs = Tabs(onSelect, {
       append: h('div.navExtra', [ search, menu ])
@@ -50,4 +49,3 @@ exports.create = function (api) {
     'app.html.tabs': tabs
   })
 }
-

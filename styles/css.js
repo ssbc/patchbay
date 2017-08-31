@@ -40,4 +40,3 @@ function mcssToCss (mcssObj, mixinsStr) {
     return compile(mixinsStr + '\n' + mcssStr)
   })
 }
-

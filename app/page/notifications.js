@@ -11,13 +11,13 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  "app.html.filter": "first",
-  "app.html.scroller": "first",
-  "app.sync.goTo": "first",
-  "feed.pull.mentions": "first",
-  "feed.pull.public": "first",
-  "keys.sync.id": "first",
-  "message.html.render": "first"
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
+  'app.sync.goTo': 'first',
+  'feed.pull.mentions': 'first',
+  'feed.pull.public': 'first',
+  'keys.sync.id': 'first',
+  'message.html.render': 'first'
 })
 
 exports.create = function (api) {
@@ -56,8 +56,7 @@ exports.create = function (api) {
     }
     draw()
 
-    container.title = '/notifications' 
+    container.title = '/notifications'
     return container
   }
 }
-

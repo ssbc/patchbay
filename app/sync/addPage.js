@@ -26,4 +26,3 @@ exports.create = function (api) {
     tabs.add(page, change, split)
   }
 }
-

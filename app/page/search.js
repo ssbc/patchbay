@@ -9,11 +9,11 @@ const next = require('../../junk/next-stepper')
 exports.gives = nest('app.page.search')
 
 exports.needs = nest({
-  "app.html.filter": "first",
-  "app.html.scroller": "first",
-  "message.html.render": "first",
-  "sbot.pull.log": "first",
-  "sbot.pull.stream": "first"
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
+  'message.html.render': 'first',
+  'sbot.pull.log': 'first',
+  'sbot.pull.stream': 'first'
 })
 
 var whitespace = /\s+/
@@ -152,4 +152,3 @@ exports.create = function (api) {
     return container
   }
 }
-

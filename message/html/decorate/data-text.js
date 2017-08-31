@@ -8,4 +8,3 @@ exports.create = (api) => {
     return element
   })
 }
-

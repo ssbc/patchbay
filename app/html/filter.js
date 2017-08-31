@@ -123,7 +123,6 @@ exports.create = function (api) {
           return showPub()
         default:
           return true
-
       }
     }
 
@@ -169,4 +168,3 @@ exports.create = function (api) {
     }
   }
 }
-

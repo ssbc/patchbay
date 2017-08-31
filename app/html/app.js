@@ -16,7 +16,6 @@ exports.needs = nest({
   'router.sync.normalise': 'first',
   'styles.css': 'reduce'
 })
-  
 
 exports.create = function (api) {
   return nest('app.html.app', app)
@@ -38,7 +37,7 @@ exports.create = function (api) {
     // Catch link clicks
     api.app.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
       if (isExternal) return api.app.html.externalConfirm(link)
-      
+
       // TODO tidy up who and where this logic happens (do when adding patch-history)
       const location = api.router.sync.normalise(link)
       const tabId = JSON.stringify(location)
@@ -66,5 +65,3 @@ function values (object) {
   const keys = Object.keys(object)
   return keys.map(k => object[k])
 }
-
-

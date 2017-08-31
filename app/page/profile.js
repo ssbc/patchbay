@@ -7,7 +7,7 @@ const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
   'app.html.menuItem': true,
-  'app.page.profile': true,
+  'app.page.profile': true
 })
 
 exports.needs = nest({
@@ -26,7 +26,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.profile': profilePage,
+    'app.page.profile': profilePage
   })
 
   function menuItem () {
@@ -49,7 +49,6 @@ exports.create = function (api) {
 
     var { container, content } = api.app.html.scroller({ prepend: profile })
 
-
     pull(
       api.sbot.pull.userFeed({id: id, old: false, live: true}),
       Scroller(container, content, api.message.html.render, true, false)
@@ -68,4 +67,3 @@ exports.create = function (api) {
     return container
   }
 }
-

@@ -187,4 +187,3 @@ function crop (d, cb) {
     ])
   ])
 }
-

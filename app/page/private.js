@@ -8,7 +8,7 @@ const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
   'app.html.menuItem': true,
-  'app.page.private': true,
+  'app.page.private': true
 })
 
 exports.needs = nest({
@@ -74,4 +74,3 @@ exports.create = function (api) {
     return container
   }
 }
-

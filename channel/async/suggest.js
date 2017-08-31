@@ -67,4 +67,3 @@ function subscribedCaption (id, subscribed) {
 function mention (id) {
   return `[#${id}](#${id})`
 }
-

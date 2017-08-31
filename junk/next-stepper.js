@@ -55,4 +55,3 @@ function clone (obj) {
   for (var k in obj) _obj[k] = obj[k]
   return _obj
 }
-
