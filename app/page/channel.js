@@ -19,7 +19,7 @@ exports.create = function (api) {
     const { channel } = location
 
     const channelName = channel.substr(1)
-    const composer = api.message.html.compose({ meta: { type: 'post', channelName } })
+    const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
