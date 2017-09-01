@@ -17,7 +17,7 @@ require('setimmediate')
 // from more specialized to more general
 const sockets = combine(
   // horcrux,
-  // ssbchess,
+   ssbchess,
   // patchHub,
   // gatherings,
   // bayGatherings, // TODO collect gatherings into this
