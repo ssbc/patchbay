@@ -16,6 +16,7 @@ const patchbay = {
     message: bulk(__dirname, [ 'message/**/*.js' ]),
     router: bulk(__dirname, [ 'router/**/*.js' ]),
     styles: bulk(__dirname, [ 'styles/**/*.js' ]),
+
     config: require('./config'), // shouldn't be in here ?
     contextMenu: require('patch-context'),
   }
@@ -36,22 +37,10 @@ const sockets = combine(
 const api = entry(sockets, nest('app.html.app', 'first'))
 const app = api.app.html.app
 
-console.log('LOADING modules')
-const yes = app()
-document.body.appendChild(yes)
+module.exports = patchbay
 
-// function start (electron) {
-//   document.body.appendChild(app(electron))
-// }
-
-// // for electro
-// if (typeof window !== 'undefined') {
-//   start() 
-// }
-
-// // for people building with patchbay
-// start.modules = patchbay
-
-// // for electron
-// module.exports = start 
+// for electro[n]
+if (typeof window !== 'undefined') {
+  document.body.appendChild(app())
+}
 
