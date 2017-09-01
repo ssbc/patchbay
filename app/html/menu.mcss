@@ -17,11 +17,15 @@ Menu {
     z-index: 5
   }
 
-  -active {
+  -open {
     div {
       display: flex
       flex-direction: column
     }
+  }
+
+  -disconnected {
+    background-color: red
   }
 }
 
