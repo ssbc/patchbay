@@ -63,16 +63,16 @@ exports.create = function (api) {
 	var wc = electron.remote.getCurrentWebContents()
 	wc && wc.getZoomFactor((zf) => {
 	    api.settings.sync.set({
-		zoomFactor: zf,
-		bounds: electron.remote.getCurrentWindow().getBounds()
+		'electron-zoomFactor': zf,
+		'electron-windowBounds': electron.remote.getCurrentWindow().getBounds()
 	    })
 	})
     })
 
-    var zoomFactor = api.settings.sync.get('zoom')
+    var zoomFactor = api.settings.sync.get('electron-zoomFactor')
     if (zoomFactor)
 	electron.remote.getCurrentWebContents().setZoomFactor(zoomFactor)
-    var bounds = api.settings.sync.get('bounds')
+    var bounds = api.settings.sync.get('electron-windowBounds')
     if (bounds)
 	electron.remote.getCurrentWindow().setBounds(bounds)
 
