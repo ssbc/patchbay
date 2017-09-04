@@ -1,8 +1,8 @@
 const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
-const { isMsg, isFeed } = require('ssb-ref')
+const { isFeed } = require('ssb-ref')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.thread')
 
 exports.needs = nest({
   'about.html.avatar': 'first',
@@ -10,29 +10,23 @@ exports.needs = nest({
   'contact.obs.following': 'first',
   'feed.obs.thread': 'first',
   'keys.sync.id': 'first',
-  message: {
-    html: {
-      compose: 'first',
-      render: 'first'
-    },
-    'async.name': 'first',
-    'sync.unbox': 'first'
-  },
-  sbot: {
-    'async.get': 'first',
-    'pull.links': 'first'
-  }
+  'message.html.compose': 'first',
+  'message.html.render': 'first',
+  'message.async.name': 'first',
+  'message.sync.unbox': 'first',
+  'sbot.async.get': 'first',
+  'sbot.pull.links': 'first'
 })
 
 exports.create = function (api) {
-  return nest('app.html.page', threadPage)
+  return nest('app.page.thread', threadPage)
 
-  function threadPage (id) {
-    if (!isMsg(id)) return
+  function threadPage (location) {
+    const { key } = location
 
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
-    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(id)
+    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(key)
     const meta = Struct({
       type: 'post',
       root: rootId,
@@ -69,12 +63,13 @@ exports.create = function (api) {
       shrink: false
     })
     const content = h('section.content', map(messages, m => {
-      return api.message.html.render(resolve(m), {pageId: id})
+      return api.message.html.render(resolve(m), {pageId: key})
     }))
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
     container.classList.add('Thread')
-    api.message.async.name(id, (err, name) => {
+    container.title = key
+    api.message.async.name(key, (err, name) => {
       if (err) throw err
       container.title = name
     })
@@ -88,4 +83,3 @@ exports.create = function (api) {
     return container
   }
 }
-

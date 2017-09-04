@@ -5,22 +5,15 @@ const insertCss = require('insert-css')
 exports.gives = nest('app.html.app')
 
 exports.needs = nest({
-  app: {
-    async: {
-      catchLinkClick: 'first'
-    },
-    html: {
-      error: 'first',
-      externalConfirm: 'first',
-      tabs: 'first',
-      page: 'first'
-    },
-    sync: {
-      window: 'reduce',
-      addPage: 'first',
-      catchKeyboardShortcut: 'first'
-    }
-  },
+  'app.async.catchLinkClick': 'first',
+  'app.html.externalConfirm': 'first',
+  'app.html.tabs': 'first',
+  'app.page.errors': 'first',
+  'app.sync.window': 'reduce',
+  'app.sync.addPage': 'first',
+  'app.sync.catchKeyboardShortcut': 'first',
+  'router.sync.router': 'first',
+  'router.sync.normalise': 'first',
   'styles.css': 'reduce'
 })
 
@@ -33,8 +26,8 @@ exports.create = function (api) {
     insertCss(css)
 
     const initialTabs = ['/public', '/inbox', '/private', '/notifications']
+    // NB router converts these to { page: '/public' }
     const tabs = api.app.html.tabs(initialTabs)
-    const { addPage } = api.app.sync
 
     const App = h('App', tabs)
 
@@ -45,20 +38,22 @@ exports.create = function (api) {
     api.app.async.catchLinkClick(App, (link, { ctrlKey: openBackground, isExternal }) => {
       if (isExternal) return api.app.html.externalConfirm(link)
 
-      if (tabs.has(link)) tabs.select(link)
+      // TODO tidy up who and where this logic happens (do when adding patch-history)
+      const location = api.router.sync.normalise(link)
+      const tabId = JSON.stringify(location)
+      if (tabs.has(tabId)) tabs.select(tabId)
       else {
         const changeTab = !openBackground
-        addPage(link, changeTab)
+        api.app.sync.addPage(location, changeTab)
       }
     })
 
     // Catch errors
-    var { container: errorPage, content: errorList } = api.app.html.page('/errors')
+    var { container: errorPage, addError } = api.router.sync.router('/errors')
     window.addEventListener('error', ev => {
       if (!tabs.has('/errors')) tabs.add(errorPage, true)
 
-      const error = api.app.html.error(ev.error || ev)
-      errorList.appendChild(error)
+      addError(ev.error || ev)
     })
 
     return App
@@ -69,5 +64,3 @@ function values (object) {
   const keys = Object.keys(object)
   return keys.map(k => object[k])
 }
-
-

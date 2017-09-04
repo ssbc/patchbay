@@ -16,7 +16,6 @@ exports.create = function (api) {
   return nest('app.html.searchBar', function searchBar () {
     if (_search) return _search
 
-    const goTo = api.app.sync.goTo
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
@@ -26,14 +25,19 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-            if (goTo(input.value.trim(), !ev.ctrlKey)) {
-              input.blur()
+            var location = input.value.trim()
+            if (location[0] == '?') {
+              location = { page: 'search', query: location.substring(1) }
+            } else if (!['@', '#', '%', '&', '/'].includes(location[0])) {
+              location = { page: 'search', query: location }
             }
+
+            api.app.sync.goTo(location)
+            if (!ev.ctrlKey) input.blur()
             return
           case 27: // escape
             ev.preventDefault()
             input.blur()
-            return
         }
       }
     })
@@ -68,4 +72,3 @@ exports.create = function (api) {
     return _search
   })
 }
-

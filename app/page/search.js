@@ -4,20 +4,16 @@ const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const TextNodeSearcher = require('text-node-searcher')
 
-const next = require('../../../junk/next-stepper')
+const next = require('../../junk/next-stepper')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.search')
 
 exports.needs = nest({
-  'app.html': {
-    filter: 'first',
-    scroller: 'first'
-  },
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
   'message.html.render': 'first',
-  'sbot.pull': {
-    log: 'first',
-    stream: 'first'
-  }
+  'sbot.pull.log': 'first',
+  'sbot.pull.stream': 'first'
 })
 
 var whitespace = /\s+/
@@ -77,14 +73,13 @@ function fallback (createReader) {
 }
 
 exports.create = function (api) {
-  return nest('app.html.page', searchPage)
+  return nest('app.page.search', searchPage)
 
-  function searchPage (path) {
-    if (path.match(/^[@#%\/]/)) return
+  function searchPage (location) {
+    const query = location.query.trim()
 
-    var queryStr = path.replace(/^\??/, '').trim()
-    var query = queryStr.split(whitespace)
-    var matchesQuery = searchFilter(query)
+    var queryTerms = query.split(whitespace)
+    var matchesQuery = searchFilter(queryTerms)
 
     const search = Struct({
       isLinear: Value(false),
@@ -100,7 +95,7 @@ exports.create = function (api) {
       (done, matches) => done && matches === 0)
 
     const searchHeader = h('Search', [
-      h('header', h('h1', query.join(' '))),
+      h('header', h('h1', query)),
       when(search.isLinear,
         h('section.details', [
           h('div.searched', ['Searched: ', search.linear.checked]),
@@ -114,11 +109,10 @@ exports.create = function (api) {
     ])
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [searchHeader, filterMenu] })
-    container.id = path // helps tabs find this tab
 
     function renderMsg (msg) {
       var el = api.message.html.render(msg)
-      highlight(el, createOrRegExp(query))
+      highlight(el, createOrRegExp(queryTerms))
       return el
     }
 
@@ -133,7 +127,7 @@ exports.create = function (api) {
       )
 
       pull(
-        api.sbot.pull.stream(sbot => next(sbot.fulltext.search, {query: queryStr, reverse: true, limit: 500, live: false})),
+        api.sbot.pull.stream(sbot => next(sbot.fulltext.search, {query, reverse: true, limit: 500, live: false})),
         fallback((err) => {
           if (err === true) {
             search.fulltext.isDone.set(true)
@@ -154,7 +148,7 @@ exports.create = function (api) {
 
     draw()
 
+    container.title = '?' + query
     return container
   }
 }
-

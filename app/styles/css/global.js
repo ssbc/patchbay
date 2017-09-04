@@ -155,4 +155,3 @@ div.lightbox {
   border-radius: .2em;
 }
 `
-

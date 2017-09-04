@@ -9,4 +9,3 @@ exports.create = function (api) {
     return 'http://localhost:8989/blobs/get/' + id
   })
 }
-

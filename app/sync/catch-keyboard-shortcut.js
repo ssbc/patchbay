@@ -3,21 +3,17 @@ const nest = require('depnest')
 exports.gives = nest('app.sync.catchKeyboardShortcut')
 
 exports.needs = nest({
-  'app.html': {
-    searchBar: 'first',
-    tabs: 'first'
-  },
-  'app.sync': {
-    goTo: 'first'
-  }
+  'app.html.searchBar': 'first',
+  'app.html.tabs': 'first',
+  'app.sync.goTo': 'first'
 })
+
+var gPressed = false
 
 exports.create = function (api) {
   return nest('app.sync.catchKeyboardShortcut', catchKeyboardShortcut)
 
   function catchKeyboardShortcut (root) {
-    var gPressed = false
-
     var tabs = api.app.html.tabs()
     var search = api.app.html.searchBar()
     var goTo = api.app.sync.goTo
@@ -46,6 +42,9 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
       gPressed = true
+      window.setTimeout(() => {
+        gPressed = false
+      }, 3000)
       return
     }
     tabs.getCurrent().firstChild.scroll('first')
@@ -53,7 +52,6 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
   gPressed = false
 
   switch (ev.keyCode) {
-
     // Messages (cont'd)
     case 74: // j = older
       return tabs.getCurrent().firstChild.scroll(1)
@@ -78,6 +76,7 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
         tabs.remove(sel)
         tabs.select(Math.max(i - 1, 0))
       }
+      // TODO add history call in here
       return
 
     // Search
@@ -93,7 +92,6 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
       return
     case 53: // % = message search
       if (ev.shiftKey) search.activate('%', ev)
-      return
   }
 }
 
@@ -128,4 +126,3 @@ function toggleRawMessage (ev) {
   // this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }
-

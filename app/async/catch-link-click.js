@@ -23,7 +23,7 @@ exports.create = function (api) {
       if (!anchor) return true
 
       var href = anchor.getAttribute('href')
-      if (!href) return
+      if (!href || href == '#') return
 
       var url = Url.parse(href)
       var opts = {
@@ -38,4 +38,3 @@ exports.create = function (api) {
     })
   }
 }
-

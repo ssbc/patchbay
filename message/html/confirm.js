@@ -66,4 +66,3 @@ exports.create = function (api) {
     okay.focus()
   }
 }
-
