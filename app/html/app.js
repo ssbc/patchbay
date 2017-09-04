@@ -59,14 +59,15 @@ exports.create = function (api) {
       addError(ev.error || ev)
     })
 
-    // TODO - extract this to keep patch-lite isolated from electron
+    ////// TODO - extract this to keep patch-lite isolated from electron
+    const { getCurrentWebContents, getCurrentWindow } = electron.remote
     window.addEventListener('resize', () => {
-      var wc = electron.remote.getCurrentWebContents()
+      var wc = getCurrentWebContents()
       wc && wc.getZoomFactor((zf) => {
         api.settings.sync.set({
           electron: {
-          zoomFactor: zf,
-          windowBounds: electron.remote.getCurrentWindow().getBounds()
+            zoomFactor: zf,
+            windowBounds: getCurrentWindow().getBounds()
           }
         })
       })
@@ -74,12 +75,12 @@ exports.create = function (api) {
 
     var zoomFactor = api.settings.sync.get('electron.zoomFactor')
     if (zoomFactor)
-      electron.remote.getCurrentWebContents().setZoomFactor(zoomFactor)
+      getCurrentWebContents().setZoomFactor(zoomFactor)
 
     var bounds = api.settings.sync.get('electron.windowBounds')
     if (bounds)
-      electron.remote.getCurrentWindow().setBounds(bounds)
-    ///////////////////
+      getCurrentWindow().setBounds(bounds)
+    //////
 
     return App
   }

@@ -24,8 +24,8 @@ const sockets = combine(
   // bayGatherings, // TODO collect gatherings into this
   patchbay,
   patchContext,
-  patchcore,
-  patchSettings
+  patchSettings,
+  patchcore
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))
