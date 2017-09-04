@@ -2,14 +2,12 @@ const nest = require('depnest')
 const { h, Value } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('../../../junk/next-stepper')
+const next = require('../../junk/next-stepper')
 const ref = require('ssb-ref')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.page.inbox': true, 
+  'app.html.menuItem': true
 })
 
 exports.needs = nest({
@@ -28,25 +26,19 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
-  const route = '/inbox'
-
   return nest({
-    'app.html': {
-      page: privatePage,
-      menuItem: menuItem
-    }
+    'app.page.inbox': page, 
+    'app.html.menuItem': menuItem
   })
 
   function menuItem () {
     return h('a', {
       style: { order: 2 },
-      'ev-click': () => api.app.sync.goTo(route)
-    }, route)
+      'ev-click': () => api.app.sync.goTo({ page: 'inbox' })
+    }, '/inbox')
   }
 
-  function privatePage (path) {
-    if (path !== route) return
-
+  function page (location) {
     const id = api.keys.sync.id()
 
     const composer = api.message.html.compose({
@@ -93,6 +85,7 @@ exports.create = function (api) {
       return api.message.html.render(msgRollup, { layout: 'inbox' })
     }
 
+    container.title = '/inbox'
     return container
   }
 }
