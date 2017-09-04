@@ -26,6 +26,7 @@ exports.needs = nest({
   'message.html.markdown': 'first',
   sbot: {
     'async.addBlob': 'first',
+    'obs.connection': 'first',
     'pull.links': 'first'
   }
 })
@@ -37,7 +38,8 @@ exports.create = function (api) {
 
   // TODO refactor this to use obs better
   function edit (id) {
-    var mutual = Mutual.init(api.sbot)
+    // TODO - get this to wait till the connection is present !
+    var mutual = Mutual.init(api.sbot.obs.connection())
 
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
