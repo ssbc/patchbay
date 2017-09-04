@@ -12,4 +12,3 @@ exports.create = function (api) {
     return h('a', {href: id, title: id}, text || api.about.obs.name(id))
   })
 }
-

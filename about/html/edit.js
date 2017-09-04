@@ -6,7 +6,7 @@ const hyperlightbox = require('hyperlightbox')
 const Mutual = require('ssb-mutual')
 
 const {
-  h, Value, Array: MutantArray, Dict: MutantObject, Struct,
+  h, Value, Dict: MutantObject, Struct,
   map, computed, when, dictToCollection
 } = require('mutant')
 const pull = require('pull-stream')

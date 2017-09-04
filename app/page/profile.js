@@ -1,22 +1,18 @@
 const nest = require('depnest')
-const ref = require('ssb-ref')
 const Scroller = require('pull-scroll')
 const pull = require('pull-stream')
 const { h, watch } = require('mutant')
-const next = require('../../../junk/next-stepper')
+
+const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.profile': true
 })
 
 exports.needs = nest({
-  'about': {
-    'html.edit': 'first',
-    'obs.name': 'first'
-  },
+  'about.html.edit': 'first',
+  'about.obs.name': 'first',
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'contact.html.relationships': 'first',
@@ -27,10 +23,8 @@ exports.needs = nest({
 
 exports.create = function (api) {
   return nest({
-    'app.html': {
-      page: profilePage,
-      menuItem: menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.profile': profilePage
   })
 
   function menuItem () {
@@ -40,9 +34,8 @@ exports.create = function (api) {
     }, '/profile')
   }
 
-  function profilePage (id) {
-    if (!ref.isFeed(id)) return
-
+  function profilePage (location) {
+    const { feed: id } = location
     const profile = h('Profile', [
       h('section.edit', api.about.html.edit(id)),
       h('section.relationships', api.contact.html.relationships(id)),
@@ -53,10 +46,6 @@ exports.create = function (api) {
     ])
 
     var { container, content } = api.app.html.scroller({ prepend: profile })
-
-    const name = api.about.obs.name(id)
-    watch(name, function (name) { container.title = '@' + name })
-    container.id = id
 
     pull(
       api.sbot.pull.userFeed({id: id, old: false, live: true}),
@@ -71,7 +60,7 @@ exports.create = function (api) {
       Scroller(container, content, api.message.html.render, false, false)
     )
 
+    watch(api.about.obs.name(id), name => { container.title = '@' + name })
     return container
   }
 }
-

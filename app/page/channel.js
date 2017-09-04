@@ -2,38 +2,31 @@ const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 
-exports.gives = nest('app.html.page')
+exports.gives = nest('app.page.channel')
 
 exports.needs = nest({
-  'app.html': {
-    filter: 'first',
-    scroller: 'first'
-  },
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
   'feed.pull.channel': 'first',
-  message: {
-    html: {
-      compose: 'first',
-      render: 'first'
-    }
-    // 'sync.unbox': 'first'
-  }
+  'message.html.compose': 'first',
+  'message.html.render': 'first'
 })
 
 exports.create = function (api) {
-  return nest('app.html.page', channelView)
+  return nest('app.page.channel', channelView)
 
-  function channelView (path) {
-    if (path && !path.match(/#[^\s]+/)) return
+  function channelView (location) {
+    const { channel } = location
 
-    const channel = path.substr(1)
-    const composer = api.message.html.compose({ meta: { type: 'post', channel } })
+    const channelName = channel.substr(1)
+    const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
     function draw () {
       resetFeed({ container, content })
 
-      const openChannelSource = api.feed.pull.channel(channel)
+      const openChannelSource = api.feed.pull.channel(channelName)
 
       pull(
         openChannelSource({old: false}),
@@ -49,7 +42,7 @@ exports.create = function (api) {
     }
     draw()
 
+    container.title = channel
     return container
   }
 }
-

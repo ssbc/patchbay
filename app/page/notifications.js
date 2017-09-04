@@ -2,49 +2,38 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('../../../junk/next-stepper')
+
+const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
-  'app.html': {
-    page: true,
-    menuItem: true
-  }
+  'app.html.menuItem': true,
+  'app.page.notifications': true
 })
 
 exports.needs = nest({
-  'app.html': {
-    filter: 'first',
-    scroller: 'first'
-  },
+  'app.html.filter': 'first',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
-  'feed.pull': {
-    mentions: 'first',
-    public: 'first'
-  },
+  'feed.pull.mentions': 'first',
+  'feed.pull.public': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first'
 })
 
 exports.create = function (api) {
-  const route = '/notifications'
-
   return nest({
-    'app.html': {
-      page: notificationsPage,
-      menuItem
-    }
+    'app.html.menuItem': menuItem,
+    'app.page.notifications': notificationsPage
   })
 
   function menuItem () {
     return h('a', {
       style: { order: 3 },
-      'ev-click': () => api.app.sync.goTo(route)
-    }, route)
+      'ev-click': () => api.app.sync.goTo({ page: 'notifications' })
+    }, '/notifications')
   }
 
-  function notificationsPage (path) {
-    if (path !== route) return
-
+  function notificationsPage (location) {
     const id = api.keys.sync.id()
 
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
@@ -67,7 +56,7 @@ exports.create = function (api) {
     }
     draw()
 
+    container.title = '/notifications'
     return container
   }
 }
-

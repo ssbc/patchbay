@@ -3,17 +3,12 @@ const { h } = require('mutant')
 const Tabs = require('hypertabs')
 
 exports.gives = nest({
-  app: {
-    'html.tabs': true
-  }
+  'app.html.tabs': true
 })
 
 exports.needs = nest({
-  'app.html': {
-    menu: 'first',
-    page: 'first',
-    searchBar: 'first'
-  },
+  'app.html.menu': 'first',
+  'app.html.searchBar': 'first',
   'app.sync.addPage': 'first'
 })
 
@@ -26,7 +21,15 @@ exports.create = function (api) {
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
     const onSelect = (indexes) => {
-      search.input.value = _tabs.get(indexes[0]).content.id
+      const { id } = _tabs.get(indexes[0]).content
+
+      try {
+        var location = JSON.parse(id)
+      } catch (e) {
+        throw new Error('app.html.tabs expects all page ids to be stringified location objects')
+      }
+
+      search.input.value = buildSearchBarTermFromLocation(location)
     }
     _tabs = Tabs(onSelect, {
       append: h('div.navExtra', [ search, menu ])
@@ -44,3 +47,15 @@ exports.create = function (api) {
   })
 }
 
+function buildSearchBarTermFromLocation (location) {
+  const { page, query } = location
+
+  if (page === 'search') return '?' + query
+
+  const keys = Object.keys(location)
+  if (page && keys.length === 1) return '/' + page
+
+  return keys
+    .map(k => location[k])
+    .join(', ')
+}

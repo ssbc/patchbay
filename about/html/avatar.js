@@ -27,4 +27,3 @@ exports.create = function (api) {
     )
   }
 }
-
