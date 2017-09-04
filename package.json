@@ -68,6 +68,7 @@
     "require-style": "^1.0.0",
     "scuttlebot": "^10.4.4",
     "setimmediate": "^1.0.5",
+    "ssb-chess": "1.4.4",
     "ssb-horcrux": "^0.1.3",
     "ssb-ws": "^1.0.3",
     "style-resolve": "^1.0.1",

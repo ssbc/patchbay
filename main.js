@@ -26,7 +26,7 @@ const patchbay = {
 // from more specialized to more general
 const sockets = combine(
   // require('ssb-horcrux'),
-  // require('ssb-chess'),
+  require('ssb-chess'),
   // require('patch-hub'),
   // require('patch-gatherings'),
   // require('patchbay-gatherings'), // TODO collect gatherings into this
