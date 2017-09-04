@@ -1,13 +1,13 @@
 {
   "name": "patchbay",
-  "version": "7.9.0",
+  "version": "7.9.1",
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
     "setup": "npm install electron electro -g",
     "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
-    "start": "electro main.js"
+    "start": "electro main.js -- --title patchbay"
   },
   "browserify": {
     "transform": [
@@ -56,6 +56,7 @@
     "patch-hub": "^1.1.0",
     "patchbay-gatherings": "^1.1.2",
     "patchcore": "^1.10.3",
+    "patch-settings": "^1.0.0",
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
     "pull-next": "1.0.0",

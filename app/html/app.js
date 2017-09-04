@@ -1,6 +1,7 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 const insertCss = require('insert-css')
+const electron = require('electron')
 
 exports.gives = nest('app.html.app')
 
@@ -14,7 +15,9 @@ exports.needs = nest({
   'app.sync.catchKeyboardShortcut': 'first',
   'router.sync.router': 'first',
   'router.sync.normalise': 'first',
-  'styles.css': 'reduce'
+  'styles.css': 'reduce',
+  'settings.sync.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -55,6 +58,29 @@ exports.create = function (api) {
 
       addError(ev.error || ev)
     })
+
+    ////// TODO - extract this to keep patch-lite isolated from electron
+    const { getCurrentWebContents, getCurrentWindow } = electron.remote
+    window.addEventListener('resize', () => {
+      var wc = getCurrentWebContents()
+      wc && wc.getZoomFactor((zf) => {
+        api.settings.sync.set({
+          electron: {
+            zoomFactor: zf,
+            windowBounds: getCurrentWindow().getBounds()
+          }
+        })
+      })
+    })
+
+    var zoomFactor = api.settings.sync.get('electron.zoomFactor')
+    if (zoomFactor)
+      getCurrentWebContents().setZoomFactor(zoomFactor)
+
+    var bounds = api.settings.sync.get('electron.windowBounds')
+    if (bounds)
+      getCurrentWindow().setBounds(bounds)
+    //////
 
     return App
   }
