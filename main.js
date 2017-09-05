@@ -5,10 +5,8 @@ const nest = require('depnest')
 const horcrux = require('ssb-horcrux')
 const ssbchess = require('ssb-chess')
 const patchHub = require('patch-hub')
-const gatherings = require('patch-gatherings')
-const bayGatherings = require('patchbay-gatherings')
-const patchbay = require('./')
 const patchContext = require('patch-context')
+const patchbay = require('./')
 const patchcore = require('patchcore')
 const patchSettings = require('patch-settings')
 
@@ -20,8 +18,7 @@ const sockets = combine(
   // horcrux,
    ssbchess,
   // patchHub,
-  // gatherings,
-  // bayGatherings, // TODO collect gatherings into this
+  require('patchbay-gatherings'),
   patchbay,
   patchContext,
   patchSettings,
