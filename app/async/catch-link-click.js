@@ -3,10 +3,16 @@ const Url = require('url')
 
 exports.gives = nest('app.async.catchLinkClick')
 
+exports.needs = nest({
+  'app.html.externalConfirm': 'first',
+  'app.sync.goTo': 'first',
+  'router.sync.normalise': 'first',
+})
+
 exports.create = function (api) {
   return nest('app.async.catchLinkClick', catchLinkClick)
 
-  function catchLinkClick (root, cb) {
+  function catchLinkClick (root, cb = defaultCallback) {
     root.addEventListener('click', (ev) => {
       if (ev.target.tagName === 'INPUT' && ev.target.type === 'file') return
       if (ev.defaultPrevented) return // TODO check this is in the right place
@@ -37,4 +43,13 @@ exports.create = function (api) {
       cb(href, opts)
     })
   }
+
+  function defaultCallback (link, { ctrlKey, isExternal }) {
+    if (isExternal) return api.app.html.externalConfirm(link)
+
+    const location = api.router.sync.normalise(link)
+    const openBackground = ctrlKey
+    api.app.sync.goTo(location, openBackground)
+  }
 }
+

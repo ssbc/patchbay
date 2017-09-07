@@ -19,6 +19,7 @@ exports.create = function (api) {
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
+    // TODO api.history.sync.push
     const input = h('input', {
       type: 'search',
       placeholder: '?search, @name, #channel',

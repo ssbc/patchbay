@@ -5,7 +5,8 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first'
+  'app.sync.goTo': 'first',
+  'history.obs.store': 'first'
 })
 
 var gPressed = false
