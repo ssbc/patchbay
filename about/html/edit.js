@@ -92,7 +92,6 @@ exports.create = function (api) {
 
       var balance_els = [];
       Object.keys(balances).forEach(function(key) {
-        console.log(key)
         balances_div.appendChild(
           h('div', `💰 ${balances[key]} ${key}`)
         )
