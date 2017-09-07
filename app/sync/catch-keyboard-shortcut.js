@@ -6,7 +6,6 @@ exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
   'app.sync.goTo': 'first',
-  'history.obs.store': 'first'
 })
 
 var gPressed = false
