@@ -10,7 +10,9 @@ exports.gives = nest('app.html.filter')
 exports.needs = nest({
   'about.async.suggest': 'first',
   'contact.obs.following': 'first',
-  'keys.sync.id': 'first'
+  'keys.sync.id': 'first',
+  'settings.sync.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -23,15 +25,15 @@ exports.create = function (api) {
 
     const myId = api.keys.sync.id()
     const peopleIFollow = api.contact.obs.following(myId)
-    const onlyPeopleIFollow = Value(false)
+    const onlyPeopleIFollow = Value(api.settings.sync.get('filter.onlyPeopleIFollow') || false)
     const onlyAuthor = Value()
 
-    const showPost = Value(true)
-    const showAbout = Value(true)
-    const showVote = Value(false)
-    const showContact = Value(false)
-    const showChannel = Value(false)
-    const showPub = Value(false)
+    const showPost = Value(api.settings.sync.get('filter.showPost') || true)
+    const showAbout = Value(api.settings.sync.get('filter.showAbout') || true)
+    const showVote = Value(api.settings.sync.get('filter.showVote') || false)
+    const showContact = Value(api.settings.sync.get('filter.showContact') || false)
+    const showChannel = Value(api.settings.sync.get('filter.showChannel') || false)
+    const showPub = Value(api.settings.sync.get('filter.showPub') || false)
 
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
@@ -77,6 +79,22 @@ exports.create = function (api) {
       return h('FilterToggle', {
         'ev-click': () => {
           obs.set(!obs())
+
+	  if (label == 'Only people I follow')
+	    api.settings.sync.set({ filter: { onlyPeopleIFollow: obs() }})
+	  else if (label == 'post')
+	    api.settings.sync.set({ filter: { showPost: obs() }})
+	  else if (label == 'about')
+	    api.settings.sync.set({ filter: { showAbout: obs() }})
+	  else if (label == 'vote')
+	    api.settings.sync.set({ filter: { showVote: obs() }})
+	  else if (label == 'contact')
+	    api.settings.sync.set({ filter: { showContact: obs() }})
+	  else if (label == 'channel')
+	    api.settings.sync.set({ filter: { showChannel: obs() }})
+	  else if (label == 'pub')
+	    api.settings.sync.set({ filter: { showPub: obs() }})
+
           draw()
         }}, [
           h('label', label),
