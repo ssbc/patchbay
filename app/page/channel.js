@@ -1,6 +1,7 @@
 const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
+const { h } = require('mutant')
 
 exports.gives = nest('app.page.channel')
 
@@ -9,7 +10,10 @@ exports.needs = nest({
   'app.html.scroller': 'first',
   'feed.pull.channel': 'first',
   'message.html.compose': 'first',
-  'message.html.render': 'first'
+  'message.html.render': 'first',
+  'channel.obs.subscribed': 'first',
+  'keys.sync.id': 'first',
+  'sbot.async.publish': 'first'
 })
 
 exports.create = function (api) {
@@ -19,9 +23,22 @@ exports.create = function (api) {
     const { channel } = location
 
     const channelName = channel.substr(1)
+
+    var subscribed = api.channel.obs.subscribed(api.keys.sync.id())
+
+    function subscribeToChannel() {
+      api.sbot.async.publish({
+        type: 'channel',
+        channel: channelName,
+        subscribed: true
+      })
+    }
+
+    const channelHeader = h('header', [channel, h('span', subscribed.has(channelName)() ? ' is subscribed' : h('button', { 'ev-click': subscribeToChannel }, 'Subscribe'))])
+
     const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
+    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu, channelHeader] })
 
     function draw () {
       resetFeed({ container, content })
