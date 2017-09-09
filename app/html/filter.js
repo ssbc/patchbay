@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, when } = require('mutant')
+const { h, Value, when, computed } = require('mutant')
 const Abort = require('pull-abortable')
 const pull = require('pull-stream')
 const addSuggest = require('suggest-box')
@@ -35,6 +35,10 @@ exports.create = function (api) {
     const showChannel = Value(api.settings.sync.get('filter.showChannel') || false)
     const showPub = Value(api.settings.sync.get('filter.showPub') || false)
 
+    const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
+	  return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub
+      })
+
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
         const author = ev.target.value
@@ -47,7 +51,9 @@ exports.create = function (api) {
 
     const filterMenu = h('Filter', [
       h('i', {
-        classList: when(showFilters, 'fa fa-filter -active', 'fa fa-filter'),
+        classList: when(showFilters, 'fa fa-filter -active',
+		     when(isFiltered, 'fa fa-filter -filtered',
+			  'fa fa-filter')),
         'ev-click': () => showFilters.set(!showFilters())
       }),
       h('i.fa.fa-angle-up', { 'ev-click': draw }),

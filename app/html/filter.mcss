@@ -18,6 +18,9 @@ Filter {
     -active {
       color: #555
     }
+    -filtered {
+      color: #0f0
+    }
   }
   i.fa-angle-up {
     left: 1rem
