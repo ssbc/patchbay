@@ -34,9 +34,10 @@ exports.create = function (api) {
     const showContact = Value(api.settings.sync.get('filter.showContact') || false)
     const showChannel = Value(api.settings.sync.get('filter.showChannel') || false)
     const showPub = Value(api.settings.sync.get('filter.showPub') || false)
+    const showChess = Value(api.settings.sync.get('filter.showChess') || true)
 
-    const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
-	  return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub
+    const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub, showChess], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
+	  return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub || !showChess
       })
 
     const authorInput = h('input', {
@@ -75,7 +76,8 @@ exports.create = function (api) {
             toggle({ obs: showAbout, label: 'about' }),
             toggle({ obs: showContact, label: 'contact' }),
             toggle({ obs: showChannel, label: 'channel' }),
-            toggle({ obs: showPub, label: 'pub' })
+            toggle({ obs: showPub, label: 'pub' }),
+            toggle({ obs: showChess, label: 'chess' })
           ])
         ])
       ])
@@ -100,6 +102,8 @@ exports.create = function (api) {
 	    api.settings.sync.set({ filter: { showChannel: obs() }})
 	  else if (label == 'pub')
 	    api.settings.sync.set({ filter: { showPub: obs() }})
+	  else if (label == 'chess')
+	    api.settings.sync.set({ filter: { showChess: obs() }})
 
           draw()
         }}, [
@@ -145,6 +149,12 @@ exports.create = function (api) {
           return showChannel()
         case 'pub':
           return showPub()
+        case 'chess_invite':
+          return showChess()
+        case 'chess_game_end':
+          return showChess()
+        case 'chess_move':
+          return showChess()
         default:
           return true
       }
