@@ -29,7 +29,6 @@ exports.create = function (api) {
     if (tabs.has(locationId)) {
       tabs.select(locationId)
       api.history.sync.push(location)
-      console.log('history', api.history.obs.store()())
       return true
     }
 
@@ -49,7 +48,6 @@ exports.create = function (api) {
       api.history.sync.push(location)
     }
 
-    console.log('history', api.history.obs.store()())
     return openBackground
   }
 }
