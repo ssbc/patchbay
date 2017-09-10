@@ -23,7 +23,7 @@ Message {
 
     a {
       font-size: .8rem
-      _textSubtle
+      $textSubtle
     }
   }
 
@@ -41,7 +41,7 @@ Message {
     }
 
     a {
-      _textSubtle
+      $textSubtle
     }
  
     /* this is for private message_meta, TODO find a better home */
@@ -57,7 +57,7 @@ Message {
     font-size: .9rem
 
     span, span a {
-      _textSubtle
+      $textSubtle
     }
   }
 
@@ -98,7 +98,7 @@ Message {
     }
 
     a.unlike {
-      _textSubtle
+      $textSubtle
     }
   }
 
