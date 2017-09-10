@@ -47,7 +47,7 @@
     "hypertabs": "git+https://github.com/hyperhype/hypertabs.git#add_onClose_hook",
     "insert-css": "^2.0.0",
     "libnested": "^1.2.1",
-    "micro-css": "^1.0.0",
+    "micro-css": "^2.0.1",
     "mutant": "^3.18.0",
     "mutant-pull-reduce": "^1.0.1",
     "open-external": "^0.1.1",
