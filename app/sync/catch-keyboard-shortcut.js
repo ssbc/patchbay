@@ -6,7 +6,6 @@ exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
   'app.sync.goTo': 'first',
-  'history.sync.back': 'first',
 })
 
 var gPressed = false
@@ -18,12 +17,11 @@ exports.create = function (api) {
     var tabs = api.app.html.tabs()
     var search = api.app.html.searchBar()
     var goTo = api.app.sync.goTo
-    var back = api.history.sync.back
 
     root.addEventListener('keydown', (ev) => {
       isTextFieldEvent(ev)
         ? textFieldShortcuts(ev)
-        : genericShortcuts(ev, { tabs, search, goTo, back })
+        : genericShortcuts(ev, { tabs, search, goTo })
     })
   }
 }
@@ -39,7 +37,7 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, search, goTo, back }) {
+function genericShortcuts (ev, { tabs, search, goTo }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -49,16 +47,16 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
       }, 3000)
       return
     }
-    tabs.getCurrent().firstChild.scroll('first')
+    tabs.currentPage().scroll('first')
   }
   gPressed = false
 
   switch (ev.keyCode) {
     // Messages (cont'd)
     case 74: // j = older
-      return tabs.getCurrent().firstChild.scroll(1)
+      return tabs.currentPage().scroll(1)
     case 75: // k = newer
-      return tabs.getCurrent().firstChild.scroll(-1)
+      return tabs.currentPage().scroll(-1)
     case 13: // enter = open
       return goToMessage(ev, { tabs, goTo })
     case 79: // o = open
@@ -68,15 +66,15 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
 
     // Tabs
     case 72: // h = left
-      return tabs.selectRelative(-1)
+      tabs.selectRelative(-1)
+      return goTo(JSON.parse(tabs.currentPage().id))
     case 76: // l = right
-      return tabs.selectRelative(1)
+      tabs.selectRelative(1)
+      return goTo(JSON.parse(tabs.currentPage().id))
     case 88: // x = close
       if (tabs.selected) {
         var sel = tabs.selected
-        var i = sel.reduce(function (a, b) { return Math.min(a, b) })
         tabs.remove(sel)
-        back()
       }
       return
 
@@ -108,11 +106,11 @@ function goToMessage (ev, { tabs, goTo }) {
 }
 
 function scrollDownToMessage (id, tabs) {
-  tabs.getCurrent().firstChild.scroll('first')
+  tabs.currentPage().scroll('first')
   locateKey()
 
   function locateKey () {
-    const msg = tabs.getCurrent().querySelector(`[data-id='${id}']`)
+    const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
     if (msg === null) return setTimeout(locateKey, 100)
 
     ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
