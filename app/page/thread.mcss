@@ -34,7 +34,7 @@ Thread {
         margin: .4rem
 
         font-size: .9rem
-        _textSubtle
+        $textSubtle
 
         -warning {
           font-size: 1rem
