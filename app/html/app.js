@@ -28,7 +28,7 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const initialTabs = ['/public', '/inbox', '/private', '/notifications']
+    const initialTabs = ['/public', '/inbox', '/notifications']
     // NB router converts these to { page: '/public' }
     const tabs = api.app.html.tabs(initialTabs)
 
