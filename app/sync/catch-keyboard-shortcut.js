@@ -32,8 +32,14 @@ function isTextFieldEvent (ev) {
 }
 
 function textFieldShortcuts (ev) {
-  if (ev.keyCode === 13 && ev.ctrlKey) {
-    ev.target.publish()  // expects the textField to have a publish method
+  switch (ev.keyCode) {
+    case 13: // ctrl+enter
+      if (ev.ctrlKey) {
+        ev.target.publish()  // expects the textField to have a publish method
+      }
+      return
+    case 27: // esc
+      return ev.target.blur()
   }
 }
 
