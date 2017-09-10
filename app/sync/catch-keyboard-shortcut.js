@@ -6,6 +6,7 @@ exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
   'app.sync.goTo': 'first',
+  'history.sync.back': 'first',
 })
 
 var gPressed = false
@@ -17,11 +18,12 @@ exports.create = function (api) {
     var tabs = api.app.html.tabs()
     var search = api.app.html.searchBar()
     var goTo = api.app.sync.goTo
+    var back = api.history.sync.back
 
     root.addEventListener('keydown', (ev) => {
       isTextFieldEvent(ev)
         ? textFieldShortcuts(ev)
-        : genericShortcuts(ev, { tabs, search, goTo })
+        : genericShortcuts(ev, { tabs, search, goTo, back })
     })
   }
 }
@@ -37,7 +39,7 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, goTo, search }) {
+function genericShortcuts (ev, { tabs, search, goTo, back }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -74,9 +76,8 @@ function genericShortcuts (ev, { tabs, goTo, search }) {
         var sel = tabs.selected
         var i = sel.reduce(function (a, b) { return Math.min(a, b) })
         tabs.remove(sel)
-        tabs.select(Math.max(i - 1, 0))
+        back()
       }
-      // TODO add history call in here
       return
 
     // Search
@@ -126,3 +127,4 @@ function toggleRawMessage (ev) {
   // this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }
+
