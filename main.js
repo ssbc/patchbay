@@ -19,6 +19,7 @@ const sockets = combine(
    ssbchess,
   // patchHub,
   require('patchbay-gatherings'),
+  require('patch-inbox'),
   require('patch-history'),
   patchbay,
   patchContext,

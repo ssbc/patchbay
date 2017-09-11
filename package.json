@@ -54,6 +54,7 @@
     "patch-context": "^2.0.0",
     "patch-history": "^1.0.0",
     "patch-hub": "^1.1.0",
+    "patch-inbox": "^1.0.2",
     "patch-settings": "^1.0.0",
     "patchbay-gatherings": "^2.0.0",
     "patchcore": "^1.10.3",
