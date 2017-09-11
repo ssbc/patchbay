@@ -65,15 +65,35 @@ exports.create = function (api) {
     })
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
+    var warningMessage = Value(null)
+    var warning = h('section.warning',
+      { className: when(warningMessage, '-open', '-closed') },
+      [
+        h('div.warning', warningMessage),
+        h('div.close', { 'ev-click': () => warningMessage.set(null) }, 'x')
+      ]
+    )
     var fileInput = api.blob.html.input(file => {
+
+      const megabytes = file.size / 1024 / 1024
+      if (megabytes >= 5) {
+        const rounded = Math.floor(megabytes*100)/100
+        warningMessage.set([
+          h('i.fa.fa-exclamation-triangle'),
+          h('strong', file.name),
+          ` is ${rounded}MB - the current limit is 5MB`
+        ])
+        return
+      }
+
       files.push(file)
       filesById[file.link] = file
 
-      var embed = file.type.match(/^image/) ? '!' : ''
-      var spacer = embed ? '\n' : ' '
-      var insertLink = spacer + embed + '[' + file.name + ']' + '(' + file.link + ')' + spacer
+      const pos = textArea.selectionStart
+      const embed = file.type.match(/^image/) ? '!' : ''
+      const spacer = embed ? '\n' : ' '
+      const insertLink = spacer + embed + '[' + file.name + ']' + '(' + file.link + ')' + spacer
 
-      var pos = textArea.selectionStart
       textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
 
       console.log('added:', file)
@@ -93,6 +113,7 @@ exports.create = function (api) {
     }, [
       channelInput,
       textArea,
+      warning,
       actions
     ])
 
@@ -117,16 +138,19 @@ exports.create = function (api) {
           word = word.slice(0, -1)
         }
         // TODO: when no emoji typed, list some default ones
-        cb(null, api.emoji.sync.names().filter(function (name) {
-          return name.slice(0, word.length) === word
-        }).slice(0, 100).map(function (emoji) {
-          return {
-            image: api.emoji.sync.url(emoji),
-            title: emoji,
-            subtitle: emoji,
-            value: ':' + emoji + ':'
-          }
-        }))
+
+        const suggestions = api.emoji.sync.names()
+          .filter(name => ~name.indexOf(word))
+          .slice(0, 100).map(emoji => {
+            return {
+              image: api.emoji.sync.url(emoji),
+              title: emoji,
+              subtitle: emoji,
+              value: ':' + emoji + ':'
+            }
+          })
+
+        cb(null, suggestions)
       }
     }, {cls: 'SuggestBox'})
 

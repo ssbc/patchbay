@@ -14,24 +14,24 @@ exports.create = function (api) {
 }
 
 const mainMixins = `
-_textPrimary {
+$textPrimary {
   color: #222
 }
 
-_textSubtle {
+$textSubtle {
   color: gray
 }
 
-_backgroundPrimary {
+$backgroundPrimary {
   background-color: #50aadf
 }
 
-_avatarLarge {
+$avatarLarge {
   width: 56px
   height: 56px
 }
 
-_avatarSmall {
+$avatarSmall {
   width: 32px
   height: 32px
 }

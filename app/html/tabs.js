@@ -9,17 +9,21 @@ exports.gives = nest({
 exports.needs = nest({
   'app.html.menu': 'first',
   'app.html.searchBar': 'first',
-  'app.sync.addPage': 'first'
+  'app.sync.goTo': 'first',
+  'history.obs.store': 'first',
+  'history.sync.push': 'first'
 })
 
 exports.create = function (api) {
   var _tabs
 
+  return nest({
+    'app.html.tabs': tabs
+  })
+
   function tabs (initialTabs = []) {
     if (_tabs) return _tabs
 
-    const search = api.app.html.searchBar()
-    const menu = api.app.html.menu()
     const onSelect = (indexes) => {
       const { id } = _tabs.get(indexes[0]).content
 
@@ -29,24 +33,35 @@ exports.create = function (api) {
         throw new Error('app.html.tabs expects all page ids to be stringified location objects')
       }
 
+      api.history.sync.push(location)
       search.input.value = buildSearchBarTermFromLocation(location)
     }
-    _tabs = Tabs(onSelect, {
+    const onClose = (page) => {
+      var history = api.history.obs.store()
+      const prunedHistory = history().filter(loc => {
+        return JSON.stringify(loc) != page.id
+      })
+      history.set(prunedHistory)
+    }
+    
+    const search = api.app.html.searchBar()
+    const menu = api.app.html.menu()
+
+    _tabs = Tabs({
+      onSelect,
+      onClose,
       append: h('div.navExtra', [ search, menu ])
     })
-    _tabs.getCurrent = () => _tabs.get(_tabs.selected[0])
+    _tabs.currentPage = () => _tabs.get(_tabs.selected[0]).firstChild
 
     // # TODO: review - this works but is strange
-    initialTabs.forEach(p => api.app.sync.addPage(p))
-    _tabs.select(0)
+    initialTabs.forEach(p => api.app.sync.goTo(p))
+    api.app.sync.goTo(initialTabs[0])
     return _tabs
   }
-
-  return nest({
-    'app.html.tabs': tabs
-  })
 }
 
+// TODO - move this responsibility out to the searchBar?
 function buildSearchBarTermFromLocation (location) {
   const { page, query } = location
 
@@ -59,3 +74,4 @@ function buildSearchBarTermFromLocation (location) {
     .map(k => location[k])
     .join(', ')
 }
+

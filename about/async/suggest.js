@@ -24,9 +24,7 @@ exports.create = function (api) {
       if (!word) return recentSuggestions()
 
       return suggestions()
-        .filter((item) => {
-          return item.title.toLowerCase().startsWith(word.toLowerCase())
-        })
+        .filter(item => ~item.title.indexOf(word))
         .reverse()
     }
   }
