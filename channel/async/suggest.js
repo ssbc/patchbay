@@ -21,9 +21,8 @@ exports.create = function (api) {
       if (!word) {
         return suggestions().slice(0, 100)
       } else {
-        const wordRegex = new RegExp(word, 'i')
         return suggestions()
-          .filter(item => item.title.match(wordRegex))
+          .filter(item => ~item.title.indexOf(word))
       }
     }
   })

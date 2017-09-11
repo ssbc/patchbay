@@ -138,10 +138,9 @@ exports.create = function (api) {
           word = word.slice(0, -1)
         }
         // TODO: when no emoji typed, list some default ones
-        const wordRegex = new RegExp(word, 'i')
 
         const suggestions = api.emoji.sync.names()
-          .filter(name => name.match(wordRegex))
+          .filter(name => ~name.indexOf(word))
           .slice(0, 100).map(emoji => {
             return {
               image: api.emoji.sync.url(emoji),

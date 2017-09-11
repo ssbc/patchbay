@@ -23,9 +23,8 @@ exports.create = function (api) {
     return function (word) {
       if (!word) return recentSuggestions()
 
-      const wordRegex = new RegExp(word, 'i')
       return suggestions()
-        .filter(item => item.title.match(wordRegex))
+        .filter(item => ~item.title.indexOf(word))
         .reverse()
     }
   }
