@@ -11,7 +11,7 @@ This makes in very easy to create say, a renderer for a new message type, or swi
 
 ## Setup
 
-Libsodium has some build dependencies. On *ubuntu systems the following might help:
+Libsodium has some build dependencies. On ubuntu systems the following might help:
 
 ```sh
 sudo apt-get install m4 libtool eclipse-cdt-autotools
@@ -22,11 +22,38 @@ On MacOS you may need the following packages installed (in this example, via [Ho
 brew install libtool automake autoconf
 ```
 
-Install Scuttlebot (your gossip server)
+### Easy Install
+
+This runs an embedded sbot with all the right plugins already installed.
 
 ```sh
-npm install scuttlebot@latest -g
+git clone https://github.com/ssbc/patchbay.git
+cd patchbay
+npm install
+npm run rebuild
+```
 
+Patchbay doesn't give you a way to join pubs yet, so this is good if you've already done that with another client (like Patchwork).
+
+
+### Harder Install (full dev setup)
+
+Install a standalone scuttlebot (your gossip server)
+```sh
+npm install scuttlebot@latest -g
+```
+
+Until https://github.com/ssbc/scuttlebot/pull/417 is resolved, you may need to do this instead:
+
+```sh
+git clone https://github.com/ssbc/scuttlebot.git
+cd scuttlebot
+git checkout ssb-private
+npm install
+npm link  // this should make sbot accessible globally
+```
+
+```sh
 # make sure you have secure-scuttlebutt@15.5.2
 npm ls secure-scuttlebutt -g
 
@@ -42,27 +69,33 @@ sbot plugins.install ssb-fulltext # for faster searches
 ```
 
 Restart your sbot, then (optionally) use an invite code. This will give you your first friend, from which point you can find others:
-```
- sbot invite.accept LONG_INVITE_CODE_MAYBE_IN_QUOTES
+```sh
+sbot invite.accept LONG_INVITE_CODE_MAYBE_IN_QUOTES
 ```
 
-Install Patchbay (an interface for the your scuttlebutt database)
-
+Install Patchbay
 ```sh
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
-npm run setup
 npm run rebuild
 ```
 
-
 ## Running the desktop app
 
-From inside the patchbay repo folder, 
 
+Easy mode (embedded sbot):
 ```sh
+# from the patchbay repo folder
 npm start
+```
+
+Harder mode:
+```sh
+sbot server
+
+# from the patchbay repo folder
+npm run dev
 ```
 
 ## How to add a feature
@@ -76,10 +109,7 @@ See the code for more examples.
 
 ## Module graph
 
-patchbay uses [depject](http://github.com/dominictarr/depject) to manage it's modules. Here is a graph of the current connections between them (round shows module, square shows api, arrow direction points from user to provider).
-
-[module graph](./graph.svg)
-
+TODO - reinstate this
 
 ## License
 
