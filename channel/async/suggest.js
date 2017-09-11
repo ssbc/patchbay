@@ -21,9 +21,9 @@ exports.create = function (api) {
       if (!word) {
         return suggestions().slice(0, 100)
       } else {
-        return suggestions().filter((item) => {
-          return item.title.toLowerCase().startsWith(word.toLowerCase())
-        })
+        const wordRegex = new RegExp(word, 'i')
+        return suggestions()
+          .filter(item => item.title.match(wordRegex))
       }
     }
   })
