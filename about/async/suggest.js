@@ -23,10 +23,9 @@ exports.create = function (api) {
     return function (word) {
       if (!word) return recentSuggestions()
 
+      const wordRegex = new RegExp(word, 'i')
       return suggestions()
-        .filter((item) => {
-          return item.title.toLowerCase().startsWith(word.toLowerCase())
-        })
+        .filter(item => item.title.match(wordRegex))
         .reverse()
     }
   }

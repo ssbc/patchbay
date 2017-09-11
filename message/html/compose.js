@@ -138,16 +138,20 @@ exports.create = function (api) {
           word = word.slice(0, -1)
         }
         // TODO: when no emoji typed, list some default ones
-        cb(null, api.emoji.sync.names().filter(function (name) {
-          return name.slice(0, word.length) === word
-        }).slice(0, 100).map(function (emoji) {
-          return {
-            image: api.emoji.sync.url(emoji),
-            title: emoji,
-            subtitle: emoji,
-            value: ':' + emoji + ':'
-          }
-        }))
+        const wordRegex = new RegExp(word, 'i')
+
+        const suggestions = api.emoji.sync.names()
+          .filter(name => name.match(wordRegex))
+          .slice(0, 100).map(emoji => {
+            return {
+              image: api.emoji.sync.url(emoji),
+              title: emoji,
+              subtitle: emoji,
+              value: ':' + emoji + ':'
+            }
+          })
+
+        cb(null, suggestions)
       }
     }, {cls: 'SuggestBox'})
 
