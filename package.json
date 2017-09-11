@@ -2,12 +2,12 @@
   "name": "patchbay",
   "version": "7.10.0",
   "description": "patchbay 2, built on patchcore",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "lint": "standard",
-    "setup": "npm install electron electro -g",
-    "rebuild": "npm rebuild --runtime=electron --target=$(electron -v) --abi=$(electron --abi) --disturl=https://atom.io/download/atom-shell",
-    "start": "electro main.js -- --title patchbay"
+    "rebuild": "cross-script npm rebuild --runtime=electron \"--target=$(electron -v)\" \"--abi=$(electron --abi)\" --disturl=https://atom.io/download/atom-shell",
+    "start": "electron index.js -- --title patchbay",
+    "dev": "echo 'run your own sbot!' && electro main.js -- --title patchbay"
   },
   "browserify": {
     "transform": [
@@ -36,9 +36,12 @@
   "dependencies": {
     "bulk-require": "^1.0.0",
     "bulkify": "^1.4.2",
+    "cross-script": "^1.0.5",
     "dataurl-": "^0.1.0",
     "depject": "^3.2.0",
     "depnest": "^1.0.2",
+    "electron-default-menu": "^1.0.1",
+    "electron-window-state": "^4.1.1",
     "es2040": "^1.2.5",
     "font-awesome": "^4.7.0",
     "hypercrop": "^1.1.0",
@@ -61,13 +64,15 @@
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
     "pull-next": "1.0.0",
-    "pull-scroll": "^1.0.7",
+    "pull-scroll": "^1.0.9",
     "pull-stream": "^3.5.0",
     "read-directory": "^2.0.0",
     "require-style": "^1.0.0",
+    "scuttlebot": "^10.4.4",
     "setimmediate": "^1.0.5",
     "ssb-chess": "1.4.4",
     "ssb-horcrux": "^0.1.3",
+    "ssb-ws": "^1.0.3",
     "ssb-mentions": "~0.4.0",
     "ssb-mutual": "^0.1.0",
     "style-resolve": "^1.0.1",
@@ -76,6 +81,18 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
+    "electro": "^2.0.3",
+    "electron": "~1.6.11",
+    "ssb-about": "^0.1.0",
+    "ssb-backlinks": "^0.4.0",
+    "ssb-blobs": "^1.1.3",
+    "ssb-contacts": "0.0.2",
+    "ssb-friends": "^2.2.2",
+    "ssb-fulltext": "^1.0.1",
+    "ssb-keys": "^7.0.10",
+    "ssb-mentions": "^0.4.0",
+    "ssb-private": "^0.1.2",
+    "ssb-query": "^0.1.2",
     "standard": "^8.6.0"
   }
 }

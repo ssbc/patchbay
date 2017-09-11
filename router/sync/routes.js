@@ -38,6 +38,7 @@ exports.create = (api) => {
       [ loc => isMsg(loc.key), pages.thread ]
     ]
 
+    // stack already loaded routes on top of these
     return [...sofar, ...routes]
   })
 }

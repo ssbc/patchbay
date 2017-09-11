@@ -24,7 +24,10 @@ exports.create = function (api) {
   return nest('app.html.app', app)
 
   function app () {
+    console.log("STARTING app")
+
     window = api.app.sync.window(window)
+ 
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
