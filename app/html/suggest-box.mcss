@@ -70,7 +70,7 @@ body {
           div.key {
             align-self: flex-end
 
-            margin: auto: 0
+            margin: auto 0
 
             font-family: monospace
             font-size: .8rem
