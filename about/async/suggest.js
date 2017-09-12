@@ -8,7 +8,6 @@ exports.gives = nest('about.async.suggest')
 exports.needs = nest({
   'about.obs.groupedValues': 'first',
   'about.obs.name': 'first',
-  'about.obs.names': 'first',
   'about.obs.imageUrl': 'first',
   'contact.obs.following': 'first',
   'feed.obs.recent': 'first',
@@ -27,39 +26,29 @@ exports.create = function (api) {
       if (!word) return recentSuggestions()
 
       wordLower = word.toLowerCase()
-      const nameMatches = suggestions()
-        .filter(item => {
-          // if (item.title) return ~item.title.toLowerCase().indexOf(wordLower)
-          if (item._name) return ~item._name.toLowerCase().indexOf(wordLower)
-          return ~item.subtitle.toLowerCase().indexOf(wordLower)
+      return suggestions()
+        .filter(item => ~item.title.toLowerCase().indexOf(wordLower))
+        .sort((a, b) => { 
+          // where name is matching exactly so far
+          if (a.title.indexOf(word) === 0) return -1
+          if (b.title.indexOf(word) === 0) return +1
+
+          // where name is matching exactly so far (case insensitive)
+          if (a.title.toLowerCase().indexOf(wordLower) === 0) return -1
+          if (b.title.toLowerCase().indexOf(wordLower) === 0) return +1
         })
-
-
-      return nameMatches
-        .sort((a, b) => { // sort primary aliases to top
-          if (a._name.indexOf(word) === 0) return -1
-          if (b._name.indexOf(word) === 0) return +1
-
-          if (a._name.toLowerCase().indexOf(wordLower) === 0) return -1
-          if (b._name.toLowerCase().indexOf(wordLower) === 0) return +1
-        })
-        // .sort((a, b) => {  // sort into blocks of id
-        //   if (a.id === b.id) return 0
-        //   if (a.id > b.id) return -1
-        //   if (a.id < b.id) return +1
-        // })
         .reduce((sofar, match) => {
-          // prune to the first instance of each id
+          // prune down to the first instance of each id
           // this presumes if you were typing e.g. "dino" you don't need "ahdinosaur" as well
           if (sofar.find(el => el.id === match.id)) return sofar
 
           return [...sofar, match]
         }, [])
-        // .sort((a, b) => {  // sort isTopAlias avatar to top
-        //   if (a.id !== b.id) return 0
-        //   if (a.image) return -1
-        //   if (b.image)  return +1
-        // })
+        .sort((a, b) => { 
+          // bubble up names where typed word matches our name for them
+          if (a._isPrefered) return -1
+          if (b._isPrefered) return +1
+        })
     }
   }
 
@@ -99,7 +88,6 @@ exports.create = function (api) {
 
     return computed([api.about.obs.name(id)], myNameForThem => {
       return map(item.value, name => {
-        const isTopAlias = name === myNameForThem
         const names = item.value()
 
         const aliases = names
@@ -119,7 +107,7 @@ exports.create = function (api) {
           value: mention(name, id),
           image: api.about.obs.imageUrl(id),
           showBoth: true,
-          _name: name // TODO change code above if not needed
+          _isPrefered: name === myNameForThem
         })
       })
     })
