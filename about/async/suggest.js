@@ -40,14 +40,14 @@ exports.create = function (api) {
           if (a._name.indexOf(word) === 0) return -1
           if (b._name.indexOf(word) === 0) return +1
 
-          if (a._name.toLowerCase().indexOf(word) === 0) return -1
-          if (b._name.toLowerCase().indexOf(word) === 0) return +1
+          if (a._name.toLowerCase().indexOf(wordLower) === 0) return -1
+          if (b._name.toLowerCase().indexOf(wordLower) === 0) return +1
         })
-        .sort((a, b) => {  // sort into blocks of id
-          if (a.id === b.id) return 0
-          if (a.id > b.id) return -1
-          if (a.id < b.id) return +1
-        })
+        // .sort((a, b) => {  // sort into blocks of id
+        //   if (a.id === b.id) return 0
+        //   if (a.id > b.id) return -1
+        //   if (a.id < b.id) return +1
+        // })
         .reduce((sofar, match) => {
           // prune to the first instance of each id
           // this presumes if you were typing e.g. "dino" you don't need "ahdinosaur" as well
