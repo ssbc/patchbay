@@ -1,11 +1,14 @@
 var nest = require('depnest')
-var { Struct, map, concat, dictToCollection, computed, lookup, watch, keys, resolve } = require('mutant')
+var { h, Struct, map, concat, dictToCollection, computed, lookup, watch, keys, resolve } = require('mutant')
+
+var KEY_SAMPLE_LENGTH = 10 // includes @
 
 exports.gives = nest('about.async.suggest')
 
 exports.needs = nest({
   'about.obs.groupedValues': 'first',
   'about.obs.name': 'first',
+  'about.obs.names': 'first',
   'about.obs.imageUrl': 'first',
   'contact.obs.following': 'first',
   'feed.obs.recent': 'first',
@@ -23,9 +26,40 @@ exports.create = function (api) {
     return function (word) {
       if (!word) return recentSuggestions()
 
-      return suggestions()
-        .filter(item => ~item.title.indexOf(word))
-        .reverse()
+      wordLower = word.toLowerCase()
+      const nameMatches = suggestions()
+        .filter(item => {
+          // if (item.title) return ~item.title.toLowerCase().indexOf(wordLower)
+          if (item._name) return ~item._name.toLowerCase().indexOf(wordLower)
+          return ~item.subtitle.toLowerCase().indexOf(wordLower)
+        })
+
+
+      return nameMatches
+        .sort((a, b) => { // sort primary aliases to top
+          if (a._name.indexOf(word) === 0) return -1
+          if (b._name.indexOf(word) === 0) return +1
+
+          if (a._name.toLowerCase().indexOf(word) === 0) return -1
+          if (b._name.toLowerCase().indexOf(word) === 0) return +1
+        })
+        .sort((a, b) => {  // sort into blocks of id
+          if (a.id === b.id) return 0
+          if (a.id > b.id) return -1
+          if (a.id < b.id) return +1
+        })
+        .reduce((sofar, match) => {
+          // prune to the first instance of each id
+          // this presumes if you were typing e.g. "dino" you don't need "ahdinosaur" as well
+          if (sofar.find(el => el.id === match.id)) return sofar
+
+          return [...sofar, match]
+        }, [])
+        // .sort((a, b) => {  // sort isTopAlias avatar to top
+        //   if (a.id !== b.id) return 0
+        //   if (a.image) return -1
+        //   if (b.image)  return +1
+        // })
     }
   }
 
@@ -62,35 +96,46 @@ exports.create = function (api) {
 
   function pluralSuggestions (item) {
     const id = resolve(item.key)
-    return map(item.value, name => {
-      return Struct({
-        id,
-        title: name,
-        subtitle: subtitle(id, name),
-        value: computed([name, id], mention),
-        image: api.about.obs.imageUrl(id),
-        showBoth: true
+
+    return computed([api.about.obs.name(id)], myNameForThem => {
+      return map(item.value, name => {
+        const isTopAlias = name === myNameForThem
+        const names = item.value()
+
+        const aliases = names
+          .filter(n => n != name)
+          .map(name => h('div.alias', 
+            { className: name === myNameForThem ? '-bold' : '' },
+            name
+          ))
+
+        return Struct({
+          id,
+          title: name,
+          subtitle: [
+            h('div.aliases', aliases),
+            h('div.key', id.substring(0, KEY_SAMPLE_LENGTH))
+          ],
+          value: mention(name, id),
+          image: api.about.obs.imageUrl(id),
+          showBoth: true,
+          _name: name // TODO change code above if not needed
+        })
       })
     })
+
   }
 
+  // feeds recentSuggestions
   function suggestion (id) {
     var name = api.about.obs.name(id)
     return Struct({
-      title: name,
       id,
-      subtitle: id.substring(0, 10),
+      title: name,
+      subtitle: h('div.key', id.substring(0, KEY_SAMPLE_LENGTH)),
       value: computed([name, id], mention),
       image: api.about.obs.imageUrl(id),
       showBoth: true
-    })
-  }
-
-  function subtitle (id, name) {
-    return computed([api.about.obs.name(id)], commonName => {
-      return name.toLowerCase() === commonName.toLowerCase()
-        ? id.substring(0, 10)
-        : `${commonName} ${id.substring(0, 10)}`
     })
   }
 }

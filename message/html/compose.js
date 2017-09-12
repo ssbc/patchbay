@@ -137,6 +137,7 @@ exports.create = function (api) {
         if (word[word.length - 1] === ':') {
           word = word.slice(0, -1)
         }
+        word = word.toLowerCase()
         // TODO: when no emoji typed, list some default ones
 
         const suggestions = api.emoji.sync.names()

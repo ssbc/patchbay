@@ -1,11 +1,14 @@
+// SuggestBox
 body {
   div.suggest-box {
     width: max-content
     background-color: #fff
-    border: 1px gainsboro solid
 
+    min-width: 20rem
+    max-width: 35rem
     padding: .2rem .5rem
     margin-top: .35rem
+    border: 1px gainsboro solid
 
     ul {
       list-style-type: none
@@ -22,18 +25,54 @@ body {
           height: 36px
           width: 36px
           padding: .2rem
-          /* TODO make smaller emoji thumbnails */
         }
+
         strong {
-          flex-grow: 1
-          margin-left: .5rem
           font-weight: 300
+          min-width: 7rem
+          margin-left: .5rem
+          margin-right: .5rem
+
+          span.subtle {
+            color: #aaa
+          }
         }
+
         small {
-          font-family: monospace
+          flex-grow: 1
+
           margin-left: .5rem
           padding-right: .2rem
           font-size: 1rem
+
+          display: flex
+          justify-content: flex-end
+
+          div.aliases {
+            flex-grow: 1
+
+            font-size: .8rem
+            color: #666
+            margin-right: .5rem
+
+            display: flex
+            flex-wrap: wrap
+
+            div.alias {
+              margin-right: .4rem
+              -bold {
+                font-weight: 600
+              }
+            }
+          }
+
+          div.key {
+            align-self: flex-end
+
+            font-family: monospace
+            font-size: .8rem
+            min-width: 5rem
+          }
         }
       }
 
