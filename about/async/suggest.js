@@ -1,5 +1,7 @@
 var nest = require('depnest')
-var { Struct, map, concat, dictToCollection, computed, lookup, watch, keys, resolve } = require('mutant')
+var { h, Struct, map, concat, dictToCollection, computed, lookup, watch, keys, resolve } = require('mutant')
+
+var KEY_SAMPLE_LENGTH = 10 // includes @
 
 exports.gives = nest('about.async.suggest')
 
@@ -23,9 +25,30 @@ exports.create = function (api) {
     return function (word) {
       if (!word) return recentSuggestions()
 
+      wordLower = word.toLowerCase()
       return suggestions()
-        .filter(item => ~item.title.indexOf(word))
-        .reverse()
+        .filter(item => ~item.title.toLowerCase().indexOf(wordLower))
+        .sort((a, b) => { 
+          // where name is matching exactly so far
+          if (a.title.indexOf(word) === 0) return -1
+          if (b.title.indexOf(word) === 0) return +1
+
+          // where name is matching exactly so far (case insensitive)
+          if (a.title.toLowerCase().indexOf(wordLower) === 0) return -1
+          if (b.title.toLowerCase().indexOf(wordLower) === 0) return +1
+        })
+        .reduce((sofar, match) => {
+          // prune down to the first instance of each id
+          // this presumes if you were typing e.g. "dino" you don't need "ahdinosaur" as well
+          if (sofar.find(el => el.id === match.id)) return sofar
+
+          return [...sofar, match]
+        }, [])
+        .sort((a, b) => { 
+          // bubble up names where typed word matches our name for them
+          if (a._isPrefered) return -1
+          if (b._isPrefered) return +1
+        })
     }
   }
 
@@ -62,35 +85,45 @@ exports.create = function (api) {
 
   function pluralSuggestions (item) {
     const id = resolve(item.key)
-    return map(item.value, name => {
-      return Struct({
-        id,
-        title: name,
-        subtitle: subtitle(id, name),
-        value: computed([name, id], mention),
-        image: api.about.obs.imageUrl(id),
-        showBoth: true
+
+    return computed([api.about.obs.name(id)], myNameForThem => {
+      return map(item.value, name => {
+        const names = item.value()
+
+        const aliases = names
+          .filter(n => n != name)
+          .map(name => h('div.alias', 
+            { className: name === myNameForThem ? '-bold' : '' },
+            name
+          ))
+
+        return Struct({
+          id,
+          title: name,
+          subtitle: [
+            h('div.aliases', aliases),
+            h('div.key', id.substring(0, KEY_SAMPLE_LENGTH))
+          ],
+          value: mention(name, id),
+          image: api.about.obs.imageUrl(id),
+          showBoth: true,
+          _isPrefered: name === myNameForThem
+        })
       })
     })
+
   }
 
+  // feeds recentSuggestions
   function suggestion (id) {
     var name = api.about.obs.name(id)
     return Struct({
-      title: name,
       id,
-      subtitle: id.substring(0, 10),
+      title: name,
+      subtitle: h('div.key', id.substring(0, KEY_SAMPLE_LENGTH)),
       value: computed([name, id], mention),
       image: api.about.obs.imageUrl(id),
       showBoth: true
-    })
-  }
-
-  function subtitle (id, name) {
-    return computed([api.about.obs.name(id)], commonName => {
-      return name.toLowerCase() === commonName.toLowerCase()
-        ? id.substring(0, 10)
-        : `${commonName} ${id.substring(0, 10)}`
     })
   }
 }
