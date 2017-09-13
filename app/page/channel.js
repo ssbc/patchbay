@@ -26,7 +26,8 @@ exports.create = function (api) {
 
     var subscribed = api.channel.obs.subscribed(api.keys.sync.id())
 
-    function subscribeToChannel() {
+    function subscribeToChannel(btn) {
+      btn.target.replaceWith(unsubscribeButton())
       api.sbot.async.publish({
         type: 'channel',
         channel: channelName,
@@ -34,7 +35,24 @@ exports.create = function (api) {
       })
     }
 
-    const channelHeader = h('header', [channel, h('span', subscribed.has(channelName)() ? ' is subscribed' : h('button', { 'ev-click': subscribeToChannel }, 'Subscribe'))])
+    function unsubscribeFromChannel(btn) {
+      btn.target.replaceWith(subscribeButton())
+      api.sbot.async.publish({
+        type: 'channel',
+        channel: channelName,
+        subscribed: false
+      })
+    }
+
+    function unsubscribeButton() {
+      return h('button', { 'ev-click': unsubscribeFromChannel }, 'Unsubscribe from channel')
+    }
+
+    function subscribeButton() {
+      return h('button', { 'ev-click': subscribeToChannel }, 'Subscribe to channel')
+    }
+
+    const channelHeader = h('span', subscribed.has(channelName)() ? unsubscribeButton() : subscribeButton())
 
     const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
