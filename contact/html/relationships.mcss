@@ -16,7 +16,7 @@ Relationships {
     header {
       flex-basis: 100%
       
-      _textSubtle
+      $textSubtle
       font-size: .9rem
       
       margin-bottom: .2rem
@@ -25,7 +25,7 @@ Relationships {
     section a {
       margin-right: .2rem
 
-      img { _avatar-small }
+      img { $avatar-small }
     }
   }
 
@@ -49,7 +49,7 @@ Relationships {
       margin: 0 .2rem 0.2rem 0
 
       img { 
-        _avatar-large
+        $avatar-large
       }
     }
   }
@@ -61,12 +61,12 @@ Relationships {
   }
 }
 
-_avatar-large {
+$avatar-large {
   width: 56px
   height: 56px
 }
 
-_avatar-small {
+$avatar-small {
   width: 32px
   height: 32px
 }

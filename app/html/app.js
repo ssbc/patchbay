@@ -24,11 +24,14 @@ exports.create = function (api) {
   return nest('app.html.app', app)
 
   function app () {
+    console.log("STARTING app")
+
     window = api.app.sync.window(window)
+ 
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
-    const initialTabs = [ '/public', '/private', '/notifications' ]
+    const initialTabs = ['/public', '/inbox', '/notifications']
     // NB router converts these to { page: '/public' }
     const tabs = api.app.html.tabs(initialTabs)
 

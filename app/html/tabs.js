@@ -52,7 +52,7 @@ exports.create = function (api) {
       onClose,
       append: h('div.navExtra', [ search, menu ])
     })
-    _tabs.getCurrent = () => _tabs.get(_tabs.selected[0])
+    _tabs.currentPage = () => _tabs.get(_tabs.selected[0]).firstChild
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))
