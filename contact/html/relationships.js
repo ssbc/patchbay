@@ -12,7 +12,7 @@ exports.needs = nest({
   'contact.async.unblock': 'first',
   'contact.obs.followers': 'first',
   'contact.obs.following': 'first',
-  // 'contact.obs.blockers': 'first',
+  'contact.obs.blockers': 'first',
   'keys.sync.id': 'first'
 })
 
@@ -55,8 +55,8 @@ exports.create = function (api) {
     }
 
     const { unfollow, follow, block, unblock } = api.contact.async
-    // const blockedBy = api.contact.obs.blockers(id)
-    // const ImBlockingThem = computed(blockedBy, blockers => blockers.has(myId))
+    const blockers = api.contact.obs.blockers(id)
+    const ImBlockingThem = computed(blockers, blockers => blockers.includes(myId))
 
     return h('Relationships', [
       h('header', 'Relationships'),
@@ -74,17 +74,29 @@ exports.create = function (api) {
             when(ImFollowing.sync, h('div.relationship-status', relationshipStatus)),
           ]),
           h('section -blocking', [
-            // when(ImBlockingThem,
-            //   h('button', { 'ev-click': () => unblock(id, console.log) }, 'unblock'),
-            //   h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK')
-            // ),
+            when(ImBlockingThem,
+              h('button', { 'ev-click': () => unblock(id, console.log) }, 'unblock'),
+              h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK')
+            ),
             h('div.explainer', [
-              "Blocking is a way to tell others that you don't want to communicate with a person ",
-              "(you don't want to hear from them, and you don't want them to hear about you)."
+              "Blocking tells everyone you don't want to communicate with a person.",
+              h('ul', [
+                h('li', 'You will no longer receive messages from this person'),
+                h('li', "This person won't get any new information about you (including this block)"),
+                h('li', "Your followers will see you have blocked this person - their apps need to know so that they don't pass your information on."),
+              ])
             ])
           ])
         ])
       ),
+      computed(blockers, blockers => {
+        if (blockers.length === 0) return ''
+
+        return h('div.blockers', [
+          h('header', 'Blocked by'),
+          h('section', blockers.map(imageLink))
+        ])
+      }),
       h('div.friends', [
         h('header', 'Friends'),
         h('section', map(friends, imageLink))
