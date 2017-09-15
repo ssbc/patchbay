@@ -35,13 +35,24 @@ Relationships {
 
     margin: 0 
 
-    section.action {
-      button { margin-left: 0 }
+    display: flex
 
+    section {
+      button { margin: 0 }
+
+      -friendship {
+        display: flex
+        div.relationship-status {
+          margin: auto
+          margin-left: .5rem
+        }
+
+      }
+      -blocking {
+        margin-left: 8rem
+      }
     }
-    section.status {
-    
-    }
+
   }
 
   div.friends {

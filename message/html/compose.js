@@ -74,7 +74,6 @@ exports.create = function (api) {
       ]
     )
     var fileInput = api.blob.html.input(file => {
-
       const megabytes = file.size / 1024 / 1024
       if (megabytes >= 5) {
         const rounded = Math.floor(megabytes*100)/100

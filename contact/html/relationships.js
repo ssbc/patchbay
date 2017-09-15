@@ -4,20 +4,15 @@ const { h, map, computed, when } = require('mutant')
 exports.gives = nest('contact.html.relationships')
 
 exports.needs = nest({
-  about: {
-    'html.image': 'first',
-    'obs.name': 'first'
-  },
-  contact: {
-    async: {
-      follow: 'first',
-      unfollow: 'first'
-    },
-    obs: {
-      followers: 'first',
-      following: 'first'
-    }
-  },
+  'about.html.image': 'first',
+  'about.obs.name': 'first',
+  'contact.async.follow': 'first',
+  'contact.async.unfollow': 'first',
+  'contact.async.block': 'first',
+  'contact.async.unblock': 'first',
+  'contact.obs.followers': 'first',
+  'contact.obs.following': 'first',
+  // 'contact.obs.blockers': 'first',
   'keys.sync.id': 'first'
 })
 
@@ -31,7 +26,7 @@ exports.create = function (api) {
     var rawFollowers = api.contact.obs.followers(id)
 
     var friends = computed([rawFollowing, rawFollowers], (following, followers) => {
-      return [...following].filter(follow => followers.has(follow))
+      return [...following].filter(follow => followers.includes(follow))
     })
     var following = computed([rawFollowing, friends], (following, friends) => {
       return [...following].filter(follow => !friends.includes(follow))
@@ -42,8 +37,8 @@ exports.create = function (api) {
 
     var myId = api.keys.sync.id()
     var ImFollowing = api.contact.obs.following(myId)
-    var IFollowThem = computed([ImFollowing], ImFollowing => ImFollowing.has(id))
-    var theyFollowMe = computed([rawFollowing], following => following.has(myId))
+    var IFollowThem = computed([ImFollowing], ImFollowing => ImFollowing.includes(id))
+    var theyFollowMe = computed([rawFollowing], following => following.includes(myId))
 
     var relationshipStatus = computed([IFollowThem, theyFollowMe], (IFollowThem, theyFollowMe) => {
       return IFollowThem && theyFollowMe ? '- you are friends'
@@ -59,21 +54,35 @@ exports.create = function (api) {
       )
     }
 
+    const { unfollow, follow, block, unblock } = api.contact.async
+    // const blockedBy = api.contact.obs.blockers(id)
+    // const ImBlockingThem = computed(blockedBy, blockers => blockers.has(myId))
+
     return h('Relationships', [
       h('header', 'Relationships'),
       when(id !== myId,
         h('div.your-status', [
           h('header', 'Your status'),
-          h('section.action', [
+          h('section -friendship', [
             when(ImFollowing.sync,
               when(IFollowThem,
-                h('button', { 'ev-click': () => api.contact.async.unfollow(id) }, 'Unfollow'),
-                h('button', { 'ev-click': () => api.contact.async.follow(id) }, 'Follow')
+                h('button', { 'ev-click': () => unfollow(id) }, 'Unfollow'),
+                h('button', { 'ev-click': () => follow(id) }, 'Follow')
               ),
               h('button', { disabled: 'disabled' }, 'Loading...')
-            )
+            ),
+            when(ImFollowing.sync, h('div.relationship-status', relationshipStatus)),
           ]),
-          when(ImFollowing.sync, h('section.status', relationshipStatus))
+          h('section -blocking', [
+            // when(ImBlockingThem,
+            //   h('button', { 'ev-click': () => unblock(id, console.log) }, 'unblock'),
+            //   h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK')
+            // ),
+            h('div.explainer', [
+              "Blocking is a way to tell others that you don't want to communicate with a person ",
+              "(you don't want to hear from them, and you don't want them to hear about you)."
+            ])
+          ])
         ])
       ),
       h('div.friends', [
