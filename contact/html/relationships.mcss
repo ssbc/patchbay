@@ -35,13 +35,49 @@ Relationships {
 
     margin: 0 
 
-    section.action {
-      button { margin-left: 0 }
+    display: flex
 
+    section {
+      button { margin: 0 }
+
+      -friendship {
+        display: flex
+        div.relationship-status {
+          margin: auto
+          margin-left: .5rem
+        }
+
+      }
+      -blocking {
+        margin-left: 8rem
+        position: relative
+
+        button {}
+
+        div.explainer {
+          visibility: hidden
+          position: absolute
+          background: #fff
+          width: 24rem
+          left: 1rem
+          bottom: 2rem
+          padding: .5rem
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 8px
+
+          ul {
+            font-size: .8rem
+            padding-left: 1rem
+          }
+        }
+
+        :hover {
+          div.explainer {
+            visibility: visible
+          }
+        }
+      }
     }
-    section.status {
-    
-    }
+
   }
 
   div.friends {
