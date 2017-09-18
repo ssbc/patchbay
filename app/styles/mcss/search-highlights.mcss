@@ -1,0 +1,11 @@
+/* TextNodeSearcher highlights */
+
+Markdown {
+  (highlight) {
+
+    color: fuchsia
+    padding: 0 .2rem
+    margin: 0 .1rem
+  }
+}
+
