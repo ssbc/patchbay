@@ -6,6 +6,7 @@ const addSuggest = require('suggest-box')
 const { isFeed } = require('ssb-ref')
 const some = require('lodash/some')
 const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
 
 exports.gives = nest('app.html.filter')
 
@@ -36,12 +37,8 @@ exports.create = function (api) {
 
     // this needs to show if the filter has changed from default ?...?
     const isFiltered = computed([onlyAuthor, filterSettings], (onlyAuthor, filterSettings) => {
-      return onlyAuthor || filterSettings.only.peopleIFollow || some(filterSettings.show, false)
+	return onlyAuthor || filterSettings.only.peopleIFollow || !isEqual(filterSettings.show, filterSettings.defaults.show)
     })
-
-    // const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub, showChess], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
-		// return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub || !showChess
-    // })
 
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
@@ -57,8 +54,7 @@ exports.create = function (api) {
       h('i', {
         classList: when(showFilters, 
           'fa fa-filter -active',
-          'fa fa-filter'
-          // when(isFiltered, 'fa fa-filter -filtered', 'fa fa-filter')
+          when(isFiltered, 'fa fa-filter -filtered', 'fa fa-filter')
         ),
         'ev-click': () => showFilters.set(!showFilters())
       }),
@@ -73,7 +69,7 @@ exports.create = function (api) {
             h('label', 'Show author'),
             authorInput
           ]),
-          toggle({ type: 'peopleIfollow', filterGroup: 'only', label: 'Only people I follow' }),
+          toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
           h('div.message-types', [
             h('header', 'Show messages'),
             toggle({ type: 'post' }),

@@ -31,6 +31,7 @@ exports.create = function (api) {
   function initialiseSettings () {
     const { get, set } = api.settings.sync
     const settings = merge({}, defaults, get())
+    settings.filter.defaults = defaults.filter
 
     set(settings)
   }
