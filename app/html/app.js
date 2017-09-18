@@ -9,9 +9,10 @@ exports.needs = nest({
   'app.async.catchLinkClick': 'first',
   'app.html.tabs': 'first',
   'app.page.errors': 'first',
-  'app.sync.window': 'reduce',
-  'app.sync.goTo': 'first',
   'app.sync.catchKeyboardShortcut': 'first',
+  'app.sync.goTo': 'first',
+  'app.sync.initialise': 'first',
+  'app.sync.window': 'reduce',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
   'router.sync.router': 'first',
@@ -25,6 +26,8 @@ exports.create = function (api) {
 
   function app () {
     console.log("STARTING app")
+
+    api.app.sync.initialise()
 
     window = api.app.sync.window(window)
  

@@ -50,6 +50,7 @@
     "hypertabs": "^5.0.0",
     "insert-css": "^2.0.0",
     "libnested": "^1.2.1",
+    "lodash": "^4.17.4",
     "micro-css": "^2.0.1",
     "mutant": "^3.18.0",
     "mutant-pull-reduce": "^1.0.1",

@@ -4,6 +4,8 @@ const Abort = require('pull-abortable')
 const pull = require('pull-stream')
 const addSuggest = require('suggest-box')
 const { isFeed } = require('ssb-ref')
+const some = require('lodash/some')
+const get = require('lodash/get')
 
 exports.gives = nest('app.html.filter')
 
@@ -11,7 +13,7 @@ exports.needs = nest({
   'about.async.suggest': 'first',
   'contact.obs.following': 'first',
   'keys.sync.id': 'first',
-  'settings.sync.get': 'first',
+  'settings.obs.get': 'first',
   'settings.sync.set': 'first'
 })
 
@@ -25,20 +27,21 @@ exports.create = function (api) {
 
     const myId = api.keys.sync.id()
     const peopleIFollow = api.contact.obs.following(myId)
-    const onlyPeopleIFollow = Value(api.settings.sync.get('filter.onlyPeopleIFollow') || false)
+
+    const { set } = api.settings.sync
+
     const onlyAuthor = Value()
 
-    const showPost = Value(api.settings.sync.get('filter.showPost') || true)
-    const showAbout = Value(api.settings.sync.get('filter.showAbout') || true)
-    const showVote = Value(api.settings.sync.get('filter.showVote') || false)
-    const showContact = Value(api.settings.sync.get('filter.showContact') || false)
-    const showChannel = Value(api.settings.sync.get('filter.showChannel') || false)
-    const showPub = Value(api.settings.sync.get('filter.showPub') || false)
-    const showChess = Value(api.settings.sync.get('filter.showChess') || true)
+    const filterSettings = api.settings.obs.get('filter')
 
-    const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub, showChess], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
-	  return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub || !showChess
-      })
+    // this needs to show if the filter has changed from default ?...?
+    const isFiltered = computed([onlyAuthor, filterSettings], (onlyAuthor, filterSettings) => {
+      return onlyAuthor || filterSettings.only.peopleIFollow || some(filterSettings.show, false)
+    })
+
+    // const isFiltered = computed([onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub, showChess], (onlyPeopleIFollow, onlyAuthor, showPost, showAbout, showVote, showContact, showChannel, showPub) => {
+		// return onlyPeopleIFollow || onlyAuthor || !showPost || !showAbout || showVote || showContact || showChannel || showPub || !showChess
+    // })
 
     const authorInput = h('input', {
       'ev-keyup': (ev) => {
@@ -52,9 +55,11 @@ exports.create = function (api) {
 
     const filterMenu = h('Filter', [
       h('i', {
-        classList: when(showFilters, 'fa fa-filter -active',
-		     when(isFiltered, 'fa fa-filter -filtered',
-			  'fa fa-filter')),
+        classList: when(showFilters, 
+          'fa fa-filter -active',
+          'fa fa-filter'
+          // when(isFiltered, 'fa fa-filter -filtered', 'fa fa-filter')
+        ),
         'ev-click': () => showFilters.set(!showFilters())
       }),
       h('i.fa.fa-angle-up', { 'ev-click': draw }),
@@ -68,49 +73,45 @@ exports.create = function (api) {
             h('label', 'Show author'),
             authorInput
           ]),
-          toggle({ obs: onlyPeopleIFollow, label: 'Only people I follow' }),
+          toggle({ type: 'peopleIfollow', filterGroup: 'only', label: 'Only people I follow' }),
           h('div.message-types', [
             h('header', 'Show messages'),
-            toggle({ obs: showPost, label: 'post' }),
-            toggle({ obs: showVote, label: 'like' }),
-            toggle({ obs: showAbout, label: 'about' }),
-            toggle({ obs: showContact, label: 'contact' }),
-            toggle({ obs: showChannel, label: 'channel' }),
-            toggle({ obs: showPub, label: 'pub' }),
-            toggle({ obs: showChess, label: 'chess' })
+            toggle({ type: 'post' }),
+            toggle({ type: 'like' }),
+            toggle({ type: 'about' }),
+            toggle({ type: 'contact' }),
+            toggle({ type: 'channel' }),
+            toggle({ type: 'pub' }),
+            toggle({ type: 'chess' })
           ])
         ])
       ])
     ])
 
-    function toggle ({ obs, label }) {
-      return h('FilterToggle', {
-        'ev-click': () => {
-          obs.set(!obs())
+    function toggle ({ type, filterGroup, label }) {
+      label = label || type
+      filterGroup = filterGroup || 'show'
 
-	  if (label == 'Only people I follow')
-	    api.settings.sync.set({ filter: { onlyPeopleIFollow: obs() }})
-	  else if (label == 'post')
-	    api.settings.sync.set({ filter: { showPost: obs() }})
-	  else if (label == 'about')
-	    api.settings.sync.set({ filter: { showAbout: obs() }})
-	  else if (label == 'vote')
-	    api.settings.sync.set({ filter: { showVote: obs() }})
-	  else if (label == 'contact')
-	    api.settings.sync.set({ filter: { showContact: obs() }})
-	  else if (label == 'channel')
-	    api.settings.sync.set({ filter: { showChannel: obs() }})
-	  else if (label == 'pub')
-	    api.settings.sync.set({ filter: { showPub: obs() }})
-	  else if (label == 'chess')
-	    api.settings.sync.set({ filter: { showChess: obs() }})
+      const state = computed(filterSettings, settings => get(settings, [filterGroup, type]))
+      const handleClick = () => {
+        const currentState = state()
 
-          draw()
-        }}, [
-          h('label', label),
-          h('i', { classList: when(obs, 'fa fa-check-square-o', 'fa fa-square-o') })
-        ]
-      )
+        //TODO use some lodash tool ?
+        api.settings.sync.set({ 
+          filter: {
+            [filterGroup]: {
+              [type]: !currentState
+            }
+          }
+        })
+
+        draw()
+      }
+
+      return h('FilterToggle', { 'ev-click': handleClick }, [
+        h('label', label),
+        h('i', { classList: when(state, 'fa fa-check-square-o', 'fa fa-square-o') })
+      ])
     }
 
     // NOTE: suggest needs to be added after the input has a parent
@@ -124,7 +125,7 @@ exports.create = function (api) {
     })
 
     function followFilter (msg) {
-      if (!onlyPeopleIFollow()) return true
+      if (!filterSettings().only.peopleIFollow) return true
 
       return Array.from(peopleIFollow()).includes(msg.value.author)
     }
@@ -136,28 +137,12 @@ exports.create = function (api) {
     }
 
     function messageFilter (msg) {
-      switch (msg.value.content.type) {
-        case 'post':
-          return showPost()
-        case 'vote':
-          return showVote()
-        case 'about':
-          return showAbout()
-        case 'contact':
-          return showContact()
-        case 'channel':
-          return showChannel()
-        case 'pub':
-          return showPub()
-        case 'chess_invite':
-          return showChess()
-        case 'chess_game_end':
-          return showChess()
-        case 'chess_move':
-          return showChess()
-        default:
-          return true
+      var { type } = msg.value.content
+      if (/^chess/.test(type)) {
+        type = 'chess'
       }
+
+      return get(filterSettings(), ['show', type], true)
     }
 
     var downScrollAborter
