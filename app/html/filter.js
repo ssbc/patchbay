@@ -90,7 +90,7 @@ exports.create = function (api) {
     addSuggest(authorInput, (inputText, cb) => {
       if (inputText[0] === '@') inputText = inputText.slice(1)
       cb(null, getProfileSuggestions(inputText))
-    }, {cls: 'SuggestBox'})
+    }, {cls: 'PatchSuggest'})
     authorInput.addEventListener('suggestselect', ev => {
       authorInput.value = ev.detail.id
     })

@@ -19,8 +19,9 @@ const patchbay = {
 
     config: require('./config'), // shouldn't be in here ?
     contextMenu: require('patch-context'),
+    suggestions: require('patch-suggest'),
     inbox: require('patch-inbox'),
-    history: require('patch-history')
+    history: require('patch-history'),
   }
 }
 

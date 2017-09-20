@@ -68,7 +68,7 @@ exports.create = function (api) {
       } else if (inputText[0] === '#') {
         cb(null, getChannelSuggestions(inputText.slice(1)))
       }
-    }, {cls: 'SuggestBox'})
+    }, {cls: 'PatchSuggest'})
 
     return _search
   })
