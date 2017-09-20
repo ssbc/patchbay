@@ -31,7 +31,7 @@ AboutEditor {
 
   margin-bottom: 2rem
 
-  section.lightbox {
+  section.Lightbox {
     position: absolute
     z-index: 40
   }

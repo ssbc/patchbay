@@ -99,7 +99,7 @@ exports.create = function (api) {
     })
 
     return h('AboutEditor', [
-      h('section.lightbox', lb),
+      h('Lightbox', lb),
       h('section.avatar', [
         h('section', [
           h('img', { src: avatarSrc })

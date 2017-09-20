@@ -1,6 +1,6 @@
 /* lightbox - used in message-confirm */
 
-body {
+Lightbox {
   div.lightbox {
     position: fixed
     left: 0px
