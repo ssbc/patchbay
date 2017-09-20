@@ -1,0 +1,37 @@
+Button {
+  font-family: arial
+  text-align: center
+
+  cursor: pointer
+
+  padding: .2rem 2rem
+  min-width: 4rem
+  border: 1px #b9b9b9 solid
+
+  -subtle {
+    color: #b9b9b9
+    :hover {
+      color: #222
+    }
+  }
+  -primary {
+    $colorPrimary
+
+    :hover { 
+      opacity: .9
+    }
+
+    border: 1px solid #3dc8c3
+  }
+
+  -showMore {
+    width: 100%
+
+    padding: .2rem 0
+
+    border-left: none
+    border-right: none
+    border-bottom: none
+  }
+}
+

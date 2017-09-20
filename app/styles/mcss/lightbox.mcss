@@ -1,6 +1,7 @@
-/* lightbox - used in message-confirm */
+/* used in app.html.externalConfirm */
+/* used in message.html.confirm */
 
-Lightbox {
+body {
   div.lightbox {
     position: fixed
     left: 0px

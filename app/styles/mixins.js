@@ -22,6 +22,15 @@ $textSubtle {
   color: gray
 }
 
+$colorPrimary {
+  color: white
+  background-color: #3dc8c3
+
+  (a) {
+    color: #5c6bc0
+  }
+}
+
 $backgroundPrimary {
   background-color: #50aadf
 }
