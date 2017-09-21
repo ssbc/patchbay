@@ -10,6 +10,8 @@ Hypertabs {
     background: linear-gradient(to bottom, #efefef, #e5e5e5)
 
     section.tabs {
+      padding: .5rem 0 0 .5rem
+
       flex-grow: 1
       display: flex
       min-width: 0
@@ -76,7 +78,7 @@ Hypertabs {
           white-space: nowrap
           text-overflow: ellipsis
 
-          padding: .5rem 0 .5rem .6rem
+          padding: .45rem 0 .45rem .6rem
         }
 
         a.close {
@@ -104,6 +106,7 @@ Hypertabs {
     }
 
     div.navExtra {
+      padding-top: .2rem
       display: flex
       align-items: center
     }
@@ -118,8 +121,6 @@ Hypertabs {
       flex-grow: 1
 
       display: flex /*hack to get give Scroller context it needs */
-
-      padding-top: .2rem
     }
   }
 }

@@ -7,9 +7,8 @@ SearchBar {
 
     margin-left: 1rem
 
-    border: 1px #dcdcdc solid;
     border-radius: 0
-    font-size: .9rem;
+    font-size: .9rem
   }
 }
 
