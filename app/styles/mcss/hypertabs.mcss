@@ -31,6 +31,7 @@ Hypertabs {
         border: none
 
         :hover {
+          background-color: #f8f8f8
           a.close {
             visibility: visible
           }
@@ -40,7 +41,12 @@ Hypertabs {
           color: #222
           background-color: #fff
 
+          :hover {
+            background-color: #fff
+          }
+
           a.link {
+            text-decoration: none
             max-width: calc(100% - 2rem)
           }
           a.close {
@@ -57,7 +63,6 @@ Hypertabs {
           color: #666
 
           :hover {
-            color: #0088cc
             text-decoration: none
           }
         }
