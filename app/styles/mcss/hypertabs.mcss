@@ -27,9 +27,8 @@ Hypertabs {
         overflow: hidden
 
         padding: 0
-        margin-left: .6rem
-        border: 1px gainsboro solid
-        border-bottom: none
+        margin-left: .3rem
+        border: none
 
         :hover {
           a.close {
