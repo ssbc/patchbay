@@ -59,7 +59,7 @@
     "patch-hub": "^1.1.0",
     "patch-inbox": "^1.0.2",
     "patch-settings": "^1.0.0",
-    "patch-suggest": "^1.0.0",
+    "patch-suggest": "^1.0.1",
     "patchbay-gatherings": "^2.0.0",
     "patchcore": "^1.12.0",
     "pull-abortable": "^4.1.1",
