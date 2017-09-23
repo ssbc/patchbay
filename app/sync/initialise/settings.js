@@ -10,6 +10,9 @@ exports.needs = nest({
 
 const defaults = {
   filter: {
+    exclude: {
+      channels: ""
+    },
     only: {
       peopleIFollow: false
     },

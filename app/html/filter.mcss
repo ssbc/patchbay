@@ -52,7 +52,7 @@ Filter {
       justify-content: space-between
       align-items: center
 
-      div.author {
+      div.channels {
         label {
           margin-right: .4rem
         }

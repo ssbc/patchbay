@@ -11,7 +11,7 @@ const isEqual = require('lodash/isEqual')
 exports.gives = nest('app.html.filter')
 
 exports.needs = nest({
-  'about.async.suggest': 'first',
+  'channel.async.suggest': 'first',
   'contact.obs.following': 'first',
   'keys.sync.id': 'first',
   'settings.obs.get': 'first',
@@ -31,24 +31,30 @@ exports.create = function (api) {
 
     const { set } = api.settings.sync
 
-    const onlyAuthor = Value()
-
     const filterSettings = api.settings.obs.get('filter')
 
     // this needs to show if the filter has changed from default ?...?
-    const isFiltered = computed([onlyAuthor, filterSettings], (onlyAuthor, filterSettings) => {
-	return onlyAuthor || filterSettings.only.peopleIFollow || !isEqual(filterSettings.show, filterSettings.defaults.show)
+    const isFiltered = computed([filterSettings], (filterSettings) => {
+	return filterSettings.exclude.channels || filterSettings.only.peopleIFollow || !isEqual(filterSettings.show, filterSettings.defaults.show)
     })
 
-    const authorInput = h('input', {
-      'ev-keyup': (ev) => {
-        const author = ev.target.value
-        if (author && !isFeed(author)) return
-
-        onlyAuthor.set(author)
-        draw()
-      }
-    })
+    const channelInput = h('input',
+                           { value: filterSettings().exclude.channels,
+                             'ev-keyup': (ev) => {
+                               var text = ev.target.value
+                               if (text.length == 0 || ev.which == 13) {
+                                 api.settings.sync.set({
+                                   filter: {
+                                     exclude: {
+                                       channels: text
+                                     }
+                                   }
+                                 })
+                                 draw()
+                               }
+                             }
+                           }
+                          )
 
     const filterMenu = h('Filter', [
       h('i', {
@@ -65,9 +71,9 @@ exports.create = function (api) {
           h('i.fa.fa-filter')
         ]),
         h('section', [
-          h('div.author', [
-            h('label', 'Show author'),
-            authorInput
+          h('div.channels', [
+            h('label', 'Exclude channels'),
+            channelInput
           ]),
           toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
           h('div.message-types', [
@@ -110,14 +116,18 @@ exports.create = function (api) {
       ])
     }
 
-    // NOTE: suggest needs to be added after the input has a parent
-    const getProfileSuggestions = api.about.async.suggest()
-    addSuggest(authorInput, (inputText, cb) => {
-      if (inputText[0] === '@') inputText = inputText.slice(1)
-      cb(null, getProfileSuggestions(inputText))
+    const getChannelSuggestions = api.channel.async.suggest()
+    addSuggest(channelInput, (inputText, cb) => {
+      if (inputText[0] === '#') {
+        cb(null, getChannelSuggestions(inputText.slice(1)))
+      }
     }, {cls: 'PatchSuggest'})
-    authorInput.addEventListener('suggestselect', ev => {
-      authorInput.value = ev.detail.id
+    channelInput.addEventListener('suggestselect', ev => {
+      const channels = channelInput.value.trim()
+
+      api.settings.sync.set({ filter: { exclude: { channels: channels } } })
+
+      draw()
     })
 
     function followFilter (msg) {
@@ -126,10 +136,12 @@ exports.create = function (api) {
       return Array.from(peopleIFollow()).includes(msg.value.author)
     }
 
-    function authorFilter (msg) {
-      if (!onlyAuthor()) return true
+    function channelFilter (msg) {
+      var filters = filterSettings().exclude.channels
+      if (!filters) return true
+      filters = filters.split(' ').map(c => c.slice(1))
 
-      return msg.value.author === onlyAuthor()
+      return msg.value.content && !filters.includes(msg.value.content.channel)
     }
 
     function messageFilter (msg) {
@@ -147,7 +159,7 @@ exports.create = function (api) {
       return pull(
         downScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter),
+        pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
     }
@@ -158,7 +170,7 @@ exports.create = function (api) {
       return pull(
         upScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter),
+        pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
     }
