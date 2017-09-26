@@ -19,6 +19,7 @@ Markdown {
     word-wrap: break-word
     code {
       border: none
+      padding: none
     }
   }
   (code) {
