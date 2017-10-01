@@ -81,6 +81,7 @@ exports.create = function (api) {
 
       return pages
         .filter(page => ~page.indexOf(word))
+        .sort((a, b) => a.indexOf(word) < b.indexOf(word) ? -1 : +1 )
         .map(page => {
           return {
             title: '/'+page,
