@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const { h } = require('mutant')
+const { h, when } = require('mutant')
 
 exports.gives = nest('app.page.channel')
 
@@ -23,40 +23,25 @@ exports.create = function (api) {
     const { channel } = location
 
     const channelName = channel.substr(1)
+    const myKey = api.keys.sync.id()
+    var subscribed = api.channel.obs.subscribed(myKey).has(channelName)
 
-    var subscribed = api.channel.obs.subscribed(api.keys.sync.id())
-
-    function subscribeToChannel(btn) {
-      btn.target.replaceWith(unsubscribeButton())
+    function toggleSubscription () {
       api.sbot.async.publish({
         type: 'channel',
         channel: channelName,
-        subscribed: true
+        subscribed: !subscribed()
       })
     }
 
-    function unsubscribeFromChannel(btn) {
-      btn.target.replaceWith(subscribeButton())
-      api.sbot.async.publish({
-        type: 'channel',
-        channel: channelName,
-        subscribed: false
-      })
-    }
-
-    function unsubscribeButton() {
-      return h('button', { 'ev-click': unsubscribeFromChannel }, 'Unsubscribe from channel')
-    }
-
-    function subscribeButton() {
-      return h('button', { 'ev-click': subscribeToChannel }, 'Subscribe to channel')
-    }
-
-    const channelHeader = h('span', subscribed.has(channelName)() ? unsubscribeButton() : subscribeButton())
+    const subscribeButton = h('Button -subscribe',
+      { 'ev-click': toggleSubscription },
+      when(subscribed, 'Unsubscribe from channel', 'Subscribe to channel')
+    )
 
     const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu, channelHeader] })
+    const { container, content } = api.app.html.scroller({ prepend: [subscribeButton, composer] })
 
     function draw () {
       resetFeed({ container, content })
@@ -77,7 +62,9 @@ exports.create = function (api) {
     }
     draw()
 
-    container.title = channel
-    return container
+    return h('Page -channel', {title: channel}, [
+      filterMenu,
+      container
+    ]) 
   }
 }

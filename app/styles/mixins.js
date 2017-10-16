@@ -22,8 +22,17 @@ $textSubtle {
   color: gray
 }
 
-$backgroundPrimary {
+$colorPrimary {
+  color: #fff
   background-color: #50aadf
+}
+
+$borderPrimary {
+  border: 1px solid #50aadf
+}
+
+$backgroundPrimary {
+  background-color: #fff
 }
 
 $avatarLarge {

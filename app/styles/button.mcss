@@ -1,0 +1,45 @@
+Button {
+  font-family: arial
+  background-color: #fff
+
+  min-width: 6rem
+  height: 1.2rem
+  padding: .2rem 1rem
+
+  border: 1px #b9b9b9 solid
+  border-radius: 10rem
+
+  cursor: pointer
+
+  display: flex
+  justify-content: center
+  align-items: center
+
+  -subtle {
+    color: initial
+    :hover {
+      color: #222
+    }
+  }
+
+  -primary {
+    $colorPrimary
+    $borderPrimary
+
+    :hover { 
+      opacity: .9
+    }
+  }
+
+  -showMore {
+    width: 100%
+
+    padding: .2rem 0
+
+    border-left: none
+    border-right: none
+    border-bottom: none
+  }
+}
+
+
