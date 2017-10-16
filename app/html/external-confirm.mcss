@@ -14,7 +14,11 @@ ExternalConfirm {
     }
 
     pre.link {
-
+      background-color: #f5f5f5
+      color: #c121dc
+      padding: .3rem
+      white-space: pre-wrap
+      word-wrap: break-word
     }
   }
 

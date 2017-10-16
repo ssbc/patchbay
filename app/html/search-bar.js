@@ -7,7 +7,8 @@ exports.gives = nest('app.html.searchBar')
 exports.needs = nest({
   'app.sync.goTo': 'first',
   'about.async.suggest': 'first',
-  'channel.async.suggest': 'first'
+  'channel.async.suggest': 'first',
+  // 'app.async.suggest': 'reduce' // TODO add ability to add to this
 })
 
 exports.create = function (api) {
@@ -20,13 +21,13 @@ exports.create = function (api) {
     const getChannelSuggestions = api.channel.async.suggest()
 
     function goToLocation(location, ev) {
-        if (location[0] == '?')
-            location = { page: 'search', query: location.substring(1) }
-        else if (!['@', '#', '%', '&', '/'].includes(location[0]))
-            location = { page: 'search', query: location }
+      if (location[0] == '?')
+        location = { page: 'search', query: location.substring(1) }
+      else if (!['@', '#', '%', '&', '/'].includes(location[0]))
+        location = { page: 'search', query: location }
 
-        api.app.sync.goTo(location)
-        if (!ev.ctrlKey) input.blur()
+      api.app.sync.goTo(location)
+      if (!ev.ctrlKey) input.blur()
     }
 
     const input = h('input', {
@@ -63,12 +64,32 @@ exports.create = function (api) {
     }
 
     addSuggest(input, (inputText, cb) => {
-      if (inputText[0] === '@') {
-        cb(null, getProfileSuggestions(inputText.slice(1)))
-      } else if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
-      }
-    }, {cls: 'SuggestBox'})
+      const char = inputText[0]
+      const word = inputText.slice(1)
+
+      if (char === '@') cb(null, getProfileSuggestions(word))
+      if (char === '#') cb(null, getChannelSuggestions(word))
+      if (char === '/') cb(null, getPagesSuggestions(word))
+    }, {cls: 'PatchSuggest'})
+
+    // TODO extract
+    function getPagesSuggestions (word) {
+      const pages = [
+        'public', 'private', 'inbox', 'profile', 'notifications',
+        'gatherings', 'chess'
+      ]
+
+      return pages
+        .filter(page => ~page.indexOf(word))
+        .sort((a, b) => a.indexOf(word) < b.indexOf(word) ? -1 : +1 )
+        .map(page => {
+          return {
+            title: '/'+page,
+            id: '/'+page,
+            value: '/'+page,
+          }
+        })
+    }
 
     return _search
   })

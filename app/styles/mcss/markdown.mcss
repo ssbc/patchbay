@@ -1,6 +1,15 @@
 Markdown {
-
   p, ul, ol {
+  }
+
+  // center images (non-emoji)
+  p {
+    a {
+      img {
+        display: block
+        margin: auto
+      }
+    }
   }
 
   hr {
@@ -9,16 +18,17 @@ Markdown {
     border-width: 1px 0 0
     clear: both
     margin-bottom: .9em
-    white-space: pre-wrap
-    word-wrap: break-word
   }
 
-  pre {
+  (pre) {
     background-color: #f5f5f5
     color: #c121dc
     padding: .3rem
+    white-space: pre-wrap
+    word-wrap: break-word
     code {
       border: none
+      padding: none
     }
   }
   (code) {
@@ -79,5 +89,5 @@ Markdown {
   h4 { font-size: 1.12rem }
   h5 { font-size: 1.1rem }
   h6 { font-size: 1rem }
-  }
+}
 

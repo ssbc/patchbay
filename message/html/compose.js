@@ -8,12 +8,9 @@ exports.gives = nest('message.html.compose')
 
 exports.needs = nest({
   'about.async.suggest': 'first',
-  'blob.html.input': 'first',
   'channel.async.suggest': 'first',
-  'emoji.sync': {
-    names: 'first',
-    url: 'first'
-  },
+  'emoji.async.suggest': 'first',
+  'blob.html.input': 'first',
   'message.html.confirm': 'first'
 })
 
@@ -27,8 +24,10 @@ exports.create = function (api) {
     var textAreaFocused = Value(false)
     var focused = computed([channelInputFocused, textAreaFocused], (a, b) => a || b)
     var hasContent = Value(false)
+
     var getProfileSuggestions = api.about.async.suggest()
     var getChannelSuggestions = api.channel.async.suggest()
+    var getEmojiSuggestions = api.emoji.async.suggest()
 
     var blurTimeout = null
 
@@ -120,39 +119,19 @@ exports.create = function (api) {
       if (inputText[0] === '#') {
         cb(null, getChannelSuggestions(inputText.slice(1)))
       }
-    }, {cls: 'SuggestBox'})
+    }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
       channelInput.value = ev.detail.id  // HACK : this over-rides the markdown value
     })
 
     addSuggest(textArea, (inputText, cb) => {
-      if (inputText[0] === '@') {
-        cb(null, getProfileSuggestions(inputText.slice(1)))
-      } else if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
-      } else if (inputText[0] === ':') {
-        // suggest emojis
-        var word = inputText.slice(1)
-        if (word[word.length - 1] === ':') {
-          word = word.slice(0, -1)
-        }
-        word = word.toLowerCase()
-        // TODO: when no emoji typed, list some default ones
+      const char = inputText[0]
+      const wordFragment = inputText.slice(1)
 
-        const suggestions = api.emoji.sync.names()
-          .filter(name => ~name.indexOf(word))
-          .slice(0, 100).map(emoji => {
-            return {
-              image: api.emoji.sync.url(emoji),
-              title: emoji,
-              subtitle: emoji,
-              value: ':' + emoji + ':'
-            }
-          })
-
-        cb(null, suggestions)
-      }
-    }, {cls: 'SuggestBox'})
+      if (char === '@') cb(null, getProfileSuggestions(wordFragment))
+      if (char === '#') cb(null, getChannelSuggestions(wordFragment))
+      if (char === ':') cb(null, getEmojiSuggestions(wordFragment))
+    }, {cls: 'PatchSuggest'})
 
     return composer
 

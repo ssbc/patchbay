@@ -24,7 +24,11 @@ $textSubtle {
 
 $colorPrimary {
   color: #fff
-  background-color: #50aadf
+  background-color: #3dc8c3
+
+  (a) {
+    color: #5c6bc0
+  }
 }
 
 $borderPrimary {

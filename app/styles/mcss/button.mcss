@@ -16,7 +16,7 @@ Button {
   align-items: center
 
   -subtle {
-    color: initial
+    color: #b9b9b9
     :hover {
       color: #222
     }
@@ -41,5 +41,4 @@ Button {
     border-bottom: none
   }
 }
-
 

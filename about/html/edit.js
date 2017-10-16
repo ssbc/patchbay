@@ -68,7 +68,7 @@ exports.create = function (api) {
     )
     var names = dictToCollection(namesRecord)
 
-    var lb = hyperlightbox()
+    var lightbox = hyperlightbox()
 
     var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
       return name || avatar.link
@@ -99,7 +99,7 @@ exports.create = function (api) {
     })
 
     return h('AboutEditor', [
-      h('section.lightbox', lb),
+      lightbox,
       h('section.avatar', [
         h('section', [
           h('img', { src: avatarSrc })
@@ -144,27 +144,61 @@ exports.create = function (api) {
     ])
 
     function dataUrlCallback (data) {
-      var el = crop(data, (err, data) => {
+      const cropCallback = (err, cropData) => {
         if (err) throw err
+        if (!cropData) return lightbox.close()
 
-        if (data) {
-          var _data = dataurl.parse(data)
+        var _data = dataurl.parse(cropData)
+        api.sbot.async.addBlob(pull.once(_data.data), (err, hash) => {
+          if (err) throw err // TODO check if this is safely caught by error catcher
 
-          api.sbot.async.addBlob(pull.once(_data.data), (err, hash) => {
-            if (err) throw err // TODO check if this is safely caught by error catcher
-
-            avatar.new.set({
-              link: hash,
-              size: _data.data.length,
-              type: _data.mimetype,
-              width: 512,
-              height: 512
-            })
+          avatar.new.set({
+            link: hash,
+            size: _data.data.length,
+            type: _data.mimetype,
+            width: 512,
+            height: 512
           })
+        })
+        lightbox.close()
+      }
+
+      const cropEl = Crop(data, cropCallback)
+      lightbox.show(cropEl)
+    }
+
+    function Crop (data, cb) {
+      var img = h('img', {src: data})
+
+      var crop = h('div')
+
+      waitForImg()
+
+      return h('div.cropper', [
+        crop,
+        h('div.background')
+      ])
+
+      function waitForImg () {
+        // WEIRDNESS - if you invoke hypecrop before img is ready,
+        // the canvas instantiates and draws nothing
+
+        if (!img.height && !img.width) {
+          return window.setTimeout(waitForImg, 100)
         }
-        lb.close()
-      })
-      lb.show(el)
+
+        var canvas = hypercrop(img)
+        crop = (
+          h('PatchProfileCrop', [
+            h('header', 'click and drag to crop your image'),
+            canvas,
+            h('section.actions', [
+              h('Button', { 'ev-click': () => cb() }, 'Cancel'),
+              h('Button -primary', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'Okay')
+            ])
+          ])
+        )
+      }
     }
 
     function clearNewSelections () {
@@ -195,16 +229,3 @@ exports.create = function (api) {
   }
 }
 
-function crop (d, cb) {
-  var canvas = hypercrop(h('img', {src: d}))
-
-  return h('AboutImageEditor', [
-    h('header', 'Click and drag to crop your avatar.'),
-    canvas,
-    // canvas.selection,
-    h('section.actions', [
-      h('button.cancel', { 'ev-click': () => cb(new Error('canceled')) }, 'cancel'),
-      h('button.okay', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'okay')
-    ])
-  ])
-}
