@@ -23,7 +23,7 @@ $textSubtle {
 }
 
 $colorPrimary {
-  color: white
+  color: #fff
   background-color: #3dc8c3
 
   (a) {
@@ -31,8 +31,12 @@ $colorPrimary {
   }
 }
 
+$borderPrimary {
+  border: 1px solid #50aadf
+}
+
 $backgroundPrimary {
-  background-color: #50aadf
+  background-color: #fff
 }
 
 $avatarLarge {

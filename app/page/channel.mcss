@@ -1,0 +1,26 @@
+Page -channel {
+  div.Filter {
+  }
+
+  div.Scroller {
+    div.wrapper {
+      header {
+        display: flex
+        flex-wrap: wrap
+        justify-content: flex-end
+
+        div.Button.-subscribe {
+          margin-right: .5rem
+        }
+
+        div.Compose {
+          flex-basis: 100%
+        }
+      }
+
+      section.content {
+      }
+    }
+  }
+}
+
