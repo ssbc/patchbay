@@ -1,6 +1,15 @@
 Markdown {
-
   p, ul, ol {
+  }
+
+  // center images (non-emoji)
+  p {
+    a {
+      img {
+        display: block
+        margin: auto
+      }
+    }
   }
 
   hr {
@@ -80,5 +89,5 @@ Markdown {
   h4 { font-size: 1.12rem }
   h5 { font-size: 1.1rem }
   h6 { font-size: 1rem }
-  }
+}
 
