@@ -60,7 +60,6 @@ npm ls secure-scuttlebutt -g
 sbot server
 
 # then in another tab (these must be separate commands)
-sbot plugins.install ssb-contacts
 sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
 sbot plugins.install ssb-fulltext # for faster searches

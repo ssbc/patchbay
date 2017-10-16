@@ -19,6 +19,8 @@ const patchbay = {
 
     config: require('./config'), // shouldn't be in here ?
     contextMenu: require('patch-context'),
+    inbox: require('patch-inbox'),
+    history: require('patch-history')
   }
 }
 
@@ -27,11 +29,11 @@ const patchbay = {
 const sockets = combine(
   //require('ssb-horcrux'),
   //require('patch-hub'),
+
   require('ssb-chess'),
   require('patchbay-gatherings'),
-  require('patch-inbox'),
-  require('patch-history'),
-  require('patch-settings'),
+  // require('patch-network),
+  require('patch-settings'), // might need to be in patchbay
   patchbay,
   require('patchcore')
 )
