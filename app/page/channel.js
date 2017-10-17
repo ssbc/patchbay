@@ -62,9 +62,14 @@ exports.create = function (api) {
     }
     draw()
 
-    return h('Page -channel', {title: channel}, [
+    var page =  h('Page -channel', {title: channel}, [
       filterMenu,
       container
     ]) 
+
+    // TODO better scroll hack for hekyboard shortcuts
+    page.scroll = container.scroll
+
+    return page
   }
 }
