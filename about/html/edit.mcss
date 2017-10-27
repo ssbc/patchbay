@@ -175,9 +175,7 @@ AboutEditor {
       }
 
       button.confirm {
-        color: #fff
         $backgroundPrimary
-        border: none
       }
     }
   }
