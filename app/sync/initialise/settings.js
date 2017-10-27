@@ -18,8 +18,8 @@ const defaults = {
     },
     show: {
       post: true,
+      vote: false, // a.k.a. like
       about: true,
-      vote: false,
       contact: false,
       channel: false,
       pub: false,

@@ -33,39 +33,39 @@ exports.create = function (api) {
 
     const filterSettings = api.settings.obs.get('filter')
 
-    // this needs to show if the filter has changed from default ?...?
-    const isFiltered = computed([filterSettings], (filterSettings) => {
-	return filterSettings.exclude.channels || filterSettings.only.peopleIFollow || !isEqual(filterSettings.show, filterSettings.defaults.show)
+    const channelInput = h('input',
+     { value: filterSettings().exclude.channels,
+       'ev-keyup': (ev) => {
+         var text = ev.target.value
+         if (text.length == 0 || ev.which == 13) {
+           api.settings.sync.set({
+             filter: {
+               exclude: {
+                 channels: text
+               }
+             }
+           })
+           draw()
+         }
+       }
+     }
+    )
+
+    const isFiltered = computed(filterSettings, (filterSettings) => {
+      const _settings = Object.assign({}, filterSettings)
+      delete _settings.defaults
+
+      return !isEqual(_settings, filterSettings.defaults)
     })
 
-    const channelInput = h('input',
-                           { value: filterSettings().exclude.channels,
-                             'ev-keyup': (ev) => {
-                               var text = ev.target.value
-                               if (text.length == 0 || ev.which == 13) {
-                                 api.settings.sync.set({
-                                   filter: {
-                                     exclude: {
-                                       channels: text
-                                     }
-                                   }
-                                 })
-                                 draw()
-                               }
-                             }
-                           }
-                          )
-
     const filterMenu = h('Filter', [
-      h('i', {
-        classList: when(showFilters, 
-          'fa fa-filter -active',
-          when(isFiltered, 'fa fa-filter -filtered', 'fa fa-filter')
-        ),
+      when(isFiltered, h('i.custom')),
+      h('i.fa.fa-filter', {
+        classList: when(showFilters, '-active'),
         'ev-click': () => showFilters.set(!showFilters())
       }),
       h('i.fa.fa-angle-up', { 'ev-click': draw }),
-      h('div', { className: when(showFilters, '', '-hidden') }, [
+      h('div.options', { className: when(showFilters, '', '-hidden') }, [
         h('header', [
           'Filter',
           h('i.fa.fa-filter')

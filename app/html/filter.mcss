@@ -1,8 +1,6 @@
 Filter {
-  display: flex
-  flex-direction: column
-
   color: #444
+  $threadWidth
 
   i {
     position: absolute
@@ -18,19 +16,26 @@ Filter {
     -active {
       color: #555
     }
-    -filtered {
-      color: #0f0
-    }
   }
   i.fa-angle-up {
     left: 1rem
   }
+  i.custom {
+    right: 3.5rem
+    font-size: .8rem
+    color: #666
 
-  div {
-    margin: 0 .5rem .5rem .5rem
-    padding: .5rem
+    ::before {
+      content: 'custom'
+    }
+  }
+
+  div.options {
     background-color: #fff
+
+    padding: .5rem
     border: 1px gainsboro solid
+    margin: 0 .5rem .5rem .5rem
 
     -hidden {
       height: 0

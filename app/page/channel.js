@@ -41,7 +41,7 @@ exports.create = function (api) {
 
     const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [subscribeButton, composer] })
+    const { container, content } = api.app.html.scroller({ prepend: [subscribeButton, composer, filterMenu] })
 
     function draw () {
       resetFeed({ container, content })
@@ -63,11 +63,11 @@ exports.create = function (api) {
     draw()
 
     var page =  h('Page -channel', {title: channel}, [
-      filterMenu,
+      // filterMenu, // TODO - extract non-scroller els like filterMenu here
       container
     ]) 
 
-    // TODO better scroll hack for hekyboard shortcuts
+    // TODO better scroll hack for keyboard shortcuts
     page.scroll = container.scroll
 
     return page
