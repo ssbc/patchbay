@@ -1,7 +1,4 @@
 Page -channel {
-  div.Filter {
-  }
-
   div.Scroller {
     div.wrapper {
       header {

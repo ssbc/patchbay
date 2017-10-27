@@ -11,8 +11,7 @@ Scroller {
     align-self: center
 
     flex: 1 1
-    min-width: 780px
-    max-width: 840px
+    $threadWidth
     padding-top: .5rem
 
     section.content {
