@@ -91,7 +91,6 @@
     "ssb-friends": "^2.2.3",
     "ssb-fulltext": "^1.0.1",
     "ssb-keys": "^7.0.10",
-    "ssb-mentions": "^0.4.0",
     "ssb-private": "^0.1.2",
     "ssb-query": "^0.1.2",
     "standard": "^8.6.0"
