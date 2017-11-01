@@ -72,7 +72,7 @@
     "require-style": "^1.0.0",
     "scuttlebot": "^10.4.4",
     "setimmediate": "^1.0.5",
-    "ssb-chess": "^1.5.0",
+    "ssb-chess": "^1.6.1",
     "ssb-horcrux": "^0.1.3",
     "ssb-mentions": "~0.4.0",
     "ssb-mutual": "^0.1.0",
