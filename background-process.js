@@ -20,6 +20,7 @@ var createSbot = require('scuttlebot')
   .use(require('ssb-fulltext'))
   // .use(require('ssb-ebt'))
   .use(require('ssb-ws'))
+  .use(require('ssb-chess-db'));
 
 // pull config options out of depject
 var config = require('./config').create().config.sync.load()
@@ -28,4 +29,3 @@ var sbot = createSbot(config)
 var manifest = sbot.getManifest()
 fs.writeFileSync(Path.join(config.path, 'manifest.json'), JSON.stringify(manifest))
 electron.ipcRenderer.send('server-started')
-

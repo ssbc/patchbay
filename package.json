@@ -1,6 +1,6 @@
 {
   "name": "patchbay",
-  "version": "7.12.2",
+  "version": "7.12.3",
   "description": "patchbay 2, built on patchcore",
   "main": "main.js",
   "scripts": {
@@ -73,6 +73,7 @@
     "scuttlebot": "^10.4.4",
     "setimmediate": "^1.0.5",
     "ssb-chess": "^1.5.0",
+    "ssb-chess-db": "1.0.0",
     "ssb-horcrux": "^0.1.3",
     "ssb-mentions": "~0.4.0",
     "ssb-mutual": "^0.1.0",
