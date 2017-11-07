@@ -4,5 +4,6 @@ Page {
   $backgroundPrimary
 
   display: flex
+  flex-wrap: wrap
 }
 

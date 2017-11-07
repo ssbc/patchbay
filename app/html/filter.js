@@ -1,16 +1,21 @@
 const nest = require('depnest')
-const { h, Value, when } = require('mutant')
+const { h, Value, when, computed } = require('mutant')
 const Abort = require('pull-abortable')
 const pull = require('pull-stream')
 const addSuggest = require('suggest-box')
 const { isFeed } = require('ssb-ref')
+const some = require('lodash/some')
+const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
 
 exports.gives = nest('app.html.filter')
 
 exports.needs = nest({
-  'about.async.suggest': 'first',
+  'channel.async.suggest': 'first',
   'contact.obs.following': 'first',
-  'keys.sync.id': 'first'
+  'keys.sync.id': 'first',
+  'settings.obs.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -23,107 +28,129 @@ exports.create = function (api) {
 
     const myId = api.keys.sync.id()
     const peopleIFollow = api.contact.obs.following(myId)
-    const onlyPeopleIFollow = Value(false)
-    const onlyAuthor = Value()
 
-    const showPost = Value(true)
-    const showAbout = Value(true)
-    const showVote = Value(false)
-    const showContact = Value(false)
-    const showChannel = Value(false)
-    const showPub = Value(false)
+    const { set } = api.settings.sync
 
-    const authorInput = h('input', {
-      'ev-keyup': (ev) => {
-        const author = ev.target.value
-        if (author && !isFeed(author)) return
+    const filterSettings = api.settings.obs.get('filter')
 
-        onlyAuthor.set(author)
-        draw()
-      }
+    const channelInput = h('input',
+     { value: filterSettings().exclude.channels,
+       'ev-keyup': (ev) => {
+         var text = ev.target.value
+         if (text.length == 0 || ev.which == 13) {
+           api.settings.sync.set({
+             filter: {
+               exclude: {
+                 channels: text
+               }
+             }
+           })
+           draw()
+         }
+       }
+     }
+    )
+
+    const isFiltered = computed(filterSettings, (filterSettings) => {
+      const _settings = Object.assign({}, filterSettings)
+      delete _settings.defaults
+
+      return !isEqual(_settings, filterSettings.defaults)
     })
 
     const filterMenu = h('Filter', [
-      h('i', {
-        classList: when(showFilters, 'fa fa-filter -active', 'fa fa-filter'),
+      when(isFiltered, h('i.custom')),
+      h('i.fa.fa-filter', {
+        classList: when(showFilters, '-active'),
         'ev-click': () => showFilters.set(!showFilters())
       }),
       h('i.fa.fa-angle-up', { 'ev-click': draw }),
-      h('div', { className: when(showFilters, '', '-hidden') }, [
+      h('div.options', { className: when(showFilters, '', '-hidden') }, [
         h('header', [
           'Filter',
           h('i.fa.fa-filter')
         ]),
         h('section', [
-          h('div.author', [
-            h('label', 'Show author'),
-            authorInput
+          h('div.channels', [
+            h('label', 'Exclude channels'),
+            channelInput
           ]),
-          toggle({ obs: onlyPeopleIFollow, label: 'Only people I follow' }),
+          toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
           h('div.message-types', [
             h('header', 'Show messages'),
-            toggle({ obs: showPost, label: 'post' }),
-            toggle({ obs: showVote, label: 'like' }),
-            toggle({ obs: showAbout, label: 'about' }),
-            toggle({ obs: showContact, label: 'contact' }),
-            toggle({ obs: showChannel, label: 'channel' }),
-            toggle({ obs: showPub, label: 'pub' })
+            toggle({ type: 'post' }),
+            toggle({ type: 'like' }),
+            toggle({ type: 'about' }),
+            toggle({ type: 'contact' }),
+            toggle({ type: 'channel' }),
+            toggle({ type: 'pub' }),
+            toggle({ type: 'chess' })
           ])
         ])
       ])
     ])
 
-    function toggle ({ obs, label }) {
-      return h('FilterToggle', {
-        'ev-click': () => {
-          obs.set(!obs())
-          draw()
-        }}, [
-          h('label', label),
-          h('i', { classList: when(obs, 'fa fa-check-square-o', 'fa fa-square-o') })
-        ]
-      )
+    function toggle ({ type, filterGroup, label }) {
+      label = label || type
+      filterGroup = filterGroup || 'show'
+
+      const state = computed(filterSettings, settings => get(settings, [filterGroup, type]))
+      const handleClick = () => {
+        const currentState = state()
+
+        //TODO use some lodash tool ?
+        api.settings.sync.set({ 
+          filter: {
+            [filterGroup]: {
+              [type]: !currentState
+            }
+          }
+        })
+
+        draw()
+      }
+
+      return h('FilterToggle', { 'ev-click': handleClick }, [
+        h('label', label),
+        h('i', { classList: when(state, 'fa fa-check-square-o', 'fa fa-square-o') })
+      ])
     }
 
-    // NOTE: suggest needs to be added after the input has a parent
-    const getProfileSuggestions = api.about.async.suggest()
-    addSuggest(authorInput, (inputText, cb) => {
-      if (inputText[0] === '@') inputText = inputText.slice(1)
-      cb(null, getProfileSuggestions(inputText))
+    const getChannelSuggestions = api.channel.async.suggest()
+    addSuggest(channelInput, (inputText, cb) => {
+      if (inputText[0] === '#') {
+        cb(null, getChannelSuggestions(inputText.slice(1)))
+      }
     }, {cls: 'PatchSuggest'})
-    authorInput.addEventListener('suggestselect', ev => {
-      authorInput.value = ev.detail.id
+    channelInput.addEventListener('suggestselect', ev => {
+      const channels = channelInput.value.trim()
+
+      api.settings.sync.set({ filter: { exclude: { channels: channels } } })
+
+      draw()
     })
 
     function followFilter (msg) {
-      if (!onlyPeopleIFollow()) return true
+      if (!filterSettings().only.peopleIFollow) return true
 
       return Array.from(peopleIFollow()).includes(msg.value.author)
     }
 
-    function authorFilter (msg) {
-      if (!onlyAuthor()) return true
+    function channelFilter (msg) {
+      var filters = filterSettings().exclude.channels
+      if (!filters) return true
+      filters = filters.split(' ').map(c => c.slice(1))
 
-      return msg.value.author === onlyAuthor()
+      return msg.value.content && !filters.includes(msg.value.content.channel)
     }
 
     function messageFilter (msg) {
-      switch (msg.value.content.type) {
-        case 'post':
-          return showPost()
-        case 'vote':
-          return showVote()
-        case 'about':
-          return showAbout()
-        case 'contact':
-          return showContact()
-        case 'channel':
-          return showChannel()
-        case 'pub':
-          return showPub()
-        default:
-          return true
+      var { type } = msg.value.content
+      if (/^chess/.test(type)) {
+        type = 'chess'
       }
+
+      return get(filterSettings(), ['show', type], true)
     }
 
     var downScrollAborter
@@ -132,7 +159,7 @@ exports.create = function (api) {
       return pull(
         downScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter),
+        pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
     }
@@ -143,7 +170,7 @@ exports.create = function (api) {
       return pull(
         upScrollAborter,
         pull.filter(followFilter),
-        pull.filter(authorFilter),
+        pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
     }

@@ -48,4 +48,9 @@ $avatarSmall {
   width: 32px
   height: 32px
 }
+
+$threadWidth {
+  min-width: 780px
+  max-width: 840px
+}
 `
