@@ -91,14 +91,6 @@ exports.create = function (api) {
           ])
         ])
       ),
-      computed(blocking, blocking => {
-        if (blocking.length === 0) return ''
-
-        return h('div.blocking', [
-          h('header', 'Blocking'),
-          h('section', blocking.map(imageLink))
-        ])
-      }),
       computed(blockers, blockers => {
         if (blockers.length === 0) return ''
 
@@ -118,7 +110,15 @@ exports.create = function (api) {
       h('div.followers', [
         h('header', 'Followers'),
         h('section', map(followers, imageLink))
-      ])
+      ]),
+      computed(blocking, blocking => {
+        if (blocking.length === 0) return ''
+
+        return h('div.blocking', [
+          h('header', 'Blocking'),
+          h('section', blocking.map(imageLink))
+        ])
+      })
     ])
   }
 }
