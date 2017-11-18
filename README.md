@@ -63,6 +63,9 @@ sbot server
 sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
 sbot plugins.install ssb-fulltext # for faster searches
+sbot plugins.install ssb-chess-db # for chess
+
+After that you need to make sure that .ssb/config reads: "ssb-chess-db": "ssbChessIndex" for chess to work.
 
 # restart sbot server (go back to previous tab and kill it)
 ```
