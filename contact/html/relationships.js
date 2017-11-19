@@ -13,6 +13,7 @@ exports.needs = nest({
   'contact.obs.followers': 'first',
   'contact.obs.following': 'first',
   'contact.obs.blockers': 'first',
+  'contact.obs.blocking': 'first',
   'keys.sync.id': 'first'
 })
 
@@ -56,6 +57,7 @@ exports.create = function (api) {
 
     const { unfollow, follow, block, unblock } = api.contact.async
     const blockers = api.contact.obs.blockers(id)
+    const blocking = api.contact.obs.blocking(id)
     const ImBlockingThem = computed(blockers, blockers => blockers.includes(myId))
 
     return h('Relationships', [
@@ -108,7 +110,15 @@ exports.create = function (api) {
       h('div.followers', [
         h('header', 'Followers'),
         h('section', map(followers, imageLink))
-      ])
+      ]),
+      computed(blocking, blocking => {
+        if (blocking.length === 0) return ''
+
+        return h('div.blocking', [
+          h('header', 'Blocking'),
+          h('section', blocking.map(imageLink))
+        ])
+      })
     ])
   }
 }
