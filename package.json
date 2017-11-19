@@ -71,7 +71,7 @@
     "pull-stream": "^3.5.0",
     "read-directory": "^2.0.0",
     "require-style": "^1.0.0",
-    "scuttlebot": "^10.4.4",
+    "scuttlebot": "^10.4.10",
     "setimmediate": "^1.0.5",
     "ssb-chess": "^1.7.1",
     "ssb-chess-db": "1.0.0",
