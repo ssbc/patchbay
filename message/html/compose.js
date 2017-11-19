@@ -11,7 +11,9 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'blob.html.input': 'first',
-  'message.html.confirm': 'first'
+  'message.html.confirm': 'first',
+  'drafts.sync.get': 'first',
+  'drafts.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -53,8 +55,17 @@ exports.create = function (api) {
       title: when(meta.channel, 'Reply is in same channel as original message')
     })
 
+    var draftPerstTimeout = null
     var textArea = h('textarea', {
-      'ev-input': () => hasContent.set(!!textArea.value),
+      'ev-input': () => {
+        hasContent.set(!!textArea.value)
+        clearTimeout(draftPerstTimeout)
+        draftPerstTimeout = setTimeout(() => {
+          // TODO: /public might not be the only place where there is no root?
+          let where = resolve(meta).root || '/public'
+          api.drafts.sync.set(where, textArea.value)
+        }, 200)
+      },
       'ev-blur': () => {
         clearTimeout(blurTimeout)
         blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
@@ -63,6 +74,12 @@ exports.create = function (api) {
       placeholder
     })
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
+
+    // load draft
+    let draft = api.drafts.sync.get(resolve(meta).root || '/public')
+    if (typeof draft === 'string') {
+      textArea.value = draft
+    }
 
     var warningMessage = Value(null)
     var warning = h('section.warning',
