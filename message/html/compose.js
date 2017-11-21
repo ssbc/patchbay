@@ -19,7 +19,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
-  function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
+  function compose ({ location, shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
     var files = []
     var filesById = {}
     var channelInputFocused = Value(false)
@@ -56,7 +56,11 @@ exports.create = function (api) {
     })
 
     var draftPerstTimeout = null
-    var draftLocation = resolve(meta).root || '/public'
+    var draftLocation = resolve(meta).root
+    if (!draftLocation) {
+      draftLocation = location.page
+      if (draftLocation === '/channel') draftLocation = draftLocation + ':' + meta.channel
+    }
     var textArea = h('textarea', {
       'ev-input': () => {
         hasContent.set(!!textArea.value)

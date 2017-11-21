@@ -34,6 +34,7 @@ exports.create = function (api) {
 
   function publicPage (location) {
     const composer = api.message.html.compose({
+      location: { page: '/public' },
       meta: { type: 'post' },
       placeholder: 'Write a public message'
     })
