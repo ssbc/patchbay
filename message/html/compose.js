@@ -56,14 +56,13 @@ exports.create = function (api) {
     })
 
     var draftPerstTimeout = null
+    var draftLocation = resolve(meta).root || '/public'
     var textArea = h('textarea', {
       'ev-input': () => {
         hasContent.set(!!textArea.value)
         clearTimeout(draftPerstTimeout)
         draftPerstTimeout = setTimeout(() => {
-          // TODO: /public might not be the only place where there is no root?
-          let where = resolve(meta).root || '/public'
-          api.drafts.sync.set(where, textArea.value)
+          api.drafts.sync.set(draftLocation, textArea.value)
         }, 200)
       },
       'ev-blur': () => {
@@ -76,7 +75,7 @@ exports.create = function (api) {
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
     // load draft
-    let draft = api.drafts.sync.get(resolve(meta).root || '/public')
+    let draft = api.drafts.sync.get(draftLocation)
     if (typeof draft === 'string') {
       textArea.value = draft
     }
