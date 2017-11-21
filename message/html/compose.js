@@ -194,7 +194,10 @@ exports.create = function (api) {
       function done (err, msg) {
         publishBtn.disabled = false
         if (err) throw err
-        else if (msg) textArea.value = ''
+        else if (msg) {
+          textArea.value = ''
+          api.drafts.sync.set(draftLocation, '')
+        }
         if (cb) cb(err, msg)
       }
     }
