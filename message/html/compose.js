@@ -11,13 +11,15 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'blob.html.input': 'first',
-  'message.html.confirm': 'first'
+  'message.html.confirm': 'first',
+  'drafts.sync.get': 'first',
+  'drafts.sync.set': 'first'
 })
 
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
-  function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
+  function compose ({ location, shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
     var files = []
     var filesById = {}
     var channelInputFocused = Value(false)
@@ -53,8 +55,20 @@ exports.create = function (api) {
       title: when(meta.channel, 'Reply is in same channel as original message')
     })
 
+    var draftPerstTimeout = null
+    var draftLocation = resolve(meta).root
+    if (!draftLocation) {
+      draftLocation = location.page
+      if (draftLocation === '/channel') draftLocation = draftLocation + ':' + meta.channel
+    }
     var textArea = h('textarea', {
-      'ev-input': () => hasContent.set(!!textArea.value),
+      'ev-input': () => {
+        hasContent.set(!!textArea.value)
+        clearTimeout(draftPerstTimeout)
+        draftPerstTimeout = setTimeout(() => {
+          api.drafts.sync.set(draftLocation, textArea.value)
+        }, 200)
+      },
       'ev-blur': () => {
         clearTimeout(blurTimeout)
         blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
@@ -63,6 +77,12 @@ exports.create = function (api) {
       placeholder
     })
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
+
+    // load draft
+    let draft = api.drafts.sync.get(draftLocation)
+    if (typeof draft === 'string') {
+      textArea.value = draft
+    }
 
     var warningMessage = Value(null)
     var warning = h('section.warning',
@@ -178,7 +198,10 @@ exports.create = function (api) {
       function done (err, msg) {
         publishBtn.disabled = false
         if (err) throw err
-        else if (msg) textArea.value = ''
+        else if (msg) {
+          textArea.value = ''
+          api.drafts.sync.set(draftLocation, '')
+        }
         if (cb) cb(err, msg)
       }
     }

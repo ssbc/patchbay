@@ -56,6 +56,7 @@
     "mutant-pull-reduce": "^1.1.0",
     "open-external": "^0.1.1",
     "patch-context": "^2.0.0",
+    "patch-drafts": "0.0.5",
     "patch-history": "^1.0.0",
     "patch-hub": "^1.1.0",
     "patch-inbox": "^1.0.2",

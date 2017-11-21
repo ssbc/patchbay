@@ -36,6 +36,7 @@ const sockets = combine(
   require('patchbay-book'),
   // require('patch-network),
   require('patch-settings'), // might need to be in patchbay
+  require('patch-drafts'),
   patchbay,
   require('patchcore')
 )
