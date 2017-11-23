@@ -20,7 +20,9 @@ const patchbay = {
     config: require('./config'), // shouldn't be in here ?
     contextMenu: require('patch-context'),
     suggestions: require('patch-suggest'),
-    inbox: require('patch-inbox'),
+    settings: require('patch-settings'),
+    drafts: require('patch-drafts'),
+    inbox: require('patch-inbox'), // TODO - ideally this would be a standalone patch-* module
     history: require('patch-history'),
   }
 }
@@ -35,8 +37,6 @@ const sockets = combine(
   require('patchbay-gatherings'),
   require('patchbay-book'),
   // require('patch-network),
-  require('patch-settings'), // might need to be in patchbay
-  require('patch-drafts'),
   patchbay,
   require('patchcore')
 )
