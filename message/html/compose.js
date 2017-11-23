@@ -13,7 +13,8 @@ exports.needs = nest({
   'blob.html.input': 'first',
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
-  'drafts.sync.set': 'first'
+  'drafts.sync.set': 'first',
+  'drafts.sync.remove': 'first'
 })
 
 exports.create = function (api) {
@@ -200,7 +201,7 @@ exports.create = function (api) {
         if (err) throw err
         else if (msg) {
           textArea.value = ''
-          api.drafts.sync.set(draftLocation, '')
+          api.drafts.sync.remove(draftLocation)
         }
         if (cb) cb(err, msg)
       }
