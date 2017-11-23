@@ -58,6 +58,7 @@ exports.create = function (api) {
     }
 
     const composer = api.message.html.compose({
+      location,
       meta,
       placeholder: 'Write a reply',
       shrink: false

@@ -42,7 +42,7 @@ exports.create = function (api) {
     const id = api.keys.sync.id()
 
     const composer = api.message.html.compose({
-      location: { page: '/private' },
+      location,
       meta: { type: 'post' },
       prepublish: meta => {
         meta.recps = [id, ...(meta.mentions || [])]
