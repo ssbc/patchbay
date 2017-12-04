@@ -20,23 +20,22 @@ Markdown {
     margin-bottom: .9em
   }
 
-  (pre) {
+  pre {
     background-color: #f5f5f5
     color: #c121dc
     padding: .3rem
     white-space: pre-wrap
     word-wrap: break-word
+
     code {
+      $code
       border: none
-      padding: none
     }
   }
-  (code) {
-    background-color: #f5f5f5
-    color: #c121dc
+
+  p code {
+    $code
     padding: 0.1rem .2rem
-    border: 1px solid #e6e6e6
-    border-radius: 2px
   }
 
   blockquote {
@@ -91,3 +90,9 @@ Markdown {
   h6 { font-size: 1rem }
 }
 
+$code {
+  background-color: #f5f5f5
+  color: #c121dc
+  border: 1px solid #e6e6e6
+  border-radius: 2px
+}
