@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, resolve } = require('mutant')
+const { h, Value, resolve, computed } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('mutant-scroll')
 var HLRU = require('hashlru')
@@ -55,7 +55,17 @@ exports.create = function (api) {
     const render = (msgObs) => {
       // if (msg.value.content.type === 'about') debugger
       const msg = resolve(msgObs) // actually the rollup
-      return api.message.html.render(msg)
+      return h('ThreadCard', [
+        api.message.html.render(msg),
+        'Recent replies:',
+        computed(msgObs, msg => {
+          return h('ul', msg.replies.map(reply => h('li', [
+            reply.value.timestamp,
+            ' ',
+            reply.key 
+          ])))
+        })
+      ])
     }
 
     var scroller = Scroller({
