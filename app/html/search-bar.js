@@ -75,7 +75,7 @@ exports.create = function (api) {
     // TODO extract
     function getPagesSuggestions (word) {
       const pages = [
-        'public', 'private', 'inbox', 'profile', 'notifications',
+        'feed', 'all', 'private', 'inbox', 'profile', 'notifications',
         'gatherings', 'chess', 'books'
       ]
 

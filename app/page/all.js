@@ -7,7 +7,7 @@ const next = require('../../junk/next-stepper')
 
 exports.gives = nest({
   'app.html.menuItem': true,
-  'app.page.public': true
+  'app.page.all': true
 })
 
 exports.needs = nest({
@@ -22,17 +22,17 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.public': publicPage
+    'app.page.all': allPage
   })
 
   function menuItem () {
     return h('a', {
       style: { order: 1 },
-      'ev-click': () => api.app.sync.goTo({ page: 'public' })
-    }, '/public')
+      'ev-click': () => api.app.sync.goTo({ page: 'all' })
+    }, '/all')
   }
 
-  function publicPage (location) {
+  function allPage (location) {
     const composer = api.message.html.compose({
       location,
       meta: { type: 'post' },
@@ -64,7 +64,7 @@ exports.create = function (api) {
     }
     draw()
 
-    container.title = '/public'
+    container.title = '/all'
     return container
   }
 }

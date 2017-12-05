@@ -1,0 +1,10 @@
+Page -feed {
+  flex-wrap: initial
+
+  section {
+    $threadWidth
+    margin: 0 auto
+  }
+
+}
+
