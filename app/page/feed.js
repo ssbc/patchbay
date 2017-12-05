@@ -47,13 +47,10 @@ exports.create = function (api) {
     })
 
     const filter = () => pull(
+      // filter private messages
+      pull.filter(msg => msg.value && msg.value.content),
       pull.filter(msg => msg.value.content.type === 'post')
     )
-    // const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-
-    // TODO : build a pull-stream which has seperate state + rendering
-    // function draw () {
-    //   resetFeed({ container, content })
 
     const render = (msgObs) => {
       // if (msg.value.content.type === 'about') debugger
@@ -84,8 +81,6 @@ exports.create = function (api) {
 
     function miniRollup () {
       return pull(
-        // filter private messages
-        pull.filter(msg => !(msg.value && typeof msg.value.content === 'string')),
         pull.asyncMap((msg, cb) => {
           // if (msg.value) {
           var root = api.message.sync.root(msg)
