@@ -13,6 +13,7 @@ const patchbay = {
     blob: bulk(__dirname, [ 'blob/**/*.js' ]),
     channel: bulk(__dirname, [ 'channel/**/*.js' ]),
     contact: bulk(__dirname, [ 'contact/**/*.js' ]),
+    feed: bulk(__dirname, [ 'feed/**/*.js' ]),
     message: bulk(__dirname, [ 'message/**/*.js' ]),
     router: bulk(__dirname, [ 'router/**/*.js' ]),
     styles: bulk(__dirname, [ 'styles/**/*.js' ]),

@@ -2,9 +2,10 @@ const nest = require('depnest')
 const { h, Value, resolve, computed } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('mutant-scroll')
-var HLRU = require('hashlru')
-
 const next = require('pull-next-step')
+const HLRU = require('hashlru')
+
+const keyscroll = require('../../junk/keyscroll')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -16,6 +17,7 @@ exports.needs = nest({
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'feed.pull.public': 'first',
+  'feed.html.feedCard': 'first',
   'message.html.compose': 'first',
   'message.html.render': 'first',
   'message.sync.root': 'first',
@@ -52,22 +54,6 @@ exports.create = function (api) {
       pull.filter(msg => msg.value.content.type === 'post')
     )
 
-    const render = (msgObs) => {
-      // if (msg.value.content.type === 'about') debugger
-      const msg = resolve(msgObs) // actually the rollup
-      return h('ThreadCard', [
-        api.message.html.render(msg),
-        'Recent replies:',
-        computed(msgObs, msg => {
-          return h('ul', msg.replies.map(reply => h('li', [
-            reply.value.timestamp,
-            ' ',
-            reply.key 
-          ])))
-        })
-      ])
-    }
-
     var scroller = Scroller({
       classList: [ 'Page', '-feed' ],
       prepend: composer,
@@ -86,7 +72,7 @@ exports.create = function (api) {
       // store: recentMsgCache,
       updateTop: updateRecentMsgCache,
       updateBottom: updateRecentMsgCache,
-      render
+      render: api.feed.html.feedCard
     })
 
     function miniRollup () {
@@ -148,6 +134,7 @@ exports.create = function (api) {
     }
 
     scroller.title = '/feed'
+    scroller.scroll = keyscroll(scroller.children.item(1))
     return scroller
   }
 }
