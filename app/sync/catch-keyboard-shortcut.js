@@ -102,7 +102,7 @@ function genericShortcuts (ev, { tabs, search, goTo }) {
 
 function goToMessage (ev, { tabs, goTo }) {
   const msg = ev.target
-  if (!msg.classList.contains('Message')) return
+  if (!msg.classList.contains('Message') && !msg.classList.contains('FeedCard')) return
 
   const { root, id } = msg.dataset
   if (!root) return goTo(id)
@@ -119,7 +119,12 @@ function scrollDownToMessage (id, tabs) {
     const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
     if (msg === null) return setTimeout(locateKey, 100)
 
-    ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
+    msg.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'start',
+    })
+    // ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
     msg.focus()
   }
 }
