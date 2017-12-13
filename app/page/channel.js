@@ -39,7 +39,9 @@ exports.create = function (api) {
       when(subscribed, 'Unsubscribe from channel', 'Subscribe to channel')
     )
 
-    const composer = api.message.html.compose({ meta: { type: 'post', channel: channelName } })
+    const composer = api.message.html.compose({
+      location,
+      meta: { type: 'post', channel: channelName } })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [subscribeButton, composer, filterMenu] })
 

@@ -11,13 +11,19 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'blob.html.input': 'first',
-  'message.html.confirm': 'first'
+  'message.html.confirm': 'first',
+  'drafts.sync.get': 'first',
+  'drafts.sync.set': 'first',
+  'drafts.sync.remove': 'first'
 })
 
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
-  function compose ({ shrink = true, meta, prepublish, placeholder = 'Write a message' }, cb) {
+  function compose ({ meta, location, prepublish, placeholder = 'Write a message', shrink = true }, cb) {
+    if (typeof resolve(meta) !== 'object') throw new Error('Compose needs meta data about what sort of message composer you are making')
+    if (!location) throw new Error('Compose expects a unique location so it can save drafts of messages')
+
     var files = []
     var filesById = {}
     var channelInputFocused = Value(false)
@@ -53,8 +59,16 @@ exports.create = function (api) {
       title: when(meta.channel, 'Reply is in same channel as original message')
     })
 
+    var draftPerstTimeout = null
+    var draftLocation = location
     var textArea = h('textarea', {
-      'ev-input': () => hasContent.set(!!textArea.value),
+      'ev-input': () => {
+        hasContent.set(!!textArea.value)
+        clearTimeout(draftPerstTimeout)
+        draftPerstTimeout = setTimeout(() => {
+          api.drafts.sync.set(draftLocation, textArea.value)
+        }, 200)
+      },
       'ev-blur': () => {
         clearTimeout(blurTimeout)
         blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
@@ -63,6 +77,13 @@ exports.create = function (api) {
       placeholder
     })
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
+
+    // load draft
+    let draft = api.drafts.sync.get(draftLocation)
+    if (typeof draft === 'string') {
+      textArea.value = draft
+      hasContent.set(true)
+    }
 
     var warningMessage = Value(null)
     var warning = h('section.warning',
@@ -178,7 +199,10 @@ exports.create = function (api) {
       function done (err, msg) {
         publishBtn.disabled = false
         if (err) throw err
-        else if (msg) textArea.value = ''
+        else if (msg) {
+          textArea.value = ''
+          api.drafts.sync.remove(draftLocation)
+        }
         if (cb) cb(err, msg)
       }
     }
