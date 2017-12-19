@@ -119,12 +119,14 @@ function scrollDownToMessage (id, tabs) {
     const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
     if (msg === null) return setTimeout(locateKey, 100)
 
-    msg.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'start',
-    })
-    // ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
+    if (msg.scrollIntoViewIfNeeded)
+      msg.scrollIntoViewIfNeeded(false)
+    else
+      msg.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'start',
+      })
     msg.focus()
   }
 }
