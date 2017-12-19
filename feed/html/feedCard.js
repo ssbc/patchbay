@@ -7,6 +7,8 @@ exports.gives = nest({
 
 exports.needs = nest({
   'message.html.render': 'first',
+  'message.html.timestamp': 'first',
+  'about.obs.name': 'first',
 })
 
 
@@ -27,14 +29,17 @@ exports.create = function (api) {
     }
     return h('FeedCard', opts, [
       api.message.html.render(msg),
-      'Recent replies:',
-      computed(msgObs, msg => {
-        return h('ul', msg.replies.map(reply => h('li', [
-          reply.value.timestamp,
-          ' ',
-          reply.key 
-        ])))
-      })
+      computed(msgObs, msg => h('div', msg.replies.slice(-3).map(Reply)) )
+    ])
+  }
+
+  function Reply (msg) {
+    const { author, content } = msg.value
+    return h('div', [
+      h('b', api.about.obs.name(author)),
+      ' - ',
+      // api.message.html.timestamp(msg),
+      content.text.substr(0,124)
     ])
   }
 }
