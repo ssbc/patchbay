@@ -1,7 +1,6 @@
 const combine = require('depject')
 const entry = require('depject/entry')
 const nest = require('depnest')
-const bulk = require('bulk-require')
 
 // polyfills
 require('setimmediate')

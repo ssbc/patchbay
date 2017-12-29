@@ -34,7 +34,6 @@
   },
   "homepage": "https://github.com/ssbc/patchbay#readme",
   "dependencies": {
-    "bulk-require": "^1.0.1",
     "bulkify": "^1.4.2",
     "cross-script": "^1.0.5",
     "dataurl-": "^0.1.0",
@@ -100,3 +99,4 @@
     "standard": "^8.6.0"
   }
 }
+
