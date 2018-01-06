@@ -74,7 +74,7 @@
     "require-style": "^1.0.1",
     "scuttlebot": "^10.4.10",
     "setimmediate": "^1.0.5",
-    "ssb-chess": "^2.0.1",
+    "ssb-chess": "^2.1.0",
     "ssb-chess-db": "^1.0.1",
     "ssb-client": "^4.5.2",
     "ssb-horcrux": "^0.1.3",
