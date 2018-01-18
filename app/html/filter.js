@@ -133,7 +133,7 @@ exports.create = function (api) {
     function followFilter (msg) {
       if (!filterSettings().only.peopleIFollow) return true
 
-      return Array.from(peopleIFollow()).includes(msg.value.author)
+      return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author)
     }
 
     function channelFilter (msg) {
