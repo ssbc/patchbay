@@ -55,7 +55,7 @@
     "mutant": "^3.22.1",
     "mutant-pull-reduce": "^1.1.0",
     "open-external": "^0.1.1",
-    "patch-context": "^2.0.0",
+    "patch-context": "^2.0.1",
     "patch-drafts": "0.0.6",
     "patch-history": "^1.0.0",
     "patch-hub": "^1.1.0",
@@ -64,7 +64,7 @@
     "patch-suggest": "^1.0.1",
     "patchbay-book": "^1.0.4",
     "patchbay-gatherings": "^2.0.0",
-    "patchcore": "^1.18.0",
+    "patchcore": "^1.23.0",
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
     "pull-next": "^1.0.0",
@@ -92,7 +92,7 @@
     "ssb-fulltext": "^1.0.1",
     "ssb-keys": "^7.0.13",
     "ssb-private": "^0.1.2",
-    "ssb-query": "^1.0.1"
+    "ssb-query": "^1.0.2"
   },
   "devDependencies": {
     "electro": "^2.0.3",
