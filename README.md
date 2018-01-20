@@ -8,7 +8,6 @@ Patchbay is built using [patchcore](https://github.com/ssbc/patchcore) + [depjec
 
 This makes in very easy to create say, a renderer for a new message type, or switch to a different method for choosing user names.
 
-
 ## Setup
 
 Libsodium has some build dependencies. On ubuntu systems the following might help:
@@ -99,6 +98,14 @@ sbot server
 # from the patchbay repo folder
 npm run dev
 ```
+
+## Keyboard shortcuts
+`CmdOrCtrl` is the `command` key on Apple keyboards or the `ctrl` key on PC keyboards.
+
+### Tabs and Window
+- `CmdOrCtrl+Shift+]` and `CmdOrCtrl+Shift+[` will cycle the tabs left and right
+- `CmdOrCtrl+w` will close the current tab
+- `CmdOrCtrl+Shift+w` will close the current window
 
 ## How to add a feature
 

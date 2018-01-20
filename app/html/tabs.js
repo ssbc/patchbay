@@ -43,7 +43,7 @@ exports.create = function (api) {
       })
       history.set(prunedHistory)
     }
-    
+
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
 
@@ -52,7 +52,13 @@ exports.create = function (api) {
       onClose,
       append: h('div.navExtra', [ search, menu ])
     })
-    _tabs.currentPage = () => _tabs.get(_tabs.selected[0]).firstChild
+    _tabs.currentPage = () => {
+      const currentPage = _tabs.get(_tabs.selected[0])
+      return currentPage && currentPage.firstChild
+    }
+    _tabs.nextTab = () => _tabs.currentPage() && _tabs.selectRelative(1)
+    _tabs.previousTab = () => _tabs.currentPage() && _tabs.selectRelative(-1)
+    _tabs.closeCurrentTab = () => _tabs.currentPage() && _tabs.remove(_tabs.selected[0])
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))

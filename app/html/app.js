@@ -30,7 +30,6 @@ exports.create = function (api) {
     api.app.sync.initialise()
 
     window = api.app.sync.window(window)
- 
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
@@ -39,6 +38,18 @@ exports.create = function (api) {
     const tabs = api.app.html.tabs(initialTabs)
 
     const App = h('App', tabs)
+
+    electron.ipcRenderer.on('nextTab', () => {
+      tabs.nextTab()
+    })
+
+    electron.ipcRenderer.on('previousTab', () => {
+      tabs.previousTab()
+    })
+
+    electron.ipcRenderer.on('closeTab', () => {
+      tabs.closeCurrentTab()
+    })
 
     // Catch user actions
     api.app.sync.catchKeyboardShortcut(window, { tabs })
