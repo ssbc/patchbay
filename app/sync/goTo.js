@@ -6,8 +6,8 @@ exports.needs = nest({
   'app.html.tabs': 'first',
   'history.obs.store': 'first',
   'history.sync.push': 'first',
-  'router.sync.normalise': 'first',
-  'router.sync.router': 'first'
+  'router.async.normalise': 'first',
+  'router.async.router': 'first'
 })
 
 exports.create = function (api) {
@@ -22,32 +22,39 @@ exports.create = function (api) {
   //   - router.sync.router would take (location, { position }) ?
 
   function goTo (location, openBackground = false, split = false) {
-    location = api.router.sync.normalise(location)
-    const locationId = JSON.stringify(location)
+    api.router.async.normalise(location, (err, location) => {
+      if (err) throw err
+    
+      const locationId = JSON.stringify(location)
 
-    const tabs = api.app.html.tabs()
-    if (tabs.has(locationId)) {
-      tabs.select(locationId)
-      api.history.sync.push(location)
-      return true
-    }
+      const tabs = api.app.html.tabs()
+      if (tabs.has(locationId)) {
+        tabs.select(locationId)
+        api.history.sync.push(location)
+        return true
+      }
 
-    const page = api.router.sync.router(location)
-    if (!page) return
+      api.router.async.router(location, (err, page) => {
+        debugger
+        if (err) throw err
 
-    page.id = page.id || locationId
-    tabs.add(page, !openBackground, split)
+        if (!page) return
 
-    if (openBackground) {
-      const history = api.history.obs.store()
-      var _history = history()
-      var current = _history.pop()
+        page.id = page.id || locationId
+        tabs.add(page, !openBackground, split)
 
-      history.set([ ..._history, location, current ])
-    } else {
-      api.history.sync.push(location)
-    }
+        if (openBackground) {
+          const history = api.history.obs.store()
+          var _history = history()
+          var current = _history.pop()
 
-    return openBackground
+          history.set([ ..._history, location, current ])
+        } else {
+          api.history.sync.push(location)
+        }
+      })
+
+      // return openBackground // might not be needed?
+    })
   }
 }

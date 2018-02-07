@@ -15,7 +15,8 @@ exports.needs = nest({
   'app.sync.window': 'reduce',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
-  'router.sync.router': 'first',
+  'router.async.router': 'first',
+  'router.sync.router': 'first', // TODO rm
   'styles.css': 'reduce',
   'settings.sync.get': 'first',
   'settings.sync.set': 'first'
@@ -47,6 +48,8 @@ exports.create = function (api) {
     api.history.obs.location()(loc => api.app.sync.goTo(loc || {}))
 
     // Catch errors
+    // TODO - change this error handler error page annomaly
+    // Note I'm still using a sync router just to ge this working (mix)
     var { container: errorPage, addError } = api.router.sync.router('/errors')
     window.addEventListener('error', ev => {
       if (!tabs.has('/errors')) tabs.add(errorPage, true)
