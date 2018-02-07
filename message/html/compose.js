@@ -21,11 +21,11 @@ exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
   function compose (options, cb) {
-    const { 
+    const {
       meta,
-      location, 
+      location,
       feedIdsInThread = [],
-      prepublish, 
+      prepublish,
       placeholder = 'Write a message',
       shrink = true
     } = options
@@ -105,7 +105,7 @@ exports.create = function (api) {
     var fileInput = api.blob.html.input(file => {
       const megabytes = file.size / 1024 / 1024
       if (megabytes >= 5) {
-        const rounded = Math.floor(megabytes*100)/100
+        const rounded = Math.floor(megabytes * 100) / 100
         warningMessage.set([
           h('i.fa.fa-exclamation-triangle'),
           h('strong', file.name),

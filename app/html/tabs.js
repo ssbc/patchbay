@@ -43,7 +43,7 @@ exports.create = function (api) {
       })
       history.set(prunedHistory)
     }
-    
+
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
 
@@ -74,4 +74,3 @@ function buildSearchBarTermFromLocation (location) {
     .map(k => location[k])
     .join(', ')
 }
-

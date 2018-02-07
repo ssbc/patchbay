@@ -25,12 +25,12 @@ exports.create = function (api) {
   return nest('app.html.app', app)
 
   function app () {
-    console.log("STARTING app")
+    console.log('STARTING app')
 
     api.app.sync.initialise()
 
     window = api.app.sync.window(window)
- 
+
     const css = values(api.styles.css()).join('\n')
     insertCss(css)
 
@@ -44,7 +44,7 @@ exports.create = function (api) {
     api.app.sync.catchKeyboardShortcut(window, { tabs })
     api.app.async.catchLinkClick(App)
 
-    api.history.obs.location()(loc => api.app.sync.goTo(loc || {}) )
+    api.history.obs.location()(loc => api.app.sync.goTo(loc || {}))
 
     // Catch errors
     var { container: errorPage, addError } = api.router.sync.router('/errors')
@@ -54,7 +54,7 @@ exports.create = function (api) {
       addError(ev.error || ev)
     })
 
-    ////// TODO - extract this to keep patch-lite isolated from electron
+    /// /// TODO - extract this to keep patch-lite isolated from electron
     const { getCurrentWebContents, getCurrentWindow } = electron.remote
     window.addEventListener('resize', () => {
       var wc = getCurrentWebContents()
@@ -69,13 +69,11 @@ exports.create = function (api) {
     })
 
     var zoomFactor = api.settings.sync.get('electron.zoomFactor')
-    if (zoomFactor)
-      getCurrentWebContents().setZoomFactor(zoomFactor)
+    if (zoomFactor) { getCurrentWebContents().setZoomFactor(zoomFactor) }
 
     var bounds = api.settings.sync.get('electron.windowBounds')
-    if (bounds)
-      getCurrentWindow().setBounds(bounds)
-    //////
+    if (bounds) { getCurrentWindow().setBounds(bounds) }
+    /// ///
 
     return App
   }

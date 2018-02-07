@@ -5,13 +5,13 @@ exports.gives = nest('app.sync.initialise')
 
 exports.needs = nest({
   'settings.sync.set': 'first',
-  'settings.sync.get': 'first',
+  'settings.sync.get': 'first'
 })
 
 const defaults = {
   filter: {
     exclude: {
-      channels: ""
+      channels: ''
     },
     only: {
       peopleIFollow: false
@@ -39,4 +39,3 @@ exports.create = function (api) {
     set(settings)
   }
 }
-

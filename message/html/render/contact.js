@@ -31,13 +31,17 @@ exports.create = function (api) {
   function renderContent ({ contact, following, blocking }) {
     const name = api.about.html.link(contact)
 
-    if (blocking != undefined) return [
-      blocking ? 'blocked ' : 'unblocked ',
-      name
-    ]
-    if (following != undefined) return [
-      following ? 'followed ' : 'unfollowed ',
-      name
-    ]
+    if (blocking != undefined) {
+      return [
+        blocking ? 'blocked ' : 'unblocked ',
+        name
+      ]
+    }
+    if (following != undefined) {
+      return [
+        following ? 'followed ' : 'unfollowed ',
+        name
+      ]
+    }
   }
 }

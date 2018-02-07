@@ -6,7 +6,7 @@ exports.gives = nest('app.async.catchLinkClick')
 exports.needs = nest({
   'app.html.externalConfirm': 'first',
   'app.sync.goTo': 'first',
-  'router.sync.normalise': 'first',
+  'router.sync.normalise': 'first'
 })
 
 exports.create = function (api) {
@@ -52,4 +52,3 @@ exports.create = function (api) {
     api.app.sync.goTo(location, openBackground)
   }
 }
-

@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first',
+  'app.sync.goTo': 'first'
 })
 
 var gPressed = false
@@ -131,4 +131,3 @@ function toggleRawMessage (ev) {
   // this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }
-
