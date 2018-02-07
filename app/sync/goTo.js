@@ -7,7 +7,7 @@ exports.needs = nest({
   'history.obs.store': 'first',
   'history.sync.push': 'first',
   'router.sync.normalise': 'first',
-  'router.sync.router': 'first',
+  'router.sync.router': 'first'
 })
 
 exports.create = function (api) {

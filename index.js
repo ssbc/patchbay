@@ -135,4 +135,3 @@ function openWindow (path, opts) {
   window.loadURL('file://' + Path.join(__dirname, 'assets', 'base.html'))
   return window
 }
-

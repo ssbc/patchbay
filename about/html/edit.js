@@ -84,18 +84,17 @@ exports.create = function (api) {
       else return name.current
     })
 
-
     var balances_div = h('div.balances')
 
     mutual.getAccountBalances(id, (error, balances) => {
       if (balances == null) return ''
 
-      var balance_els = [];
-      Object.keys(balances).forEach(function(key) {
+      var balance_els = []
+      Object.keys(balances).forEach(function (key) {
         balances_div.appendChild(
           h('div', `💰 ${balances[key]} ${key}`)
         )
-      });
+      })
     })
 
     return h('AboutEditor', [
@@ -228,4 +227,3 @@ exports.create = function (api) {
     }
   }
 }
-

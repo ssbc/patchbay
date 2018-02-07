@@ -73,7 +73,7 @@ exports.create = function (api) {
               ),
               h('button', { disabled: 'disabled' }, 'Loading...')
             ),
-            when(ImFollowing.sync, h('div.relationship-status', relationshipStatus)),
+            when(ImFollowing.sync, h('div.relationship-status', relationshipStatus))
           ]),
           h('section -blocking', [
             when(ImBlockingThem,
@@ -85,7 +85,7 @@ exports.create = function (api) {
               h('ul', [
                 h('li', 'You will no longer receive messages from this person'),
                 h('li', "This person won't get any new information about you (including this block)"),
-                h('li', "Your followers will see you have blocked this person - their apps need to know so that they don't pass your information on."),
+                h('li', "Your followers will see you have blocked this person - their apps need to know so that they don't pass your information on.")
               ])
             ])
           ])
