@@ -1,4 +1,4 @@
-const { h, Struct, Value, when, map, resolve, onceTrue } = require('mutant')
+const { h, Struct, Value, when, computed, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
 const { isFeed } = require('ssb-ref')
 
@@ -58,8 +58,9 @@ exports.create = function (api) {
     }
 
     const composer = api.message.html.compose({
-      location,
       meta,
+      location,
+      feedIdsInThread: computed(messages, msgs => msgs.map(m => m.value.author)),
       placeholder: 'Write a reply',
       shrink: false
     })
