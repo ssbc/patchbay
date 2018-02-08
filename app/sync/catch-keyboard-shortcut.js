@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first'
+  'app.sync.goTo': 'first',
 })
 
 var gPressed = false
@@ -43,7 +43,7 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, search, goTo }) {
+function genericShortcuts (ev, { tabs, search, goTo, back }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {

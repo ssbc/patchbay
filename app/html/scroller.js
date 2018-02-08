@@ -46,6 +46,7 @@ function keyscroll (container) {
   function selectChild (el) {
     if (!el) { return }
 
+    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) debugger
     ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
     el.focus()
     curMsgEl = el
