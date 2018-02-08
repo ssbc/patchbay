@@ -27,7 +27,7 @@ exports.create = function (api) {
       openBackground = false,
       split = false
     } = options
-    
+
     const tabs = api.app.html.tabs()
 
     // currently do normalisation here only to generate normalised locationId
@@ -58,7 +58,6 @@ exports.create = function (api) {
         } else {
           api.history.sync.push(location)
         }
-
       })
     })
   }

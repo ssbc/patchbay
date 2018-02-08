@@ -10,11 +10,12 @@ exports.create = function (api) {
   function locationId (location) {
     if (typeof location === 'string') return string
 
-    if (isMsg(location.key)) location = { 
-      key: get(location, 'value.content.root', location.key)
+    if (isMsg(location.key)) {
+      location = {
+        key: get(location, 'value.content.root', location.key)
+      }
     }
 
     return JSON.stringify(location)
   }
 }
-

@@ -89,7 +89,6 @@ exports.create = function (api) {
 
     return container
 
-
     function scrollDownToMessage (id) {
       const locationId = api.app.sync.locationId(location)
       const tabs = api.app.html.tabs()
@@ -109,4 +108,3 @@ exports.create = function (api) {
     }
   }
 }
-

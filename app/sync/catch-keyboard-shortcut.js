@@ -108,7 +108,6 @@ function goToMessage (ev, { goTo }) {
   // TODO - rm the dataset.root decorator
 }
 
-
 function toggleRawMessage (ev) {
   const msg = ev.target
   if (!msg.classList.contains('Message')) return

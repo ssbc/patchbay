@@ -34,5 +34,3 @@ function Router (routes) {
     if (route) cb(null, route[1](location))
   }
 }
-
-
