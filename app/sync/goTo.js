@@ -4,6 +4,7 @@ exports.gives = nest({ 'app.sync.goTo': true })
 
 exports.needs = nest({
   'app.html.tabs': 'first',
+  'app.sync.locationId': 'first',
   'history.obs.store': 'first',
   'history.sync.push': 'first',
   'router.async.normalise': 'first',
@@ -21,21 +22,26 @@ exports.create = function (api) {
   //   - extracts scrollToMessage into app.page.thread
   //   - router.sync.router would take (location, { position }) ?
 
-  function goTo (location, openBackground = false, split = false) {
-    api.router.async.normalise(location, (err, location) => {
-      if (err) throw err
+  function goTo (location, options = {}) {
+    const {
+      openBackground = false,
+      split = false
+    } = options
     
-      const locationId = JSON.stringify(location)
+    const tabs = api.app.html.tabs()
 
-      const tabs = api.app.html.tabs()
+    // currently do normalisation here only to generate normalised locationId
+    api.router.async.normalise(location, (err, location) => {
+      const locationId = api.app.sync.locationId(location)
+
       if (tabs.has(locationId)) {
         tabs.select(locationId)
         api.history.sync.push(location)
+
         return true
       }
 
       api.router.async.router(location, (err, page) => {
-        debugger
         if (err) throw err
 
         if (!page) return
@@ -52,9 +58,8 @@ exports.create = function (api) {
         } else {
           api.history.sync.push(location)
         }
-      })
 
-      // return openBackground // might not be needed?
+      })
     })
   }
 }

@@ -1,5 +1,6 @@
 const { h, Struct, Value, when, computed, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
+const get = require('lodash/get')
 const { isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.page.thread')
@@ -7,6 +8,8 @@ exports.gives = nest('app.page.thread')
 exports.needs = nest({
   'about.html.avatar': 'first',
   'app.html.scroller': 'first',
+  'app.html.tabs': 'first',
+  'app.sync.locationId': 'first',
   'contact.obs.following': 'first',
   'feed.obs.thread': 'first',
   'keys.sync.id': 'first',
@@ -22,11 +25,13 @@ exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
   function threadPage (location) {
-    const { key } = location
+    const root = get(location, 'value.content.root', location.key)
+    const msg = location.key
+    if (msg !== root) scrollDownToMessage(msg)
 
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
-    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(key)
+    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(root)
     const meta = Struct({
       type: 'post',
       root: rootId,
@@ -65,13 +70,13 @@ exports.create = function (api) {
       shrink: false
     })
     const content = h('section.content', map(messages, m => {
-      return api.message.html.render(resolve(m), {pageId: key})
+      return api.message.html.render(resolve(m), {pageId: root})
     }))
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
     container.classList.add('Thread')
-    container.title = key
-    api.message.async.name(key, (err, name) => {
+    container.title = msg
+    api.message.async.name(msg, (err, name) => {
       if (err) throw err
       container.title = name
     })
@@ -83,5 +88,25 @@ exports.create = function (api) {
     })
 
     return container
+
+
+    function scrollDownToMessage (id) {
+      const locationId = api.app.sync.locationId(location)
+      const tabs = api.app.html.tabs()
+      locateKey()
+
+      function locateKey () {
+        // wait till we're on the right page
+        if (tabs.currentPage().id !== locationId) return setTimeout(locateKey, 200)
+
+        tabs.currentPage().scroll('first')
+        const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
+        if (msg === null) return setTimeout(locateKey, 200)
+
+        ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
+        msg.focus()
+      }
+    }
   }
 }
+

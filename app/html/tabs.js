@@ -30,6 +30,7 @@ exports.create = function (api) {
       try {
         var location = JSON.parse(id)
       } catch (e) {
+        debugger
         throw new Error('app.html.tabs expects all page ids to be stringified location objects')
       }
 

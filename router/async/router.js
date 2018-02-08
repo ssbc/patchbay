@@ -18,18 +18,16 @@ exports.create = (api) => {
     api.router.async.normalise(location, (err, normLocation) => {
       if (err) return cb(err)
 
-      debugger
-
       router(normLocation, cb)
     })
 
-    // return true
+    // stop depject 'first' after this method
+    return true
   })
 }
 
 function Router (routes) {
   return (location, cb) => {
-    debugger
     const route = routes.find(([validator]) => validator(location))
     // signature of a route is [ routeValidator, routeFunction ]
 
