@@ -3,7 +3,10 @@ const { isBlob, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.async.normalise')
 
-exports.needs = nest({'sbot.async.get': 'first'})
+exports.needs = nest({
+  'message.sync.unbox': 'first',
+  'sbot.async.get': 'first',
+})
 
 exports.create = (api) => {
   return nest('router.async.normalise', normalise)
@@ -12,7 +15,10 @@ exports.create = (api) => {
     if (typeof location === 'object') cb(null, location)
     else if (isMsg(location)) api.sbot.async.get(location, (err, value) => {
       if (err) cb(err)
-      else cb(null, {key: location, value})
+      else {
+        if (typeof value.content === 'string') value = api.message.sync.unbox(value)
+        cb(null, {key: location, value})
+      }
     })
     else if (isBlob(location)) cb(null, { blob: location })
     else if (isChannel(location)) cb(null, { channel: location })
