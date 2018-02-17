@@ -48,4 +48,3 @@ exports.create = (api) => {
 function doesLike (likes, userId) {
   return likes.includes(userId)
 }
-

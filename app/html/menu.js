@@ -4,9 +4,9 @@ const { h, Value, when } = require('mutant')
 exports.gives = nest('app.html.menu')
 
 exports.needs = nest({
-  "app.html.menuItem": "map",
-  "app.sync.goTo": "first",
-  "sbot.obs.connection": "first"
+  'app.html.menuItem': 'map',
+  'app.sync.goTo': 'first',
+  'sbot.obs.connection': 'first'
 })
 
 exports.create = function (api) {

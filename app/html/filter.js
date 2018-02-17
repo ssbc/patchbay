@@ -34,21 +34,21 @@ exports.create = function (api) {
     const filterSettings = api.settings.obs.get('filter')
 
     const channelInput = h('input',
-     { value: filterSettings().exclude.channels,
-       'ev-keyup': (ev) => {
-         var text = ev.target.value
-         if (text.length == 0 || ev.which == 13) {
-           api.settings.sync.set({
-             filter: {
-               exclude: {
-                 channels: text
-               }
-             }
-           })
-           draw()
-         }
-       }
-     }
+      { value: filterSettings().exclude.channels,
+        'ev-keyup': (ev) => {
+          var text = ev.target.value
+          if (text.length == 0 || ev.which == 13) {
+            api.settings.sync.set({
+              filter: {
+                exclude: {
+                  channels: text
+                }
+              }
+            })
+            draw()
+          }
+        }
+      }
     )
 
     const isFiltered = computed(filterSettings, (filterSettings) => {
@@ -98,8 +98,8 @@ exports.create = function (api) {
       const handleClick = () => {
         const currentState = state()
 
-        //TODO use some lodash tool ?
-        api.settings.sync.set({ 
+        // TODO use some lodash tool ?
+        api.settings.sync.set({
           filter: {
             [filterGroup]: {
               [type]: !currentState
@@ -133,7 +133,7 @@ exports.create = function (api) {
     function followFilter (msg) {
       if (!filterSettings().only.peopleIFollow) return true
 
-      return Array.from(peopleIFollow()).includes(msg.value.author)
+      return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author)
     }
 
     function channelFilter (msg) {

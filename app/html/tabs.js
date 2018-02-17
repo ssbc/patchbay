@@ -80,4 +80,3 @@ function buildSearchBarTermFromLocation (location) {
     .map(k => location[k])
     .join(', ')
 }
-
