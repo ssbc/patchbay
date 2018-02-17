@@ -3,8 +3,6 @@ BlogCard {
   margin: 2rem 0
   border: 1px solid rgba(0, 0, 0, 0.1)
 
-  transition: all .5s ease-in
-
   display: flex
   flex-direction: column
 
