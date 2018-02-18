@@ -102,7 +102,7 @@ exports.create = function (api) {
 
         tabs.currentPage().scroll('first')
         const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
-        if (msg === null) return setTimeout(locateKey, 200)
+        if (msg === undefined) return setTimeout(locateKey, 200)
 
         ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
         msg.focus()
