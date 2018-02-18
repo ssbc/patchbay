@@ -1,4 +1,5 @@
 const nest = require('depnest')
+const electron = require('electron')
 
 exports.gives = nest('app.sync.initialise')
 
