@@ -43,15 +43,6 @@ function keyscroll (container) {
     }
   }
 
-  function selectChild (el) {
-    if (!el) { return }
-
-    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) debugger
-    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
-    el.focus()
-    curMsgEl = el
-  }
-
   return function scroll (d) {
     selectChild((!curMsgEl || d === 'first') ? container.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || container.firstChild
@@ -60,4 +51,14 @@ function keyscroll (container) {
 
     return curMsgEl
   }
+
+  function selectChild (el) {
+    if (!el) { return }
+
+    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
+    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    el.focus()
+    curMsgEl = el
+  }
+
 }
