@@ -14,6 +14,7 @@ exports.needs = nest({
   'message.html.render': 'first',
   'message.async.name': 'first',
   'message.sync.unbox': 'first',
+  'message.sync.root':'first',
   'sbot.async.get': 'first',
   'sbot.pull.links': 'first'
 })
@@ -26,7 +27,11 @@ exports.create = function (api) {
 
     const myId = api.keys.sync.id()
     const ImFollowing = api.contact.obs.following(myId)
-    const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(key)
+    const { messages, isPrivate, lastId, channel, recps } = api.feed.obs.thread(key)
+    const rootId = computed(messages, (messages) => {
+      return api.message.sync.root(messages[0]) || key
+    })
+
     const meta = Struct({
       type: 'post',
       root: rootId,
