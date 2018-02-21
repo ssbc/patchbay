@@ -11,7 +11,6 @@ exports.needs = nest({
   'app.sync.window': 'reduce',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
-  'router.sync.router': 'first',
   'settings.sync.get': 'first',
   'settings.sync.set': 'first'
 })

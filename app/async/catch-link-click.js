@@ -6,7 +6,7 @@ exports.gives = nest('app.async.catchLinkClick')
 exports.needs = nest({
   'app.html.externalConfirm': 'first',
   'app.sync.goTo': 'first',
-  'router.sync.normalise': 'first'
+  'router.async.normalise': 'first'
 })
 
 exports.create = function (api) {
@@ -47,8 +47,9 @@ exports.create = function (api) {
   function defaultCallback (link, { ctrlKey, isExternal }) {
     if (isExternal) return api.app.html.externalConfirm(link)
 
-    const location = api.router.sync.normalise(link)
     const openBackground = ctrlKey
-    api.app.sync.goTo(location, openBackground)
+    api.router.async.normalise(link, (err, location) => {
+      if (location) api.app.sync.goTo(location, { openBackground })
+    })
   }
 }

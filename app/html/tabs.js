@@ -10,6 +10,7 @@ exports.needs = nest({
   'app.html.menu': 'first',
   'app.html.searchBar': 'first',
   'app.sync.goTo': 'first',
+  'app.sync.locationId': 'first',
   'history.obs.store': 'first',
   'history.sync.push': 'first'
 })
@@ -39,7 +40,7 @@ exports.create = function (api) {
     const onClose = (page) => {
       var history = api.history.obs.store()
       const prunedHistory = history().filter(loc => {
-        return JSON.stringify(loc) != page.id
+        return api.app.sync.locationId(loc) != page.id
       })
       history.set(prunedHistory)
     }
