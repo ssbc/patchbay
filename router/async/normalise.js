@@ -12,8 +12,17 @@ exports.create = (api) => {
   return nest('router.async.normalise', normalise)
 
   function normalise (location, cb) {
-    if (typeof location === 'object') cb(null, location)
-    else if (isMsg(location)) {
+    if (typeof location === 'object') {
+      cb(null, location)
+      return true
+    }
+
+    // if someone has given you an annoying html encoded location
+    if (location.match(/^%25.*%3D.sha256$/)) {
+      location = decodeURIComponent(location)
+    }
+
+    if (isMsg(location)) {
       api.sbot.async.get(location, (err, value) => {
         if (err) cb(err)
         else {
