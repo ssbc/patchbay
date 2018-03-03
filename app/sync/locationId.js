@@ -11,9 +11,9 @@ exports.create = function (api) {
     if (typeof location === 'string') return string
 
     if (isMsg(location.key)) {
-      location = {
-        key: get(location, 'value.content.root', location.key)
-      }
+      // for all messages make the thread root key the 'locationId'
+      const key = get(location, 'value.content.root', location.key)
+      return JSON.stringify({ key })
     }
 
     return JSON.stringify(location)

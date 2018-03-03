@@ -76,7 +76,7 @@ exports.create = function (api) {
 
     container.classList.add('Thread')
     container.title = msg
-    api.message.async.name(msg, (err, name) => {
+    api.message.async.name(root, (err, name) => {
       if (err) throw err
       container.title = name
     })
@@ -87,6 +87,7 @@ exports.create = function (api) {
       channelInput.disabled = true
     })
 
+    container.scrollDownToMessage = scrollDownToMessage
     return container
 
     function scrollDownToMessage (id) {
