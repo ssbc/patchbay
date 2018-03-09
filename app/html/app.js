@@ -21,15 +21,21 @@ exports.create = function (api) {
   function app () {
     console.log('STARTING app')
 
-    window = api.app.sync.window(window)
-
-    const initialTabs = ['/public', '/inbox', '/notifications'] // NB router converts these to { page: '/public' }
+    const initialTabs = ['/public', '/inbox', '/notifications']
+    // NB router converts these to { page: '/public' }
+    // TODO - extract to settings page
     const App = h('App', api.app.html.tabs(initialTabs))
 
     api.app.sync.initialise(App)
     // runs all the functions in app/sync/initialise
 
-    api.history.obs.location()(loc => api.app.sync.goTo(loc || {}))
+    // patch-context initialisation
+    window = api.app.sync.window(window)
+
+    api.history.obs.location()(loc => {
+      api.app.sync.goTo(loc || {})
+      console.log(loc)
+    })
 
     return App
   }

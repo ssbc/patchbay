@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first',
+  'app.sync.goTo': 'first'
 })
 
 var gPressed = false
@@ -34,7 +34,7 @@ function isTextFieldEvent (ev) {
 function textFieldShortcuts (ev) {
   switch (ev.keyCode) {
     case 13: // ctrl+enter
-      if (ev.ctrlKey) {
+      if (ev.ctrlKey && ev.target.publish) {
         ev.target.publish()  // expects the textField to have a publish method
       }
       return
@@ -43,7 +43,7 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, search, goTo, back }) {
+function genericShortcuts (ev, { tabs, search, goTo }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -72,12 +72,14 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
 
     // Tabs
     case 72: // h = left
-      tabs.selectRelative(-1)
-      return goTo(JSON.parse(tabs.currentPage().id))
+      tabs.previousTab()
+      return
     case 76: // l = right
-      tabs.selectRelative(1)
-      return goTo(JSON.parse(tabs.currentPage().id))
+      tabs.nextTab()
+      return
     case 88: // x = close
+      // TODO chage this logic to change history?
+      // tabs.closePage()  // have this prune history too
       if (tabs.selected) {
         var sel = tabs.selected
         tabs.remove(sel)
@@ -112,6 +114,6 @@ function toggleRawMessage (ev) {
   const msg = ev.target
   if (!msg.classList.contains('Message')) return
 
-  // this uses a crudely exported nav api
+  // TODO this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }

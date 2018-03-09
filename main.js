@@ -31,11 +31,11 @@ const patchbay = {
 const sockets = combine(
   // require('ssb-horcrux'),
   // require('patch-hub'),
-
-  require('ssb-chess'),
-  require('patchbay-gatherings'),
-  require('patchbay-book'),
   // require('patch-network),
+  require('patchbay-gatherings'),
+  require('ssb-chess'),
+  require('patchbay-book'),
+  require('patchbay-poll'),
   patchbay,
   require('patchcore')
 )

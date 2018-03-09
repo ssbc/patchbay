@@ -32,6 +32,7 @@ exports.create = function (api) {
 
     // currently do normalisation here only to generate normalised locationId
     api.router.async.normalise(location, (err, location) => {
+      if (err) throw err
       const locationId = api.app.sync.locationId(location)
 
       var page = tabs.get(locationId)
@@ -40,6 +41,7 @@ exports.create = function (api) {
         if (page && page.firstChild && page.firstChild.scrollDownToMessage) {
           page.firstChild.scrollDownToMessage(location.key)
         }
+        console.log('page exists, adding move to history', location)
         api.history.sync.push(location)
 
         return true
@@ -60,6 +62,7 @@ exports.create = function (api) {
 
           history.set([ ..._history, location, current ])
         } else {
+          console.log('new page adding to history', location)
           api.history.sync.push(location)
         }
       })

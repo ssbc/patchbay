@@ -5,7 +5,7 @@ exports.gives = nest('app.async.catchLinkClick')
 
 exports.needs = nest({
   'app.html.externalConfirm': 'first',
-  'app.sync.goTo': 'first',
+  'history.sync.push': 'first',
   'router.async.normalise': 'first'
 })
 
@@ -29,7 +29,7 @@ exports.create = function (api) {
       if (!anchor) return true
 
       var href = anchor.getAttribute('href')
-      if (!href || href == '#') return
+      if (!href || href === '#') return
 
       var url = Url.parse(href)
       var opts = {
@@ -49,7 +49,10 @@ exports.create = function (api) {
 
     const openBackground = ctrlKey
     api.router.async.normalise(link, (err, location) => {
-      if (location) api.app.sync.goTo(location, { openBackground })
+      if (err) throw err
+
+      if (openBackground) location.temp = { openBackground }
+      api.history.sync.push(location)
     })
   }
 }
