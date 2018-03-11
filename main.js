@@ -35,7 +35,6 @@ const sockets = combine(
   require('patchbay-gatherings'),
   require('ssb-chess'),
   require('patchbay-book'),
-  require('patchbay-poll'),
   patchbay,
   require('patchcore')
 )

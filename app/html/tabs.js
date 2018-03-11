@@ -35,6 +35,11 @@ exports.create = function (api) {
       ])
     })
 
+    _tabs.addEventListener('click', (ev) => {
+      console.log('got it')
+      ev.stopPropogation()
+    }, { capture: true })
+
     _tabs.currentPage = () => {
       const currentPage = _tabs.get(_tabs.selected[0])
       return currentPage && currentPage.firstChild
