@@ -29,16 +29,18 @@ exports.create = function (api) {
     _tabs = Tabs({
       onSelect,
       onClose,
+      onSelectHook: onSelect,
+      onCloseHook: onClose,
       append: h('div.navExtra', [
         search,
         api.app.html.menu()
       ])
     })
 
-    _tabs.addEventListener('click', (ev) => {
-      console.log('got it')
-      ev.stopPropogation()
-    }, { capture: true })
+    // _tabs.addEventListener('click', (ev) => {
+    //   debugger
+    //   ev.stopPropagation()
+    // }, { capture: true })
 
     _tabs.currentPage = () => {
       const currentPage = _tabs.get(_tabs.selected[0])

@@ -33,8 +33,8 @@ exports.create = function (api) {
     window = api.app.sync.window(window)
 
     api.history.obs.location()(loc => {
-      api.app.sync.goTo(loc || {})
       console.log(loc)
+      api.app.sync.goTo(loc || {})
     })
 
     return App
