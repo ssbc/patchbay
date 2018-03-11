@@ -31,7 +31,7 @@ exports.create = function (api) {
 
     const { set } = api.settings.sync
 
-    const filterSettings = api.settings.obs.get('filter')
+    const filterSettings = api.settings.obs.get('filter', {exclude: {}})
 
     const channelInput = h('input',
       { value: filterSettings().exclude.channels,
