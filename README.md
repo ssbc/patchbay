@@ -50,7 +50,7 @@ sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
 sbot plugins.install ssb-fulltext # for faster searches
 sbot plugins.install ssb-chess-db # for chess
-sbot plugins.install ssb-private # for chess
+sbot plugins.install ssb-private # for private messages
 
 After that you need to make sure that .ssb/config reads: "ssb-chess-db": "ssbChessIndex" for chess to work.
 
