@@ -8,6 +8,7 @@ exports.gives = nest('app.page.channel')
 exports.needs = nest({
   'app.html.filter': 'first',
   'app.html.scroller': 'first',
+  'app.sync.goTo': 'first',
   'feed.pull.channel': 'first',
   'message.html.compose': 'first',
   'message.html.render': 'first',
@@ -45,6 +46,23 @@ exports.create = function (api) {
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [subscribeButton, composer, filterMenu] })
 
+    function render (msg) {
+      const text = msg.value.content.text
+      if (text) {
+        msg.value.content.text = text.substr(0, 240) + '...'
+      }
+
+      const goMsg = (ev) => {
+        ev.stopPropagation()
+        api.app.sync.goTo(msg)
+      }
+      const style = {
+        cursor: 'pointer'
+      }
+
+      return h('div', { 'ev-click': goMsg, style }, api.message.html.render(msg))
+    }
+
     function draw () {
       resetFeed({ container, content })
 
@@ -52,14 +70,16 @@ exports.create = function (api) {
 
       pull(
         openChannelSource({old: false}),
+        pull.filter(m => !m.value.content.root),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
         openChannelSource({reverse: true}),
+        pull.filter(m => !m.value.content.root),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()
