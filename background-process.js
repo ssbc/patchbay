@@ -18,7 +18,6 @@ var createSbot = require('scuttlebot')
   .use(require('ssb-query'))
   .use(require('ssb-about'))
   .use(require('ssb-fulltext'))
-  // .use(require('ssb-ebt'))
   .use(require('ssb-ws'))
   .use(require('ssb-chess-db'))
 

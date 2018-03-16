@@ -73,7 +73,7 @@
     "read-directory": "^2.1.1",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.0",
-    "scuttlebot": "^10.4.10",
+    "scuttlebot": "^11.1.1",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.1",
     "ssb-backlinks": "^0.6.1",
