@@ -4,13 +4,13 @@ const Abort = require('pull-abortable')
 const pull = require('pull-stream')
 const addSuggest = require('suggest-box')
 const { isFeed } = require('ssb-ref')
-const some = require('lodash/some')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
 
 exports.gives = nest('app.html.filter')
 
 exports.needs = nest({
+  'about.async.suggest': 'first',
   'channel.async.suggest': 'first',
   'contact.obs.following': 'first',
   'keys.sync.id': 'first',
@@ -29,27 +29,26 @@ exports.create = function (api) {
     const myId = api.keys.sync.id()
     const peopleIFollow = api.contact.obs.following(myId)
 
-    const { set } = api.settings.sync
-
     const filterSettings = api.settings.obs.get('filter', {exclude: {}})
 
-    const channelInput = h('input',
-      { value: filterSettings().exclude.channels,
-        'ev-keyup': (ev) => {
-          var text = ev.target.value
-          if (text.length == 0 || ev.which == 13) {
-            api.settings.sync.set({
-              filter: {
-                exclude: {
-                  channels: text
-                }
+    const channelInput = h('input', {
+      value: filterSettings().exclude.channels,
+      'ev-keyup': (ev) => {
+        var text = ev.target.value
+        if (text.length === 0 || ev.which === 13) {
+          api.settings.sync.set({
+            filter: {
+              exclude: {
+                channels: text
               }
-            })
-            draw()
-          }
+            }
+          })
+          draw()
         }
       }
-    )
+    })
+
+    const userInput = h('input')
 
     const isFiltered = computed(filterSettings, (filterSettings) => {
       const _settings = Object.assign({}, filterSettings)
@@ -71,11 +70,17 @@ exports.create = function (api) {
           h('i.fa.fa-filter')
         ]),
         h('section', [
+          h('div.users', [
+            toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
+            h('div.user-filter', [
+              h('label', 'Only this user (temporary filter):'),
+              userInput
+            ])
+          ]),
           h('div.channels', [
             h('label', 'Exclude channels'),
             channelInput
           ]),
-          toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
           h('div.message-types', [
             h('header', 'Show messages'),
             toggle({ type: 'post' }),
@@ -85,6 +90,9 @@ exports.create = function (api) {
             toggle({ type: 'channel' }),
             toggle({ type: 'pub' }),
             toggle({ type: 'chess' })
+          ]),
+          h('div.root-messages', [
+            toggle({ type: 'rootMessages', filterGroup: 'only', label: 'Root messages only' })
           ])
         ])
       ])
@@ -130,10 +138,35 @@ exports.create = function (api) {
       draw()
     })
 
+    var userId
+    const getAboutSuggestions = api.about.async.suggest()
+    addSuggest(userInput, (inputText, cb) => {
+      inputText = inputText.replace(/^@/, '')
+      cb(null, getAboutSuggestions(inputText.slice(1)))
+    }, {cls: 'PatchSuggest'})
+    userInput.addEventListener('suggestselect', ev => {
+      userId = ev.detail.id
+      userInput.value = userId
+
+      draw()
+    })
+
     function followFilter (msg) {
       if (!filterSettings().only.peopleIFollow) return true
 
       return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author)
+    }
+
+    function userFilter (msg) {
+      if (!userId) return true
+
+      return msg.value.author === userId
+    }
+
+    function rootFilter (msg) {
+      if (!filterSettings().only.rootMessages) return true
+
+      return !msg.value.content.root
     }
 
     function channelFilter (msg) {
@@ -159,6 +192,8 @@ exports.create = function (api) {
       return pull(
         downScrollAborter,
         pull.filter(followFilter),
+        pull.filter(userFilter),
+        pull.filter(rootFilter),
         pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
@@ -170,6 +205,8 @@ exports.create = function (api) {
       return pull(
         upScrollAborter,
         pull.filter(followFilter),
+        pull.filter(userFilter),
+        pull.filter(rootFilter),
         pull.filter(channelFilter),
         pull.filter(messageFilter)
       )
