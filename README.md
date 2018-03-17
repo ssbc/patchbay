@@ -42,20 +42,7 @@ Install a standalone scuttlebot (your gossip server)
 npm install scuttlebot@latest -g
 ```
 
-Until https://github.com/ssbc/scuttlebot/pull/417 is resolved, you may need to do this instead:
-
 ```sh
-git clone https://github.com/ssbc/scuttlebot.git
-cd scuttlebot
-git checkout ssb-private
-npm install
-npm link  // this should make sbot accessible globally
-```
-
-```sh
-# make sure you have secure-scuttlebutt@15.5.2
-npm ls secure-scuttlebutt -g
-
 sbot server
 
 # then in another tab (these must be separate commands)
@@ -63,6 +50,7 @@ sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
 sbot plugins.install ssb-fulltext # for faster searches
 sbot plugins.install ssb-chess-db # for chess
+sbot plugins.install ssb-private # for private messages
 
 After that you need to make sure that .ssb/config reads: "ssb-chess-db": "ssbChessIndex" for chess to work.
 
