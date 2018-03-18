@@ -57,7 +57,30 @@ Filter {
       justify-content: space-between
       align-items: center
 
-      div.channels {
+      div.users {
+        flex-basis: 100%
+        margin-bottom: .5rem
+
+        display: flex
+        align-items: center
+
+        div.FilterToggle {
+          flex-grow: 1
+        }
+        div.user-filter {
+          label {
+            margin-right: .4rem
+          }
+          input {
+            border: 1px gainsboro solid
+            font-size: 1rem
+          }
+        }
+      }
+      
+      div.channels  {
+        display: flex
+         
         label {
           margin-right: .4rem
         }
@@ -68,12 +91,17 @@ Filter {
       }
 
       div.message-types {
+        flex-basis: 100%
+
         margin: .6rem 0
         display: flex
 
         header {
           margin-right: 1rem
         }
+      }
+
+      div.root-messages {
       }
     }
 
