@@ -127,7 +127,7 @@ exports.create = function (api) {
       )
 
       pull(
-        api.sbot.pull.stream(sbot => next(sbot.fulltext.search, {query, reverse: true, limit: 500, live: false})),
+        api.sbot.pull.stream(sbot => next(sbot.search.query, {query, limit: 500 })),
         fallback((err) => {
           if (err === true) {
             search.fulltext.isDone.set(true)

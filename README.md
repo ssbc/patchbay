@@ -48,7 +48,7 @@ sbot server
 # then in another tab (these must be separate commands)
 sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
-sbot plugins.install ssb-fulltext # for faster searches
+sbot plugins.install ssb-search # for search
 sbot plugins.install ssb-chess-db # for chess
 sbot plugins.install ssb-private # for private messages
 
