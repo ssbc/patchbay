@@ -13,6 +13,7 @@ exports.needs = nest({
   'about.async.suggest': 'first',
   'channel.async.suggest': 'first',
   'contact.obs.following': 'first',
+  'channel.obs.subscribed': 'first',
   'keys.sync.id': 'first',
   'settings.obs.get': 'first',
   'settings.sync.set': 'first'
@@ -28,6 +29,7 @@ exports.create = function (api) {
 
     const myId = api.keys.sync.id()
     const peopleIFollow = api.contact.obs.following(myId)
+    const channelsIFollow = api.channel.obs.subscribed(myId)
 
     const filterSettings = api.settings.obs.get('filter', {exclude: {}})
 
@@ -71,7 +73,7 @@ exports.create = function (api) {
         ]),
         h('section', [
           h('div.users', [
-            toggle({ type: 'peopleIFollow', filterGroup: 'only', label: 'Only people I follow' }),
+            toggle({ type: 'peopleAndChannelsIFollow', filterGroup: 'only', label: 'Only people & channels I follow' }),
             h('div.user-filter', [
               h('label', 'Only this user (temporary filter):'),
               userInput
@@ -152,9 +154,10 @@ exports.create = function (api) {
     })
 
     function followFilter (msg) {
-      if (!filterSettings().only.peopleIFollow) return true
+      if (!filterSettings().only.peopleAndChannelsIFollow) return true
 
-      return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author)
+      return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author) ||
+             (msg.value.content && Array.from(channelsIFollow()).includes(msg.value.content.channel))
     }
 
     function userFilter (msg) {
