@@ -91,6 +91,7 @@ exports.create = function (api) {
             toggle({ type: 'contact' }),
             toggle({ type: 'channel' }),
             toggle({ type: 'pub' }),
+            toggle({ type: 'private' }),
             toggle({ type: 'chess' })
           ]),
           h('div.root-messages', [
@@ -184,6 +185,10 @@ exports.create = function (api) {
       var { type } = msg.value.content
       if (/^chess/.test(type)) {
         type = 'chess'
+      }
+
+      if (typeof msg.value.content == 'string') {
+        type = 'private'
       }
 
       return get(filterSettings(), ['show', type], true)
