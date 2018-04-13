@@ -1,0 +1,29 @@
+SettingsPage {
+  flex-grow: 1
+
+  display: flex
+  justify-content: center
+
+  div.container {
+    width: 600px
+
+    h2 {
+      margin: 0
+      font-size: 1rem
+    }
+
+    textarea {
+      min-width: 400px
+      width: 500px
+      max-width: 600px
+      min-height: 200px
+      border: 1px solid gainsboro
+    }
+
+    button {
+      display: block
+      margin: .5rem 0
+    }
+  }
+}
+

@@ -1,7 +1,5 @@
 const nest = require('depnest')
 const { h } = require('mutant')
-const insertCss = require('insert-css')
-const compileCss = require('micro-css')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -9,7 +7,9 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'app.sync.goTo': 'first'
+  'app.sync.goTo': 'first',
+  'settings.obs.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -26,23 +26,25 @@ exports.create = function (api) {
   }
 
   function publicPage (location) {
-    const styles = h('textarea')
-    return h('SettingsPage', [
-      styles,
-      h('button', {'ev-click': () => peachify(styles)}, 'peachify')
+    const customStyles = api.settings.obs.get('patchbay.customStyles', '')
+    const styles = h('textarea', { value: customStyles() })
+
+    return h('SettingsPage', { title: '/settings' }, [
+      h('div.container', [
+        h('h1', 'Settings'),
+        h('h2', 'Custom Styles'),
+        h('p', 'Add custom styles (accepts CSS and MCSS)'),
+        styles,
+        h('button', {'ev-click': peachify}, 'Apply Styles')
+      ])
     ])
 
-    function peachify (styles) {
-     const css = compileCss(styles.value)
-      //   body{
-      //     background-color: peachpuff; 
-      //     color: indigo; }
-
-      //   a:link, a:visited, a:active  {
-      //     color: #116a6a; }
-      // `
-      insertCss(css)
+    function peachify () {
+      api.settings.sync.set({
+        patchbay: {
+          customStyles: styles.value
+        }
+      })
     }
   }
-
 }
