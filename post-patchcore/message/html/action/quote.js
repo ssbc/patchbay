@@ -8,7 +8,7 @@ exports.needs = nest({
 exports.gives = nest('message.html.action')
 
 exports.create = (api) => {
-  return nest('message.html.action', function reply (msg) {
+  return nest('message.html.action', function quote (msg) {
     return h('a', {
         href: '#',
       'ev-click': () => api.app.sync.goTo({ action: 'quote', key: msg.key, value: msg.value })
