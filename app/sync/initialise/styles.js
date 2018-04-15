@@ -20,8 +20,9 @@ exports.create = function (api) {
       h('style', {
         innerHTML: computed(api.settings.obs.get('patchbay.customStyles', ''), styles => {
           const customStyles = compileCss(styles)
-          console.log(customStyles)
-          return [css, customStyles].join('\n')
+
+          // apply styles twice so our mixins 'win'
+          return [customStyles, css, customStyles].join('\n')
         })
       })
     )
