@@ -32,7 +32,7 @@ exports.create = function (api) {
     function peachify () {
       api.settings.sync.set({
         patchbay: {
-          defaultTabs: styles.value
+          customStyles: styles.value
         }
       })
     }
