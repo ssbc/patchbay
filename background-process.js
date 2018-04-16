@@ -17,10 +17,10 @@ var createSbot = require('scuttlebot')
   .use(require('scuttlebot/plugins/logging'))
   .use(require('ssb-query'))
   .use(require('ssb-about'))
-  .use(require('ssb-fulltext'))
+  .use(require('ssb-search'))
   // .use(require('ssb-ebt'))
   .use(require('ssb-ws'))
-  .use(require('ssb-chess-db'));
+  .use(require('ssb-chess-db'))
 
 // pull config options out of depject
 var config = require('./config').create().config.sync.load()

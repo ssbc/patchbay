@@ -43,7 +43,7 @@ function textFieldShortcuts (ev) {
   }
 }
 
-function genericShortcuts (ev, { tabs, search, goTo }) {
+function genericShortcuts (ev, { tabs, search, goTo, back }) {
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -64,9 +64,9 @@ function genericShortcuts (ev, { tabs, search, goTo }) {
     case 75: // k = newer
       return tabs.currentPage().scroll(-1)
     case 13: // enter = open
-      return goToMessage(ev, { tabs, goTo })
+      return goToMessage(ev, { goTo })
     case 79: // o = open
-      return goToMessage(ev, { tabs, goTo })
+      return goToMessage(ev, { goTo })
     case 192: // ` = toggle raw message view
       return toggleRawMessage(ev)
 
@@ -100,28 +100,12 @@ function genericShortcuts (ev, { tabs, search, goTo }) {
   }
 }
 
-function goToMessage (ev, { tabs, goTo }) {
+function goToMessage (ev, { goTo }) {
   const msg = ev.target
   if (!msg.classList.contains('Message')) return
 
-  const { root, id } = msg.dataset
-  if (!root) return goTo(id)
-
-  goTo(root)
-  setTimeout(() => scrollDownToMessage(id, tabs), 250)
-}
-
-function scrollDownToMessage (id, tabs) {
-  tabs.currentPage().scroll('first')
-  locateKey()
-
-  function locateKey () {
-    const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
-    if (msg === null) return setTimeout(locateKey, 100)
-
-    ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
-    msg.focus()
-  }
+  goTo(msg.dataset.id)
+  // TODO - rm the dataset.root decorator
 }
 
 function toggleRawMessage (ev) {
@@ -131,4 +115,3 @@ function toggleRawMessage (ev) {
   // this uses a crudely exported nav api
   msg.querySelector('.meta .toggle-raw-msg').click()
 }
-

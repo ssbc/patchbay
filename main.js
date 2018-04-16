@@ -6,7 +6,7 @@ const bulk = require('bulk-require')
 // polyfills
 require('setimmediate')
 
-const patchbay = { 
+const patchbay = {
   patchbay: {
     about: bulk(__dirname, [ 'about/**/*.js' ]),
     app: bulk(__dirname, [ 'app/**/*.js' ]),
@@ -23,15 +23,14 @@ const patchbay = {
     settings: require('patch-settings'),
     drafts: require('patch-drafts'),
     inbox: require('patch-inbox'), // TODO - ideally this would be a standalone patch-* module
-    history: require('patch-history'),
+    history: require('patch-history')
   }
 }
 
-
 // from more specialized to more general
 const sockets = combine(
-  //require('ssb-horcrux'),
-  //require('patch-hub'),
+  // require('ssb-horcrux'),
+  // require('patch-hub'),
 
   require('ssb-chess'),
   require('patchbay-gatherings'),
@@ -50,4 +49,3 @@ module.exports = patchbay
 if (typeof window !== 'undefined') {
   document.body.appendChild(app())
 }
-

@@ -64,10 +64,10 @@ exports.create = function (api) {
     }
     draw()
 
-    var page =  h('Page -channel', {title: channel}, [
+    var page = h('Page -channel', {title: channel}, [
       // filterMenu, // TODO - extract non-scroller els like filterMenu here
       container
-    ]) 
+    ])
 
     // TODO better scroll hack for keyboard shortcuts
     page.scroll = container.scroll

@@ -10,6 +10,7 @@ exports.needs = nest({
   'app.html.menu': 'first',
   'app.html.searchBar': 'first',
   'app.sync.goTo': 'first',
+  'app.sync.locationId': 'first',
   'history.obs.store': 'first',
   'history.sync.push': 'first'
 })
@@ -39,11 +40,11 @@ exports.create = function (api) {
     const onClose = (page) => {
       var history = api.history.obs.store()
       const prunedHistory = history().filter(loc => {
-        return JSON.stringify(loc) != page.id
+        return api.app.sync.locationId(loc) != page.id
       })
       history.set(prunedHistory)
     }
-    
+
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
 
@@ -52,7 +53,13 @@ exports.create = function (api) {
       onClose,
       append: h('div.navExtra', [ search, menu ])
     })
-    _tabs.currentPage = () => _tabs.get(_tabs.selected[0]).firstChild
+    _tabs.currentPage = () => {
+      const currentPage = _tabs.get(_tabs.selected[0])
+      return currentPage && currentPage.firstChild
+    }
+    _tabs.nextTab = () => _tabs.currentPage() && _tabs.selectRelative(1)
+    _tabs.previousTab = () => _tabs.currentPage() && _tabs.selectRelative(-1)
+    _tabs.closeCurrentTab = () => _tabs.currentPage() && _tabs.remove(_tabs.selected[0])
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))
@@ -74,4 +81,3 @@ function buildSearchBarTermFromLocation (location) {
     .map(k => location[k])
     .join(', ')
 }
-

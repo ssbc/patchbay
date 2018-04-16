@@ -20,7 +20,16 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({ 'message.html.compose': compose })
 
-  function compose ({ meta, location, prepublish, placeholder = 'Write a message', shrink = true }, cb) {
+  function compose (options, cb) {
+    const {
+      meta,
+      location,
+      feedIdsInThread = [],
+      prepublish,
+      placeholder = 'Write a message',
+      shrink = true
+    } = options
+
     if (typeof resolve(meta) !== 'object') throw new Error('Compose needs meta data about what sort of message composer you are making')
     if (!location) throw new Error('Compose expects a unique location so it can save drafts of messages')
 
@@ -96,7 +105,7 @@ exports.create = function (api) {
     var fileInput = api.blob.html.input(file => {
       const megabytes = file.size / 1024 / 1024
       if (megabytes >= 5) {
-        const rounded = Math.floor(megabytes*100)/100
+        const rounded = Math.floor(megabytes * 100) / 100
         warningMessage.set([
           h('i.fa.fa-exclamation-triangle'),
           h('strong', file.name),
@@ -149,7 +158,7 @@ exports.create = function (api) {
       const char = inputText[0]
       const wordFragment = inputText.slice(1)
 
-      if (char === '@') cb(null, getProfileSuggestions(wordFragment))
+      if (char === '@') cb(null, getProfileSuggestions(wordFragment, feedIdsInThread))
       if (char === '#') cb(null, getChannelSuggestions(wordFragment))
       if (char === ':') cb(null, getEmojiSuggestions(wordFragment))
     }, {cls: 'PatchSuggest'})

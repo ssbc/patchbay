@@ -22,16 +22,36 @@ electron.app.on('ready', () => {
     { type: 'separator' },
     { role: 'togglefullscreen' }
   ]
-  if (process.platform === 'darwin') {
-    var win = menu.find(x => x.label === 'Window')
-    win.submenu = [
-      { role: 'minimize' },
-      { role: 'zoom' },
-      { role: 'close', label: 'Close' },
-      { type: 'separator' },
-      { role: 'front' }
-    ]
-  }
+  var win = menu.find(x => x.label === 'Window')
+  win.submenu = [
+    { role: 'minimize' },
+    { role: 'zoom' },
+    { role: 'close', label: 'Close Window', accelerator: 'CmdOrCtrl+Shift+W' },
+    { type: 'separator' },
+    {
+      label: 'Close Tab',
+      accelerator: 'CmdOrCtrl+W',
+      click() {
+        windows.main.webContents.send('closeTab')
+      }
+    },
+    {
+      label: 'Select Next Tab',
+      accelerator: 'CmdOrCtrl+Shift+]',
+      click() {
+        windows.main.webContents.send('nextTab')
+      }
+    },
+    {
+      label: 'Select Previous Tab',
+      accelerator: 'CmdOrCtrl+Shift+[',
+      click() {
+        windows.main.webContents.send('previousTab')
+      }
+    },
+    { type: 'separator' },
+    { role: 'front' }
+  ]
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 
@@ -135,4 +155,3 @@ function openWindow (path, opts) {
   window.loadURL('file://' + Path.join(__dirname, 'assets', 'base.html'))
   return window
 }
-

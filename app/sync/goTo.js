@@ -4,10 +4,11 @@ exports.gives = nest({ 'app.sync.goTo': true })
 
 exports.needs = nest({
   'app.html.tabs': 'first',
+  'app.sync.locationId': 'first',
   'history.obs.store': 'first',
   'history.sync.push': 'first',
-  'router.sync.normalise': 'first',
-  'router.sync.router': 'first',
+  'router.async.normalise': 'first',
+  'router.async.router': 'first'
 })
 
 exports.create = function (api) {
@@ -21,33 +22,51 @@ exports.create = function (api) {
   //   - extracts scrollToMessage into app.page.thread
   //   - router.sync.router would take (location, { position }) ?
 
-  function goTo (location, openBackground = false, split = false) {
-    location = api.router.sync.normalise(location)
-    const locationId = JSON.stringify(location)
+  function goTo (location, options = {}) {
+    const {
+      openBackground = false,
+      split = false
+    } = options
 
     const tabs = api.app.html.tabs()
-    if (tabs.has(locationId)) {
-      tabs.select(locationId)
-      api.history.sync.push(location)
-      return true
-    }
 
-    const page = api.router.sync.router(location)
-    if (!page) return
+    // currently do normalisation here only to generate normalised locationId
+    api.router.async.normalise(location, (err, location) => {
+      const locationId = api.app.sync.locationId(location)
 
-    page.id = page.id || locationId
-    tabs.add(page, !openBackground, split)
+      var page = tabs.get(locationId)
+      if (page) {
+        tabs.select(locationId)
 
-    if (openBackground) {
-      const history = api.history.obs.store()
-      var _history = history()
-      var current = _history.pop()
+        if (location.value) { // if there's a value it's not just a hydrated locationId
+          if (page && page.firstChild && page.firstChild.scrollDownToMessage) {
+            page.firstChild.scrollDownToMessage(location.key)
+          }
+        }
 
-      history.set([ ..._history, location, current ])
-    } else {
-      api.history.sync.push(location)
-    }
+        api.history.sync.push(location)
 
-    return openBackground
+        return true
+      }
+
+      api.router.async.router(location, (err, page) => {
+        if (err) throw err
+
+        if (!page) return
+
+        page.id = page.id || locationId
+        tabs.add(page, !openBackground, split)
+
+        if (openBackground) {
+          const history = api.history.obs.store()
+          var _history = history()
+          var current = _history.pop()
+
+          history.set([ ..._history, location, current ])
+        } else {
+          api.history.sync.push(location)
+        }
+      })
+    })
   }
 }

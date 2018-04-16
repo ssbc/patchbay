@@ -7,7 +7,7 @@ exports.gives = nest('app.html.searchBar')
 exports.needs = nest({
   'app.sync.goTo': 'first',
   'about.async.suggest': 'first',
-  'channel.async.suggest': 'first',
+  'channel.async.suggest': 'first'
   // 'app.async.suggest': 'reduce' // TODO add ability to add to this
 })
 
@@ -20,11 +20,8 @@ exports.create = function (api) {
     const getProfileSuggestions = api.about.async.suggest()
     const getChannelSuggestions = api.channel.async.suggest()
 
-    function goToLocation(location, ev) {
-      if (location[0] == '?')
-        location = { page: 'search', query: location.substring(1) }
-      else if (!['@', '#', '%', '&', '/'].includes(location[0]))
-        location = { page: 'search', query: location }
+    function goToLocation (location, ev) {
+      if (location[0] == '?') { location = { page: 'search', query: location.substring(1) } } else if (!['@', '#', '%', '&', '/'].includes(location[0])) { location = { page: 'search', query: location } }
 
       api.app.sync.goTo(location)
       if (!ev.ctrlKey) input.blur()
@@ -44,7 +41,7 @@ exports.create = function (api) {
         }
       }
     })
-      
+
     input.addEventListener('suggestselect', ev => {
       input.value = ev.detail.id  // HACK : this over-rides the markdown value
       goToLocation(input.value.trim(), ev)
@@ -81,12 +78,12 @@ exports.create = function (api) {
 
       return pages
         .filter(page => ~page.indexOf(word))
-        .sort((a, b) => a.indexOf(word) < b.indexOf(word) ? -1 : +1 )
+        .sort((a, b) => a.indexOf(word) < b.indexOf(word) ? -1 : +1)
         .map(page => {
           return {
-            title: '/'+page,
-            id: '/'+page,
-            value: '/'+page,
+            title: '/' + page,
+            id: '/' + page,
+            value: '/' + page
           }
         })
     }
