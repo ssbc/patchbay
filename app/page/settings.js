@@ -7,9 +7,8 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'app.sync.goTo': 'first',
-  'settings.obs.get': 'first',
-  'settings.sync.set': 'first'
+  'app.html.settings': 'map',
+  'app.sync.goTo': 'first'
 })
 
 exports.create = function (api) {
@@ -26,25 +25,18 @@ exports.create = function (api) {
   }
 
   function publicPage (location) {
-    const customStyles = api.settings.obs.get('patchbay.customStyles', '')
-    const styles = h('textarea', { value: customStyles() })
-
     return h('SettingsPage', { title: '/settings' }, [
       h('div.container', [
         h('h1', 'Settings'),
-        h('h2', 'Custom Styles'),
-        h('p', 'Add custom styles (accepts CSS and MCSS)'),
-        styles,
-        h('button', {'ev-click': peachify}, 'Apply Styles')
+        api.app.html.settings().map(setting => {
+          if (!setting.title && !setting.body) throw new Error('app.html.settings requires settings in form { title, body }')
+
+          return h('section', [
+            h('h2', setting.title),
+            setting.body
+          ])
+        })
       ])
     ])
-
-    function peachify () {
-      api.settings.sync.set({
-        patchbay: {
-          customStyles: styles.value
-        }
-      })
-    }
   }
 }

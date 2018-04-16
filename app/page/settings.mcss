@@ -5,24 +5,53 @@ SettingsPage {
   justify-content: center
 
   div.container {
-    width: 600px
+    background-color: hsla(0, 0%, 100%, .3)
+    padding: 1rem
+    margin: 1rem 0
 
-    h2 {
-      margin: 0
-      font-size: 1rem
+    h1 {
+      text-transform: uppercase
+      font-size: .8rem
+      letter-spacing: 3.4px
+      margin-bottom: 3rem
+      margin-left: .3rem
     }
 
-    textarea {
-      min-width: 400px
-      width: 500px
-      max-width: 600px
-      min-height: 200px
-      border: 1px solid gainsboro
-    }
+    section {
+      margin-bottom: 3rem
+      h2 {
+        margin: 0
+        margin-left: .3rem
+        font-size: 1rem
+        text-transform: uppercase
+        letter-spacing: 2px
+      }
 
-    button {
-      display: block
-      margin: .5rem 0
+      div {
+        p {
+          margin-top: .2rem
+          margin-left: .3rem
+        }
+
+        textarea {
+          min-width: 400px
+          width: 600px
+          max-width: 600px
+          min-height: 200px
+          border: 1px solid gainsboro
+        }
+
+        input {
+          font-size: 1rem
+
+          padding: .5rem
+          border: 1px solid gainsboro
+
+          width: 600px
+          max-width: 600px
+        }
+
+      }
     }
   }
 }

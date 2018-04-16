@@ -9,6 +9,9 @@ exports.needs = nest({
 })
 
 const defaults = {
+  patchbay: {
+    defaultTabs: ['/public', '/inbox', '/notifications']
+  },
   filter: {
     exclude: {
       channels: ''
