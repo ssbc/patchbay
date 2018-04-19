@@ -1,0 +1,6 @@
+CustomStyles {
+  button {
+    display: block
+    margin: .5rem 0
+  }
+}

@@ -11,8 +11,7 @@ exports.needs = nest({
   'app.sync.window': 'reduce',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
-  'settings.sync.get': 'first',
-  'settings.sync.set': 'first'
+  'settings.sync.get': 'first'
 })
 
 exports.create = function (api) {
@@ -23,7 +22,7 @@ exports.create = function (api) {
 
     window = api.app.sync.window(window)
 
-    const initialTabs = ['/public', '/inbox', '/notifications'] // NB router converts these to { page: '/public' }
+    const initialTabs = api.settings.sync.get('patchbay.defaultTabs')
     const App = h('App', api.app.html.tabs(initialTabs))
 
     api.app.sync.initialise(App)

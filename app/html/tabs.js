@@ -63,7 +63,7 @@ exports.create = function (api) {
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))
-    api.app.sync.goTo(initialTabs[0])
+    if (initialTabs[0]) api.app.sync.goTo(initialTabs[0])
     return _tabs
   }
 }
