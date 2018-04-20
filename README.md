@@ -1,14 +1,61 @@
 # Patchbay
 
-`patchbay` is a secure-scuttlebutt client interface that is fully compatible with [patchwork](https://github.com/ssbc/patchwork).
+Patchbay is a scuttlebutt client designed to be easy to modify and extend.
+It uses the same database as Patchwork and Patchfoo, so you can easily take it for a spin with your existing identity.
 
 ![](./screenshot.png)
 
-Patchbay is built using [patchcore](https://github.com/ssbc/patchcore) + [depject](https://github.com/dominictarr/depject). The goal is to make it easier to develop new features, and enable or disable features. This has so far been quite successful!
+Patchbay was created by Dominic Tarr towards the end of the life of Patchwork v1.
+It was born our out of the observation that maintaining a large client apps can be really hard work.
+Patchbay was designed to sidestep this by using some technology ([`depject`](https://github.com/dominictarr/depject)) to make parts easier to swap and extend.
 
-This makes in very easy to create say, a renderer for a new message type, or switch to a different method for choosing user names.
+Patchbay now shares a common core library ([`patchcore`](https://github.com/ssbc/patchcore)) with Patchwork, and connects this in using the `depject`
+This is another experiment in sharing useful code and mainmtenance.
 
-## Setup
+Current features boasted:
+- gatherings - a booking system
+- chess - p2p chess games and chat
+- bookblub - a book review interface
+- blogs - can read blogposts created in Ticktack
+
+## Install
+
+Download easy installer for Mac / Windows / Linux here : https://github.com/ssbc/patchbay/releases
+
+If you'd like to hack on Patchbay, check out the Developer Install below.
+
+## Keyboard shortcuts
+
+`CmdOrCtrl` is the `command` key on Apple keyboards or the `ctrl` key on PC keyboards.
+
+### Tabs and window
+
+- `h` / `CmdOrCtrl+Shift+]` : tabs left
+- `j` / `CmdOrCtrl+Shift+[`: tabs right
+- `x` / `CmdOrCtrl+w` : close tab
+- `CmdOrCtrl+Shift+w` will close the current window
+
+### Message feeds
+
+`j` : next message (down)
+`k` : previous message
+`o` : open message thread (and scroll to position of this message in that thread)
+` ` ` : toggle raw message view for currently selected message (` ` ` = backtick, lives on the same key as `~`)
+
+composing : cttrl + enter = post
+
+### Nav bar thing
+
+`@` : start a person query
+`#` : start a channel query
+`?` : start a search query
+`/` : start a navigation  (e.g. /public)  - need to re-instate suggestions for this
+
+you can also paste a message id (starts with `%`) in here to navigate to it. Same with blobs (`&`)
+
+---
+
+## Developer Install
 
 Libsodium has some build dependencies. On ubuntu systems the following might help:
 
@@ -42,27 +89,15 @@ Install a standalone scuttlebot (your gossip server)
 npm install scuttlebot@latest -g
 ```
 
-Until https://github.com/ssbc/scuttlebot/pull/417 is resolved, you may need to do this instead:
-
 ```sh
-git clone https://github.com/ssbc/scuttlebot.git
-cd scuttlebot
-git checkout ssb-private
-npm install
-npm link  // this should make sbot accessible globally
-```
-
-```sh
-# make sure you have secure-scuttlebutt@15.5.2
-npm ls secure-scuttlebutt -g
-
 sbot server
 
 # then in another tab (these must be separate commands)
 sbot plugins.install ssb-about
 sbot plugins.install ssb-backlinks
-sbot plugins.install ssb-fulltext # for faster searches
+sbot plugins.install ssb-search # for search
 sbot plugins.install ssb-chess-db # for chess
+sbot plugins.install ssb-private # for private messages
 
 After that you need to make sure that .ssb/config reads: "ssb-chess-db": "ssbChessIndex" for chess to work.
 
@@ -84,7 +119,6 @@ npm run rebuild
 
 ## Running the desktop app
 
-
 Easy mode (embedded sbot):
 ```sh
 # from the patchbay repo folder
@@ -99,53 +133,56 @@ sbot server
 npm run dev
 ```
 
-## Keyboard shortcuts
-`CmdOrCtrl` is the `command` key on Apple keyboards or the `ctrl` key on PC keyboards.
+## Development
 
-### Tabs and Window
-- `CmdOrCtrl+Shift+]` and `CmdOrCtrl+Shift+[` will cycle the tabs left and right
-- `CmdOrCtrl+w` will close the current tab
-- `CmdOrCtrl+Shift+w` will close the current window
+### Key depject modules in Patchbay
 
-## How to add a feature
+Here's a quick high level overview of the depject modules you're going to want to know about:
 
-To add a new message type, add add a js to `./modules/` that exports a function named `message_content` (it should return an HTML element). To add a new tab, export a function named `screen_view` (returns an html element).
+#### `app.html.app`
 
-To add a new detail, that appears above a message, export a function named `message_meta`.
+The top level module which starts the front end js.
 
-See the code for more examples.
+#### `app.sync.initialise`
 
+A collection of function which are called on app start.
+Does things like load css into the app, set up custom listeners, set default settings
 
-## Keyboard shortcuts
+#### `app.sync.goTo(location)`
 
-## Tabs 
+The function you call when you want to open a new location.
+`location` can be a string (like a message or blob id) or an object.
 
-`h` : tabs left
-`j` : tabs right
-`x` : close tab
+Note - some locations are _normalised_ before being passed onto the router.
+Check out `router.async.normalise` for explicit detail.
 
-## Message feeds
+#### `router.sync.router`
 
-`j` : next message (down)
-`k` : previous message
-`o` : open message thread (and scroll to position of this message in that thread)
-` ` ` : toggle raw message view for currently selected message (` ` ` = backtick, lives on the same key as `~`)
+This is the module where you can add routes to the app.
+This is ultimately reduced along with all other `router.sync.router` modules into the final router.
 
-composing : cttrl + enter = post
+#### `app.html.settings`
 
-## Nav bar thing
-
-`@` : start a person query
-`#` : start a channel query
-`?` : start a search query
-`/` : start a navigation  (e.g. /public)  - need to re-instate suggestions for this
-
-you can also paste a message id (starts with `%`) in here to navigate to it. Same with blobs (`&`)
+Giving modules here will add settings sections to the settings page (`app.page.settings`).
 
 
-## Module graph
+### How to add a new page
 
-TODO - reinstate this
+e.g. to add a 'cats' page to the app: 
+
+- Add a file `app/page/cats.js` which gives `app.page.cats`
+- Tell the router to send people browsing to location `{page: 'cats'}` to send them to this page
+  - route will look like `[location => location.page === 'cats', api.app.page.cats]`
+  - Note the normaliser will automaticall turn location `/cats` to `{page: 'cats'}`
+- Add a link somewhere which will trigger that route:
+  - e.g. activate`api.app.sync.goTo('/cats')` onclick
+  - e.g. add a link `<a href='/cats'>Cats!</a>` (which will be clicked up by listeners)
+
+
+
+### Module graph
+
+TODO!
 
 ## License
 
