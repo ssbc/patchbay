@@ -1,6 +1,7 @@
 const nest = require('depnest')
 const compileCss = require('micro-css')
 const { h, computed } = require('mutant')
+const get = require('lodash/get')
 
 exports.gives = nest('app.sync.initialise')
 
@@ -14,19 +15,44 @@ exports.create = function (api) {
 
   function styles () {
     const css = values(api.styles.css()).join('\n')
+    const custom = api.settings.obs.get('patchbay.customStyles', '')
+    const accessibility = api.settings.obs.get('patchbay.accessibility', '')
 
     document.head.appendChild(
       h('style', {
-        innerHTML: computed(api.settings.obs.get('patchbay.customStyles', ''), styles => {
-          const customStyles = compileCss(styles)
-
-          // apply styles twice so our mixins 'win'
-          return [customStyles, css, customStyles].join('\n')
+        innerHTML: computed([custom, accessibility], (custom, accessibility) => {
+          return [
+            css,
+            compileCss(custom),
+            compileCss(accessibilityMcss(accessibility))
+          ].join('\n')
         })
       })
     )
   }
 }
+
+// ////////////////////////////
+// The parts that feed into this are in app/html/settings/accessibility.js
+
+function accessibilityMcss (settings) {
+  const invert = get(settings, 'invert')
+  const saturation = get(settings, 'saturation', 100)
+  const brightness = get(settings, 'brightness', 100)
+  const contrast = get(settings, 'contrast', 100)
+
+  return `
+    body {
+      filter: ${invert ? 'invert()' : ''} saturate(${saturation}%) brightness(${brightness}%) contrast(${contrast}%)
+
+      (img) {
+        filter: ${invert ? 'invert()' : ''}
+      }
+
+    }
+  `
+}
+// ////////////////////////////
 
 function values (object) {
   const keys = Object.keys(object)
