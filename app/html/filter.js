@@ -1,11 +1,12 @@
 const nest = require('depnest')
-const { h, Value, when, computed } = require('mutant')
+const { h, Value, when, computed, resolve } = require('mutant')
 const Abort = require('pull-abortable')
 const pull = require('pull-stream')
 const addSuggest = require('suggest-box')
-const { isFeed } = require('ssb-ref')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
+const isEmpty = require('lodash/isEmpty')
+const { isFeed } = require('ssb-ref')
 
 exports.gives = nest('app.html.filter')
 
@@ -50,7 +51,20 @@ exports.create = function (api) {
       }
     })
 
-    const userInput = h('input')
+    var userId = Value('')
+    userId(id => {
+      userInput.value = id
+      draw()
+    })
+    const userInput = h('input', {
+      'ev-input': (ev) => {
+        const { value } = ev.target
+        if (value === resolve(userId)) return // stops infinite loop
+
+        if (isFeed(value)) userId.set(value)
+        else if (isEmpty(value)) userId.set('')
+      }
+    })
 
     const isFiltered = computed(filterSettings, (filterSettings) => {
       const _settings = Object.assign({}, filterSettings)
@@ -141,18 +155,12 @@ exports.create = function (api) {
       draw()
     })
 
-    var userId
     const getAboutSuggestions = api.about.async.suggest()
     addSuggest(userInput, (inputText, cb) => {
       inputText = inputText.replace(/^@/, '')
       cb(null, getAboutSuggestions(inputText.slice(1)))
     }, {cls: 'PatchSuggest'})
-    userInput.addEventListener('suggestselect', ev => {
-      userId = ev.detail.id
-      userInput.value = userId
-
-      draw()
-    })
+    userInput.addEventListener('suggestselect', ev => userId.set(ev.detail.id))
 
     function followFilter (msg) {
       if (!filterSettings().only.peopleAndChannelsIFollow) return true
@@ -162,9 +170,10 @@ exports.create = function (api) {
     }
 
     function userFilter (msg) {
-      if (!userId) return true
+      const id = resolve(userId)
+      if (!id) return true
 
-      return msg.value.author === userId
+      return msg.value.author === id
     }
 
     function rootFilter (msg) {
@@ -187,7 +196,7 @@ exports.create = function (api) {
         type = 'chess'
       }
 
-      if (typeof msg.value.content == 'string') {
+      if (typeof msg.value.content === 'string') {
         type = 'private'
       }
 
