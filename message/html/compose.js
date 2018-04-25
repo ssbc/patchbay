@@ -94,6 +94,10 @@ exports.create = function (api) {
       hasContent.set(true)
     }
 
+    var isPrivate = location.page == 'private' ||
+          (location.key && !location.value) ||
+          (location.value && location.value.private)
+
     var warningMessage = Value(null)
     var warning = h('section.warning',
       { className: when(warningMessage, '-open', '-closed') },
@@ -125,7 +129,7 @@ exports.create = function (api) {
       textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
 
       console.log('added:', file)
-    })
+    }, { private: isPrivate })
 
     fileInput.onclick = () => hasContent.set(true)
 
