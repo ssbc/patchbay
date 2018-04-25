@@ -158,7 +158,7 @@ exports.create = function (api) {
     const getAboutSuggestions = api.about.async.suggest()
     addSuggest(userInput, (inputText, cb) => {
       inputText = inputText.replace(/^@/, '')
-      cb(null, getAboutSuggestions(inputText.slice(1)))
+      cb(null, getAboutSuggestions(inputText))
     }, {cls: 'PatchSuggest'})
     userInput.addEventListener('suggestselect', ev => userId.set(ev.detail.id))
 
