@@ -165,8 +165,8 @@ exports.create = function (api) {
     function followFilter (msg) {
       if (!filterSettings().only.peopleAndChannelsIFollow) return true
 
-      return Array.from(peopleIFollow()).concat(myId).includes(msg.value.author) ||
-             (msg.value.content && Array.from(channelsIFollow()).includes(msg.value.content.channel))
+      return (msg.value && Array.from(peopleIFollow()).concat(myId).includes(msg.value.author)) ||
+             (msg.value && msg.value.content && Array.from(channelsIFollow()).includes(msg.value.content.channel))
     }
 
     function userFilter (msg) {
@@ -208,6 +208,7 @@ exports.create = function (api) {
     function filterDownThrough () {
       return pull(
         downScrollAborter,
+        pull.filter(msg => msg),
         pull.filter(followFilter),
         pull.filter(userFilter),
         pull.filter(rootFilter),
@@ -221,6 +222,7 @@ exports.create = function (api) {
     function filterUpThrough () {
       return pull(
         upScrollAborter,
+        pull.filter(msg => msg),
         pull.filter(followFilter),
         pull.filter(userFilter),
         pull.filter(rootFilter),
