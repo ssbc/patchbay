@@ -22,7 +22,7 @@ exports.create = function (api) {
 
     window = api.app.sync.window(window)
 
-    const initialTabs = ['/polls', '/public', '/inbox', '/notifications'] // NB router converts these to { page: '/public' }
+    const initialTabs = api.settings.sync.get('patchbay.defaultTabs')
     const App = h('App', api.app.html.tabs(initialTabs))
 
     api.app.sync.initialise(App)
