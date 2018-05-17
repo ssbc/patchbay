@@ -1,0 +1,48 @@
+Modal {
+  display: flex
+  flex-direction: row
+  position: fixed
+  z-index: 999
+  width: 100%
+  height: 100%
+  text-align: center
+  top: 0
+  left: 0
+  background: rgba(0,0,0,0.8)
+
+  div.content {
+    margin: auto
+    padding: 30px
+    border-radius: 5px
+    $backgroundPrimary
+    $dontSelect
+
+    div.dialog {
+      div.message {
+        $colorFontPrimary
+      }
+
+      div.actions {
+        display: flex
+        padding-top: 15px
+
+        div.Button {
+          margin: auto
+
+          -primary {
+            $backgroundPrimary
+          }
+        }
+      }
+    }
+  }
+
+  -open {
+    display: flex
+  }
+
+  -close {
+    display: none
+  }
+}
+

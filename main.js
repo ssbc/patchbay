@@ -27,17 +27,25 @@ const patchbay = {
   }
 }
 
+const post = {
+  patchbay: {
+    message: bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
+  }
+}
+
 // from more specialized to more general
 const sockets = combine(
   // require('ssb-horcrux'),
   // require('patch-hub'),
 
+  require('patchbay-poll'),
   require('ssb-chess'),
   require('patchbay-gatherings'),
   require('patchbay-book'),
   // require('patch-network),
   patchbay,
-  require('patchcore')
+  require('patchcore'),
+  post
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))

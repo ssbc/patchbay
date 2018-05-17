@@ -6,9 +6,8 @@ exports.gives = nest('app.sync.initialise')
 exports.needs = nest({
   'app.async.catchLinkClick': 'first',
   'app.sync.catchKeyboardShortcut': 'first',
-  'app.html.tabs': 'first',
+  'app.html.tabs': 'first'
 })
-
 
 exports.create = function (api) {
   return nest('app.sync.initialise', userActionListeners)
@@ -30,7 +29,6 @@ exports.create = function (api) {
     electron.ipcRenderer.on('closeTab', () => {
       tabs.closeCurrentTab()
     })
-
   }
 }
 

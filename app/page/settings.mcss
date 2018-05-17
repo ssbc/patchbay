@@ -1,0 +1,58 @@
+SettingsPage {
+  flex-grow: 1
+
+  display: flex
+  justify-content: center
+
+  div.container {
+    background-color: hsla(0, 0%, 100%, .3)
+    padding: 1rem
+    margin: 1rem 0
+
+    h1 {
+      text-transform: uppercase
+      font-size: .8rem
+      letter-spacing: 3.4px
+      margin-bottom: 3rem
+      margin-left: .3rem
+    }
+
+    section {
+      margin-bottom: 3rem
+      h2 {
+        margin: 0
+        margin-left: .3rem
+        font-size: 1rem
+        text-transform: uppercase
+        letter-spacing: 2px
+      }
+
+      div {
+        p {
+          margin-top: .2rem
+          margin-left: .3rem
+        }
+
+        textarea {
+          min-width: 400px
+          width: 600px
+          max-width: 600px
+          min-height: 200px
+          border: 1px solid gainsboro
+        }
+
+        input {
+          font-size: 1rem
+
+          padding: .5rem
+          border: 1px solid gainsboro
+
+          width: 600px
+          max-width: 600px
+        }
+
+      }
+    }
+  }
+}
+

@@ -20,8 +20,10 @@ exports.create = function (api) {
   function about (msg, opts) {
     if (msg.value.content.type !== 'about') return
 
-    const { name, description, image } = msg.value.content
+    const { name, description, image, about } = msg.value.content
     if (!name && !description && !image) return
+
+    if (ref.isMsg(about)) return
 
     const element = api.message.html.layout(msg, extend({
       content: renderContent(msg),

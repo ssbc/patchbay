@@ -38,7 +38,7 @@ input:focus, .compose:focus {
 }
 
 input, textarea {
-  border: none;
+  border: 1px solid gainsboro
   border-radius: .2em;
   font-family: sans-serif;
 }

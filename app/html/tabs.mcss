@@ -39,7 +39,7 @@ Hypertabs {
 
         -selected {
           color: #222
-          background-color: #fff
+          $backgroundPrimary
 
           a.link {
             max-width: calc(100% - 2rem)
