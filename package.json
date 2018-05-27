@@ -86,6 +86,7 @@
     "ssb-friends": "^2.2.3",
     "ssb-horcrux": "^1.0.0",
     "ssb-keys": "^7.0.15",
+    "ssb-meme": "^1.0.0",
     "ssb-mentions": "^0.4.1",
     "ssb-mutual": "^0.1.0",
     "ssb-private": "^0.1.2",

@@ -11,6 +11,7 @@ exports.needs = nest({
     'notifications': 'first',
     'profile': 'first',
     'search': 'first',
+    'imageSearch': 'first',
     'blob': 'first',
     'thread': 'first',
     'channel': 'first',
@@ -33,7 +34,8 @@ exports.create = (api) => {
       [ loc => loc.page === 'errors', pages.errors ],
       [ loc => loc.page === 'profile', () => pages.profile({ feed: myId }) ],
       [ loc => loc.page === 'search' && loc.query, pages.search ],
-      [ loc => loc.page === 'settings', pages.settings],
+      [ loc => loc.page === 'imageSearch', pages.imageSearch ],
+      [ loc => loc.page === 'settings', pages.settings ],
 
       [ loc => isBlob(loc.blob), pages.blob ],
       [ loc => isPresent(loc.channel), pages.channel ],
