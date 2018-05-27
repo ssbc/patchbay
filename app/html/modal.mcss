@@ -8,13 +8,17 @@ Modal {
   text-align: center
   top: 0
   left: 0
-  background: rgba(0,0,0,0.8)
+  background: rgba(0,0,0,0.1)
 
   div.content {
-    margin: auto
-    padding: 30px
-    border-radius: 5px
+    max-width: 90vw
+    max-height: 90vh
+    overflow: auto
+
     $backgroundPrimary
+    padding: 30px
+    box-shadow: rgba(0,0,0,.34) 2px 6px 10px
+    margin: auto
     $dontSelect
 
     div.dialog {
