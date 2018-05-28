@@ -58,7 +58,7 @@ exports.create = function (api) {
       h('section.settings', [
         h('input', {
           'placeholder': 'search image by name',
-          'ev-input': ev => query.set(ev.target.value.toLowerCase())
+          'ev-input': ev => query.set(ev.target.value)
         })
       ]),
       h('section.results', computed([results, query], (results, query) => {
