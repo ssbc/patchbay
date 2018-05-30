@@ -8,6 +8,7 @@ exports.gives = nest({
 
 exports.needs = nest({
   'app.html.settings': 'map',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first'
 })
 
@@ -25,7 +26,7 @@ exports.create = function (api) {
   }
 
   function publicPage (location) {
-    return h('SettingsPage', { title: '/settings' }, [
+    var page = h('SettingsPage', { title: '/settings' }, [
       h('div.container', [
         h('h1', 'Settings'),
         api.app.html.settings().map(setting => {
@@ -38,5 +39,9 @@ exports.create = function (api) {
         })
       ])
     ])
+
+    var { container, content } = api.app.html.scroller({ prepend: page })
+    container.title = 'Settings'
+    return container
   }
 }
