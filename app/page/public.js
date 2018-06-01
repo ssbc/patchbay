@@ -50,15 +50,16 @@ exports.create = function (api) {
         return api.message.html.render(msg)
       }
 
+      // TODO - change to use ssb-query, streamed by publish time
       pull(
-        next(api.feed.pull.public, {old: false, limit: 100}, ['value', 'timestamp']),
-        filterDownThrough(),
+        next(api.feed.pull.public, {old: false, limit: 100, live: true}, ['timestamp']),
+        filterUpThrough(),
         Scroller(container, content, render, true, false)
       )
 
       pull(
-        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
-        filterUpThrough(),
+        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}, ['timestamp']),
+        filterDownThrough(),
         Scroller(container, content, render, false, false)
       )
     }

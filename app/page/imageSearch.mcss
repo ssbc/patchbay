@@ -1,0 +1,84 @@
+Page -imageSearch {
+  overflow-y: auto
+
+  display: grid
+  grid-template-columns: 85vw
+  grid-template-rows: 5rem auto
+  justify-content: center
+  align-items: start
+
+  div.Modal {
+    div.content {
+      display: grid
+      justify-items: center
+
+      img {
+        max-width: 90vw
+        max-height: 80vh
+
+        margin-bottom: 1rem
+      }
+
+      div.md {
+        pre {
+          user-select: all
+          padding: .2rem
+          padding-right: 2rem
+          min-width: 39rem
+          background-color: rgba(0,0,0,.1)
+
+          text-align: right
+          margin-top: .2rem
+          display: inline-block
+        }
+      }
+
+      table {
+        tr { 
+          td {
+            text-align: left
+            padding-right: .5rem            
+          }
+
+          td.msg {
+            font-family: monospace
+          }
+        }
+      }
+    }
+  }
+
+  section.settings {
+    padding: 1rem 0
+    input {
+      min-width: 20rem
+      padding: .5rem
+    }
+  }
+
+  section.results {
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+
+    div {
+      cursor: pointer
+
+      min-width: 5rem
+      min-height: 5rem
+      max-width: 19rem
+      max-height: 19rem
+
+      display: flex
+      justify-content: center
+      align-items: center
+
+      img {
+        max-width: 19rem
+        max-height: 19rem
+      }
+
+      margin: 0 1rem 1rem 0
+    }
+  }
+}
