@@ -73,7 +73,7 @@
     "pull-stream": "^3.6.8",
     "read-directory": "^2.1.1",
     "require-style": "^1.0.1",
-    "scuttle-blog": "^1.0.0",
+    "scuttle-blog": "^1.0.1",
     "scuttlebot": "^11.3.0",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
