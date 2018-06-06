@@ -20,6 +20,7 @@ exports.needs = nest({
 })
 
 exports.create = function (api) {
+  console.log('LOADING PUBLIC PAGE')
   return nest({
     'app.html.menuItem': menuItem,
     'app.page.public': publicPage

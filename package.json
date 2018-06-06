@@ -61,7 +61,7 @@
     "patch-hub": "^1.1.0",
     "patch-inbox": "^1.0.2",
     "patch-settings": "^1.1.1",
-    "patch-suggest": "^1.1.0",
+    "patch-suggest": "^2.0.0",
     "patchbay-book": "^1.0.6",
     "patchbay-gatherings": "^2.0.0",
     "patchbay-poll": "^1.0.1",

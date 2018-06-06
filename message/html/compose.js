@@ -10,6 +10,7 @@ exports.needs = nest({
   'about.async.suggest': 'first',
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
+  'meme.async.suggest': 'first',
   'blob.html.input': 'first',
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
@@ -39,10 +40,6 @@ exports.create = function (api) {
     var textAreaFocused = Value(false)
     var focused = computed([channelInputFocused, textAreaFocused], (a, b) => a || b)
     var hasContent = Value(false)
-
-    var getProfileSuggestions = api.about.async.suggest()
-    var getChannelSuggestions = api.channel.async.suggest()
-    var getEmojiSuggestions = api.emoji.async.suggest()
 
     var blurTimeout = null
 
@@ -153,20 +150,21 @@ exports.create = function (api) {
       try {
         if (typeof data.content.text === 'string') {
           var text = data.content.text
-          textArea.value += '> ' + text.replace(/\r\n|\r|\n/g,'\n> ') + '\r\n\n'
+          textArea.value += '> ' + text.replace(/\r\n|\r|\n/g, '\n> ') + '\r\n\n'
           hasContent.set(!!textArea.value)
         }
-      } catch(err) {
+      } catch (err) {
         // object not have text or content
       }
     }
 
-    if (location.action == 'quote')
+    if (location.action == 'quote') {
       composer.addQuote(location.value)
+    }
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
+        cb(null, api.channel.async.suggest(inputText.slice(1)))
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
@@ -177,9 +175,10 @@ exports.create = function (api) {
       const char = inputText[0]
       const wordFragment = inputText.slice(1)
 
-      if (char === '@') cb(null, getProfileSuggestions(wordFragment, feedIdsInThread))
-      if (char === '#') cb(null, getChannelSuggestions(wordFragment))
-      if (char === ':') cb(null, getEmojiSuggestions(wordFragment))
+      if (char === '@') api.about.async.suggest(wordFragment, feedIdsInThread, cb)
+      if (char === '#') api.channel.async.suggest(wordFragment, cb)
+      if (char === ':') api.emoji.async.suggest(wordFragment, cb)
+      if (char === '&') api.meme.async.suggest(wordFragment, cb)
     }, {cls: 'PatchSuggest'})
 
     return composer
