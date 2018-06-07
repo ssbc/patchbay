@@ -141,10 +141,9 @@ exports.create = function (api) {
       ])
     }
 
-    const getChannelSuggestions = api.channel.async.suggest()
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, getChannelSuggestions(inputText.slice(1)))
+        api.channel.async.suggest(inputText.slice(1), cb)
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
@@ -155,10 +154,9 @@ exports.create = function (api) {
       draw()
     })
 
-    const getAboutSuggestions = api.about.async.suggest()
     addSuggest(userInput, (inputText, cb) => {
       inputText = inputText.replace(/^@/, '')
-      cb(null, getAboutSuggestions(inputText))
+      api.about.async.suggest(inputText, cb)
     }, {cls: 'PatchSuggest'})
     userInput.addEventListener('suggestselect', ev => userId.set(ev.detail.id))
 

@@ -17,11 +17,12 @@ exports.create = function (api) {
   return nest('app.html.searchBar', function searchBar () {
     if (_search) return _search
 
-    const getProfileSuggestions = api.about.async.suggest()
-    const getChannelSuggestions = api.channel.async.suggest()
-
     function goToLocation (location, ev) {
-      if (location[0] == '?') { location = { page: 'search', query: location.substring(1) } } else if (!['@', '#', '%', '&', '/'].includes(location[0])) { location = { page: 'search', query: location } }
+      if (location[0] === '?') {
+        location = { page: 'search', query: location.substring(1) }
+      } else if (!['@', '#', '%', '&', '/'].includes(location[0])) {
+        location = { page: 'search', query: location }
+      }
 
       api.app.sync.goTo(location)
       if (!ev.ctrlKey) input.blur()
@@ -33,7 +34,7 @@ exports.create = function (api) {
       'ev-keyup': ev => {
         switch (ev.keyCode) {
           case 13: // enter
-	    goToLocation(input.value.trim(), ev)
+            goToLocation(input.value.trim(), ev)
             return
           case 27: // escape
             ev.preventDefault()
@@ -64,8 +65,8 @@ exports.create = function (api) {
       const char = inputText[0]
       const word = inputText.slice(1)
 
-      if (char === '@') cb(null, getProfileSuggestions(word))
-      if (char === '#') cb(null, getChannelSuggestions(word))
+      if (char === '@') api.about.async.suggest(word, cb)
+      if (char === '#') api.channel.async.suggest(word, cb)
       if (char === '/') cb(null, getPagesSuggestions(word))
     }, {cls: 'PatchSuggest'})
 
@@ -73,7 +74,7 @@ exports.create = function (api) {
     function getPagesSuggestions (word) {
       const pages = [
         'public', 'private', 'inbox', 'profile', 'notifications', 'settings',
-        'gatherings', 'chess', 'books'
+        'gatherings', 'chess', 'books', 'imageSearch', 'polls'
       ]
 
       return pages

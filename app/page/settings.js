@@ -15,7 +15,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.settings': publicPage
+    'app.page.settings': settingsPage
   })
 
   function menuItem () {
@@ -25,7 +25,8 @@ exports.create = function (api) {
     }, '/settings')
   }
 
-  function publicPage (location) {
+
+  function settingsPage (location) {
     var page = h('SettingsPage', { title: '/settings' }, [
       h('div.container', [
         h('h1', 'Settings'),
