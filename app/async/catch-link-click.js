@@ -14,7 +14,8 @@ exports.create = function (api) {
 
   function catchLinkClick (root, cb = defaultCallback) {
     root.addEventListener('click', (ev) => {
-      if (ev.target.tagName === 'INPUT' && ev.target.type === 'file') return
+      if (ev.target.tagName === 'INPUT' &&
+          (ev.target.type === 'file' || ev.target.type === 'checkbox')) return
       if (ev.defaultPrevented) return // TODO check this is in the right place
       ev.preventDefault()
       ev.stopPropagation()

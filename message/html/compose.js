@@ -15,7 +15,8 @@ exports.needs = nest({
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
   'drafts.sync.set': 'first',
-  'drafts.sync.remove': 'first'
+  'drafts.sync.remove': 'first',
+  'settings.obs.get': 'first'
 })
 
 exports.create = function (api) {
@@ -126,7 +127,7 @@ exports.create = function (api) {
       textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
 
       console.log('added:', file)
-    }, { private: isPrivate })
+    }, { private: isPrivate, removeExif: api.settings.obs.get('patchbay.removeExif', true) })
 
     fileInput.onclick = () => hasContent.set(true)
 
