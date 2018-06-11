@@ -8,13 +8,14 @@ exports.gives = nest({
 
 exports.needs = nest({
   'app.html.settings': 'map',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first'
 })
 
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.settings': publicPage
+    'app.page.settings': settingsPage
   })
 
   function menuItem () {
@@ -24,8 +25,9 @@ exports.create = function (api) {
     }, '/settings')
   }
 
-  function publicPage (location) {
-    return h('SettingsPage', { title: '/settings' }, [
+
+  function settingsPage (location) {
+    var page = h('SettingsPage', { title: '/settings' }, [
       h('div.container', [
         h('h1', 'Settings'),
         api.app.html.settings().map(setting => {
@@ -38,5 +40,9 @@ exports.create = function (api) {
         })
       ])
     ])
+
+    var { container, content } = api.app.html.scroller({ prepend: page })
+    container.title = 'Settings'
+    return container
   }
 }
