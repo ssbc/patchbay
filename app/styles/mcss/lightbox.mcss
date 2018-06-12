@@ -3,13 +3,13 @@
 
 body {
   div.lightbox {
+    $threadWidth
+
     position: fixed
     left: 0px
     right: 0px
     top: 50px
     overflow: auto
-    width: 780px
-    max-width: 100%
     padding: 25px
     margin: auto
     z-index: 2

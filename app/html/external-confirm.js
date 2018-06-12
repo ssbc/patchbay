@@ -20,7 +20,7 @@ exports.create = function (api) {
       'open'
     )
 
-    var cancel = h('button.cancel', {
+    var cancel = h('button.cancel.-subtle', {
       'ev-click': () => {
         lb.remove()
       }},
