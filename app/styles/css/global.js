@@ -38,8 +38,7 @@ input:focus, .compose:focus {
 }
 
 input, textarea {
-  border: 1px solid gainsboro
-  border-radius: .2em;
+  border: 1px solid gainsboro;
   font-family: sans-serif;
 }
 
@@ -53,26 +52,5 @@ textarea:focus {
   border-color: none;
 }
 
-button {
-  background: #fff;
-  color: #666;
-  border: 1px solid #bbb;
-  border-radius: .5em;
-  padding: .7em;
-  margin: .5em;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: .7em;
-}
-button:focus {
-  outline: none;
-  border-color: #0088cc; 
-  box-shadow: 0 0 4px #0088cc;
-}
-button:hover {
-  background: #ccc;
-  border: 1px solid #bbb;
-}
 
 `

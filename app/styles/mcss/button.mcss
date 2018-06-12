@@ -1,24 +1,49 @@
-Button {
+button {
   font-family: arial
+  text-transform: uppercase
+  font-weight: bold
+  font-size: .7rem
+  letter-spacing: 1.4px
+
+  color: #666
   background-color: #fff
 
   min-width: 6rem
-  height: 1.2rem
+  min-height: 1.8rem
+
   padding: .2rem 1rem
-
-  border: 1px #b9b9b9 solid
-  border-radius: 10rem
-
   cursor: pointer
+  border: 1px #b9b9b9 solid
+  outline: none
 
   display: flex
   justify-content: center
   align-items: center
 
+  transition: all .1s ease-in
+
+  :focus {
+    outline: none
+    border-color: #0088cc
+    box-shadow: 0 0 4px #0088cc
+  }
+
+  :hover {
+    color: #fff
+    background-color: teal
+    border: 1px solid teal
+    outline: none
+  }
+
   -subtle {
     color: #b9b9b9
+    border: 1px solid rgba(0,0,0,0)
+    background: none
+
     :hover {
-      color: #222
+      color: #fff
+      background-color: rgba(200,0,0,.5)
+      border: 1px solid rgba(200,0,0,.5)
     }
   }
 

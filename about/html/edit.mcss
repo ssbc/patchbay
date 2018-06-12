@@ -97,6 +97,7 @@ AboutEditor {
         input[type="file"] {
           $avatarLarge
           color: transparent
+          border: none
 
           ::-webkit-file-upload-button {
             visibility: hidden
