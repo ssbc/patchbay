@@ -28,8 +28,8 @@ const patchbay = {
 }
 
 const post = {
-  patchbay: {
-    message: bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
+  'patchbay-post': {
+    'message-more': bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
   }
 }
 
@@ -44,8 +44,8 @@ const sockets = combine(
   require('patchbay-book'),
   // require('patch-network),
   patchbay,
-  require('patchcore'),
-  post
+  post,
+  require('patchcore')
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))

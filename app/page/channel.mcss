@@ -6,7 +6,7 @@ Page -channel {
         flex-wrap: wrap
         justify-content: flex-end
 
-        div.Button.-subscribe {
+        button.-subscribe {
           margin-right: .5rem
         }
 

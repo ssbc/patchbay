@@ -2,7 +2,7 @@ Modal {
   display: flex
   flex-direction: row
   position: fixed
-  z-index: 999
+  z-index: 90
   width: 100%
   height: 100%
   text-align: center
@@ -30,7 +30,7 @@ Modal {
         display: flex
         padding-top: 15px
 
-        div.Button {
+        button {
           margin: auto
 
           -primary {
