@@ -28,8 +28,8 @@ const patchbay = {
 }
 
 const post = {
-  'patchbay-post': {
-    'message-more': bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
+  patchbay: {
+    message: bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
   }
 }
 
