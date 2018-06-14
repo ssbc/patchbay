@@ -59,7 +59,7 @@
     "patch-drafts": "0.0.6",
     "patch-history": "^1.0.0",
     "patch-hub": "^1.1.0",
-    "patch-inbox": "^1.1.1",
+    "patch-inbox": "^1.1.2",
     "patch-settings": "^1.1.1",
     "patch-suggest": "^2.0.2",
     "patchbay-book": "^1.0.6",
