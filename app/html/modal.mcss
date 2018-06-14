@@ -3,12 +3,12 @@ Modal {
   flex-direction: row
   position: fixed
   z-index: 90
-  width: 100%
-  height: 100%
   text-align: center
-  top: 0
+  top: 2.5rem
+  right: 0
+  bottom: 0
   left: 0
-  background: rgba(0,0,0,0.1)
+  background: rgba(15, 0, 25, 0.78)
 
   div.content {
     max-width: 90vw
@@ -47,6 +47,12 @@ Modal {
 
   -close {
     display: none
+  }
+
+  -dark {
+    div.content {
+      background: #000
+    }
   }
 }
 

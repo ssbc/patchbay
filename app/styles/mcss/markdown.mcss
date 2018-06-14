@@ -3,14 +3,14 @@ Markdown {
   }
 
   // center images (non-emoji)
-  p {
-    a {
-      img {
-        display: block
-        margin: auto
-      }
-    }
-  }
+  // p {
+  //   a {
+  //     img {
+  //       display: block
+  //       margin: auto
+  //     }
+  //   }
+  // }
 
   hr {
     height: 0
