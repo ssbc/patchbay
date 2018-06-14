@@ -20,7 +20,7 @@ button {
   justify-content: center
   align-items: center
 
-  transition: all .1s ease-in
+  transition: border, color, background .1s ease-in
 
   :focus {
     outline: none
@@ -30,8 +30,8 @@ button {
 
   :hover {
     color: #fff
-    background-color: teal
-    border: 1px solid teal
+    background-color: #15d6b4
+    border: 1px solid #15d6b4
     outline: none
   }
 
@@ -48,12 +48,19 @@ button {
   }
 
   -primary {
-    $colorPrimary
-    $borderPrimary
+    color: #fff
+    background-color: #9754de
+    border: 1px solid #9754de
 
     :hover { 
-      opacity: .9
+      background-color: #de54cc
+      border: 1px solid #de54cc
     }
+  }
+
+  -active {
+    color: #aa2cda
+    border: 1px solid #aa2cda
   }
 
   -showMore {
