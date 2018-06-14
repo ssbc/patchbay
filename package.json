@@ -64,7 +64,7 @@
     "patch-suggest": "^2.0.2",
     "patchbay-book": "^1.0.6",
     "patchbay-gatherings": "^2.0.0",
-    "patchbay-poll": "^1.0.1",
+    "patchbay-poll": "^1.0.4",
     "patchcore": "^1.27.1",
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
