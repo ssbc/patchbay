@@ -1,4 +1,10 @@
 Hypertabs {
+  position: fixed
+  top: 0
+  right: 0
+  left: 0
+  bottom: 0
+
   display: flex
   flex-direction: column
 
@@ -114,8 +120,6 @@ Hypertabs {
       flex-grow: 1
 
       display: flex /*hack to get give Scroller context it needs */
-
-      padding-top: .2rem
     }
   }
 }

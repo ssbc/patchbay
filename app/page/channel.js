@@ -34,7 +34,7 @@ exports.create = function (api) {
       })
     }
 
-    const subscribeButton = h('Button -subscribe',
+    const subscribeButton = h('button.-subscribe',
       { 'ev-click': toggleSubscription },
       when(subscribed, 'Unsubscribe from channel', 'Subscribe to channel')
     )

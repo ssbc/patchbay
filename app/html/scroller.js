@@ -6,37 +6,40 @@ exports.gives = nest('app.html.scroller')
 exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
-  function Scroller ({ prepend = [], content = null, append = [] } = {}) {
-    content = content || h('section.content')
+  function Scroller (opts = {}) {
+    const { prepend = [], content = null, append = [], classList = [], className = '', title = '' } = opts
 
-    const container = h('Scroller', { style: { overflow: 'auto' } }, [
-      h('div.wrapper', [
-        h('header', prepend),
-        content,
-        h('footer', append)
-      ])
-    ])
+    const contentSection = h('section.content', content)
 
-    container.scroll = keyscroll(content)
+    const container = h('Scroller',
+      { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },
+      [
+        h('section.top', prepend),
+        contentSection,
+        h('section.bottom', append)
+      ]
+    )
+
+    container.scroll = keyscroll(content || contentSection)
 
     return {
-      content,
+      content: content || contentSection,
       container
     }
   }
 }
 
-function keyscroll (container) {
+function keyscroll (content) {
   var curMsgEl
 
-  if (!container) return () => {}
+  if (!content) return () => {}
 
-  container.addEventListener('click', onActivateChild, false)
-  container.addEventListener('focus', onActivateChild, true)
+  content.addEventListener('click', onActivateChild, false)
+  content.addEventListener('focus', onActivateChild, true)
 
   function onActivateChild (ev) {
     for (var el = ev.target; el; el = el.parentNode) {
-      if (el.parentNode === container) {
+      if (el.parentNode === content) {
         curMsgEl = el
         return
       }
@@ -44,9 +47,9 @@ function keyscroll (container) {
   }
 
   return function scroll (d) {
-    selectChild((!curMsgEl || d === 'first') ? container.firstChild
-      : d < 0 ? curMsgEl.previousElementSibling || container.firstChild
-      : d > 0 ? curMsgEl.nextElementSibling || container.lastChild
+    selectChild((!curMsgEl || d === 'first') ? content.firstChild
+      : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
+      : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
       : curMsgEl)
 
     return curMsgEl
@@ -60,5 +63,4 @@ function keyscroll (container) {
     el.focus()
     curMsgEl = el
   }
-
 }

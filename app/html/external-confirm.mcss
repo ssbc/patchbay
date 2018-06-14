@@ -30,7 +30,6 @@ ExternalConfirm {
 
     }
     button.okay {
-      margin-right: 0
 
     }
   }

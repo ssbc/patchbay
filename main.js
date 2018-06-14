@@ -44,8 +44,8 @@ const sockets = combine(
   require('patchbay-book'),
   // require('patch-network),
   patchbay,
-  require('patchcore'),
-  post
+  post,
+  require('patchcore')
 )
 
 const api = entry(sockets, nest('app.html.app', 'first'))

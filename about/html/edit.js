@@ -192,8 +192,8 @@ exports.create = function (api) {
             h('header', 'click and drag to crop your image'),
             canvas,
             h('section.actions', [
-              h('Button', { 'ev-click': () => cb() }, 'Cancel'),
-              h('Button -primary', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'Okay')
+              h('button', { 'ev-click': () => cb() }, 'Cancel'),
+              h('button -primary', { 'ev-click': () => cb(null, canvas.selection.toDataURL()) }, 'Okay')
             ])
           ])
         )
