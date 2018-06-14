@@ -165,7 +165,7 @@ exports.create = function (api) {
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, api.channel.async.suggest(inputText.slice(1)))
+        api.channel.async.suggest(inputText.slice(1), cb)
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
