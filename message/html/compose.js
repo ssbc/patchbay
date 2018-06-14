@@ -131,7 +131,7 @@ exports.create = function (api) {
 
     fileInput.onclick = () => hasContent.set(true)
 
-    var publishBtn = h('button', { 'ev-click': publish }, 'Publish')
+    var publishBtn = h('button', { 'ev-click': publish }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
       fileInput,
@@ -165,7 +165,7 @@ exports.create = function (api) {
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
-        cb(null, api.channel.async.suggest(inputText.slice(1)))
+        api.channel.async.suggest(inputText.slice(1), cb)
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
