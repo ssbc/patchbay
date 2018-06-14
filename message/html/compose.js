@@ -131,7 +131,7 @@ exports.create = function (api) {
 
     fileInput.onclick = () => hasContent.set(true)
 
-    var publishBtn = h('button', { 'ev-click': publish }, 'Publish')
+    var publishBtn = h('button', { 'ev-click': publish }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
       fileInput,
