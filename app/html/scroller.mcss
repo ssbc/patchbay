@@ -6,7 +6,6 @@ Scroller {
   overflow-y: scroll
   overflow-x: auto
 
-  padding-top: 1rem
 
   display: grid
   justify-content: stretch
@@ -17,6 +16,10 @@ Scroller {
     grid-column: 2 / 3
 
     box-sizing: border-box
+  }
+
+  section.top {
+    margin-top: 1rem
   }
 
   section.content {

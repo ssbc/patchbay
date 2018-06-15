@@ -12,6 +12,17 @@ Markdown {
   //   }
   // }
 
+  p {
+    a {
+      :only-of-type {
+        img {
+          display: block
+          margin: auto
+        }
+      }
+    }
+  }
+
   hr {
     height: 0
     border: solid #ddd

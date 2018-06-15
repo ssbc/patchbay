@@ -113,6 +113,8 @@ Hypertabs {
   }
 
   section.content {
+    // this margin brings the scroll-bar in
+    margin: .5rem .4rem
     display: flex
 
     height: 100% /* needed to stop making nav weird */
