@@ -69,9 +69,9 @@ exports.create = function (api) {
       placeholder: 'Write a reply',
       shrink: false
     })
-    const content = h('section.content', map(messages, m => {
+    const content = map(messages, m => {
       return api.message.html.render(resolve(m), {pageId: root})
-    }))
+    })
     const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
     container.classList.add('Thread')

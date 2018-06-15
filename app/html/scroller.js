@@ -20,10 +20,10 @@ exports.create = function (api) {
       ]
     )
 
-    container.scroll = keyscroll(content || contentSection)
+    container.scroll = keyscroll(contentSection)
 
     return {
-      content: content || contentSection,
+      content: contentSection,
       container
     }
   }
