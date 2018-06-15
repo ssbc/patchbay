@@ -24,6 +24,10 @@ Scroller {
       border-bottom: solid 1px gainsboro
     }
   }
+
+  section.bottom {
+    margin-bottom: 10rem
+  }
 }
 
 Scroller -errors {
