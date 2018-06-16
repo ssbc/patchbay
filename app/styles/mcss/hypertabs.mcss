@@ -2,67 +2,85 @@ Hypertabs {
   display: flex
   flex-direction: column
 
-  height: 100% /* needed to stop scroller blowing out */
+  top: var(--app-border-width)
+  bottom: var(--app-border-width)
+  left: var(--app-border-width)
+  right: var(--app-border-width)
+
+  height: initial
 
   nav {
     display: flex
     
-    background: linear-gradient(to bottom, #efefef, #e5e5e5)
+    background: none
 
     section.tabs {
-      padding: .5rem 0 0 .5rem
+      min-width: 0
 
       flex-grow: 1
       display: flex
-      min-width: 0
 
       div.tab {
         flex-grow: 1
+
+        min-width: 3.5rem
+        font-size: .9rem
+        background: rgba(0, 0, 0, 0)
+          
+        overflow: hidden
+
+        padding: 0
+        border: none
+        margin: 0 .3rem 0 0 
 
         display: flex
         align-items: center
         justify-content: space-between
 
-        min-width: 3.5rem
-        font-size: .9rem
-        background-color: #efefef
-        overflow: hidden
-
-        padding: 0
-        margin-left: .3rem
-        border: none
+        transition: all .1s ease-in
 
         :hover {
-          background-color: #f8f8f8
+          background: var(--app-border-background-mid)
+
+          a.link {
+            color: var(--app-border-color)
+          }
+
           a.close {
             visibility: visible
           }
         }
 
         -selected {
-          color: #222
-          background-color: #fff
-
-          :hover {
-            background-color: #fff
-          }
+          color: var(--page-color)
+          background: var(--page-background)
 
           a.link {
+            color: var(--page-color)
             text-decoration: none
             max-width: calc(100% - 2rem)
+            cursor: default
           }
           a.close {
             visibility: visible
           }
+
+          :hover {
+            background: var(--page-background)
+
+            a.link {
+              color: var(--page-color)
+            }
+          }
+
         }
 
         -notify {
           background-color: orange;
         }
 
-
         a {
-          color: #666
+          color: var(--app-border-color)
 
           :hover {
             text-decoration: none
@@ -79,6 +97,7 @@ Hypertabs {
           text-overflow: ellipsis
 
           padding: .45rem 0 .45rem .6rem
+          /* padding: 0 0 var(--app-border-width) .6rem */
         }
 
         a.close {
@@ -106,18 +125,20 @@ Hypertabs {
     }
 
     div.navExtra {
-      padding-top: .2rem
+      padding-bottom: var(--app-border-width)
       display: flex
       align-items: center
     }
   }
 
   section.content {
-    // this margin brings the scroll-bar in
-    margin: .5rem .4rem
-    display: flex
+    background-color: var(--page-background)
+    // this brings the scroll-bar in
+    padding: .5rem .4rem
 
     height: 100% /* needed to stop making nav weird */
+
+    display: flex
 
     div.page {
       flex-grow: 1

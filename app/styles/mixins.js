@@ -15,7 +15,7 @@ exports.create = function (api) {
 
 const mainMixins = `
 $textPrimary {
-  color: #222
+  color: var(--page-color)
 }
 
 $textSubtle {

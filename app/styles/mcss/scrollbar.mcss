@@ -5,10 +5,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(65, 3, 82, 0.48)
+  background-color: var(--scrollbar-color)
 
   :hover {
-    background-color: rgba(65, 3, 82, 0.55)
+    background-color: var(--scrollbar-color-hover)
   }
 }
 
