@@ -1,5 +1,5 @@
 App {
-  background-color: var(--app-border-background)
+  background: var(--app-border-background)
   position: absolute
 
   top: 0

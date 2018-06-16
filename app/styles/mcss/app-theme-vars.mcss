@@ -1,5 +1,4 @@
 App {
-  
   --app-border-background: rgb(0, 0, 0)
   --app-border-background-mid: rgba(218, 139, 255, 0.47)
   --app-border-width: .3rem

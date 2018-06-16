@@ -37,54 +37,10 @@ Hypertabs {
         align-items: center
         justify-content: space-between
 
-        transition: all .1s ease-in
-
-        :hover {
-          background: var(--app-border-background-mid)
-
-          a.link {
-            color: var(--app-border-color)
-          }
-
-          a.close {
-            visibility: visible
-          }
-        }
-
-        -selected {
-          color: var(--page-color)
-          background: var(--page-background)
-
-          a.link {
-            color: var(--page-color)
-            text-decoration: none
-            max-width: calc(100% - 2rem)
-            cursor: default
-          }
-          a.close {
-            visibility: visible
-          }
-
-          :hover {
-            background: var(--page-background)
-
-            a.link {
-              color: var(--page-color)
-            }
-          }
-
-        }
-
-        -notify {
-          background-color: orange;
-        }
-
         a {
           color: var(--app-border-color)
-
-          :hover {
-            text-decoration: none
-          }
+          outline: none
+          :hover { text-decoration: none }
         }
 
         a.link {
@@ -103,7 +59,9 @@ Hypertabs {
         a.close {
           visibility: hidden
           font-family: monospace
+          font-weight: 600
           line-height: 1rem
+
           width: .9rem
           height: .9rem
           /* border-radius: 1rem */
@@ -114,10 +72,45 @@ Hypertabs {
           justify-content: center
 
           :hover {
-            background: #aaaaaa
-            color: #fff
-            font-weight: 600
+            background: var(--page-background)
+            color: var(--page-color)
           }
+        }
+
+        :hover {
+          background: var(--app-border-background-mid)
+          a.link { color: var(--app-border-color) }
+          a.close { visibility: visible }
+          transition: all .2s ease-in
+        }
+
+        -selected {
+          color: var(--page-color)
+          background: var(--page-background)
+
+          a.link {
+            color: var(--page-color)
+            text-decoration: none
+            max-width: calc(100% - 2rem)
+            cursor: default
+          }
+          a.close {
+            visibility: visible
+            color: var(--page-color)
+
+            :hover {
+            }
+          }
+
+          :hover {
+            background: var(--page-background)
+            a.link { color: var(--page-color) }
+            transition: none
+          }
+        }
+
+        -notify {
+          background-color: orange;
         }
 
       }
