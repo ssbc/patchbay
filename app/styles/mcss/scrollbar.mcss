@@ -1,0 +1,19 @@
+/* reference: https://css-tricks.com/custom-scrollbars-in-webkit/ */
+
+::-webkit-scrollbar {
+  width: 8px
+  height: 8px
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color)
+
+  :hover {
+    background-color: var(--scrollbar-color-hover)
+  }
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0,0,0,0.1)
+  margin: .5rem
+}

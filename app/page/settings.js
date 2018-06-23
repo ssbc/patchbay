@@ -25,7 +25,6 @@ exports.create = function (api) {
     }, '/settings')
   }
 
-
   function settingsPage (location) {
     var page = h('SettingsPage', { title: '/settings' }, [
       h('div.container', [
@@ -41,8 +40,8 @@ exports.create = function (api) {
       ])
     ])
 
-    var { container, content } = api.app.html.scroller({ prepend: page })
-    container.title = 'Settings'
+    var { container } = api.app.html.scroller({ prepend: page })
+    container.title = '/settings'
     return container
   }
 }

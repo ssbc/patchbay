@@ -1,70 +1,53 @@
-Message {
-  padding: 1rem .5rem 1rem 6rem
-  /* min-height: 5rem */
+Message -default {
+  padding: 1rem .5rem
 
-  position: relative
-  display: flex
-  flex-direction: row
-  flex-wrap: wrap
-  justify-content: flex-end
+  display: grid
+  grid-template-columns: 5rem auto
 
   section.avatar {
-    position: absolute
-    left: .5rem
-    
+    grid-column: 1 / 2
+    grid-row: 1 / span 4
     a img {
     }
   }
 
-  section.timestamp {
-    position: absolute
-    left: .5rem
-    top: 5rem
+  section.top {
+    grid-column: 2 / 3
+    grid-row: 1 / span 1
 
-    a {
-      font-size: .8rem
-      $textSubtle
-    }
-  }
-
-  header.author {
-    margin-right: .4rem
-  }
-
-  section.meta {
     display: flex
-    flex-grow: 1
-    justify-content: flex-end
-    align-items: center
-    * {
-      margin-left: .4rem
+    align-items: baseline
+    
+    div.author {
+      font-weight: 600
+      margin-right: .5rem
+      (a) { color: #222 }
     }
 
-    a {
+    div.title {
+      flex-grow: 1
+      font-size: .9rem
       $textSubtle
+      (a) { $textSubtle }
     }
- 
-    /* this is for private message_meta, TODO find a better home */
-    (img) {
-      height: 1.8rem
-      width: 1.8rem
-      margin: 0 .2rem -.2rem
-    }
-  }
 
-  section.title {
-    flex-basis: 100%
-    font-size: .9rem
+    div.meta {
+      display: flex
+      justify-content: flex-end
+      align-items: center
 
-    span, span a {
-      $textSubtle
+      a {
+        $textSubtle
+        margin-left: .5rem
+      }
     }
   }
 
   section.content {
-    flex-basis: 100%
+    grid-column: 2 / 3
+    grid-row: 2 / span 1
 
-    margin-top: .4rem
+    margin-bottom: .5rem
 
     (img) {
       max-width: 100%
@@ -74,9 +57,41 @@ Message {
     }
   }
 
+  section.bottom {
+    grid-column: 2 / 3
+    grid-row: 4 / span 1
+
+    display: flex
+    align-items: center
+
+    div.timestamp {
+      flex-grow: 1
+
+      a {
+        font-size: .9rem
+        $textSubtle
+      }
+    }
+
+    div.actions {
+      display: flex
+      justify-content: flex-end
+
+      font-size: .9rem
+      a {
+        margin-left: .5em
+      }
+
+      a.unlike {
+        $textSubtle
+      }
+    }
+  }
+
   section.raw-content {
-    margin-left: -5.5rem
-    flex-basis: 118%
+    grid-column: 2 / 3
+    grid-row: 3 / span 1
+
     pre {
       border: 1px gainsboro solid
       padding: .8rem
@@ -95,24 +110,10 @@ Message {
     }
   }
 
-  section.actions {
-    flex-basis: 100%
-    display: flex
-    justify-content: flex-end
-
-    font-size: .9rem
-    a {
-      margin-left: .5em
-    }
-
-    a.unlike {
-      $textSubtle
-    }
-  }
-
   footer.backlinks {
+    grid-row: 5 / span 1
+
+    grid-column: 2 / 3
     flex-basis: 100%
   }
-
-
 }
