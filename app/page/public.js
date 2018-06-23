@@ -2,8 +2,8 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-
-const next = require('../../junk/next-stepper')
+const next = require('pull-next-query')
+const merge = require('lodash/merge')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -14,7 +14,8 @@ exports.needs = nest({
   'app.html.filter': 'first',
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
-  'feed.pull.public': 'first',
+  // 'feed.pull.public': 'first',
+  'sbot.pull.stream': 'first',
   'message.html.compose': 'first',
   'message.html.render': 'first'
 })
@@ -41,6 +42,14 @@ exports.create = function (api) {
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
 
+    const createStream = (opts) => api.sbot.pull.stream(server => {
+      const _opts = merge({}, opts, {
+        query: [{$filter: { timestamp: {$gt: 0} }}]
+      })
+
+      return next(server.query.read, _opts, ['timestamp'])
+    })
+
     // TODO : build a pull-stream which has seperate state + rendering
     function draw () {
       resetFeed({ container, content })
@@ -52,13 +61,13 @@ exports.create = function (api) {
 
       // TODO - change to use ssb-query, streamed by publish time
       pull(
-        next(api.feed.pull.public, {old: false, limit: 100, live: true}, ['timestamp']),
+        createStream({old: false, limit: 100, live: true}),
         filterUpThrough(),
         Scroller(container, content, render, true, false)
       )
 
       pull(
-        next(api.feed.pull.public, {reverse: true, limit: 100, live: false}, ['timestamp']),
+        createStream({reverse: true, limit: 100, live: false}),
         filterDownThrough(),
         Scroller(container, content, render, false, false)
       )

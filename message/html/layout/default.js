@@ -27,9 +27,7 @@ exports.create = (api) => {
     var rawMessage = Value(null)
 
     return h('Message -default', {
-      attributes: {
-        tabindex: '0' // needed to be able to navigate and show focus()
-      }
+      attributes: { tabindex: '0' } // needed to be able to navigate and show focus()
     }, [
       h('section.avatar', {}, api.about.html.avatar(msg.value.author)),
       h('section.top', [

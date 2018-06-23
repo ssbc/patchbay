@@ -40,13 +40,6 @@ Message -default {
         $textSubtle
         margin-left: .5rem
       }
-   
-      /* this is for private message_meta, TODO find a better home */
-      (img) {
-        height: 1.8rem
-        width: 1.8rem
-        margin: 0 .2rem -.2rem
-      }
     }
   }
 
@@ -116,7 +109,6 @@ Message -default {
       }
     }
   }
-
 
   footer.backlinks {
     grid-row: 5 / span 1
