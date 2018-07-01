@@ -13,6 +13,7 @@ ThreadCard {
   -loading {
     min-height: 20rem
   }
+  outline: none
 
   display: grid
   grid-template-columns: 8rem 1fr
@@ -103,6 +104,16 @@ ThreadCard {
           font-weight: 600 
         }
         div.preview { margin-left: .5rem }
+      }
+    }
+  }
+  :focus {
+    section.content-preview {
+      div.root {
+        div.Markdown {
+          background: #6f0055
+          transition: background .2s ease-in
+        }
       }
     }
   }

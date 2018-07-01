@@ -163,7 +163,10 @@ exports.create = function (api) {
     return h('ThreadCard',
       {
         className,
-        attributes: { tabindex: '0' } // needed to be able to navigate and show focus()
+        attributes: {
+          tabindex: '0', // needed to be able to navigate and show focus()
+          'data-id': key // TODO do this with decorators?
+        }
       }, [
         h('section.context', [
           h('div.avatar', root.avatar),
