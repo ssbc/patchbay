@@ -1,0 +1,109 @@
+Posts {
+  grid-template-columns: auto minmax(800px, 1200px) 1rem auto
+
+  section.content {
+    div.ThreadCard {
+      border: none
+      margin-top: 3rem
+    }
+  }
+}
+
+ThreadCard {
+  -loading {
+    min-height: 20rem
+  }
+
+  display: grid
+  grid-template-columns: 8rem 1fr
+  grid-gap: 2rem
+
+  section.context {
+    display: grid
+    grid-gap: 1rem
+    align-content: start
+    justify-items: end
+
+    div.avatar {
+      height: 4rem
+      width: 4rem
+      a {
+        height: 4rem
+        width: 4rem
+        img {
+          height: 4rem
+          width: 4rem
+        }
+      }
+    }
+    div.name {
+      a {
+        color: #222
+        font-weight: 600
+        text-decoration: none
+      }
+    }
+    div.counts {
+      display: grid
+      grid-template-columns: auto auto auto
+      grid-gap: 1rem
+
+      div {
+        display: flex
+        align-items: center
+        i { margin-left: .3rem }
+      }
+    }
+
+    div.participants {
+      display: flex
+      justify-content: flex-end
+      flex-wrap: wrap
+
+      a {
+        height: 2rem
+        width: 2rem
+        margin: 0 0 .5rem .5rem
+        img {
+          height: 2rem
+          width: 2rem
+        }
+      }
+    }
+  }
+
+  section.content-preview {
+    cursor: pointer
+
+    div.root {
+      div.Markdown {
+        background-color: #000
+        color: #fff
+        line-height: 1.4rem
+        padding: 2rem
+
+        max-height: 20rem
+        overflow: hidden
+
+        p {
+          :first-of-type { margin-top: 0 }
+        }
+        (img) { max-width: 100% }
+      }
+    }
+
+    div.recent {
+      div.msg {
+        margin: 1rem 2rem 0 2rem
+        display: flex
+
+        :last-child { margin-bottom: .5rem }
+
+        div.author {
+          font-weight: 600 
+        }
+        div.preview { margin-left: .5rem }
+      }
+    }
+  }
+}
