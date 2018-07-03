@@ -82,7 +82,7 @@ exports.create = function (api) {
               value: {
                 content: {
                   type: 'post',
-                  recps: { $is: 'undefined' }
+                  recps: { $not: true }
                 }
               }
             }

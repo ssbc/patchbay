@@ -1,6 +1,17 @@
 Posts {
   grid-template-columns: auto minmax(800px, 1200px) 1rem auto
 
+  section.top {
+    display: grid
+    grid-template-columns: 8rem 1fr
+    grid-gap: 2rem
+    
+    div.Compose {
+      grid-column: 2 / 3
+      padding: 0
+    }
+  }
+
   section.content {
     div.ThreadCard {
       border: none
