@@ -39,7 +39,7 @@ exports.create = function (api) {
   // TODO refactor this to use obs better
   function edit (id) {
     // TODO - get this to wait till the connection is present !
-    var mutual = Mutual.init(api.sbot.obs.connection())
+    // var mutual = Mutual.init(api.sbot.obs.connection())
 
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
@@ -86,16 +86,17 @@ exports.create = function (api) {
 
     var balances_div = h('div.balances')
 
-    mutual.getAccountBalances(id, (error, balances) => {
-      if (balances == null) return ''
+    // TODO install ssb-mutual correctly as a plugin, access it usual way
+    // mutual.getAccountBalances(id, (error, balances) => {
+    //   if (balances == null) return ''
 
-      var balance_els = []
-      Object.keys(balances).forEach(function (key) {
-        balances_div.appendChild(
-          h('div', `💰 ${balances[key]} ${key}`)
-        )
-      })
-    })
+    //   var balance_els = []
+    //   Object.keys(balances).forEach(function (key) {
+    //     balances_div.appendChild(
+    //       h('div', `💰 ${balances[key]} ${key}`)
+    //     )
+    //   })
+    // })
 
     return h('AboutEditor', [
       lightbox,
