@@ -40,61 +40,72 @@ exports.create = function (api) {
   }
 
   function postsPage (location) {
-    const BY_UPDATE = 'by_update'
-    const BY_ROOT = 'by_root'
+    const BY_UPDATE = 'by update'
+    const BY_ROOT = 'by root'
 
-    const composer = api.message.html.compose({
+    const state = Value(BY_UPDATE)
+    const viewSettings = h('section.viewSettings', [
+      h('button', 'hey!')
+    ])
+
+    return computed(state, state => {
+      var page = byUpdatePage()
+
+      page.title = '/posts'
+      page.scroll = keyscroll(page.querySelector('section.content'))
+      return page
+    })
+
+    function byUpdatePage () {
+      return Scroller({
+        classList: ['Posts'],
+        prepend: [
+          viewSettings,
+          Composer(location)
+        ],
+        streamToTop: createStream({ live: true, old: false }),
+        streamToBottom: createStream({ reverse: true }),
+        updateTop: (soFar, msg) => {
+          const root = getRoot(msg)
+          if (soFar.includes(root)) soFar.delete(root)
+          soFar.insert(root)
+        },
+        updateBottom: (soFar, msg) => {
+          const root = getRoot(msg)
+          if (!soFar.includes(root)) soFar.push(root)
+        },
+        render
+      })
+
+      function createStream (opts) {
+        return api.sbot.pull.stream(server => {
+          // by_update - stream by receive time
+          const defaults = {
+            limit: 50,
+            query: [{
+              $filter: {
+                timestamp: { $gt: 0 },
+                value: {
+                  content: {
+                    type: 'post',
+                    recps: { $not: true }
+                  }
+                }
+              }
+            }]
+          }
+          return next(server.query.read, merge({}, defaults, opts), ['timestamp'])
+        })
+      }
+    }
+  }
+
+  function Composer (location) {
+    return api.message.html.compose({
       location,
       meta: { type: 'post' },
       placeholder: 'Write a public message'
     })
-
-    const store = MutantArray([])
-
-    const page = Scroller({
-      classList: ['Posts'],
-      prepend: [
-        composer
-      ],
-      streamToTop: createStream({ live: true, old: false }),
-      streamToBottom: createStream({ reverse: true }),
-      store,
-      updateTop: (soFar, msg) => {
-        const root = getRoot(msg)
-        if (soFar.includes(root)) soFar.delete(root)
-        soFar.insert(root)
-      },
-      updateBottom: (soFar, msg) => {
-        const root = getRoot(msg)
-        if (!soFar.includes(root)) soFar.push(root)
-      },
-      render
-    })
-
-    function createStream (opts) {
-      return api.sbot.pull.stream(server => {
-        // by_update - stream by receive time
-        const defaults = {
-          limit: 50,
-          query: [{
-            $filter: {
-              timestamp: { $gt: 0 },
-              value: {
-                content: {
-                  type: 'post',
-                  recps: { $not: true }
-                }
-              }
-            }
-          }]
-        }
-        return next(server.query.read, merge({}, defaults, opts), ['timestamp'])
-      })
-    }
-
-    page.title = '/posts'
-    page.scroll = keyscroll(page.querySelector('section.content'))
-    return page
   }
 
   // TODO - move out into message.html.render ?
