@@ -3,13 +3,12 @@ const dataurl = require('dataurl-')
 const hyperfile = require('hyperfile')
 const hypercrop = require('hypercrop')
 const hyperlightbox = require('hyperlightbox')
-const Mutual = require('ssb-mutual')
-
 const {
-  h, Value, Dict: MutantObject, Struct,
-  map, computed, when, dictToCollection
+  h, Value, Dict, Struct,
+  map, computed, when, dictToCollection, onceTrue
 } = require('mutant')
 const pull = require('pull-stream')
+const Mutual = require('ssb-mutual')
 
 exports.gives = nest('about.html.edit')
 
@@ -39,11 +38,10 @@ exports.create = function (api) {
   // TODO refactor this to use obs better
   function edit (id) {
     // TODO - get this to wait till the connection is present !
-    // var mutual = Mutual.init(api.sbot.obs.connection())
 
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
-      new: MutantObject()
+      new: Dict()
     })
 
     const links = api.sbot.pull.links
@@ -55,7 +53,7 @@ exports.create = function (api) {
 
     const images = computed(api.about.obs.groupedValues(id, 'image'), Object.keys)
 
-    var namesRecord = MutantObject()
+    var namesRecord = Dict()
     // TODO constrain query to one name per peer?
     pull(
       links({dest: id, rel: 'about', values: true}),
@@ -84,19 +82,17 @@ exports.create = function (api) {
       else return name.current
     })
 
-    var balances_div = h('div.balances')
+    var balances = Dict()
+    onceTrue(api.sbot.obs.connection, sbot => {
+      if (!sbot.links) throw new Error('where ma sbot.links at?!')
+      var mutual = Mutual.init(sbot)
+      mutual.getAccountBalances(id, (err, data) => {
+        if (err) console.log(err)
+        if (data == null) return
 
-    // TODO install ssb-mutual correctly as a plugin, access it usual way
-    // mutual.getAccountBalances(id, (error, balances) => {
-    //   if (balances == null) return ''
-
-    //   var balance_els = []
-    //   Object.keys(balances).forEach(function (key) {
-    //     balances_div.appendChild(
-    //       h('div', `💰 ${balances[key]} ${key}`)
-    //     )
-    //   })
-    // })
+        balances.set(data)
+      })
+    })
 
     return h('AboutEditor', [
       lightbox,
@@ -110,7 +106,9 @@ exports.create = function (api) {
         if (descr == null) return '' // TODO: should be in patchcore, I think...
         return api.message.html.markdown(descr)
       })),
-      h('section.credit', balances_div),
+      h('section.credit', map(dictToCollection(balances), balance => {
+        return h('div', ['💰 ', balance.value, ' ', balance.key])
+      })),
       h('section.aliases', [
         h('header', 'Aliases'),
         h('section.avatars', [
