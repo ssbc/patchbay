@@ -108,6 +108,8 @@ function openMainWindow () {
       height: windowState.height,
       autoHideMenuBar: true,
       title: 'Patchbay',
+      frame: !process.env.FRAME,
+      // titleBarStyle: 'hidden',
       show: true,
       backgroundColor: '#FFF',
       icon: './assets/icon.png'
