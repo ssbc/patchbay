@@ -1,34 +1,29 @@
-var fs = require('fs')
-var Path = require('path')
-var electron = require('electron')
+const electron = require('electron')
+const Client = require('ssb-client')
+const scuttleshell = require('scuttle-shell')
 
-console.log('STARTING SBOT')
+// Get config options from depject
+const config = require('./config').create().config.sync.load()
 
-var createSbot = require('scuttlebot')
-  .use(require('scuttlebot/plugins/master'))
-  .use(require('scuttlebot/plugins/gossip'))
-  .use(require('scuttlebot/plugins/replicate'))
-  .use(require('scuttlebot/plugins/invite'))
-  .use(require('scuttlebot/plugins/local'))
-  .use(require('scuttlebot/plugins/logging'))
-  .use(require('ssb-about'))
-  .use(require('ssb-backlinks'))
-  .use(require('ssb-blobs'))
-  .use(require('ssb-chess-db'))
-  .use(require('ssb-ebt'))
-  .use(require('ssb-friends'))
-  .use(require('ssb-meme'))
-  .use(require('ssb-private'))
-  .use(require('ssb-query'))
-  .use(require('ssb-search'))
-  .use(require('ssb-unread'))
-  .use(require('ssb-ws'))
-  // .use(require('ssb-mutual')) // this is has recursion problems atm
+// Check if scuttle-shell is already running
+// TODO - make this check for scuttle-shell specifically (and not just an sbot)
 
-// pull config options out of depject
-var config = require('./config').create().config.sync.load()
-
-var sbot = createSbot(config)
-var manifest = sbot.getManifest()
-fs.writeFileSync(Path.join(config.path, 'manifest.json'), JSON.stringify(manifest))
-electron.ipcRenderer.send('server-started')
+Client(config.keys, config, (err, server) => {
+  // err implies no server currently running
+  if (err) {
+    console.warn('client connection failed:', err)
+    console.log('> starting scuttle-shell')
+    scuttleshell.start({}, (startErr) => {
+	  console.log('start done!', startErr)
+      if (startErr) {
+        console.error('failed to start scuttle-shell:', startErr)
+      } else {
+        electron.ipcRenderer.send('server-started')
+      }
+    })
+  } else {
+    console.log('> scuttle-shell / sbot already running')
+    server.close() // close this connection (app starts one of its own)
+    electron.ipcRenderer.send('server-started')
+  }
+})
