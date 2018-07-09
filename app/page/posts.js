@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
+const { h, Value, Array: MutantArray, Struct, computed, map } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
@@ -29,7 +29,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.posts': postsPage,
+    'app.page.posts': postsPage
   })
 
   function menuItem () {
@@ -40,16 +40,28 @@ exports.create = function (api) {
   }
 
   function postsPage (location) {
-    const BY_UPDATE = 'by update'
-    const BY_ROOT = 'by root'
+    const BY_UPDATE = 'Update'
+    const BY_START = 'Start'
 
-    const state = Value(BY_UPDATE)
+    const state = Struct({
+      sort: Value(BY_UPDATE)
+    })
     const viewSettings = h('section.viewSettings', [
-      h('button', 'hey!')
+      'Sort by: ',
+      h('button', {
+        className: computed(state.sort, s => s === BY_UPDATE ? '-primary' : ''),
+        'ev-click': () => state.sort.set(BY_UPDATE)
+      }, BY_UPDATE),
+      h('button', {
+        className: computed(state.sort, s => s === BY_START ? '-primary' : ''),
+        'ev-click': () => state.sort.set(BY_START)
+      }, BY_START)
     ])
 
     return computed(state, state => {
-      var page = byUpdatePage()
+      var page
+      if (state.sort === BY_UPDATE) page = PageByUpdate()
+      if (state.sort === BY_START) page = PageByStart()
 
       page.title = '/posts'
       page.id = '{"page": "posts"}' // this is needed because our page is a computed
@@ -57,7 +69,7 @@ exports.create = function (api) {
       return page
     })
 
-    function byUpdatePage () {
+    function PageByUpdate () {
       return Scroller({
         classList: ['Posts'],
         prepend: [
@@ -80,7 +92,6 @@ exports.create = function (api) {
 
       function createStream (opts) {
         return api.sbot.pull.stream(server => {
-          // by_update - stream by receive time
           const defaults = {
             limit: 50,
             query: [{
@@ -96,6 +107,42 @@ exports.create = function (api) {
             }]
           }
           return next(server.query.read, merge({}, defaults, opts), ['timestamp'])
+        })
+      }
+    }
+
+    function PageByStart () {
+      return Scroller({
+        classList: ['Posts'],
+        prepend: [
+          viewSettings,
+          Composer(location)
+        ],
+        streamToTop: createStream({ live: true, old: false }),
+        streamToBottom: createStream({ reverse: true }),
+        render
+      })
+
+      function createStream (opts) {
+        return api.sbot.pull.stream(server => {
+          const defaults = {
+            limit: 50,
+            query: [{
+              $filter: {
+                value: {
+                  timestamp: { $gt: 0 },
+                  content: {
+                    type: 'post',
+                    root: { $not: true },
+                    recps: { $not: true }
+                  }
+                }
+              }
+            }, {
+              $map: 'key' // TODO - this means this stream behvaues same as PageByUpdate (only keys in store)
+            }]
+          }
+          return next(server.query.read, merge({}, defaults, opts), ['value', 'timestamp'])
         })
       }
     }
