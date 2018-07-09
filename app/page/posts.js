@@ -29,7 +29,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
-    'app.page.posts': postsPage
+    'app.page.posts': postsPage,
   })
 
   function menuItem () {
@@ -52,6 +52,7 @@ exports.create = function (api) {
       var page = byUpdatePage()
 
       page.title = '/posts'
+      page.id = '{"page": "posts"}' // this is needed because our page is a computed
       page.scroll = keyscroll(page.querySelector('section.content'))
       return page
     })

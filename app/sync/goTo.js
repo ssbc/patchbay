@@ -31,25 +31,18 @@ exports.create = function (api) {
     const tabs = api.app.html.tabs()
 
     // currently do normalisation here only to generate normalised locationId
-    api.router.async.normalise(location, (err, location) => {
-      const locationId = api.app.sync.locationId(location)
+    api.router.async.normalise(location, (err, loc) => {
+      const locationId = api.app.sync.locationId(loc)
 
       var page = tabs.get(locationId)
       if (page) {
         tabs.select(locationId)
-
-        if (location.value) { // if there's a value it's not just a hydrated locationId
-          if (page && page.firstChild && page.firstChild.scrollDownToMessage) {
-            page.firstChild.scrollDownToMessage(location.key)
-          }
-        }
-
-        api.history.sync.push(location)
+        api.history.sync.push(loc)
 
         return true
       }
 
-      api.router.async.router(location, (err, page) => {
+      api.router.async.router(loc, (err, page) => {
         if (err) throw err
 
         if (!page) return
@@ -62,9 +55,9 @@ exports.create = function (api) {
           var _history = history()
           var current = _history.pop()
 
-          history.set([ ..._history, location, current ])
+          history.set([ ..._history, loc, current ])
         } else {
-          api.history.sync.push(location)
+          api.history.sync.push(loc)
         }
       })
     })
