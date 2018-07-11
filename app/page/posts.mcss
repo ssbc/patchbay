@@ -6,6 +6,25 @@ Posts {
     grid-template-columns: 8rem 1fr
     grid-gap: 2rem
     
+    section.viewSettings {
+      div.sort {}
+
+      div.show {
+        div.toggle {
+          color: #999
+          cursor: pointer
+
+          i { margin-right: .5rem }
+
+          -active {
+            color: #222
+            i { color: #9754de }
+          }
+        }
+      
+      }
+    }
+
     div.Compose {
       grid-column: 2 / 3
       padding: 0
@@ -21,9 +40,7 @@ Posts {
 }
 
 ThreadCard {
-  -loading {
-    min-height: 20rem
-  }
+  -loading { min-height: 10rem }
   outline: none
 
   display: grid
