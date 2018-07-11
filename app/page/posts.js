@@ -45,7 +45,7 @@ exports.create = function (api) {
     const BY_START = 'Start'
 
     const state = Struct({
-      sort: Value(BY_START),
+      sort: Value(BY_UPDATE),
       show: Struct({
         feedId: Value(api.keys.sync.id()),
         started: Value(true),
@@ -56,19 +56,8 @@ exports.create = function (api) {
     // const feedRoots = getFeedRoots(state.show.feedId)
 
     const viewSettings = h('section.viewSettings', [
-      h('div.sort', [
-        'Sort by: ',
-        h('button', {
-          className: computed(state.sort, s => s === BY_UPDATE ? '-primary' : ''),
-          'ev-click': () => state.sort.set(BY_UPDATE)
-        }, BY_UPDATE),
-        h('button', {
-          className: computed(state.sort, s => s === BY_START ? '-primary' : ''),
-          'ev-click': () => state.sort.set(BY_START)
-        }, BY_START)
-      ]),
       h('div.show', [
-        'Show threads: ',
+        h('span', 'Show threads:'),
         h('div.toggle',
           { className: when(state.show.started, '-active'), 'ev-click': () => state.show.started.set(!state.show.started()) },
           [ h('i.fa.fa-eye'), 'started' ]
@@ -81,6 +70,17 @@ exports.create = function (api) {
           { className: when(state.show.other, '-active'), 'ev-click': () => state.show.other.set(!state.show.other()) },
           [ h('i.fa.fa-eye', {}), 'other' ]
         )
+      ]),
+      h('div.sort', [
+        h('span', 'Sort by:'),
+        h('button', {
+          className: computed(state.sort, s => s === BY_UPDATE ? '-primary' : ''),
+          'ev-click': () => state.sort.set(BY_UPDATE)
+        }, BY_UPDATE),
+        h('button', {
+          className: computed(state.sort, s => s === BY_START ? '-primary' : ''),
+          'ev-click': () => state.sort.set(BY_START)
+        }, BY_START)
       ])
     ])
 
@@ -230,29 +230,31 @@ exports.create = function (api) {
               'data-id': key // TODO do this with decorators?
             }
           }, [
-            h('section.context', [
+            h('section.authored', [
               h('div.avatar', root.avatar),
               h('div.name', root.authorName),
-              h('div.timestamp', root.timestamp),
-              h('div.counts', [
-                h('div.comments', [ repliesCount, h('i.fa.fa-comment-o') ]),
-                h('div.likes', [ likesCount, h('i.fa.fa-heart-o') ]),
-                h('div.backlinks', [ backlinksCount, h('i.fa.fa-link') ])
-              ]),
-              h('div.participants', map(participants, api.about.html.avatar))
+              h('div.timestamp', root.timestamp)
             ]),
             h('section.content-preview', { 'ev-click': onClick }, [
               h('div.root', root.md),
               h('div.recent', map(recent, msg => {
                 return h('div.msg', [
-                  h('div.author', api.about.obs.name(msg.value.author)),
+                  h('span.author', api.about.obs.name(msg.value.author)),
                   ': ',
-                  h('div.preview', [
+                  h('span.preview', [
                     api.message.html.markdown(msg.value.content).innerText.slice(0, 120),
                     '...'
                   ])
                 ])
               }))
+            ]),
+            h('section.stats', [
+              h('div.participants', map(participants, api.about.html.avatar)),
+              h('div.counts', [
+                h('div.comments', [ repliesCount, h('i.fa.fa-comment-o') ]),
+                h('div.likes', [ likesCount, h('i.fa.fa-heart-o') ]),
+                h('div.backlinks', [ backlinksCount, h('i.fa.fa-link') ])
+              ])
             ])
           ]
         )
