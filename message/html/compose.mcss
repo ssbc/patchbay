@@ -64,8 +64,9 @@ Compose {
     input[type="file"] {
       width: 1.8rem
       height: 1.8rem
-      curor: pointer
+      cursor: pointer
       color: transparent
+      font-family: FontAwesome
       border: 1px rgba(0,0,0,0) solid
 
       ::-webkit-file-upload-button {
