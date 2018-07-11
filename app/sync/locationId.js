@@ -8,7 +8,7 @@ exports.create = function (api) {
   return nest('app.sync.locationId', locationId)
 
   function locationId (location) {
-    if (typeof location === 'string') return string
+    if (typeof location === 'string') return location
 
     if (isMsg(location.key)) {
       // for all messages make the thread root key the 'locationId'

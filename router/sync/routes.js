@@ -6,6 +6,7 @@ exports.gives = nest('router.sync.routes')
 exports.needs = nest({
   'app.page': {
     'errors': 'first',
+    'posts': 'first',
     'public': 'first',
     'private': 'first',
     'notifications': 'first',
@@ -28,6 +29,7 @@ exports.create = (api) => {
 
     // loc = location
     const routes = [
+      [ loc => loc.page === 'posts', pages.posts ],
       [ loc => loc.page === 'public', pages.public ],
       [ loc => loc.page === 'private', pages.private ],
       [ loc => loc.page === 'notifications', pages.notifications ],

@@ -75,7 +75,7 @@ Compose {
       ::before {
         padding-top: .3rem
 
-        content: '📎'
+        content: '\f0c6'
         font-size: 1rem
         color: #666;
         background-color: #fff
