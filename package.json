@@ -56,7 +56,7 @@
     "micro-css": "^2.0.1",
     "mutant": "^3.22.1",
     "mutant-pull-reduce": "^1.1.0",
-    "mutant-scroll": "^1.0.1",
+    "mutant-scroll": "^1.0.2",
     "open-external": "^0.1.1",
     "patch-context": "^2.0.1",
     "patch-drafts": "0.0.6",
