@@ -2,8 +2,7 @@ const nest = require('depnest')
 const Scroller = require('pull-scroll')
 const pull = require('pull-stream')
 const { h, watch } = require('mutant')
-
-const next = require('../../junk/next-stepper')
+const next = require('pull-next-query')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -18,7 +17,7 @@ exports.needs = nest({
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first',
-  'sbot.pull.userFeed': 'first'
+  'sbot.pull.stream': 'first'
 })
 
 exports.create = function (api) {
@@ -47,16 +46,25 @@ exports.create = function (api) {
 
     var { container, content } = api.app.html.scroller({ prepend: profile })
 
+    const source = (opts) => api.sbot.pull.stream(s => next(s.query.read, opts, ['value', 'timestamp']))
+    const query = [{
+      $filter: {
+        value: {
+          timestamp: { $gt: 0 },
+          author: id
+        }
+      }
+    }]
+
     pull(
-      api.sbot.pull.userFeed({id: id, old: false, live: true}),
+      source({ query, live: true, old: false }),
       Scroller(container, content, api.message.html.render, true, false)
     )
 
     // how to handle when have scrolled past the start???
 
     pull(
-      next(api.sbot.pull.userFeed, { id: id, reverse: true, limit: 50, live: false }, ['value', 'sequence']),
-      // pull.through(console.log.bind(console)),
+      source({ query, reverse: true, limit: 50 }),
       Scroller(container, content, api.message.html.render, false, false)
     )
 
