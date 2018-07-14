@@ -44,9 +44,18 @@ exports.create = function (api) {
 
     const createStream = (opts) => api.sbot.pull.stream(server => {
       const _opts = merge({}, opts, {
-        query: [{$filter: { timestamp: {$gt: 0} }}]
+        query: [{
+          $filter: {
+            timestamp: {$gt: 0, $lt: undefined},
+            value: {
+              content: { recps: {$not: true} }
+            }
+          }
+        }],
+        limit: 100
       })
 
+      server.query.explain(_opts, console.log)
       return next(server.query.read, _opts, ['timestamp'])
     })
 
@@ -61,13 +70,13 @@ exports.create = function (api) {
 
       // TODO - change to use ssb-query, streamed by publish time
       pull(
-        createStream({old: false, limit: 100, live: true}),
+        createStream({old: false, live: true}),
         filterUpThrough(),
         Scroller(container, content, render, true, false)
       )
 
       pull(
-        createStream({reverse: true, limit: 100, live: false}),
+        createStream({reverse: true, live: false}),
         filterDownThrough(),
         Scroller(container, content, render, false, false)
       )
