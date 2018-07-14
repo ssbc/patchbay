@@ -1,6 +1,5 @@
 const nest = require('depnest')
-const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
-const pull = require('pull-stream')
+const { h, Value, computed, when } = require('mutant')
 const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const json5 = require('json5')
@@ -15,6 +14,7 @@ exports.needs = nest({
   'sbot.pull.stream': 'first'
 })
 
+// TODO ?? extract a module patchbay-devtools ?
 exports.create = function (api) {
   return nest({
     'app.html.menuItem': menuItem,
