@@ -2,71 +2,45 @@ Hypertabs {
   display: flex
   flex-direction: column
 
-  height: 100% /* needed to stop scroller blowing out */
+  top: var(--app-border-width)
+  bottom: var(--app-border-width)
+  left: var(--app-border-width)
+  right: var(--app-border-width)
+
+  height: initial
 
   nav {
     display: flex
     
-    background: linear-gradient(to bottom, #efefef, #e5e5e5)
+    background: none
 
     section.tabs {
-      padding: .5rem 0 0 .5rem
+      min-width: 0
 
       flex-grow: 1
       display: flex
-      min-width: 0
 
       div.tab {
         flex-grow: 1
+
+        min-width: 3.5rem
+        font-size: .9rem
+        background: rgba(0, 0, 0, 0)
+          
+        overflow: hidden
+
+        padding: 0
+        border: none
+        margin: 0 .3rem 0 0 
 
         display: flex
         align-items: center
         justify-content: space-between
 
-        min-width: 3.5rem
-        font-size: .9rem
-        background-color: #efefef
-        overflow: hidden
-
-        padding: 0
-        margin-left: .3rem
-        border: none
-
-        :hover {
-          background-color: #f8f8f8
-          a.close {
-            visibility: visible
-          }
-        }
-
-        -selected {
-          color: #222
-          background-color: #fff
-
-          :hover {
-            background-color: #fff
-          }
-
-          a.link {
-            text-decoration: none
-            max-width: calc(100% - 2rem)
-          }
-          a.close {
-            visibility: visible
-          }
-        }
-
-        -notify {
-          background-color: orange;
-        }
-
-
         a {
-          color: #666
-
-          :hover {
-            text-decoration: none
-          }
+          color: var(--app-border-color)
+          outline: none
+          :hover { text-decoration: none }
         }
 
         a.link {
@@ -79,12 +53,15 @@ Hypertabs {
           text-overflow: ellipsis
 
           padding: .45rem 0 .45rem .6rem
+          /* padding: 0 0 var(--app-border-width) .6rem */
         }
 
         a.close {
           visibility: hidden
           font-family: monospace
+          font-weight: 600
           line-height: 1rem
+
           width: .9rem
           height: .9rem
           /* border-radius: 1rem */
@@ -95,10 +72,45 @@ Hypertabs {
           justify-content: center
 
           :hover {
-            background: #aaaaaa
-            color: #fff
-            font-weight: 600
+            background: var(--page-background)
+            color: var(--page-color)
           }
+        }
+
+        :hover {
+          background: var(--app-border-background-mid)
+          a.link { color: var(--app-border-color) }
+          a.close { visibility: visible }
+          transition: all .2s ease-in
+        }
+
+        -selected {
+          color: var(--page-color)
+          background: var(--page-background)
+
+          a.link {
+            color: var(--page-color)
+            text-decoration: none
+            max-width: calc(100% - 2rem)
+            cursor: default
+          }
+          a.close {
+            visibility: visible
+            color: var(--page-color)
+
+            :hover {
+            }
+          }
+
+          :hover {
+            background: var(--page-background)
+            a.link { color: var(--page-color) }
+            transition: none
+          }
+        }
+
+        -notify {
+          background-color: orange;
         }
 
       }
@@ -106,16 +118,20 @@ Hypertabs {
     }
 
     div.navExtra {
-      padding-top: .2rem
+      padding-bottom: var(--app-border-width)
       display: flex
       align-items: center
     }
   }
 
   section.content {
-    display: flex
+    background-color: var(--page-background)
+    // this brings the scroll-bar in
+    padding: .5rem .4rem
 
     height: 100% /* needed to stop making nav weird */
+
+    display: flex
 
     div.page {
       flex-grow: 1

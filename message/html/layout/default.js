@@ -26,19 +26,21 @@ exports.create = (api) => {
 
     var rawMessage = Value(null)
 
-    return h('Message', {
-      attributes: {
-        tabindex: '0' // needed to be able to navigate and show focus()
-      }
+    return h('Message -default', {
+      attributes: { tabindex: '0' } // needed to be able to navigate and show focus()
     }, [
       h('section.avatar', {}, api.about.html.avatar(msg.value.author)),
-      h('section.timestamp', {}, timestamp(msg)),
-      h('header.author', {}, author(msg)),
-      h('section.meta', {}, meta(msg, { rawMessage })),
-      h('section.title', {}, opts.title),
+      h('section.top', [
+        h('div.author', {}, author(msg)),
+        h('div.title', {}, opts.title),
+        h('div.meta', {}, meta(msg, { rawMessage }))
+      ]),
       h('section.content', {}, opts.content),
       h('section.raw-content', rawMessage),
-      h('section.actions', {}, action(msg)),
+      h('section.bottom', [
+        h('div.timestamp', {}, timestamp(msg)),
+        h('div.actions', {}, action(msg))
+      ]),
       h('footer.backlinks', {}, backlinks(msg))
     ])
   }

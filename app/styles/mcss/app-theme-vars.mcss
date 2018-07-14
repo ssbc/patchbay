@@ -1,0 +1,12 @@
+App {
+  --app-border-background: rgb(0, 0, 0)
+  --app-border-background-mid: rgba(218, 139, 255, 0.47)
+  --app-border-width: .3rem
+  --app-border-color: rgb(255, 255, 255)
+
+  --page-background: rgb(255, 255, 255)
+  --page-color: #222
+
+  --scrollbar-color: rgba(65, 3, 82, 0.48)
+  --scrollbar-color-hover: rgba(65, 3, 82, 0.55)
+}

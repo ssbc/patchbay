@@ -2,7 +2,7 @@ const nest = require('depnest')
 const { h, computed, map } = require('mutant')
 const ref = require('ssb-ref')
 
-exports.gives = nest('message.html.meta')
+exports.gives = nest('message.html.action')
 
 exports.needs = nest({
   'about.obs.name': 'first',
@@ -10,7 +10,7 @@ exports.needs = nest({
 })
 
 exports.create = (api) => {
-  return nest('message.html.meta', likes)
+  return nest('message.html.action', likes)
 
   function likes (msg) {
     if (!ref.isMsgId(msg.key)) return

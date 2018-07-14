@@ -1,48 +1,45 @@
 Thread {
-  div.wrapper {
-    header {
-      border-bottom: solid 1px gainsboro
+  section.top {
+    border-bottom: solid 1px gainsboro
 
-      section.recipients {
-        display: flex
-        justify-content: center
-        align-items: center
+    section.recipients {
+      display: flex
+      justify-content: center
+      align-items: center
 
-        margin-top: .6rem
-        margin-bottom: 0.2rem
+      margin-top: .6rem
+      margin-bottom: 0.2rem
 
-        div {
-          margin: 0 .2rem
+      div {
+        margin: 0 .2rem
 
-          a img {
-            width: 2.5rem
-            height: 2.5rem
-          }
-        }
-
-
-        div.warning a img {
-          width: 3.5rem
-          height: 3.5rem
-          border: 3px red solid
+        a img {
+          width: 2.5rem
+          height: 2.5rem
         }
       }
 
-      section.info {
-        text-align: center
-
-        margin: .4rem
-
-        font-size: .9rem
-        $textSubtle
-
-        -warning {
-          font-size: 1rem
-          color: #000
-        }
+      div.warning a img {
+        width: 3.5rem
+        height: 3.5rem
+        border: 3px red solid
       }
-
     }
+
+    section.info {
+      text-align: center
+
+      margin: .4rem
+
+      font-size: .9rem
+      $textSubtle
+
+      -warning {
+        font-size: 1rem
+        color: #000
+      }
+    }
+
   }
 }
 

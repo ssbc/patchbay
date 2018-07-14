@@ -1,18 +1,35 @@
 Scroller {
-  $scrollable
+  width: 100%
+  height: 100%
+  min-height: 0px
 
-  div.wrapper {
-    align-self: center
+  overflow-y: scroll
+  overflow-x: auto
 
-    flex: 1 1
-    $threadWidth
-    padding-top: .5rem
 
-    section.content {
-      div {
-        border-bottom: solid 1px gainsboro
-      }
+  display: grid
+  justify-content: stretch
+  align-content: start
+  grid-template-columns: auto minmax(740px, 900px) auto
+
+  section {
+    grid-column: 2 / 3
+
+    box-sizing: border-box
+  }
+
+  section.top {
+    margin-top: 1rem
+  }
+
+  section.content {
+    div {
+      border-bottom: solid 1px gainsboro
     }
+  }
+
+  section.bottom {
+    margin-bottom: 10rem
   }
 }
 

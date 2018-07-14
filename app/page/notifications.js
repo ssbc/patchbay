@@ -2,8 +2,7 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-
-const next = require('../../junk/next-stepper')
+const next = require('pull-next-step')
 
 exports.gives = nest({
   'app.html.menuItem': true,

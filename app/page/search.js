@@ -1,10 +1,9 @@
 const nest = require('depnest')
 const { h, Struct, Value, when, computed } = require('mutant')
 const pull = require('pull-stream')
+const next = require('pull-next-step')
 const Scroller = require('pull-scroll')
 const TextNodeSearcher = require('text-node-searcher')
-
-const next = require('../../junk/next-stepper')
 
 exports.gives = nest('app.page.search')
 
@@ -127,7 +126,7 @@ exports.create = function (api) {
       )
 
       pull(
-        api.sbot.pull.stream(sbot => next(sbot.search.query, {query, limit: 500 })),
+        api.sbot.pull.stream(sbot => next(sbot.search.query, { query, limit: 500 })),
         fallback((err) => {
           if (err === true) {
             search.fulltext.isDone.set(true)

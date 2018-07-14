@@ -62,42 +62,40 @@ Compose {
     margin-top: .4rem
 
     input[type="file"] {
-
-      padding: .5rem 0
-
-      width: 2.5rem
-      height: 1.5rem
+      width: 1.8rem
+      height: 1.8rem
+      cursor: pointer
       color: transparent
+      font-family: FontAwesome
+      border: 1px rgba(0,0,0,0) solid
 
       ::-webkit-file-upload-button {
         visibility: hidden
       }
 
       ::before {
-        $composeButton
         padding-top: .3rem
 
-        content: '📎'
+        content: '\f0c6'
         font-size: 1rem
+        color: #666;
+        background-color: #fff
 
         outline: none
         white-space: nowrap
         -webkit-user-select: none
+
+        display: flex
+        justify-content: center
       }
 
-      :active, :focus {
+      :hover, :focus {
+        border: 1px gainsboro solid
         outline: none
         box-shadow: none
       }
     }
 
-    button {
-      $composeButton
-
-      text-transform: uppercase
-      font-weight: bold
-      font-size: .7rem
-    }
   }
 
   -expanded {
@@ -130,14 +128,4 @@ Compose {
     }
   }
 
-}
-
-$composeButton {
-  background: #fff
-  color: #666
-  border: 1px solid #bbb
-  border-radius: .5rem
-  padding: .5rem
-  margin: 0
-  cursor: pointer
 }

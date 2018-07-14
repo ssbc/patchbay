@@ -3,8 +3,7 @@ const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const ref = require('ssb-ref')
-
-const next = require('../../junk/next-stepper')
+const next = require('pull-next-step')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -44,10 +43,10 @@ exports.create = function (api) {
     const composer = api.message.html.compose({
       location,
       meta: { type: 'post' },
-      prepublish: meta => {
-        meta.recps = [id, ...(meta.mentions || [])]
+      prepublish: content => {
+        content.recps = [id, ...(content.mentions || [])]
           .filter(m => ref.isFeed(typeof m === 'string' ? m : m.link))
-        return meta
+        return content
       },
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
     )

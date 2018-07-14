@@ -2,12 +2,15 @@ Markdown {
   p, ul, ol {
   }
 
-  // center images (non-emoji)
   p {
     a {
-      img {
-        display: block
-        margin: auto
+      img { margin 0 .5rem }
+
+      :only-of-type {
+        img {
+          display: block
+          margin: auto
+        }
       }
     }
   }

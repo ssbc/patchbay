@@ -1,42 +1,42 @@
-Message {
-  -mini {
-    font-size: .9rem
-    justify-content: flex-start
-    padding: .25rem .5rem
-    min-height: inherit
+Message -mini {
+  font-size: .9rem
+  justify-content: flex-start
+  padding: .25rem .5rem
+  min-height: inherit
 
-    section.timestamp {
-      order: 0
-      position: initial
-      left: initial
-      min-width: 5.5rem
-    }
+  display: flex
 
-    header.author {
-      order: 1
-      margin-right: .5rem
-      
-      position: initial
-      left: initial
-      top: initial
-    }
+  section.timestamp {
+    order: 0
+    position: initial
+    left: initial
+    min-width: 5.5rem
+  }
+
+  header.author {
+    order: 1
+    margin-right: .5rem
+    
+    position: initial
+    left: initial
+    top: initial
+  }
 
 
-    section.content {
-      order: 2
-      flex-basis: initial
-      flex-grow: 1
+  section.content {
+    order: 2
+    flex-basis: initial
+    flex-grow: 1
 
-      margin-top: 0
-    }
+    margin-top: 0
+  }
 
-    section.meta {
-      order: 3
-    }
+  section.meta {
+    order: 3
+  }
 
-    section.raw-content {
-      order: 4
-      margin-left: 0
-    }
+  section.raw-content {
+    order: 4
+    margin-left: 0
   }
 }

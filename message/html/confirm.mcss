@@ -30,7 +30,6 @@ MessageConfirm {
       justify-content: flex-end
 
       button {
-        margin: 0 0 0 1rem
       }
     }
   }

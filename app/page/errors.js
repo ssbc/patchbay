@@ -11,10 +11,8 @@ exports.create = function (api) {
   return nest('app.page.errors', errorsPage)
 
   function errorsPage (location) {
-    var { container, content } = api.app.html.scroller()
+    var { container, content } = api.app.html.scroller({ className: 'Errors', title: '/errors' })
 
-    container.title = '/errors'
-    container.classList = ['Errors']
     container.id = JSON.stringify(location)
     // note this page needs an id assigned as it's not added by addPage
 
