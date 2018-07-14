@@ -1,0 +1,54 @@
+Query {
+  width: 100%
+
+  display: grid
+  grid-template-columns: 28rem auto
+  grid-gap: 1rem
+
+  overflow: hidden
+
+  section.query {
+    display: grid
+    align-content: start
+    justify-items: end
+    grid-gap: 1rem
+
+    textarea {
+      justify-self: stretch
+
+      color: #fff
+      font-family: monospace
+
+      background: rgb(40 , 0, 40)
+      padding: 1rem
+      border: none
+
+      min-height: 20rem
+    }
+
+    button {
+      
+    }
+  }
+
+  section.output {
+    position: relative
+
+    div.Scroller {
+      position: absolute
+      top: 0
+      bottom: 0
+
+      section { margin: 0 }
+
+      section.content {
+        pre {
+          word-wrap: break-word
+          white-space: pre-wrap
+
+          /* margin: 0 0 3rem 0 */
+        }
+      }
+    }
+  }
+}
