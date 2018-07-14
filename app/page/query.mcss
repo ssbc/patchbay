@@ -23,7 +23,7 @@ Query {
       padding: 1rem
       border: none
 
-      min-height: 20rem
+      min-height: 40rem
     }
 
     button {

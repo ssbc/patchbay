@@ -41,13 +41,13 @@ exports.create = function (api) {
       if (!query.map(q => Object.keys(q)[0]).every(q => ['$filter', '$map', '$reduce'].includes(q))) return
       activateQuery()
     })
-    const query = Value([])
+    const query = Value(json5.parse(initial()))
 
     const activateQuery = () => query.set(json5.parse(input()))
 
-    return h('Query', [
+    return h('Query', { title: '/query' }, [
       h('section.query', [
-        h('textarea', { 'ev-input': ev => input.set(ev.target.value) }),
+        h('textarea', { 'ev-input': ev => input.set(ev.target.value), value: initial() }),
         h('button', {
           className: when(error, '', '-primary'),
           disabled: when(error, 'disabled'),
@@ -58,7 +58,11 @@ exports.create = function (api) {
         computed(query, query => {
           return Scroller({
             streamToBottom: source(query),
-            render: msg => h('pre', JSON.stringify(msg, null, 2))
+            render: msg => h('pre', JSON.stringify(msg, null, 2)),
+            comparer: (a, b) => {
+              if (a && b && a.key && b.key) return a.key === b.key
+              return a === b
+            }
           })
         })
       ])
@@ -69,11 +73,32 @@ exports.create = function (api) {
     const opts = {
       query,
       reverse: true,
-      limit: 100
+      limit: 50
     }
 
     return api.sbot.pull.stream(server => {
       return next(server.query.read, opts, ['value', 'timestamp'])
     })
   }
+}
+
+function initial () {
+  return `[{
+  $filter: {
+    value: {
+      timestamp: {$gt: 0},
+      content: {
+        type: 'post'
+      }
+    }
+  }
+}, {
+  $map: {
+    receivedTimestamp: ['timestamp'],
+    assertedTimestamp: ['value', 'timestamp'],
+    author: ['value', 'author'],
+    content: ['value', 'content']
+  }
+}]
+`
 }
