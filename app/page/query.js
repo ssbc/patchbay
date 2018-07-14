@@ -34,7 +34,7 @@ exports.create = function (api) {
       try {
         var query = json5.parse(i)
       } catch (err) {
-        console.error(err)
+        // console.error(err)
         return err
       }
       if (!Array.isArray(query)) return
