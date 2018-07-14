@@ -10,6 +10,7 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.sync.goTo': 'first',
   'message.html.render': 'first',
   'sbot.pull.stream': 'first'
 })
@@ -94,11 +95,17 @@ function initial () {
   }
 }, {
   $map: {
-    receivedTimestamp: ['timestamp'],
-    assertedTimestamp: ['value', 'timestamp'],
     author: ['value', 'author'],
-    content: ['value', 'content']
+    text: ['value', 'content', 'text'],
+    ts: {
+      received: ['timestamp'],
+      asserted: ['value', 'timestamp']
+    }
   }
 }]
+
+// $filter - used to prune down results. This must be the first entry, as ssb-query uses it to determine the most optimal index for fast lookup.
+
+// $map - optional, can be used to pluck data you want out. Doing this reduces the amount of data sent over muxrpc, which speeds up loading
 `
 }
