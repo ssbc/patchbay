@@ -55,7 +55,6 @@ exports.create = function (api) {
         limit: 100
       })
 
-      server.query.explain(_opts, console.log)
       return next(server.query.read, _opts, ['timestamp'])
     })
 
