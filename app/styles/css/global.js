@@ -33,8 +33,6 @@ a:hover, a:focus {
 
 input:focus, .compose:focus {
   outline: none;
-  border-color: #0088cc; 
-  box-shadow: 0 0 4px #0088cc;
 }
 
 input, textarea {

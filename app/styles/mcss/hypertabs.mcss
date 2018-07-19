@@ -10,9 +10,11 @@ Hypertabs {
   height: initial
 
   nav {
-    display: flex
-    
+    height: 2.3rem
+    min-height: 2.3rem
     background: none
+
+    display: flex
 
     section.tabs {
       min-width: 0
@@ -23,6 +25,7 @@ Hypertabs {
       div.tab {
         flex-grow: 1
 
+        z-index: 1000
         min-width: 3.5rem
         font-size: .9rem
         background: rgba(0, 0, 0, 0)
@@ -85,6 +88,7 @@ Hypertabs {
         }
 
         -selected {
+          z-index: 0
           color: var(--page-color)
           background: var(--page-background)
 
@@ -118,7 +122,8 @@ Hypertabs {
     }
 
     div.navExtra {
-      padding-bottom: var(--app-border-width)
+      z-index: 1000
+      padding-bottom: calc(var(--app-border-width)/2)
       display: flex
       align-items: center
     }
