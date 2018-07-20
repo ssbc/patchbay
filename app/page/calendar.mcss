@@ -112,6 +112,14 @@ CalendarDay {
   -future {
     background: hsl(0, 0%, 80%)
   }
+
+  -events {
+    border-radius: var(--day-width)
+    /* background: hsla(277, 57%, 45%, 1) */
+
+    -past {
+    }
+  }
 }
 
 CalendarDayName {

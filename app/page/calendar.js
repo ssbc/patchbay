@@ -1,25 +1,91 @@
 const nest = require('depnest')
-const { h, Value, computed } = require('mutant')
+const { h, Value, computed, Dict, throttle, dictToCollection } = require('mutant')
+const pull = require('pull-stream')
+const { isMsg } = require('ssb-ref')
 
 exports.gives = nest('app.page.calendar')
 
 exports.needs = nest({
+  'sbot.pull.stream': 'first'
 })
 
 exports.create = (api) => {
   return nest('app.page.calendar', calendarPage)
 
   function calendarPage (location) {
-    const cal = Cal()
+    const store = Dict({})
+    pull(
+      pullGatherings(2018),
+      pull.drain(
+        ({ key, date }) => store.put(key, date),
+        (err) => {
+          if (err) console.error(err)
+          else console.log('DONE')
+        }
+      )
+    )
 
-    return h('CalendarPage', { title: '/calendar' }, cal)
+    return h('CalendarPage', { title: '/calendar' }, [
+      computed(throttle(dictToCollection(store), 150), collection => {
+        const events = collection.map(item => {
+          return {
+            date: item.value,
+            data: { key: item.key }
+          }
+        })
+
+        return Calendar(events)
+      })
+    ])
+  }
+
+  function pullGatherings (year) {
+    const query = [{
+      $filter: {
+        value: {
+          timestamp: {$gt: Number(new Date(year, 0, 1))}, // ordered by published time
+          content: {
+            type: 'about',
+            startDateTime: {
+              epoch: {$gt: 0}
+            }
+          }
+        }
+      }
+    }, {
+      $map: {
+        key: ['value', 'content', 'about'], // gathering
+        date: ['value', 'content', 'startDateTime', 'epoch']
+      }
+    }]
+
+    const opts = {
+      reverse: false,
+      query
+    }
+
+    return pull(
+      api.sbot.pull.stream(server => server.query.read(opts)),
+      pull.filter(r => isMsg(r.key) && Number.isInteger(r.date)),
+      pull.map(r => {
+        return { key: r.key, date: new Date(r.date) }
+      })
+    )
   }
 }
+
+// ////////////////// extract below into a module ///////////////////////
+
+// Thanks to nomand for the inspiration and code (https://github.com/nomand/Letnice),
+// they formed the foundationf of this work
 
 const MONTHS = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
 const DAYS = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
 
-function Cal () {
+function Calendar (events) {
+  // TODO assert events is an Array of object
+  // of form { date, data }
+
   const year = Value(new Date().getFullYear())
   const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
   // const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0)
@@ -27,7 +93,7 @@ function Cal () {
   const root = h('Calendar', [
     Header(year),
     h('div.months', computed(year, year => {
-      return MONTHS.map((month, monthIndex) => Month({ month, monthIndex, year, today }))
+      return MONTHS.map((month, monthIndex) => Month({ month, monthIndex, year, today, events }))
     }))
   ])
 
@@ -45,13 +111,14 @@ function Header (year) {
   ])
 }
 
-function Month ({ month, monthIndex, year, today }) {
+function Month ({ month, monthIndex, year, today, events }) {
   const monthLength = new Date(year, monthIndex + 1, 0).getDate()
   // NOTE Date takes month as a monthIndex i.e. april = 3
   // and day = 0 goes back a day
   const days = Array(monthLength).fill().map((_, i) => i + 1)
 
   var date
+  var dateEnd
   var weekday
   var week
   var offset = getDay(new Date(year, monthIndex, 1)) - 1
@@ -66,8 +133,13 @@ function Month ({ month, monthIndex, year, today }) {
 
   function Day (day) {
     date = new Date(year, monthIndex, day)
+    dateEnd = new Date(year, monthIndex, day + 1)
     weekday = getDay(date)
     week = Math.ceil((day + offset) / 7)
+
+    const eventsOnDay = events.filter(e => {
+      return e.date >= date && e.date < dateEnd
+    })
 
     return h('CalendarDay', {
       attributes: { 'data-date': `${year}-${monthIndex + 1}-${day}` },
@@ -77,7 +149,8 @@ function Month ({ month, monthIndex, year, today }) {
         // column moved by 1 to make space for labels
       },
       classList: [
-        date < today ? '-past' : '-future'
+        date < today ? '-past' : '-future',
+        eventsOnDay.length ? '-events' : ''
       ]
     })
   }
@@ -99,3 +172,4 @@ function getDay (date) {
   // Weeks run 0...6 (Sun - Sat)
   // this shifts those days around by 1
 }
+
