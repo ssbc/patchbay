@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, computed, Dict, throttle, dictToCollection } = require('mutant')
+const { h, Array: MutantArray, Struct, computed, watch, throttle } = require('mutant')
 const pull = require('pull-stream')
 const { isMsg } = require('ssb-ref')
 
@@ -13,33 +13,21 @@ exports.create = (api) => {
   return nest('app.page.calendar', calendarPage)
 
   function calendarPage (location) {
-    const store = Dict({})
-    pull(
-      pullGatherings(2018),
-      pull.drain(
-        ({ key, date }) => store.put(key, date),
-        (err) => {
-          if (err) console.error(err)
-          else console.log('DONE')
-        }
-      )
-    )
+    const d = new Date()
+    const state = Struct({
+      today: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
+      year: d.getFullYear(),
+      events: MutantArray([])
+    })
+
+    watch(state.year, year => getEvents(year, state.events))
 
     return h('CalendarPage', { title: '/calendar' }, [
-      computed(throttle(dictToCollection(store), 150), collection => {
-        const events = collection.map(item => {
-          return {
-            date: item.value,
-            data: { key: item.key }
-          }
-        })
-
-        return Calendar(events)
-      })
+      Calendar(state)
     ])
   }
 
-  function pullGatherings (year) {
+  function getEvents (year, events) {
     const query = [{
       $filter: {
         value: {
@@ -61,14 +49,22 @@ exports.create = (api) => {
 
     const opts = {
       reverse: false,
+      live: true,
       query
     }
 
-    return pull(
+    pull(
       api.sbot.pull.stream(server => server.query.read(opts)),
+      pull.filter(m => !m.sync),
       pull.filter(r => isMsg(r.key) && Number.isInteger(r.date)),
       pull.map(r => {
         return { key: r.key, date: new Date(r.date) }
+      }),
+      pull.drain(({ key, date }) => {
+        var target = events.find(ev => ev.data.key === key)
+        if (target && target.date <= date) events.delete(target)
+
+        events.push({ date, data: { key } })
       })
     )
   }
@@ -77,27 +73,23 @@ exports.create = (api) => {
 // ////////////////// extract below into a module ///////////////////////
 
 // Thanks to nomand for the inspiration and code (https://github.com/nomand/Letnice),
-// they formed the foundationf of this work
+// they formed the foundation of this work
 
 const MONTHS = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
 const DAYS = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
 
-function Calendar (events) {
+function Calendar (state) {
   // TODO assert events is an Array of object
   // of form { date, data }
 
-  const year = Value(new Date().getFullYear())
-  const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
-  // const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0)
-
-  const root = h('Calendar', [
-    Header(year),
-    h('div.months', computed(year, year => {
-      return MONTHS.map((month, monthIndex) => Month({ month, monthIndex, year, today, events }))
+  return h('Calendar', [
+    Header(state.year),
+    h('div.months', computed(throttle(state, 100), ({ today, year, events }) => {
+      return MONTHS.map((month, monthIndex) => {
+        return Month({ month, monthIndex, today, year, events })
+      })
     }))
   ])
-
-  return root
 }
 
 function Header (year) {
@@ -107,11 +99,10 @@ function Header (year) {
       h('a', { 'ev-click': () => year.set(year() - 1) }, '-'),
       h('a', { 'ev-click': () => year.set(year() + 1) }, '+')
     ])
-    // h('p.percentage', yearProgress(year))
   ])
 }
 
-function Month ({ month, monthIndex, year, today, events }) {
+function Month ({ month, monthIndex, today, year, events }) {
   const monthLength = new Date(year, monthIndex + 1, 0).getDate()
   // NOTE Date takes month as a monthIndex i.e. april = 3
   // and day = 0 goes back a day
@@ -141,8 +132,11 @@ function Month ({ month, monthIndex, year, today, events }) {
       return e.date >= date && e.date < dateEnd
     })
 
-    return h('CalendarDay', {
-      attributes: { 'data-date': `${year}-${monthIndex + 1}-${day}` },
+    const opts = {
+      attributes: {
+        'title': `${year}-${monthIndex + 1}-${day}`,
+        'data-date': `${year}-${monthIndex + 1}-${day}`
+      },
       style: {
         'grid-row': `${weekday} / ${weekday + 1}`,
         'grid-column': `${week + 1} / ${week + 2}`
@@ -152,7 +146,16 @@ function Month ({ month, monthIndex, year, today, events }) {
         date < today ? '-past' : '-future',
         eventsOnDay.length ? '-events' : ''
       ]
-    })
+    }
+
+    if (!eventsOnDay.length) return h('CalendarDay', opts)
+
+    return h('CalendarDay', opts, [
+      // TODO try a FontAwesome circle
+      h('div', [
+        // Math.random() > 0.3 ? h('div') : ''
+      ])
+    ])
   }
 }
 

@@ -44,7 +44,7 @@ exports.create = function (api) {
       resetFeed({ container, content })
 
       pull(
-        next(api.feed.pull.mentions(id), {old: false, limit: 100}),
+        next(api.feed.pull.mentions(id), {old: false, limit: 100, property: ['timestamp']}),
         removeMyMessages(),
         removePrivateMessages(),
         filterDownThrough(),
@@ -52,7 +52,7 @@ exports.create = function (api) {
       )
 
       pull(
-        next(api.feed.pull.mentions(id), {reverse: true, limit: 100, live: false}),
+        next(api.feed.pull.mentions(id), {reverse: true, limit: 100, live: false, property: ['timestamp']}),
         removeMyMessages(),
         removePrivateMessages(),
         filterUpThrough(),

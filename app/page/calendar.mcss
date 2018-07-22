@@ -76,11 +76,11 @@ Calendar {
 
 
 CalendarMonth {
-  --day-width: 12px
+  --day-radius: 6px
   --day-border-radius: 2px
-  --day-gap: 2px
+  --day-gap: 1px
 
-  width: calc(7 * var(--day-width) +  6 * var(--day-gap))
+  width: calc(7 * 2 * var(--day-radius) +  6 * var(--day-gap))
   /* max of 6 weeks + day labels, with gaps between each */
 
   div.month-name {
@@ -100,10 +100,14 @@ CalendarMonth {
 }
 
 CalendarDay {
-  width: var(--day-width)
-  height: var(--day-width)
+  width: calc(2 * var(--day-radius))
+  height: calc(2 * var(--day-radius))
 
   border-radius: var(--day-border-radius)
+
+  display: flex
+  justify-content: center
+  align-items: center
 
   -past {
     background: hsl(0, 0%, 20%)
@@ -114,8 +118,26 @@ CalendarDay {
   }
 
   -events {
-    border-radius: var(--day-width)
+    /* border-radius: var(--day-radius) */
     /* background: hsla(277, 57%, 45%, 1) */
+
+    div {
+      background: #fff
+      width: 6px
+      height: 6px
+      border-radius: 8px
+
+      display: flex
+      justify-content: center
+      align-items: center
+
+      div {
+        background: #000
+        width: 4px
+        height: 4px
+        border-radius: 4px
+      }
+    }
 
     -past {
     }
@@ -125,11 +147,11 @@ CalendarDay {
 CalendarDayName {
   color: hsl(0, 0%, 40%)
   font-family: arial
-  font-size: calc(var(--day-width) - 3px)
-  /* line-height: calc(var(--day-width) - 2px) */
+  font-size: calc(2 * var(--day-radius) - 3px)
+  /* line-height: calc(2 * var(--day-radius) - 2px) */
 
-  width: var(--day-width)
-  height: var(--day-width)
+  width: calc(2 * var(--day-radius))
+  height: calc(2 * var(--day-radius))
 
   display: flex
   align-items: center
