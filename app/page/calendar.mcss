@@ -3,6 +3,10 @@ CalendarPage {
 
   display: grid
   justify-content: center
+  align-content: start
+  justify-items: center
+
+  overflow-y: scroll
 }
 
 
@@ -12,6 +16,7 @@ Calendar {
 
   padding: 0
   margin: 0
+  margin-bottom: 4rem
 
   section {
     top: 50%
@@ -87,6 +92,7 @@ CalendarMonth {
     font-size: 20px
     font-weight: bold
     text-align: left
+    cursor: pointer
     margin-bottom: 5px
   }
 
@@ -102,6 +108,7 @@ CalendarMonth {
 CalendarDay {
   width: calc(2 * var(--day-radius))
   height: calc(2 * var(--day-radius))
+  cursor: pointer
 
   border-radius: var(--day-border-radius)
 
@@ -115,6 +122,14 @@ CalendarDay {
 
   -future {
     background: hsl(0, 0%, 80%)
+  }
+
+  -selected {
+    background: deeppink
+
+    -future {
+      background: deepskyblue
+    }
   }
 
   -events {
@@ -156,4 +171,17 @@ CalendarDayName {
   display: flex
   align-items: center
   justify-content: center
+}
+
+CalendarEvents {
+  width: 50rem
+
+  div {
+    width: 50rem
+
+    div.Message {
+      width: 50rem
+      section.bottom { display: none }
+    }
+  }
 }
