@@ -1,0 +1,187 @@
+CalendarPage {
+  width: 100%
+
+  display: grid
+  justify-content: center
+  align-content: start
+  justify-items: center
+
+  overflow-y: scroll
+}
+
+
+Calendar {
+  font-family: 'input_mono_regular', monospace
+  text-transform: capitalize
+
+  padding: 0
+  margin: 0
+  margin-bottom: 4rem
+
+  section {
+    top: 50%
+    margin: 0 auto
+    user-select: none
+    -webkit-user-select: none
+    -ms-user-select: none
+    -webkit-transform: translateY(-50%)
+    -ms-transform: translateY(-50%)
+    transform: translateY(-50%)
+    text-align: center
+  }
+
+  div.header { 
+    margin: 40px 0
+    text-align: left
+    align-content: flex-start
+
+    div.year { 
+      font-size: 40px
+      font-weight: bold
+
+      a {
+        text-align: center
+        color: #000
+        width: 30px
+        display: inline-block
+        margin-left: 10px
+
+        :hover {
+          color: #ffffff
+          background: #000
+          cursor: pointer
+          text-decoration: none
+        }
+      }
+    }
+
+    p.percentage {
+      font-size: 20px
+      color: #8b8b8b
+    }
+  }
+
+  div.months {
+    display: flex
+
+    div.CalendarMonth {
+      margin-right: 20px
+    }
+  }
+
+  /* @media only screen and (min-width: 1440px) */
+  /* { section { width: 1440px; }} */
+
+  /* @media only screen and (max-width: 1440px) */
+  /* { section { width: 720px; }} */
+
+  /* @media only screen and (max-width: 720px) */
+  /* { section { width: 360px; }} */
+}
+
+
+CalendarMonth {
+  --day-radius: 6px
+  --day-border-radius: 2px
+  --day-gap: 1px
+
+  width: calc(7 * 2 * var(--day-radius) +  6 * var(--day-gap))
+  /* max of 6 weeks + day labels, with gaps between each */
+
+  div.month-name {
+    font-size: 20px
+    font-weight: bold
+    text-align: left
+    cursor: pointer
+    margin-bottom: 5px
+  }
+
+  div.days {
+    grid-gap: var(--day-gap)
+    justify-content: start
+    align-content: start
+
+    div.CalendarDay {}
+  }
+}
+
+CalendarDay {
+  width: calc(2 * var(--day-radius))
+  height: calc(2 * var(--day-radius))
+  cursor: pointer
+
+  border-radius: var(--day-border-radius)
+
+  display: flex
+  justify-content: center
+  align-items: center
+
+  -past {
+    background: hsl(0, 0%, 20%)
+  }
+
+  -future {
+    background: hsl(0, 0%, 80%)
+  }
+
+  -selected {
+    background: deeppink
+
+    -future {
+      background: deepskyblue
+    }
+  }
+
+  -events {
+    /* border-radius: var(--day-radius) */
+    /* background: hsla(277, 57%, 45%, 1) */
+
+    div {
+      background: #fff
+      width: 6px
+      height: 6px
+      border-radius: 8px
+
+      display: flex
+      justify-content: center
+      align-items: center
+
+      div {
+        background: #000
+        width: 4px
+        height: 4px
+        border-radius: 4px
+      }
+    }
+
+    -past {
+    }
+  }
+}
+
+CalendarDayName {
+  color: hsl(0, 0%, 40%)
+  font-family: arial
+  font-size: calc(2 * var(--day-radius) - 3px)
+  /* line-height: calc(2 * var(--day-radius) - 2px) */
+
+  width: calc(2 * var(--day-radius))
+  height: calc(2 * var(--day-radius))
+
+  display: flex
+  align-items: center
+  justify-content: center
+}
+
+CalendarEvents {
+  width: 50rem
+
+  div {
+    width: 50rem
+
+    div.Message {
+      width: 50rem
+      section.bottom { display: none }
+    }
+  }
+}
