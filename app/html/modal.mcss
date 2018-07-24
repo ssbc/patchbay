@@ -16,7 +16,6 @@ Modal {
     overflow: auto
 
     $backgroundPrimary
-    padding: 30px
     box-shadow: rgba(0,0,0,.34) 2px 6px 10px
     margin: auto
     $dontSelect
