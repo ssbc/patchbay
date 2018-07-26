@@ -26,88 +26,120 @@ exports.create = (api) => {
       })
     })
 
-    watch(state.year, year => getEvents(year, state.events))
+    watch(state.year, year => getEvents(year, state.events, api))
 
     const page = h('CalendarPage', { title: '/calendar' }, [
       Calendar(state),
-      Events(state)
+      Events(state, api)
     ])
 
-    page.scroll = i => {
-      const gte = resolve(state.range.gte)
-      state.range.gte.set(new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + i))
-      const lt = resolve(state.range.lt)
-      state.range.lt.set(new Date(lt.getFullYear(), lt.getMonth(), lt.getDate() + i))
-    }
+    page.scroll = (i) => scroll(state.range, i)
 
     return page
   }
+}
 
-  function Events (state) {
-    return h('CalendarEvents', computed([state.events, state.range], (events, range) => {
-      const keys = events
-        .filter(ev => ev.date >= range.gte && ev.date < range.lt)
-        .sort((a, b) => a.date - b.date)
-        .map(ev => ev.data.key)
+function scroll (range, i) {
+  const { gte, lt } = resolve(range)
 
-      const gatherings = MutantArray([])
-
-      pull(
-        pull.values(keys),
-        pull.asyncMap((key, cb) => {
-          api.sbot.async.get(key, (err, value) => {
-            if (err) return cb(err)
-            cb(null, {key, value})
-          })
-        }),
-        pull.drain(msg => gatherings.push(msg))
-      )
-
-      return map(gatherings, g => api.message.html.render(g))
-    }))
+  if (isMonthInterval(gte, lt)) {
+    range.gte.set(new Date(gte.getFullYear(), gte.getMonth() + i, gte.getDate()))
+    range.lt.set(new Date(lt.getFullYear(), lt.getMonth() + i, lt.getDate()))
+    return
   }
 
-  function getEvents (year, events) {
-    const query = [{
-      $filter: {
-        value: {
-          timestamp: {$gt: Number(new Date(year, 0, 1))}, // ordered by published time
-          content: {
-            type: 'about',
-            startDateTime: {
-              epoch: {$gt: 0}
-            }
+  if (isWeekInterval(gte, lt)) {
+    range.gte.set(new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7 * i))
+    range.lt.set(new Date(lt.getFullYear(), lt.getMonth(), lt.getDate() + 7 * i))
+    return
+  }
+
+  range.gte.set(new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + i))
+  range.lt.set(new Date(lt.getFullYear(), lt.getMonth(), lt.getDate() + i))
+
+  function isMonthInterval (gte, lt) {
+    return gte.getDate() === 1 &&             // 1st of month
+      lt.getDate() === 1 &&                   // to the 1st of the month
+      gte.getMonth() + 1 === lt.getMonth() && // one month gap
+      gte.getFullYear() === lt.getFullYear()
+  }
+
+  function isWeekInterval (gte, lt) {
+    console.log(
+      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString(),
+      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString(),
+      lt.toISOString(),
+    )
+    return gte.getDay() === 1 && // from monday
+      lt.getDay() === 1 &&      // to just inside monday
+      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString()
+  }
+}
+
+function Events (state, api) {
+  return h('CalendarEvents', computed([state.events, state.range], (events, range) => {
+    const keys = events
+      .filter(ev => ev.date >= range.gte && ev.date < range.lt)
+      .sort((a, b) => a.date - b.date)
+      .map(ev => ev.data.key)
+
+    const gatherings = MutantArray([])
+
+    pull(
+      pull.values(keys),
+      pull.asyncMap((key, cb) => {
+        api.sbot.async.get(key, (err, value) => {
+          if (err) return cb(err)
+          cb(null, {key, value})
+        })
+      }),
+      pull.drain(msg => gatherings.push(msg))
+    )
+
+    return map(gatherings, g => api.message.html.render(g))
+  }))
+}
+
+function getEvents (year, events, api) {
+  const query = [{
+    $filter: {
+      value: {
+        timestamp: {$gt: Number(new Date(year, 0, 1))}, // ordered by published time
+        content: {
+          type: 'about',
+          startDateTime: {
+            epoch: {$gt: 0}
           }
         }
       }
-    }, {
-      $map: {
-        key: ['value', 'content', 'about'], // gathering
-        date: ['value', 'content', 'startDateTime', 'epoch']
-      }
-    }]
-
-    const opts = {
-      reverse: false,
-      live: true,
-      query
     }
+  }, {
+    $map: {
+      key: ['value', 'content', 'about'], // gathering
+      date: ['value', 'content', 'startDateTime', 'epoch']
+    }
+  }]
 
-    pull(
-      api.sbot.pull.stream(server => server.query.read(opts)),
-      pull.filter(m => !m.sync),
-      pull.filter(r => isMsg(r.key) && Number.isInteger(r.date)),
-      pull.map(r => {
-        return { key: r.key, date: new Date(r.date) }
-      }),
-      pull.drain(({ key, date }) => {
-        var target = events.find(ev => ev.data.key === key)
-        if (target && target.date <= date) events.delete(target)
-
-        events.push({ date, data: { key } })
-      })
-    )
+  const opts = {
+    reverse: false,
+    live: true,
+    query
   }
+
+  pull(
+    api.sbot.pull.stream(server => server.query.read(opts)),
+    pull.filter(m => !m.sync),
+    pull.filter(r => isMsg(r.key) && Number.isInteger(r.date)),
+    pull.map(r => {
+      return { key: r.key, date: new Date(r.date) }
+    }),
+    pull.drain(({ key, date }) => {
+      var target = events.find(ev => ev.data.key === key)
+      if (target && target.date <= date) events.delete(target)
+
+      events.push({ date, data: { key } })
+    })
+  )
 }
 
 // ////////////////// extract below into a module ///////////////////////
@@ -122,29 +154,25 @@ function Calendar (state) {
   // TODO assert events is an Array of object
   // of form { date, data }
 
-  const setRange = state.range.set
+  const { gte, lt } = state.range
 
   return h('Calendar', [
-    Header(state.year),
+    h('div.header', [
+      h('div.year', [
+        state.year,
+        h('a', { 'ev-click': () => state.year.set(state.year() - 1) }, '-'),
+        h('a', { 'ev-click': () => state.year.set(state.year() + 1) }, '+')
+      ])
+    ]),
     h('div.months', computed(throttle(state, 100), ({ today, year, events, range }) => {
       return MONTHS.map((month, monthIndex) => {
-        return Month({ month, monthIndex, today, year, events, range, setRange })
+        return Month({ month, monthIndex, today, year, events, range, gte, lt })
       })
     }))
   ])
 }
 
-function Header (year) {
-  return h('div.header', [
-    h('div.year', [
-      year,
-      h('a', { 'ev-click': () => year.set(year() - 1) }, '-'),
-      h('a', { 'ev-click': () => year.set(year() + 1) }, '+')
-    ])
-  ])
-}
-
-function Month ({ month, monthIndex, today, year, events, range, setRange }) {
+function Month ({ month, monthIndex, today, year, events, range, gte, lt }) {
   const monthLength = new Date(year, monthIndex + 1, 0).getDate()
   // NOTE Date takes month as a monthIndex i.e. april = 3
   // and day = 0 goes back a day
@@ -154,10 +182,10 @@ function Month ({ month, monthIndex, today, year, events, range, setRange }) {
   var week
   var offset = getDay(new Date(year, monthIndex, 1)) - 1
 
-  const setMonthRange = () => setRange({
-    gte: new Date(year, monthIndex, 1),
-    lt: new Date(year, monthIndex + 1, 1)
-  })
+  const setMonthRange = (ev) => {
+    gte.set(new Date(year, monthIndex, 1))
+    lt.set(new Date(year, monthIndex + 1, 1))
+  }
 
   return h('CalendarMonth', [
     h('div.month-name', { 'ev-click': setMonthRange }, month.substr(0, 2)),
@@ -191,16 +219,16 @@ function Month ({ month, monthIndex, today, year, events, range, setRange }) {
         date < today ? '-past' : '-future',
         eventsOnDay.length ? '-events' : '',
         date >= range.gte && date < range.lt ? '-selected' : ''
-      ]
+      ],
+      'ev-click': (ev) => {
+        if (ev.shiftKey) return lt.set(dateEnd)
+
+        gte.set(date)
+        lt.set(dateEnd)
+      }
     }
 
     if (!eventsOnDay.length) return h('CalendarDay', opts)
-
-    opts['ev-click'] = () => setRange({
-      gte: date,
-      lt: dateEnd
-    })
-    opts['ev-hover'] = () => console.log(date)
 
     return h('CalendarDay', opts, [
       // TODO add awareness of whether I'm going to events
