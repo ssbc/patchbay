@@ -221,7 +221,10 @@ function Month ({ month, monthIndex, today, year, events, range, gte, lt }) {
         date >= range.gte && date < range.lt ? '-selected' : ''
       ],
       'ev-click': (ev) => {
-        if (ev.shiftKey) return lt.set(dateEnd)
+        if (ev.shiftKey) {
+          dateEnd >= resolve(lt) ? lt.set(dateEnd) : gte.set(date)
+          return
+        }
 
         gte.set(date)
         lt.set(dateEnd)
