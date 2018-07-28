@@ -91,21 +91,21 @@
     "ssb-horcrux": "^1.0.0",
     "ssb-keys": "^7.0.15",
     "ssb-meme": "^1.0.4",
-    "ssb-mentions": "^0.4.1",
+    "ssb-mentions": "^0.5.0",
     "ssb-mutual": "^0.1.0",
     "ssb-private": "^0.2.2",
     "ssb-query": "^2.1.0",
     "ssb-search": "^1.1.2",
     "ssb-sort": "^1.1.0",
-    "ssb-ws": "^1.0.3",
-    "style-resolve": "^1.1.0",
+    "ssb-ws": "^2.1.1",
+    "style-resolve": "^1.0.1",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
     "electro": "^2.1.1",
-    "electron": "^1.8.6",
+    "electron": "^2.0.5",
     "standard": "^8.6.0"
   }
 }
