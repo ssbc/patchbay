@@ -1,18 +1,33 @@
 const nest = require('depnest')
 const { h, Array: MutantArray, map, Struct, computed, watch, throttle, resolve } = require('mutant')
+
 const pull = require('pull-stream')
 const { isMsg } = require('ssb-ref')
 
-exports.gives = nest('app.page.calendar')
+exports.gives = nest({
+  'app.page.calendar': true,
+  'app.html.menuItem': true
+})
 
 exports.needs = nest({
   'message.html.render': 'first',
+  'app.sync.goTo': 'first',
   'sbot.async.get': 'first',
   'sbot.pull.stream': 'first'
 })
 
 exports.create = (api) => {
-  return nest('app.page.calendar', calendarPage)
+  return nest({
+    'app.html.menuItem': menuItem,
+    'app.page.calendar': calendarPage
+  })
+
+  function menuItem () {
+    return h('a', {
+      style: { order: 1 },
+      'ev-click': () => api.app.sync.goTo({ page: 'calendar' })
+    }, '/calendar')
+  }
 
   function calendarPage (location) {
     const d = new Date()
