@@ -83,7 +83,7 @@
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
     "ssb-blobs": "^1.1.5",
-    "ssb-chess": "^2.2.8",
+    "ssb-chess": "^2.2.9",
     "ssb-chess-db": "^1.0.2",
     "ssb-client": "^4.5.7",
     "ssb-ebt": "^5.2.2",
