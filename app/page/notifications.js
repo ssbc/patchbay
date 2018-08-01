@@ -76,7 +76,6 @@ exports.create = function (api) {
       limit: 100,
       index: 'DTA'
     }, opts)
-    console.log(_opts)
 
     return api.sbot.pull.stream(server => {
       return pull(
