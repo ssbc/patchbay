@@ -34,10 +34,9 @@ Message -default {
     div.meta {
       display: flex
       justify-content: flex-end
-      align-items: center
+      align-items: baseline
 
-      a {
-        $textSubtle
+      i, div, a {
         margin-left: .5rem
       }
     }

@@ -1,7 +1,9 @@
-const { h, Struct, Value, when, computed, map, resolve, onceTrue } = require('mutant')
+const { h, Struct, Value, when, computed, map, resolve, onceTrue, watch } = require('mutant')
 const nest = require('depnest')
 const get = require('lodash/get')
+const throttle = require('lodash/throttle')
 const { isFeed } = require('ssb-ref')
+const OnScreen = require('onscreen')
 
 exports.gives = nest('app.page.thread')
 
@@ -69,11 +71,17 @@ exports.create = function (api) {
       placeholder: 'Write a reply',
       shrink: false
     })
+    onceTrue(channel, ch => {
+      const channelInput = composer.querySelector('input')
+      channelInput.value = `#${ch}`
+      channelInput.disabled = true
+    })
+
     const content = map(messages, m => {
       return api.message.html.render(resolve(m), {pageId: root})
     })
-    const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
+    const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
     container.classList.add('Thread')
     container.title = msg
     api.message.async.name(root, (err, name) => {
@@ -81,11 +89,57 @@ exports.create = function (api) {
       container.title = name
     })
 
-    onceTrue(channel, ch => {
-      const channelInput = composer.querySelector('input')
-      channelInput.value = `#${ch}`
-      channelInput.disabled = true
-    })
+    /////////////////////////////////////////////////
+    //v2
+    //
+    // const os = new OnScreen({ container: container })
+
+    // var attached = false
+    // watch(messages, msgs => {
+    //   console.log('boop')
+    //   if (attached) os.off('leave', '.Thread .Message[data-id]')
+    //   os.on('leave', '.Message[data-id]', (el, ev) => {
+    //     console.log(el)
+    //   })
+    //   attached = true
+    // })
+
+    //////////////////
+    // v1
+
+    // var els = []
+    // watch(messages, msgs => {
+    //   els = container.querySelectorAll('.Message[data-id]')
+    //   console.log('update els', els.length)
+    //   // NOTE - this tightly couples knowledge of message rendering + decoration D:
+    // })
+    // container.addEventListener('scroll', throttle(() => {
+    //   console.log('beep')
+
+    //   var height = (window.innerHeight || document.documentElement.clientHeight)
+    //   var width = (window.innerWidth || document.documentElement.clientWidth)
+    //   var inViewport
+    //   var rect
+
+    //   els.forEach(el => {
+    //     console.log(el, el.getBoundingClientRect())
+    //     // rect = el.getBoundingClientRect()
+
+    //     // inViewport = (
+    //     //   (
+    //     //     rect.top >= 0 ||
+    //     //     rect.bottom <= height ||
+    //     //     (rect.top < 0 && rect.bottom > height) // covers whole viewPort
+    //     //   ) && (
+    //     //     rect.left >= 0 ||
+    //     //     rect.right <= width ||
+    //     //     (rect.left < 0 && rect.right > width)
+    //     //   )
+    //     // )
+
+    //     // if (inViewport) console.log(el)
+    //   })
+    // }, 300))
 
     container.scrollDownToMessage = scrollDownToMessage
     container.addQuote = addQuote
@@ -115,4 +169,17 @@ exports.create = function (api) {
       composer.addQuote(value)
     }
   }
+}
+
+function inViewport (el) {
+  var height = (window.innerHeight || document.documentElement.clientHeight)
+  var width = (window.innerWidth || document.documentElement.clientWidth)
+  var { top, left, bottom, right } = el.getBoundingClientRect()
+
+  return (
+    top >= 0 &&
+    left >= 0 &&
+    bottom <= height &&
+    right <= width
+  )
 }

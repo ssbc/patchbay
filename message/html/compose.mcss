@@ -2,7 +2,7 @@ Compose {
   display: flex
   flex-direction: column
 
-  padding: .5rem .5rem 1rem 6rem
+  padding: .5rem .5rem 1rem 5.5rem
 
   textarea {
     border: 1px solid gainsboro
