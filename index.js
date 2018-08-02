@@ -135,7 +135,7 @@ function openWindow (path, opts) {
     window.webContents.executeJavaScript(`
       var electron = require('electron')
       var h = require('mutant/h')
-      electron.webFrame.setZoomLevelLimits(1, 1)
+      electron.webFrame.setVisualZoomLevelLimits(1, 1)
       var title = ${JSON.stringify(opts.title || 'Patchbay')}
       document.documentElement.querySelector('head').appendChild(
         h('title', title)

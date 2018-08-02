@@ -3,7 +3,7 @@ const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
 const ref = require('ssb-ref')
-const next = require('pull-next-step')
+const next = require('pull-next-query')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -57,13 +57,13 @@ exports.create = function (api) {
       resetFeed({ container, content })
 
       pull(
-        next(api.feed.pull.private, {old: false, limit: 100}, ['value', 'timestamp']),
+        pullPrivate({old: false, live: true}),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
       )
 
       pull(
-        next(api.feed.pull.private, {reverse: true, limit: 100, live: false}, ['value', 'timestamp']),
+        pullPrivate({reverse: true}),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
       )
@@ -73,4 +73,22 @@ exports.create = function (api) {
     container.title = '/private'
     return container
   }
+
+  function pullPrivate (opts) {
+    const query = [{
+      $filter: {
+        timestamp: {$gt: 0},
+        value: {
+          content: {
+            recps: {$truthy: true}
+          }
+        }
+      }
+    }]
+
+    const _opts = Object.assign({ query, limit: 100 }, opts)
+
+    return next(api.feed.pull.private, _opts, ['timestamp'])
+  }
 }
+
