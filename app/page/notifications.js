@@ -2,7 +2,7 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const Scroller = require('pull-scroll')
-const next = require('pull-next-step')
+const next = require('pull-next-query')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -13,10 +13,11 @@ exports.needs = nest({
   'app.html.filter': 'first',
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
-  'feed.pull.mentions': 'first',
   'feed.pull.public': 'first',
   'keys.sync.id': 'first',
-  'message.html.render': 'first'
+  'message.html.render': 'first',
+  'message.sync.isBlocked': 'first',
+  'sbot.pull.stream': 'first'
 })
 
 exports.create = function (api) {
@@ -33,28 +34,20 @@ exports.create = function (api) {
   }
 
   function notificationsPage (location) {
-    const id = api.keys.sync.id()
-
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [ filterMenu ] })
-    const removeMyMessages = () => pull.filter(msg => msg.value.author !== id)
-    const removePrivateMessages = () => pull.filter(msg => msg.value.private !== true)
 
     function draw () {
       resetFeed({ container, content })
 
       pull(
-        next(api.feed.pull.mentions(id), {old: false, limit: 100, property: ['timestamp']}),
-        removeMyMessages(),
-        removePrivateMessages(),
+        pullMentions({old: false, live: true}),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
       )
 
       pull(
-        next(api.feed.pull.mentions(id), {reverse: true, limit: 100, live: false, property: ['timestamp']}),
-        removeMyMessages(),
-        removePrivateMessages(),
+        pullMentions({reverse: true, live: false}),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
       )
@@ -63,5 +56,32 @@ exports.create = function (api) {
 
     container.title = '/notifications'
     return container
+  }
+
+  // NOTE - this currently hits mentions AND the patchwork message replies
+  function pullMentions (opts) {
+    const query = [{
+      $filter: {
+        dest: api.keys.sync.id(),
+        timestamp: {$gt: 0},
+        value: {
+          author: {$ne: api.keys.sync.id()}, // not my messages!
+          private: {$ne: true} // not private mentions
+        }
+      }
+    }]
+
+    const _opts = Object.assign({
+      query,
+      limit: 100,
+      index: 'DTA'
+    }, opts)
+
+    return api.sbot.pull.stream(server => {
+      return pull(
+        next(server.backlinks.read, _opts, ['timestamp']),
+        pull.filter(m => !api.message.sync.isBlocked(m))
+      )
+    })
   }
 }

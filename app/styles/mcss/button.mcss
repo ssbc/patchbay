@@ -21,6 +21,7 @@ button {
   align-items: center
 
   transition: border, color, background .1s ease-in
+  word-break: initial
 
   :focus {
     outline: none
