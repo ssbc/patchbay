@@ -88,7 +88,7 @@ exports.create = function (api) {
     })
 
     container.scrollDownToMessage = scrollDownToMessage
-    container.setQuote = setQuote
+    container.addQuote = addQuote
     return container
 
     function scrollDownToMessage (id) {
@@ -111,8 +111,8 @@ exports.create = function (api) {
       }
     }
 
-    function setQuote(value) {
-      composer.setQuote(value)
+    function addQuote(value) {
+      composer.addQuote(value)
     }
   }
 }
