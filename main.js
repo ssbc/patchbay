@@ -48,6 +48,9 @@ const sockets = combine(
   post
 )
 
+// remove patchcore reply for our version
+delete sockets.message.html.action[2]
+
 const api = entry(sockets, nest('app.html.app', 'first'))
 const app = api.app.html.app
 
