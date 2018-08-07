@@ -11,7 +11,7 @@ exports.create = (api) => {
   return nest('message.html.action', function reply (msg) {
     return h('a', {
       href: '#',
-      'ev-click': () => api.app.sync.goTo({ action: 'reply', key: msg.key, value: msg.value })
+      'ev-click': (ev) => { ev.preventDefault(); api.app.sync.goTo({ action: 'reply', key: msg.key, value: msg.value }) }
     }, 'Reply')
   })
 }
