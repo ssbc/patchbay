@@ -100,8 +100,6 @@ sbot plugins.install ssb-chess-db # for chess
 sbot plugins.install ssb-private # for private messages
 sbot plugins.install ssb-meme # for image search
 
-After that you need to make sure that .ssb/config reads: "ssb-chess-db": "ssbChessIndex" for chess to work.
-
 # restart sbot server (go back to previous tab and kill it)
 ```
 
@@ -169,7 +167,7 @@ Giving modules here will add settings sections to the settings page (`app.page.s
 
 ### How to add a new page
 
-e.g. to add a 'cats' page to the app: 
+e.g. to add a 'cats' page to the app:
 
 - Add a file `app/page/cats.js` which gives `app.page.cats`
 - Tell the router to send people browsing to location `{page: 'cats'}` to send them to this page
@@ -188,5 +186,3 @@ TODO!
 ## License
 
 MIT
-
-
