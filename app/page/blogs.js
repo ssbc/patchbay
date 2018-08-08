@@ -10,6 +10,7 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.sync.goTo': 'first',
   'message.html.render': 'first',
   'sbot.pull.stream': 'first'
 })
