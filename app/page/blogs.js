@@ -49,7 +49,6 @@ exports.create = function (api) {
     })
 
     page.title = '/blogs'
-    page.id = '{"page": "blogs"}' // this is needed because our page is a computed
     page.scroll = keyscroll(page.querySelector('section.content'))
     return page
   }
