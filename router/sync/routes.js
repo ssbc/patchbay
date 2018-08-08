@@ -7,6 +7,7 @@ exports.needs = nest({
   'app.page': {
     'calendar': 'first',
     'blob': 'first',
+    'blogs': 'first',
     'errors': 'first',
     'channel': 'first',
     'imageSearch': 'first',
@@ -30,6 +31,7 @@ exports.create = (api) => {
 
     // loc = location
     const routes = [
+      [ loc => loc.page === 'blogs', pages.blogs ],
       [ loc => loc.page === 'calendar', pages.calendar ],
       [ loc => loc.page === 'errors', pages.errors ],
       [ loc => loc.page === 'imageSearch', pages.imageSearch ],
