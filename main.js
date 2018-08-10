@@ -36,14 +36,12 @@ const post = {
 // from more specialized to more general
 const sockets = combine(
   require('ssb-horcrux'),
-  // require('patch-hub'),
 
   require('patchbay-dark-crystal'),
   require('patchbay-poll'),
   require('ssb-chess'),
   require('patchbay-gatherings'),
   require('patchbay-book'),
-  // require('patch-network),
   patchbay,
   require('patchcore'),
   post

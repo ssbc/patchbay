@@ -1,5 +1,4 @@
 const nest = require('depnest')
-// const insertCss = require('insert-css')
 const compileCss = require('micro-css')
 const { h, computed } = require('mutant')
 

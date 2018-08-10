@@ -1,7 +1,6 @@
 const nest = require('depnest')
 const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
 const pull = require('pull-stream')
-pull.paramap = require('pull-paramap')
 const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const merge = require('lodash/merge')
