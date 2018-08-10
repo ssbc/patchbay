@@ -40,7 +40,7 @@ exports.create = function (api) {
     const onClose = (page) => {
       var history = api.history.obs.store()
       const prunedHistory = history().filter(loc => {
-        return api.app.sync.locationId(loc) != page.id
+        return api.app.sync.locationId(loc) !== page.id
       })
       history.set(prunedHistory)
     }

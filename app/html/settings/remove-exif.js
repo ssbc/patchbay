@@ -32,7 +32,7 @@ exports.create = function (api) {
             checked: removeExif,
             'ev-change': toggleRemoveExif
           })
-         ])
+        ])
       ])
     }
   }
