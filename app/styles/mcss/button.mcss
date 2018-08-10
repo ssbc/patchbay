@@ -36,6 +36,19 @@ button {
     outline: none
   }
 
+  :disabled {
+    color: grey
+    background: #fff
+
+    cursor: initial
+
+    :hover {
+      color: grey
+      background: #fff
+      border: 1px #b9b9b9 solid
+    }
+  }
+
   -subtle {
     color: #b9b9b9
     border: 1px solid rgba(0,0,0,0)

@@ -3,11 +3,11 @@ Modal {
   flex-direction: row
   position: fixed
   z-index: 90
-  text-align: center
-  top: 2.5rem
-  right: 0
-  bottom: 0
-  left: 0
+
+  top: var(--app-border-width)
+  bottom: var(--app-border-width)
+  left: var(--app-border-width)
+  right: var(--app-border-width)
   background: rgba(15, 0, 25, 0.78)
 
   div.content {
@@ -19,25 +19,6 @@ Modal {
     box-shadow: rgba(0,0,0,.34) 2px 6px 10px
     margin: auto
     $dontSelect
-
-    div.dialog {
-      div.message {
-        $colorFontPrimary
-      }
-
-      div.actions {
-        display: flex
-        padding-top: 15px
-
-        button {
-          margin: auto
-
-          -primary {
-            $backgroundPrimary
-          }
-        }
-      }
-    }
   }
 
   -open {
