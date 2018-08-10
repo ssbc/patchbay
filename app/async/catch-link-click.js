@@ -30,7 +30,7 @@ exports.create = function (api) {
       if (!anchor) return true
 
       var href = anchor.getAttribute('href')
-      if (!href || href == '#') return
+      if (!href || href === '#') return
 
       var url = Url.parse(href)
       var opts = {
@@ -50,6 +50,7 @@ exports.create = function (api) {
 
     const openBackground = ctrlKey
     api.router.async.normalise(link, (err, location) => {
+      if (err) throw err
       if (location) api.app.sync.goTo(location, { openBackground })
     })
   }

@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const Blog = require('scuttle-blog')
 const isBlog = require('scuttle-blog/isBlog')
-const { h, Value, computed, when, resolve, onceTrue } = require('mutant')
+const { h, Value, computed, when, resolve } = require('mutant')
 const isEmpty = require('lodash/isEmpty')
 
 exports.gives = nest('message.html.render')
@@ -12,7 +12,7 @@ exports.needs = nest({
   'message.html.decorate': 'reduce',
   'message.html.layout': 'first',
   'message.html.markdown': 'first',
-  'sbot.obs.connection': 'first',
+  'sbot.obs.connection': 'first'
   // 'history.sync.push': 'first',
 })
 
@@ -40,13 +40,12 @@ exports.create = function (api) {
     }, opts))
 
     return api.message.html.decorate(element, { msg })
-
   }
 }
 
 function BlogFull (blog, renderMd) {
   return computed(blog.body, body => {
-    if (!isEmpty(body)) { 
+    if (!isEmpty(body)) {
       return h('BlogFull.Markdown', [
         h('h1', blog.title),
         renderMd(body)
@@ -70,7 +69,7 @@ function BlogCard ({ blog, blobUrl, onClick, color }) {
         'background-size': 'cover'
       }
     }),
-    h('Thumbnail -empty', { 
+    h('Thumbnail -empty', {
       style: { 'background-color': color(blog.title) }
     }, [
       h('i.fa.fa-file-text-o')

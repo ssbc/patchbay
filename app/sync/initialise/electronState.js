@@ -5,14 +5,14 @@ exports.gives = nest('app.sync.initialise')
 
 exports.needs = nest({
   'settings.sync.get': 'first',
-  'settings.sync.set': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
   return nest('app.sync.initialise', errorCatcher)
 
   function errorCatcher () {
-    /// /// TODO - extract this to keep patch-lite isolated from electron
+    // / /// TODO - extract this to keep patch-lite isolated from electron
     const { getCurrentWebContents, getCurrentWindow } = electron.remote
     window.addEventListener('resize', () => {
       var wc = getCurrentWebContents()
@@ -31,8 +31,7 @@ exports.create = function (api) {
 
     var bounds = api.settings.sync.get('electron.windowBounds')
     if (bounds) { getCurrentWindow().setBounds(bounds) }
-    /// ///
+    // / ///
   }
 }
-
 

@@ -31,21 +31,21 @@ electron.app.on('ready', () => {
     {
       label: 'Close Tab',
       accelerator: 'CmdOrCtrl+W',
-      click() {
+      click () {
         windows.main.webContents.send('closeTab')
       }
     },
     {
       label: 'Select Next Tab',
       accelerator: 'CmdOrCtrl+Shift+]',
-      click() {
+      click () {
         windows.main.webContents.send('nextTab')
       }
     },
     {
       label: 'Select Previous Tab',
       accelerator: 'CmdOrCtrl+Shift+[',
-      click() {
+      click () {
         windows.main.webContents.send('previousTab')
       }
     },
