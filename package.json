@@ -70,7 +70,7 @@
     "pull-next-query": "^1.0.0",
     "pull-scroll": "^1.0.9",
     "pull-stream": "^3.6.8",
-    "read-directory": "^2.1.1",
+    "read-directory": "^3.0.0",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
     "scuttlebot": "^11.4.2",
@@ -82,7 +82,7 @@
     "ssb-chess-db": "^1.0.3",
     "ssb-config": "^2.2.0",
     "ssb-ebt": "^5.2.2",
-    "ssb-friends": "^2.4.0",
+    "ssb-friends": "^3.1.1",
     "ssb-horcrux": "^1.0.0",
     "ssb-keys": "^7.0.15",
     "ssb-meme": "^1.0.4",
@@ -101,6 +101,6 @@
   "devDependencies": {
     "electro": "^2.1.1",
     "electron": "^2.0.7",
-    "standard": "^8.6.0"
+    "standard": "^11.0.1"
   }
 }
