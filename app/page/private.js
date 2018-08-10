@@ -91,4 +91,3 @@ exports.create = function (api) {
     return next(api.feed.pull.private, _opts, ['timestamp'])
   }
 }
-

@@ -49,8 +49,8 @@ function keyscroll (content) {
   return function scroll (d) {
     selectChild((!curMsgEl || d === 'first') ? content.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
-      : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-      : curMsgEl)
+        : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
+          : curMsgEl)
 
     return curMsgEl
   }

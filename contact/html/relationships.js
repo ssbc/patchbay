@@ -44,8 +44,8 @@ exports.create = function (api) {
     var relationshipStatus = computed([IFollowThem, theyFollowMe], (IFollowThem, theyFollowMe) => {
       return IFollowThem && theyFollowMe ? '- you are friends'
         : IFollowThem ? '- you follow them'
-        : theyFollowMe ? '- they follow you'
-        : ''
+          : theyFollowMe ? '- they follow you'
+            : ''
     })
 
     function imageLink (id) {

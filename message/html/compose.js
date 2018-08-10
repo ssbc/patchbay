@@ -169,7 +169,7 @@ exports.create = function (api) {
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
-      channelInput.value = ev.detail.id  // HACK : this over-rides the markdown value
+      channelInput.value = ev.detail.id // HACK : this over-rides the markdown value
     })
 
     addSuggest(textArea, (inputText, cb) => {

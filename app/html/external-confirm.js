@@ -17,14 +17,14 @@ exports.create = function (api) {
         lb.remove()
         open(href)
       }},
-      'open'
+    'open'
     )
 
     var cancel = h('button.cancel.-subtle', {
       'ev-click': () => {
         lb.remove()
       }},
-      'cancel'
+    'cancel'
     )
 
     okay.addEventListener('keydown', function (ev) {

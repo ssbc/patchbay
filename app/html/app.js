@@ -33,4 +33,3 @@ exports.create = function (api) {
     return App
   }
 }
-

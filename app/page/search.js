@@ -76,4 +76,3 @@ function highlight (el, query) {
   searcher.highlight()
   return el
 }
-
