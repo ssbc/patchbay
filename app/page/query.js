@@ -38,17 +38,17 @@ exports.create = function (api) {
         // console.error(err)
         return err
       }
-      if (!Array.isArray(query)) return
-      if (!query.map(q => Object.keys(q)[0]).every(q => ['$filter', '$map', '$reduce'].includes(q))) return
-      activateQuery()
+      if (isValidQuery(query)) activateQuery()
     })
-    const query = Value(json5.parse(initial()))
+
+    const { initialQuery, initialValue } = getInitialState(location)
+    const query = Value(initialQuery)
 
     const activateQuery = () => query.set(json5.parse(input()))
 
     return h('Query', { title: '/query' }, [
       h('section.query', [
-        h('textarea', { 'ev-input': ev => input.set(ev.target.value), value: initial() }),
+        h('textarea', { 'ev-input': ev => input.set(ev.target.value), value: initialValue }),
         h('button', {
           className: when(error, '', '-primary'),
           disabled: when(error, 'disabled'),
@@ -83,8 +83,16 @@ exports.create = function (api) {
   }
 }
 
-function initial () {
-  return `[{
+function getInitialState (location) {
+  const { initialQuery, initialValue } = location
+  if (isValidQuery(initialQuery)) {
+    return {
+      initialQuery,
+      initialValue: initialValue || json5.stringify(initialQuery, null, 2)
+    }
+  }
+
+  const defaultValue = `[{
   $filter: {
     value: {
       timestamp: {$gt: 0},
@@ -108,4 +116,15 @@ function initial () {
 
 // $map - optional, can be used to pluck data you want out. Doing this reduces the amount of data sent over muxrpc, which speeds up loading
 `
+  return {
+    initialQuery: json5.parse(defaultValue),
+    initialValue: defaultValue
+  }
+}
+
+function isValidQuery (query) {
+  if (!Array.isArray(query)) return false
+  if (!query.map(q => Object.keys(q)[0]).every(q => ['$filter', '$map', '$reduce'].includes(q))) return false
+
+  return true
 }

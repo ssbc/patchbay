@@ -21,6 +21,7 @@ button {
   align-items: center
 
   transition: border, color, background .1s ease-in
+  word-break: initial
 
   :focus {
     outline: none
@@ -33,6 +34,19 @@ button {
     background-color: #15d6b4
     border: 1px solid #15d6b4
     outline: none
+  }
+
+  :disabled {
+    color: grey
+    background: #fff
+
+    cursor: initial
+
+    :hover {
+      color: grey
+      background: #fff
+      border: 1px #b9b9b9 solid
+    }
   }
 
   -subtle {
