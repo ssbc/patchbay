@@ -79,11 +79,8 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
     case 76: // l = right
       tabs.selectRelative(1)
       return goTo(JSON.parse(tabs.currentPage().id))
-    case 88: // x = close
-      if (tabs.selected) {
-        var sel = tabs.selected
-        tabs.remove(sel)
-      }
+  case 88: // x = close
+      tabs.closeCurrentTab()
       return
 
     // Search

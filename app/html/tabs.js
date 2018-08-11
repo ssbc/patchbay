@@ -59,7 +59,7 @@ exports.create = function (api) {
     }
     _tabs.nextTab = () => _tabs.currentPage() && _tabs.selectRelative(1)
     _tabs.previousTab = () => _tabs.currentPage() && _tabs.selectRelative(-1)
-    _tabs.closeCurrentTab = () => _tabs.currentPage() && _tabs.remove(_tabs.selected[0])
+    _tabs.closeCurrentTab = () => { _tabs.currentPage() && _tabs.remove(_tabs.selected[0]); _tabs.select(-1) }
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))
