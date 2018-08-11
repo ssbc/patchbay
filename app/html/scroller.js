@@ -9,7 +9,7 @@ exports.create = function (api) {
   function Scroller (opts = {}) {
     const { prepend = [], content = null, append = [], classList = [], className = '', title = '' } = opts
 
-    const contentSection = h('section.content', content)
+    const contentSection = h('section.content', { title: '' }, content)
 
     const container = h('Scroller',
       { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },

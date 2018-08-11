@@ -38,6 +38,7 @@ const sockets = combine(
   require('ssb-horcrux'),
   // require('patch-hub'),
 
+  require('patchbay-dark-crystal'),
   require('patchbay-poll'),
   require('ssb-chess'),
   require('patchbay-gatherings'),

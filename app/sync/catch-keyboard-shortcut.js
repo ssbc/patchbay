@@ -44,6 +44,8 @@ function textFieldShortcuts (ev) {
 }
 
 function genericShortcuts (ev, { tabs, search, goTo, back }) {
+  const scroll = tabs.currentPage().scroll || function () {}
+
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
     if (!gPressed) {
@@ -53,16 +55,16 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
       }, 3000)
       return
     }
-    tabs.currentPage().scroll('first')
+    scroll('first')
   }
   gPressed = false
 
   switch (ev.keyCode) {
     // Messages (cont'd)
     case 74: // j = older
-      return tabs.currentPage().scroll(1)
+      return scroll(1)
     case 75: // k = newer
-      return tabs.currentPage().scroll(-1)
+      return scroll(-1)
     case 13: // enter = open
       return goToMessage(ev, { goTo })
     case 79: // o = open

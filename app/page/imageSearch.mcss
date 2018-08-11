@@ -7,47 +7,6 @@ Page -imageSearch {
   justify-content: center
   align-items: start
 
-  div.Modal {
-    div.content {
-      display: grid
-      justify-items: center
-
-      img {
-        max-width: 90vw
-        max-height: 80vh
-
-        margin-bottom: 1rem
-      }
-
-      div.md {
-        pre {
-          user-select: all
-          padding: .2rem
-          padding-right: 2rem
-          min-width: 39rem
-          background-color: rgba(0,0,0,.1)
-
-          text-align: right
-          margin-top: .2rem
-          display: inline-block
-        }
-      }
-
-      table {
-        tr { 
-          td {
-            text-align: left
-            padding-right: .5rem            
-          }
-
-          td.msg {
-            font-family: monospace
-          }
-        }
-      }
-    }
-  }
-
   section.settings {
     padding: 1rem 0
     input {
@@ -79,6 +38,47 @@ Page -imageSearch {
       }
 
       margin: 0 1rem 1rem 0
+    }
+  }
+}
+
+ImageSearchDetails {
+  padding: 1rem
+
+  display: grid
+  justify-items: center
+
+  img {
+    max-width: 90vw
+    max-height: 80vh
+
+    margin-bottom: 1rem
+  }
+
+  div.md {
+    pre {
+      user-select: all
+      padding: .2rem
+      padding-right: 2rem
+      min-width: 39rem
+      background-color: rgba(0,0,0,.1)
+
+      text-align: right
+      margin-top: .2rem
+      display: inline-block
+    }
+  }
+
+  table {
+    tr { 
+      td {
+        text-align: left
+        padding-right: .5rem            
+      }
+
+      td.msg {
+        font-family: monospace
+      }
     }
   }
 }

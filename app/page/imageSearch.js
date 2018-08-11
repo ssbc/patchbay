@@ -103,7 +103,7 @@ function Modal ({ results, focusedBlob, blobUrl, name, goTo, createModal, backli
 
     const imageName = Value('CHOOSE YOUR OWN NAME')
 
-    return [
+    return h('ImageSearchDetails', [
       h('img', { src: blobUrl(blob) }),
       h('div.md', [
         'Copy markdown: ',
@@ -123,7 +123,7 @@ function Modal ({ results, focusedBlob, blobUrl, name, goTo, createModal, backli
           isOpen.set(false)
         }
       }, 'Close')
-    ]
+    ])
   })
   return createModal(modalContent, { isOpen })
 }
