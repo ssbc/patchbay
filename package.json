@@ -75,6 +75,7 @@
     "pull-abortable": "^4.1.1",
     "pull-cat": "^1.1.11",
     "pull-next": "^1.0.0",
+    "pull-next-query": "^1.0.0",
     "pull-scroll": "^1.0.9",
     "pull-stream": "^3.6.8",
     "read-directory": "^2.1.1",
