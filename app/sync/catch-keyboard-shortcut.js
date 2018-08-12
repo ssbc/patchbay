@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first',
+  'app.sync.goTo': 'first'
 })
 
 var gPressed = false
@@ -35,7 +35,7 @@ function textFieldShortcuts (ev) {
   switch (ev.keyCode) {
     case 13: // ctrl+enter
       if (ev.ctrlKey) {
-        ev.target.publish()  // expects the textField to have a publish method
+        ev.target.publish() // expects the textField to have a publish method
       }
       return
     case 27: // esc
@@ -79,7 +79,7 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
     case 76: // l = right
       tabs.selectRelative(1)
       return goTo(JSON.parse(tabs.currentPage().id))
-  case 88: // x = close
+    case 88: // x = close
       tabs.closeCurrentTab()
       return
 

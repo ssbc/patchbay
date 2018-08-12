@@ -73,20 +73,15 @@ function scroll (range, i) {
   range.lt.set(new Date(lt.getFullYear(), lt.getMonth(), lt.getDate() + i))
 
   function isMonthInterval (gte, lt) {
-    return gte.getDate() === 1 &&             // 1st of month
-      lt.getDate() === 1 &&                   // to the 1st of the month
+    return gte.getDate() === 1 && // 1st of month
+      lt.getDate() === 1 && // to the 1st of the month
       gte.getMonth() + 1 === lt.getMonth() && // one month gap
       gte.getFullYear() === lt.getFullYear()
   }
 
   function isWeekInterval (gte, lt) {
-    console.log(
-      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString(),
-      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString(),
-      lt.toISOString(),
-    )
     return gte.getDay() === 1 && // from monday
-      lt.getDay() === 1 &&      // to just inside monday
+      lt.getDay() === 1 && // to just inside monday
       new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString()
   }
 }

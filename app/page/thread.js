@@ -111,7 +111,7 @@ exports.create = function (api) {
       }
     }
 
-    function addQuote(value) {
+    function addQuote (value) {
       composer.addQuote(value)
     }
   }

@@ -1,7 +1,6 @@
 const nest = require('depnest')
 const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
 const pull = require('pull-stream')
-pull.paramap = require('pull-paramap')
 const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const merge = require('lodash/merge')
@@ -97,7 +96,7 @@ exports.create = function (api) {
 
     function PageByUpdate (state) {
       const createStream = (opts) => {
-        const { feedId, started, participated, other } = state.show
+        const { started, participated, other } = state.show
         if (!started && !participated && !other) return pull.empty()
 
         return api.sbot.pull.stream(server => {
@@ -409,8 +408,8 @@ function keyscroll (content) {
   return function scroll (d) {
     selectChild((!curMsgEl || d === 'first') ? content.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
-      : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-      : curMsgEl)
+        : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
+          : curMsgEl)
 
     return curMsgEl
   }

@@ -32,6 +32,7 @@ exports.create = function (api) {
 
     // currently do normalisation here only to generate normalised locationId
     api.router.async.normalise(location, (err, loc) => {
+      if (err) throw err
       const locationId = api.app.sync.locationId(loc)
 
       var page = tabs.get(locationId)
@@ -40,11 +41,10 @@ exports.create = function (api) {
         tabs.select(locationId)
         api.history.sync.push(loc)
 
-        if (loc.action == "quote" && page.firstChild && page.firstChild.addQuote) {
+        if (loc.action === 'quote' && page.firstChild && page.firstChild.addQuote) {
           page.firstChild.addQuote(loc.value)
           tabs.currentPage().scroll('last')
-        } else if (loc.action == "reply")
-          tabs.currentPage().scroll('last')
+        } else if (loc.action === 'reply') { tabs.currentPage().scroll('last') }
 
         return true
       }

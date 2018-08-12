@@ -1,7 +1,6 @@
 const nest = require('depnest')
 const { h, Struct, Value } = require('mutant')
 const pull = require('pull-stream')
-const next = require('pull-next-query')
 const Scroller = require('pull-scroll')
 const TextNodeSearcher = require('text-node-searcher')
 
@@ -76,4 +75,3 @@ function highlight (el, query) {
   searcher.highlight()
   return el
 }
-

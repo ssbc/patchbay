@@ -44,7 +44,7 @@ exports.create = function (api) {
     })
 
     input.addEventListener('suggestselect', ev => {
-      input.value = ev.detail.id  // HACK : this over-rides the markdown value
+      input.value = ev.detail.id // HACK : this over-rides the markdown value
       goToLocation(input.value.trim(), ev)
     })
 
