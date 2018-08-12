@@ -80,11 +80,6 @@ function scroll (range, i) {
   }
 
   function isWeekInterval (gte, lt) {
-    console.log(
-      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString(),
-      new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString(),
-      lt.toISOString()
-    )
     return gte.getDay() === 1 && // from monday
       lt.getDay() === 1 && // to just inside monday
       new Date(gte.getFullYear(), gte.getMonth(), gte.getDate() + 7).toISOString() === lt.toISOString()
