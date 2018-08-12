@@ -82,7 +82,7 @@
     "ssb-chess-db": "^1.0.3",
     "ssb-config": "^2.2.0",
     "ssb-ebt": "^5.2.2",
-    "ssb-friends": "^3.1.1",
+    "ssb-friends": "^2.4.0",
     "ssb-horcrux": "^1.0.0",
     "ssb-keys": "^7.0.15",
     "ssb-meme": "^1.0.4",
