@@ -159,9 +159,8 @@ exports.create = function (api) {
       }
     }
 
-    if (location.action == 'quote') {
+    if (location.action == 'quote')
       composer.addQuote(location.value)
-    }
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {

@@ -35,9 +35,16 @@ exports.create = function (api) {
       const locationId = api.app.sync.locationId(loc)
 
       var page = tabs.get(locationId)
+
       if (page) {
         tabs.select(locationId)
         api.history.sync.push(loc)
+
+        if (loc.action == "quote" && page.firstChild && page.firstChild.addQuote) {
+          page.firstChild.addQuote(loc.value)
+          tabs.currentPage().scroll('last')
+        } else if (loc.action == "reply")
+          tabs.currentPage().scroll('last')
 
         return true
       }

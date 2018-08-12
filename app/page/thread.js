@@ -88,6 +88,7 @@ exports.create = function (api) {
     })
 
     container.scrollDownToMessage = scrollDownToMessage
+    container.addQuote = addQuote
     return container
 
     function scrollDownToMessage (id) {
@@ -108,6 +109,10 @@ exports.create = function (api) {
         ;(msg.scrollIntoViewIfNeeded || msg.scrollIntoView).call(msg)
         msg.focus()
       }
+    }
+
+    function addQuote(value) {
+      composer.addQuote(value)
     }
   }
 }
