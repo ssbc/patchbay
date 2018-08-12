@@ -4,7 +4,7 @@
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
-    "lint": "standard",
+    "lint": "standard --fix",
     "rebuild": "cross-script npm rebuild --runtime=electron \"--target=$(electron -v)\" \"--abi=$(electron --abi)\" --disturl=https://atom.io/download/atom-shell",
     "start": "electron index.js -- --title patchbay",
     "start-frameless": "FRAME=false npm start",

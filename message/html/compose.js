@@ -92,7 +92,7 @@ exports.create = function (api) {
       hasContent.set(true)
     }
 
-    var isPrivate = location.page == 'private' ||
+    var isPrivate = location.page === 'private' ||
           (location.key && !location.value) ||
           (location.value && location.value.private)
 
@@ -159,8 +159,7 @@ exports.create = function (api) {
       }
     }
 
-    if (location.action == 'quote')
-      composer.addQuote(location.value)
+    if (location.action === 'quote') { composer.addQuote(location.value) }
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {

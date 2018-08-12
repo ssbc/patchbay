@@ -48,9 +48,8 @@ const sockets = combine(
 )
 
 // remove patchcore reply for our version
-var pcReplyIndex = sockets.message.html.action.findIndex(x => x.name == 'reply')
-if (pcReplyIndex != -1)
-  delete sockets.message.html.action[pcReplyIndex]
+var pcReplyIndex = sockets.message.html.action.findIndex(x => x.name === 'reply')
+if (pcReplyIndex !== -1) { delete sockets.message.html.action[pcReplyIndex] }
 
 const api = entry(sockets, nest('app.html.app', 'first'))
 const app = api.app.html.app

@@ -96,7 +96,7 @@ exports.create = function (api) {
 
     function PageByUpdate (state) {
       const createStream = (opts) => {
-        const { feedId, started, participated, other } = state.show
+        const { started, participated, other } = state.show
         if (!started && !participated && !other) return pull.empty()
 
         return api.sbot.pull.stream(server => {

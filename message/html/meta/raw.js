@@ -54,7 +54,7 @@ function colorKeys (chunks) {
 
 function linkify (text) {
   // from ssb-ref
-  var refRegex = /((?:@|%|&)[A-Za-z0-9\/+]{43}=\.[\w\d]+)/g
+  var refRegex = /((?:@|%|&)[A-Za-z0-9/+]{43}=\.[\w\d]+)/g
 
   var arr = text.split(refRegex)
   for (var i = 1; i < arr.length; i += 2) {

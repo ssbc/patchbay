@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const Blog = require('scuttle-blog')
 const isBlog = require('scuttle-blog/isBlog')
-const { h, Value, computed, when, resolve, onceTrue } = require('mutant')
+const { h, Value, computed, when, resolve } = require('mutant')
 const isEmpty = require('lodash/isEmpty')
 
 exports.gives = nest('message.html.render')
