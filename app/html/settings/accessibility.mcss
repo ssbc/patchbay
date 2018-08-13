@@ -1,0 +1,28 @@
+AccessibilityStyles {
+  div {
+    margin-left: .5rem
+    cursor: pointer
+
+    display: flex
+    align-items: center
+
+    :hover {
+      text-decoration: underline
+    }
+
+    label {
+      min-width: 6rem
+      margin-right: .5rem
+    }
+
+    input[type=range] {
+      filter: drop-shadow(0 0 8px rgba(0,0,0,.2))
+      :focus {
+        box-shadow: none
+      }
+    }
+
+    i {
+    }
+  }
+}

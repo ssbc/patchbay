@@ -28,7 +28,7 @@ SettingsPage {
       }
 
       div {
-        p {
+        p, div {
           margin-top: .2rem
           margin-left: .3rem
         }
@@ -50,7 +50,6 @@ SettingsPage {
           width: 600px
           max-width: 600px
         }
-
       }
     }
   }
