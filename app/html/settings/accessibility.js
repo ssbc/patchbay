@@ -15,12 +15,10 @@ exports.create = function (api) {
   })
 
   function accessibility () {
-    const invert = api.settings.obs.get('patchbay.accessibility.invert', false)
-    const saturation = api.settings.obs.get('patchbay.accessibility.saturation', 100)
-    const brightness = api.settings.obs.get('patchbay.accessibility.brightness', 100)
-    const contrast = api.settings.obs.get('patchbay.accessibility.contrast', 100)
-
-    invert(console.log)
+    const invert = api.settings.obs.get('patchbay.accessibility.invert')
+    const saturation = api.settings.obs.get('patchbay.accessibility.saturation')
+    const brightness = api.settings.obs.get('patchbay.accessibility.brightness')
+    const contrast = api.settings.obs.get('patchbay.accessibility.contrast')
 
     return {
       title: 'Accessibility',
@@ -45,4 +43,3 @@ exports.create = function (api) {
     }
   }
 }
-
