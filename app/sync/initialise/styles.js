@@ -15,17 +15,20 @@ exports.create = function (api) {
 
   function styles () {
     const css = values(api.styles.css()).join('\n')
-    const custom = api.settings.obs.get('patchbay.customStyles', '')
-    const accessibility = api.settings.obs.get('patchbay.accessibility', '')
+    const custom = api.settings.obs.get('patchbay.customStyles')
+    const accessibility = api.settings.obs.get('patchbay.accessibility')
 
     document.head.appendChild(
+      h('style', { innerHTML: css })
+    )
+
+    document.head.appendChild(
+      h('style', { innerHTML: computed(custom, compileCss) })
+    )
+    document.head.appendChild(
       h('style', {
-        innerHTML: computed([custom, accessibility], (custom, accessibility) => {
-          return [
-            css,
-            compileCss(custom),
-            compileCss(accessibilityMcss(accessibility))
-          ].join('\n')
+        innerHTML: computed(accessibility, a11y => {
+          return compileCss(accessibilityMcss(a11y))
         })
       })
     )
@@ -41,16 +44,22 @@ function accessibilityMcss (settings) {
   const brightness = get(settings, 'brightness', 100)
   const contrast = get(settings, 'contrast', 100)
 
-  return `
-    body {
-      filter: ${invert ? 'invert()' : ''} saturate(${saturation}%) brightness(${brightness}%) contrast(${contrast}%)
+  const css = `
+body {
+  filter: ${invert ? 'invert()' : ''} saturate(${saturation}%) brightness(${brightness}%) contrast(${contrast}%)
 
-      (img) {
-        filter: ${invert ? 'invert()' : ''}
-      }
-
-    }
-  `
+  (img) {
+    filter: ${invert ? 'invert()' : ''}
+  }
+  (video) {
+    filter: ${invert ? 'invert()' : ''}
+  }
+  (button) {
+    filter: ${invert ? 'invert()' : ''}
+  }
+}
+`
+  return css
 }
 // ////////////////////////////
 

@@ -21,9 +21,8 @@ AccessibilityStyles {
         box-shadow: none
       }
     }
+
     i {
     }
   }
-
 }
-

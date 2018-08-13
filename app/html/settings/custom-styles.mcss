@@ -1,4 +1,8 @@
 CustomStyles {
+  textarea {
+    font-family: monospace
+    line-height: 1.2rem
+  }
   button {
     display: block
     margin: .5rem 0
