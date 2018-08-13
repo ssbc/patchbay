@@ -35,7 +35,7 @@ function textFieldShortcuts (ev) {
   switch (ev.keyCode) {
     case 13: // ctrl+enter
       if (ev.ctrlKey) {
-        ev.target.publish() // expects the textField to have a publish method
+        ev.target.publish && ev.target.publish() // expects the textField to have a publish method
       }
       return
     case 27: // esc
@@ -44,7 +44,9 @@ function textFieldShortcuts (ev) {
 }
 
 function genericShortcuts (ev, { tabs, search, goTo, back }) {
-  const scroll = tabs.currentPage().scroll || function () {}
+  const scroll = tabs.currentPage().scroll || noop
+  // TODO change this scroll API - it seems some pages
+  // (e.g. Dark Crystal Index has scroll defined and expect an object...)
 
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
@@ -113,5 +115,8 @@ function toggleRawMessage (ev) {
   if (!msg.classList.contains('Message')) return
 
   // this uses a crudely exported nav api
-  msg.querySelector('.meta .toggle-raw-msg').click()
+  const target = msg.querySelector('.meta .toggle-raw-msg')
+  if (target) target.click()
 }
+
+function noop () {}
