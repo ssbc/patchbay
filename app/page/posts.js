@@ -17,6 +17,7 @@ exports.needs = nest({
   'about.html.avatar': 'first',
   'about.html.link': 'first',
   'app.sync.goTo': 'first',
+  'app.sync.locationId': 'first',
   'keys.sync.id': 'first',
   'message.html.compose': 'first',
   'message.html.markdown': 'first',
@@ -89,7 +90,7 @@ exports.create = function (api) {
       if (state.sort === BY_START) page = PageByStart(state)
 
       page.title = '/posts'
-      page.id = '{"page": "posts"}' // this is needed because our page is a computed
+      page.id = api.app.sync.locationId({page: 'posts'}) // this is needed because our page is a computed
       page.scroll = keyscroll(page.querySelector('section.content'))
       return page
     })

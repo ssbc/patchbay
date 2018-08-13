@@ -23,7 +23,7 @@ exports.create = function (api) {
     return {
       title: 'Custom Styles',
       body: h('CustomStyles', [
-        h('p', 'Comma-seperated list of tabs which will open on startup.'),
+        h('p', 'Custom MCSS to be applied on this window.'),
         styles,
         h('button', {'ev-click': peachify}, 'Apply Styles')
       ])
