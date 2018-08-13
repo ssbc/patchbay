@@ -1,5 +1,7 @@
 const nest = require('depnest')
 const merge = require('lodash/merge')
+const fs = require('fs')
+const { join } = require('path')
 
 exports.gives = nest('app.sync.initialise')
 
@@ -10,7 +12,14 @@ exports.needs = nest({
 
 const defaults = {
   patchbay: {
-    defaultTabs: ['/public', '/inbox', '/notifications']
+    defaultTabs: ['/public', '/inbox', '/notifications'],
+    accessibility: {
+      invert: false,
+      saturation: 100,
+      brightness: 100,
+      contrast: 100
+    },
+    customStyles: defaultStyles()
   },
   filter: {
     exclude: {
@@ -41,4 +50,11 @@ exports.create = function (api) {
 
     set(settings)
   }
+}
+
+function defaultStyles () {
+  // TODO add a nice little helper README / comments
+  const path = join(__dirname, '../../styles/mcss/app-theme-vars.mcss')
+  const styles = fs.readFileSync(path, 'utf8')
+  return styles
 }

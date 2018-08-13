@@ -1,8 +1,6 @@
 Page {
   width: 100%
 
-  $backgroundPrimary
-
   display: flex
   flex-wrap: wrap
 }
