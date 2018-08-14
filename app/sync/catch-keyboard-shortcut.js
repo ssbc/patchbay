@@ -44,9 +44,15 @@ function textFieldShortcuts (ev) {
 }
 
 function genericShortcuts (ev, { tabs, search, goTo, back }) {
-  const scroll = tabs.currentPage().scroll || noop
+  let scroll
+  const currentPage = tabs.currentPage()
   // TODO change this scroll API - it seems some pages
-  // (e.g. Dark Crystal Index has scroll defined and expect an object...)
+  // (e.g. Dark Crystal Index) has scroll defined and expect an object
+  if (currentPage) {
+    scroll = currentPage.scroll
+  } else {
+    scroll = noop
+  }
 
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
