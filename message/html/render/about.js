@@ -43,9 +43,9 @@ exports.create = function (api) {
     about = about || link
 
     const metaData = [
-      when(name, h('div', [ h('strong', 'Name: '), name ])),
-      when(description, h('div', [ h('strong', 'Description: '), description ])),
-      when(image, h('img', { src: api.blob.sync.url(image), style: { 'margin-top': '.5rem' } }))
+      name ? h('div', [ h('strong', 'Name: '), name ]) : undefined,
+      description ? h('div', [ h('strong', 'Description: '), description ]) : undefined,
+      image ? h('img', { src: api.blob.sync.url(image), style: { 'margin-top': '.5rem' } }): undefined
     ]
 
     if (!ref.isFeed(about)) {
