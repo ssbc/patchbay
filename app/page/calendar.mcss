@@ -175,6 +175,7 @@ CalendarDayName {
 
 CalendarEvents {
   width: 50rem
+  margin-right: 6rem
 
   div {
     width: 50rem
