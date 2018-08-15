@@ -12,7 +12,7 @@ exports.create = (api) => {
   return nest('message.html.meta', raw)
 
   function raw (msg, { rawMessage } = {}) {
-    return h('i.fa.fa-plus', {
+    return h('i.toggle-raw-msg.fa.fa-plus', {
       title: 'View raw data',
       style: {
         order: 99,
