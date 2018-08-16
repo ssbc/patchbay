@@ -28,7 +28,6 @@ exports.create = function (api) {
 
   function menuItem () {
     return h('a', {
-      style: { order: 0 },
       'ev-click': () => api.app.sync.goTo(api.keys.sync.id())
     }, '/profile')
   }
