@@ -136,25 +136,24 @@ CalendarDay {
     /* border-radius: var(--day-radius) */
     /* background: hsla(277, 57%, 45%, 1) */
 
-    div {
-      background: #fff
-      width: 6px
-      height: 6px
+    div.dot {
+      background: none
+      width: 4px
+      height: 4px
+      border: 1px solid #fff
       border-radius: 8px
-
-      display: flex
-      justify-content: center
-      align-items: center
-
-      div {
-        background: #000
-        width: 4px
-        height: 4px
-        border-radius: 4px
-      }
     }
 
     -past {
+    }
+
+    -attending {
+      div.dot {
+        background: #fff
+        width: 6px
+        height: 6px
+        border: none
+      }
     }
   }
 }

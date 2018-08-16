@@ -10,8 +10,9 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'message.html.render': 'first',
   'app.sync.goTo': 'first',
+  'keys.sync.id': 'first',
+  'message.html.render': 'first',
   'sbot.async.get': 'first',
   'sbot.pull.stream': 'first'
 })
@@ -35,13 +36,15 @@ exports.create = (api) => {
       today: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
       year: d.getFullYear(),
       events: MutantArray([]),
+      attending: MutantArray([]),
       range: Struct({
         gte: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
         lt: new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
       })
     })
 
-    watch(state.year, year => getEvents(year, state.events, api))
+    watch(state.year, year => getGatherings(year, state.events, api))
+    watchAttending(state.attending, api)
 
     const page = h('CalendarPage', { title: '/calendar' }, [
       Calendar(state),
@@ -110,11 +113,53 @@ function Events (state, api) {
   }))
 }
 
-function getEvents (year, events, api) {
+function watchAttending (attending, api) {
+  const myKey = api.keys.sync.id()
+
   const query = [{
     $filter: {
       value: {
-        timestamp: {$gt: Number(new Date(year, 0, 1))}, // ordered by published time
+        author: myKey,
+        content: {
+          type: 'about',
+          about: { $is: 'string' },
+          attendee: { link: myKey }
+        }
+      }
+    }
+  }, {
+    $map: {
+      key: ['value', 'content', 'about'], // gathering
+      rm: ['value', 'content', 'attendee', 'remove']
+    }
+  }]
+
+  const opts = { reverse: false, live: true, query }
+
+  pull(
+    api.sbot.pull.stream(server => server.query.read(opts)),
+    pull.filter(m => !m.sync),
+    pull.filter(Boolean),
+    pull.drain(({ key, rm }) => {
+      var hasKey = attending.includes(key)
+
+      if (!hasKey && !rm) attending.push(key)
+      else if (hasKey && rm) attending.delete(key)
+    })
+  )
+}
+
+function getGatherings (year, events, api) {
+  // gatherings specify times with `about` messages which have a startDateTime
+  // NOTE - this gets a window of about messages around the current year but does not gaurentee
+  //        that we got all events in this year (e.g. something booked 6 months agead would be missed)
+  const query = [{
+    $filter: {
+      value: {
+        timestamp: { // ordered by published time
+          $gt: Number(new Date(year - 1, 11, 1)),
+          $lt: Number(new Date(year + 1, 0, 1))
+        },
         content: {
           type: 'about',
           startDateTime: {
@@ -130,11 +175,7 @@ function getEvents (year, events, api) {
     }
   }]
 
-  const opts = {
-    reverse: false,
-    live: true,
-    query
-  }
+  const opts = { reverse: false, live: true, query }
 
   pull(
     api.sbot.pull.stream(server => server.query.read(opts)),
@@ -157,6 +198,8 @@ function getEvents (year, events, api) {
 // Thanks to nomand for the inspiration and code (https://github.com/nomand/Letnice),
 // they formed the foundation of this work
 
+// Calendar takes events of format { date: Date, data: { attending: Boolean, ... } }
+
 const MONTHS = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
 const DAYS = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
 
@@ -174,7 +217,12 @@ function Calendar (state) {
         h('a', { 'ev-click': () => state.year.set(state.year() + 1) }, '+')
       ])
     ]),
-    h('div.months', computed(throttle(state, 100), ({ today, year, events, range }) => {
+    h('div.months', computed(throttle(state, 100), ({ today, year, events, attending, range }) => {
+      events = events.map(ev => {
+        ev.data.attending = attending.includes(ev.data.key)
+        return ev
+      })
+
       return MONTHS.map((month, monthIndex) => {
         return Month({ month, monthIndex, today, year, events, range, gte, lt })
       })
@@ -215,6 +263,10 @@ function Month ({ month, monthIndex, today, year, events, range, gte, lt }) {
       return e.date >= date && e.date < dateEnd
     })
 
+    const attending = eventsOnDay.some(e => {
+      return e.data.attending
+    })
+
     const opts = {
       attributes: {
         'title': `${year}-${monthIndex + 1}-${day}`,
@@ -228,7 +280,8 @@ function Month ({ month, monthIndex, today, year, events, range, gte, lt }) {
       classList: [
         date < today ? '-past' : '-future',
         eventsOnDay.length ? '-events' : '',
-        date >= range.gte && date < range.lt ? '-selected' : ''
+        date >= range.gte && date < range.lt ? '-selected' : '',
+        attending ? '-attending' : ''
       ],
       'ev-click': (ev) => {
         if (ev.shiftKey) {
