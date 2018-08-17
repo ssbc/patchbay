@@ -21,6 +21,7 @@ var createSbot = require('scuttlebot')
   .use(require('ssb-private'))
   .use(require('ssb-query'))
   .use(require('ssb-search'))
+  .use(require('ssb-unread'))
   .use(require('ssb-ws'))
   // .use(require('ssb-mutual')) // this is has recursion problems atm
 

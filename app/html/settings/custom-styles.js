@@ -6,7 +6,6 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'app.html.settings': 'map',
   'settings.obs.get': 'first',
   'settings.sync.set': 'first'
 })
@@ -23,13 +22,13 @@ exports.create = function (api) {
     return {
       title: 'Custom Styles',
       body: h('CustomStyles', [
-        h('p', 'Comma-seperated list of tabs which will open on startup.'),
+        h('p', 'Custom MCSS to be applied on this window.'),
         styles,
-        h('button', {'ev-click': peachify}, 'Apply Styles')
+        h('button', {'ev-click': save}, 'Apply Styles')
       ])
     }
 
-    function peachify () {
+    function save () {
       api.settings.sync.set({
         patchbay: {
           customStyles: styles.value
@@ -38,4 +37,3 @@ exports.create = function (api) {
     }
   }
 }
-

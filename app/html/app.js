@@ -28,9 +28,10 @@ exports.create = function (api) {
     api.app.sync.initialise(App)
     // runs all the functions in app/sync/initialise
 
-    api.history.obs.location()(loc => api.app.sync.goTo(loc || {}))
+    api.history.obs.location()(loc => {
+      api.app.sync.goTo(loc || {})
+    })
 
     return App
   }
 }
-

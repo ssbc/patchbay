@@ -40,7 +40,7 @@ exports.create = function (api) {
         lb.remove()
         api.message.async.publish(content, cb)
       }},
-      'okay'
+    'okay'
     )
 
     var cancel = h('button.cancel.-subtle', {
@@ -48,7 +48,7 @@ exports.create = function (api) {
         lb.remove()
         cb(null)
       }},
-      'cancel'
+    'cancel'
     )
 
     okay.addEventListener('keydown', (ev) => {

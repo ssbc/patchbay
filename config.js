@@ -4,7 +4,7 @@ const ssbKeys = require('ssb-keys')
 const Path = require('path')
 
 const appName = process.env.ssb_appname || 'ssb'
-const opts = appName == 'ssb'
+const opts = appName === 'ssb'
   ? null
   : null // require('./default-config.json')
 

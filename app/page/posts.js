@@ -1,7 +1,6 @@
 const nest = require('depnest')
 const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
 const pull = require('pull-stream')
-pull.paramap = require('pull-paramap')
 const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const merge = require('lodash/merge')
@@ -18,6 +17,7 @@ exports.needs = nest({
   'about.html.avatar': 'first',
   'about.html.link': 'first',
   'app.sync.goTo': 'first',
+  'app.sync.locationId': 'first',
   'keys.sync.id': 'first',
   'message.html.compose': 'first',
   'message.html.markdown': 'first',
@@ -90,14 +90,14 @@ exports.create = function (api) {
       if (state.sort === BY_START) page = PageByStart(state)
 
       page.title = '/posts'
-      page.id = '{"page": "posts"}' // this is needed because our page is a computed
+      page.id = api.app.sync.locationId({page: 'posts'}) // this is needed because our page is a computed
       page.scroll = keyscroll(page.querySelector('section.content'))
       return page
     })
 
     function PageByUpdate (state) {
       const createStream = (opts) => {
-        const { feedId, started, participated, other } = state.show
+        const { started, participated, other } = state.show
         if (!started && !participated && !other) return pull.empty()
 
         return api.sbot.pull.stream(server => {
@@ -227,7 +227,7 @@ exports.create = function (api) {
             // className: computed(root.md, r => r ? '' : '-loading'),
             attributes: {
               tabindex: '0', // needed to be able to navigate and show focus()
-              'data-id': key // TODO do this with decorators?
+              'data-key': key // TODO do this with decorators?
             }
           }, [
             h('section.authored', [
@@ -409,8 +409,8 @@ function keyscroll (content) {
   return function scroll (d) {
     selectChild((!curMsgEl || d === 'first') ? content.firstChild
       : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
-      : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-      : curMsgEl)
+        : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
+          : curMsgEl)
 
     return curMsgEl
   }

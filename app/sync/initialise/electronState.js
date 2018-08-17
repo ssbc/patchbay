@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.initialise')
 
 exports.needs = nest({
   'settings.sync.get': 'first',
-  'settings.sync.set': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -34,5 +34,3 @@ exports.create = function (api) {
     /// ///
   }
 }
-
-

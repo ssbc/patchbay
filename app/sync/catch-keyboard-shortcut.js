@@ -5,7 +5,7 @@ exports.gives = nest('app.sync.catchKeyboardShortcut')
 exports.needs = nest({
   'app.html.searchBar': 'first',
   'app.html.tabs': 'first',
-  'app.sync.goTo': 'first',
+  'app.sync.goTo': 'first'
 })
 
 var gPressed = false
@@ -35,7 +35,7 @@ function textFieldShortcuts (ev) {
   switch (ev.keyCode) {
     case 13: // ctrl+enter
       if (ev.ctrlKey) {
-        ev.target.publish()  // expects the textField to have a publish method
+        ev.target.publish && ev.target.publish() // expects the textField to have a publish method
       }
       return
     case 27: // esc
@@ -44,7 +44,9 @@ function textFieldShortcuts (ev) {
 }
 
 function genericShortcuts (ev, { tabs, search, goTo, back }) {
-  const scroll = tabs.currentPage().scroll || function () {}
+  const scroll = tabs.currentPage().scroll || noop
+  // TODO change this scroll API - it seems some pages
+  // (e.g. Dark Crystal Index has scroll defined and expect an object...)
 
   // Messages
   if (ev.keyCode === 71) { // gg = scroll to top
@@ -80,10 +82,7 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
       tabs.selectRelative(1)
       return goTo(JSON.parse(tabs.currentPage().id))
     case 88: // x = close
-      if (tabs.selected) {
-        var sel = tabs.selected
-        tabs.remove(sel)
-      }
+      tabs.closeCurrentTab()
       return
 
     // Search
@@ -105,8 +104,8 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
 function goToMessage (ev, { goTo }) {
   const msg = ev.target
 
-  if (msg.dataset && msg.dataset.id) {
-    goTo(msg.dataset.id)
+  if (msg.dataset && msg.dataset.key) {
+    goTo(msg.dataset.key)
     // TODO - rm the dataset.root decorator
   }
 }
@@ -116,5 +115,8 @@ function toggleRawMessage (ev) {
   if (!msg.classList.contains('Message')) return
 
   // this uses a crudely exported nav api
-  msg.querySelector('.meta .toggle-raw-msg').click()
+  const target = msg.querySelector('.meta .toggle-raw-msg')
+  if (target) target.click()
 }
+
+function noop () {}

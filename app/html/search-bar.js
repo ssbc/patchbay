@@ -44,7 +44,7 @@ exports.create = function (api) {
     })
 
     input.addEventListener('suggestselect', ev => {
-      input.value = ev.detail.id  // HACK : this over-rides the markdown value
+      input.value = ev.detail.id // HACK : this over-rides the markdown value
       goToLocation(input.value.trim(), ev)
     })
 
@@ -74,7 +74,7 @@ exports.create = function (api) {
     function getPagesSuggestions (word) {
       const pages = [
         'blogs', 'calendar', 'posts', 'public', 'private', 'inbox', 'profile', 'notifications', 'settings',
-        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal'
+        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal', 'postRank'
       ]
 
       return pages

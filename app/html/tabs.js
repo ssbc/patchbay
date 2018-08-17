@@ -40,7 +40,7 @@ exports.create = function (api) {
     const onClose = (page) => {
       var history = api.history.obs.store()
       const prunedHistory = history().filter(loc => {
-        return api.app.sync.locationId(loc) != page.id
+        return api.app.sync.locationId(loc) !== page.id
       })
       history.set(prunedHistory)
     }
@@ -59,7 +59,7 @@ exports.create = function (api) {
     }
     _tabs.nextTab = () => _tabs.currentPage() && _tabs.selectRelative(1)
     _tabs.previousTab = () => _tabs.currentPage() && _tabs.selectRelative(-1)
-    _tabs.closeCurrentTab = () => _tabs.currentPage() && _tabs.remove(_tabs.selected[0])
+    _tabs.closeCurrentTab = () => { _tabs.currentPage() && _tabs.remove(_tabs.selected[0]) }
 
     // # TODO: review - this works but is strange
     initialTabs.forEach(p => api.app.sync.goTo(p))

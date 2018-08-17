@@ -92,7 +92,7 @@ exports.create = function (api) {
       hasContent.set(true)
     }
 
-    var isPrivate = location.page == 'private' ||
+    var isPrivate = location.page === 'private' ||
           (location.key && !location.value) ||
           (location.value && location.value.private)
 
@@ -159,9 +159,7 @@ exports.create = function (api) {
       }
     }
 
-    if (location.action == 'quote') {
-      composer.addQuote(location.value)
-    }
+    if (location.action === 'quote') { composer.addQuote(location.value) }
 
     addSuggest(channelInput, (inputText, cb) => {
       if (inputText[0] === '#') {
@@ -169,7 +167,7 @@ exports.create = function (api) {
       }
     }, {cls: 'PatchSuggest'})
     channelInput.addEventListener('suggestselect', ev => {
-      channelInput.value = ev.detail.id  // HACK : this over-rides the markdown value
+      channelInput.value = ev.detail.id // HACK : this over-rides the markdown value
     })
 
     addSuggest(textArea, (inputText, cb) => {
