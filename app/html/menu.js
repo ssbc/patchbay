@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, when }  = require('mutant')
+const { h, Value, when } = require('mutant')
 
 exports.gives = nest('app.html.menu')
 
@@ -18,7 +18,11 @@ exports.create = function (api) {
     const hoverClass = Value('')
     const connectionClass = when(api.sbot.obs.connection, '', '-disconnected')
 
-    const menuItems = api.app.html.menuItem(api.app.sync.goTo)
+    const menuItems = api.app.html.menuItem(api.app.sync.goTo).map(item => {
+      // Remove custom order from dependencies that give app.html.menuItem
+      item.style.order = null
+      return item
+    })
     const sortedMenuItems = Object.values(menuItems).sort((a, b) =>
       a.text.localeCompare(b.text)
     )
