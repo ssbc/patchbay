@@ -74,7 +74,7 @@ exports.create = function (api) {
     function getPagesSuggestions (word) {
       const pages = [
         'blogs', 'calendar', 'posts', 'public', 'private', 'inbox', 'profile', 'notifications', 'settings',
-        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal'
+        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal', 'postRank'
       ]
 
       return pages
