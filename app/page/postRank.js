@@ -32,19 +32,21 @@ exports.create = function (api) {
     }, '/postRank')
   }
 
-  function getPosts(cb)
+  function getPosts(channelPostBoost, friendPostBoost, friendVoteBoost, friendCommentBoost, threshold, cb)
   {
     let weights = {
       post: 1, // base
-      channelPost: +2,
-      friendPost: +3,
+      channelPost: channelPostBoost,
+      friendPost: friendPostBoost,
 
       vote: 0.5, // base
-      friendVote: +1,
+      friendVote: friendVoteBoost,
 
       comment: 1, // base
-      friendComment: +2
+      friendComment: friendCommentBoost
     }
+
+    console.log("weights", weights)
 
     const myKey = api.keys.sync.id()
     let myChannels = api.channel.obs.subscribed(myKey)()
@@ -98,21 +100,76 @@ exports.create = function (api) {
           return rhs.score - lhs.score
         })
 
-        cb(msgs.filter(msg => msg.score > 10))
+        cb(msgs.filter(msg => msg.score > threshold))
       })
     )
   }
   
   function page (location) {
+
+    let channelPostBoost = +2
+    let friendPostBoost = +3
+    let friendVoteBoost = +1
+    let friendCommentBoost = +2
+    let threshold = 10
+
+    let top = [
+      h('span.label', 'Channel boost:'),
+      h('input',
+        {
+          'type': 'number',
+          value: channelPostBoost,
+          'ev-input': ev => channelPostBoost = parseFloat(ev.target.value)
+        }),
+
+      h('span.label', 'Friend post boost:'),
+      h('input',
+        {
+          'type': 'number',
+          value: friendPostBoost,
+          'ev-input': ev => friendPostBoost = parseFloat(ev.target.value)
+        }),
+
+      h('span.label', 'Friend vote boost:'),
+      h('input',
+        {
+          'type': 'number',
+          value: friendVoteBoost,
+          'ev-input': ev => friendVoteBoost = parseFloat(ev.target.value)
+        }),
+
+      h('span.label', 'Friend comment boost:'),
+      h('input',
+        {
+          'type': 'number',
+          value: friendCommentBoost,
+          'ev-input': ev => friendCommentBoost = parseFloat(ev.target.value)
+        }),
+
+      h('span.label', 'Threshold:'),
+      h('input',
+        {
+          'type': 'number',
+          value: threshold,
+          'ev-input': ev => threshold = parseFloat(ev.target.value)
+        }),
+
+      h('button', {
+        'ev-click': draw
+      }, 'Go!')
+    ]
     
-    const { container, content } = api.app.html.scroller({ prepend: [ h('button', {
-      'ev-click': draw
-    }, 'Go!') ] })
+    const { container, content } = api.app.html.scroller({ prepend: top })
 
     function draw () {
-      getPosts(
+      // reset
+      container.scroll(0)
+      content.innerHTML = ''
+
+      getPosts(channelPostBoost, friendPostBoost, friendVoteBoost, friendCommentBoost, threshold,
         (msgs) => {
-          console.log(msgs)
+          console.log("msgs", msgs)
+
           pull(
             pull.values(msgs),
             Scroller(container, content, api.message.html.render)
