@@ -1,4 +1,4 @@
-const { h, Struct, Value, when, computed, map, resolve, onceTrue } = require('mutant')
+const { h, Struct, computed, map, resolve, onceTrue } = require('mutant')
 const nest = require('depnest')
 const get = require('lodash/get')
 const { isFeed } = require('ssb-ref')
@@ -16,9 +16,7 @@ exports.needs = nest({
   'message.html.compose': 'first',
   'message.html.render': 'first',
   'message.async.name': 'first',
-  'message.sync.unbox': 'first',
-  'sbot.async.get': 'first',
-  'sbot.pull.links': 'first'
+  'sbot.async.run': 'first'
 })
 
 exports.create = function (api) {
@@ -29,51 +27,33 @@ exports.create = function (api) {
     const msg = location.key
     if (msg !== root) scrollDownToMessage(msg)
 
-    const myId = api.keys.sync.id()
-    const ImFollowing = api.contact.obs.following(myId)
     const { messages, isPrivate, rootId, lastId, channel, recps } = api.feed.obs.thread(root)
-    const meta = Struct({
-      type: 'post',
-      root: rootId,
-      branch: lastId,
-      channel,
-      recps
-    })
-    const contactWarning = Value(false)
-    const header = when(isPrivate, [
-      h('section.recipients', map(recps, r => {
-        const id = isFeed(r) ? r : r.link
-
-        var className
-        if (contactIsTrouble(id)) {
-          className = 'warning'
-          contactWarning.set(true)
-        }
-        return h('div', { className }, api.about.html.avatar(id))
-      })),
-      when(contactWarning,
-        h('section.info -warning', 'There is a person in this thread you do not follow (bordered in red). If you think you know this person it might be worth checking their profile to confirm they are who they say they are.'),
-        h('section.info', 'These are the other participants in this thread. Once a private thread is started you cannot add people to it.')
-      )
-    ])
-    function contactIsTrouble (id) {
-      if (id === myId) return false
-      if (Array.from(ImFollowing()).includes(id)) return false
-      return true
-    }
-
     const composer = api.message.html.compose({
-      meta,
+      meta: Struct({
+        type: 'post',
+        root: rootId,
+        branch: lastId,
+        channel,
+        recps
+      }),
       location,
       feedIdsInThread: computed(messages, msgs => msgs.map(m => m.value.author)),
       placeholder: 'Write a reply',
       shrink: false
     })
-    const content = map(messages, m => {
-      return api.message.html.render(resolve(m), {pageId: root})
+    onceTrue(channel, ch => {
+      const channelInput = composer.querySelector('input')
+      channelInput.value = `#${ch}`
+      channelInput.disabled = true
     })
-    const { container } = api.app.html.scroller({ prepend: header, content, append: composer })
 
+    const content = map(messages, m => {
+      const message = api.message.html.render(resolve(m), {pageId: root, showUnread: true})
+      markReadWhenVisible(message)
+      return message
+    }, { comparer })
+
+    const { container } = api.app.html.scroller({ prepend: Header({ isPrivate, recps }), content, append: composer })
     container.classList.add('Thread')
     container.title = msg
     api.message.async.name(root, (err, name) => {
@@ -81,14 +61,8 @@ exports.create = function (api) {
       container.title = name
     })
 
-    onceTrue(channel, ch => {
-      const channelInput = composer.querySelector('input')
-      channelInput.value = `#${ch}`
-      channelInput.disabled = true
-    })
-
     container.scrollDownToMessage = scrollDownToMessage
-    container.addQuote = addQuote
+    container.addQuote = composer.addQuote
     return container
 
     function scrollDownToMessage (id) {
@@ -110,9 +84,66 @@ exports.create = function (api) {
         msg.focus()
       }
     }
-
-    function addQuote (value) {
-      composer.addQuote(value)
-    }
   }
+
+  // only for private threads
+  function Header ({ isPrivate, recps }) {
+    return computed(isPrivate, isPrivate => {
+      if (!isPrivate) return
+
+      const myId = api.keys.sync.id()
+      const ImFollowing = api.contact.obs.following(myId)
+
+      return computed([recps, ImFollowing], (recps, ImFollowing) => {
+        recps = recps.map(r => isFeed(r) ? r : r.link)
+
+        const strangers = recps
+          .filter(r => !Array.from(ImFollowing).includes(r))
+          .filter(r => r !== myId)
+
+        return [
+          h('section.recipients', recps.map(r => {
+            const className = strangers.includes(r) ? 'warning' : ''
+            return h('div', { className }, api.about.html.avatar(r))
+          })),
+          strangers.length
+            ? h('section.info -warning', 'There is a person in this thread you do not follow (bordered in red). If you think you know this person it might be worth checking their profile to confirm they are who they say they are.')
+            : h('section.info', 'These are the other participants in this thread. Once a private thread is started you cannot add people to it.')
+        ]
+      })
+    })
+  }
+
+  // UnreadFeature (search codebase for this if extracting)
+  //
+  // TODO
+  // - extract this into a global depject module?
+  // - garbage collect observation?
+
+  var observer
+  function markReadWhenVisible (el) {
+    if (!observer) {
+      observer = new IntersectionObserver((entries, observer) => {
+        entries
+          .filter(e => e.isIntersecting && e.target.dataset && e.target.dataset.key)
+          .forEach(e => {
+            markRead(e.target.dataset.key, e.target)
+          })
+      }, { threshold: 0.35 })
+    }
+
+    observer.observe(el)
+  }
+
+  function markRead (key, el) {
+    api.sbot.async.run(server => server.unread.markRead(key, (err, data) => {
+      if (err) console.error(err)
+
+      if (el) setTimeout(() => el.classList.add('-read'), 2000)
+    }))
+  }
+}
+
+function comparer (a, b) {
+  return get(resolve(a), 'key') === get(resolve(b), 'key')
 }

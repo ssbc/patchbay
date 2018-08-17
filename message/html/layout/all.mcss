@@ -1,0 +1,6 @@
+Message {
+  /* UnreadFeature (search codebase for this if extracting) */
+  (i.unread) {
+    display: none
+  }
+}

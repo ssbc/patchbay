@@ -227,7 +227,7 @@ exports.create = function (api) {
             // className: computed(root.md, r => r ? '' : '-loading'),
             attributes: {
               tabindex: '0', // needed to be able to navigate and show focus()
-              'data-id': key // TODO do this with decorators?
+              'data-key': key // TODO do this with decorators?
             }
           }, [
             h('section.authored', [
