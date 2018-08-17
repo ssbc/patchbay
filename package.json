@@ -75,6 +75,7 @@
     "read-directory": "^3.0.0",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
+    "scuttle-invite": "git+https://github.com/christianbundy/scuttle-invite.git#c4eb0b4a956927109eb176769570647fcc2d42b3",
     "scuttlebot": "^11.4.2",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
