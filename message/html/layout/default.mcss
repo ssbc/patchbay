@@ -119,7 +119,8 @@ Message -default {
   /* UnreadFeature (search codebase for this if extracting) */
 
   /* initially read */
-  -read { }
+  -read {
+  }
 
   /* initially unread */
   -unread {

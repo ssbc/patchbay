@@ -1,0 +1,10 @@
+section.top {
+  span.label {
+    padding-right: 10px
+  },
+  input {
+    padding: 3px
+    width: 35px
+    margin-right: 10px
+  }
+}
