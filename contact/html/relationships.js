@@ -62,7 +62,7 @@ exports.create = function (api) {
 
     return h('Relationships', [
       h('header', 'Relationships'),
-      when(id !== myId,
+      id !== myId ?
         h('div.your-status', [
           h('header', 'Your status'),
           h('section -friendship', [
@@ -90,7 +90,7 @@ exports.create = function (api) {
             ])
           ])
         ])
-      ),
+      : undefined,
       computed(blockers, blockers => {
         if (blockers.length === 0) return ''
 
