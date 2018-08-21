@@ -35,7 +35,6 @@ exports.create = function (api) {
 
   function menuItem () {
     return h('a', {
-      style: { order: 1 },
       'ev-click': () => api.app.sync.goTo({ page: 'posts' })
     }, '/posts')
   }
