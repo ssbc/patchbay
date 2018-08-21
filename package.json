@@ -9,7 +9,8 @@
     "start": "electron index.js -- --title patchbay",
     "start-frameless": "FRAME=false npm start",
     "dev": "echo 'run your own sbot!' && electro main.js -- --title patchbay --icon ./assets/icon.png",
-    "test": "standard"
+    "test": "standard",
+    "postinstall": "npm run rebuild"
   },
   "browserify": {
     "transform": [
