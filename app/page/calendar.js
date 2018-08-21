@@ -193,12 +193,10 @@ function getGatherings (year, events, api) {
   )
 }
 
-// ////////////////// extract below into a module ///////////////////////
-
 // Thanks to nomand for the inspiration and code (https://github.com/nomand/Letnice),
-// they formed the foundation of this work
-
 // Calendar takes events of format { date: Date, data: { attending: Boolean, ... } }
+
+const MONTH_NAMES = [ 'Ja', 'Fe', 'Ma', 'Ap', 'Ma', 'Ju', 'Ju', 'Au', 'Se', 'Oc', 'No', 'De' ]
 
 function Calendar (state) {
   // TODO assert events is an Array of object
@@ -219,15 +217,23 @@ function Calendar (state) {
       })
 
       return Array(12).fill(0).map((_, i) => {
-        return Month({ year, month: i + 1, events, range, setRange })
+        const setMonthRange = (ev) => {
+          onSelect({
+            gte: new Date(year, i, 1),
+            lt: new Date(year, i + 1, 1)
+          })
+        }
+
+        return h('div.month', [
+          h('div.month-name', { 'ev-click': setMonthRange }, MONTH_NAMES[i]),
+          Month({ year, month: i + 1, events, range, onSelect, styles: {weekFormat: 'columns'} })
+        ])
       })
     }))
   ])
 
-  function setRange ({ gte, lt }) {
-    // TODO some type checking
-    if (gte) state.range.gte.set(gte)
-    if (lt) state.range.lt.set(lt)
+  function onSelect ({ gte, lt }) {
+    state.range.set({ gte, lt })
   }
 }
 
