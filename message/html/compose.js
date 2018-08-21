@@ -62,8 +62,8 @@ exports.create = function (api) {
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
       value: computed(meta.channel, ch => ch ? '#' + ch : null),
-      disabled: when(meta.channel, true),
-      title: when(meta.channel, 'Reply is in same channel as original message')
+      disabled: meta.channel ?  true : undefined,
+      title: meta.channel ? 'Reply is in same channel as original message' : undefined
     })
 
     var draftPerstTimeout = null
