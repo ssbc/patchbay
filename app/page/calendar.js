@@ -1,5 +1,6 @@
 const nest = require('depnest')
 const { h, Array: MutantArray, map, Struct, computed, watch, throttle, resolve } = require('mutant')
+const Month = require('marama')
 
 const pull = require('pull-stream')
 const { isMsg } = require('ssb-ref')
@@ -10,8 +11,9 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
-  'message.html.render': 'first',
   'app.sync.goTo': 'first',
+  'keys.sync.id': 'first',
+  'message.html.render': 'first',
   'sbot.async.get': 'first',
   'sbot.pull.stream': 'first'
 })
@@ -30,18 +32,20 @@ exports.create = (api) => {
   }
 
   function calendarPage (location) {
-    const d = new Date()
+    const d = startOfDay()
     const state = Struct({
-      today: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
+      today: d,
       year: d.getFullYear(),
       events: MutantArray([]),
+      attending: MutantArray([]),
       range: Struct({
-        gte: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
-        lt: new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
+        gte: d,
+        lt: endOfDay(d)
       })
     })
 
-    watch(state.year, year => getEvents(year, state.events, api))
+    watch(state.year, year => getGatherings(year, state.events, api))
+    watchAttending(state.attending, api)
 
     const page = h('CalendarPage', { title: '/calendar' }, [
       Calendar(state),
@@ -110,11 +114,53 @@ function Events (state, api) {
   }))
 }
 
-function getEvents (year, events, api) {
+function watchAttending (attending, api) {
+  const myKey = api.keys.sync.id()
+
   const query = [{
     $filter: {
       value: {
-        timestamp: {$gt: Number(new Date(year, 0, 1))}, // ordered by published time
+        author: myKey,
+        content: {
+          type: 'about',
+          about: { $is: 'string' },
+          attendee: { link: myKey }
+        }
+      }
+    }
+  }, {
+    $map: {
+      key: ['value', 'content', 'about'], // gathering
+      rm: ['value', 'content', 'attendee', 'remove']
+    }
+  }]
+
+  const opts = { reverse: false, live: true, query }
+
+  pull(
+    api.sbot.pull.stream(server => server.query.read(opts)),
+    pull.filter(m => !m.sync),
+    pull.filter(Boolean),
+    pull.drain(({ key, rm }) => {
+      var hasKey = attending.includes(key)
+
+      if (!hasKey && !rm) attending.push(key)
+      else if (hasKey && rm) attending.delete(key)
+    })
+  )
+}
+
+function getGatherings (year, events, api) {
+  // gatherings specify times with `about` messages which have a startDateTime
+  // NOTE - this gets a window of about messages around the current year but does not gaurentee
+  //        that we got all events in this year (e.g. something booked 6 months agead would be missed)
+  const query = [{
+    $filter: {
+      value: {
+        timestamp: { // ordered by published time
+          $gt: Number(new Date(year - 1, 11, 1)),
+          $lt: Number(new Date(year + 1, 0, 1))
+        },
         content: {
           type: 'about',
           startDateTime: {
@@ -130,11 +176,7 @@ function getEvents (year, events, api) {
     }
   }]
 
-  const opts = {
-    reverse: false,
-    live: true,
-    query
-  }
+  const opts = { reverse: false, live: true, query }
 
   pull(
     api.sbot.pull.stream(server => server.query.read(opts)),
@@ -157,14 +199,11 @@ function getEvents (year, events, api) {
 // Thanks to nomand for the inspiration and code (https://github.com/nomand/Letnice),
 // they formed the foundation of this work
 
-const MONTHS = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
-const DAYS = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
+// Calendar takes events of format { date: Date, data: { attending: Boolean, ... } }
 
 function Calendar (state) {
   // TODO assert events is an Array of object
   // of form { date, data }
-
-  const { gte, lt } = state.range
 
   return h('Calendar', [
     h('div.header', [
@@ -174,98 +213,29 @@ function Calendar (state) {
         h('a', { 'ev-click': () => state.year.set(state.year() + 1) }, '+')
       ])
     ]),
-    h('div.months', computed(throttle(state, 100), ({ today, year, events, range }) => {
-      return MONTHS.map((month, monthIndex) => {
-        return Month({ month, monthIndex, today, year, events, range, gte, lt })
+    h('div.months', computed(throttle(state, 100), ({ today, year, events, attending, range }) => {
+      events = events.map(ev => {
+        ev.data.attending = attending.includes(ev.data.key)
+        return ev
+      })
+
+      return Array(12).fill(0).map((_, i) => {
+        return Month({ year, month: i + 1, events, range, setRange })
       })
     }))
   ])
-}
 
-function Month ({ month, monthIndex, today, year, events, range, gte, lt }) {
-  const monthLength = new Date(year, monthIndex + 1, 0).getDate()
-  // NOTE Date takes month as a monthIndex i.e. april = 3
-  // and day = 0 goes back a day
-  const days = Array(monthLength).fill().map((_, i) => i + 1)
-
-  var weekday
-  var week
-  var offset = getDay(new Date(year, monthIndex, 1)) - 1
-
-  const setMonthRange = (ev) => {
-    gte.set(new Date(year, monthIndex, 1))
-    lt.set(new Date(year, monthIndex + 1, 1))
-  }
-
-  return h('CalendarMonth', [
-    h('div.month-name', { 'ev-click': setMonthRange }, month.substr(0, 2)),
-    h('div.days', { style: {display: 'grid'} }, [
-      DAYS.map((day, i) => DayName(day, i)),
-      days.map(Day)
-    ])
-  ])
-
-  function Day (day) {
-    const date = new Date(year, monthIndex, day)
-    const dateEnd = new Date(year, monthIndex, day + 1)
-    weekday = getDay(date)
-    week = Math.ceil((day + offset) / 7)
-
-    const eventsOnDay = events.filter(e => {
-      return e.date >= date && e.date < dateEnd
-    })
-
-    const opts = {
-      attributes: {
-        'title': `${year}-${monthIndex + 1}-${day}`,
-        'data-date': `${year}-${monthIndex + 1}-${day}`
-      },
-      style: {
-        'grid-row': `${weekday} / ${weekday + 1}`,
-        'grid-column': `${week + 1} / ${week + 2}`
-        // column moved by 1 to make space for labels
-      },
-      classList: [
-        date < today ? '-past' : '-future',
-        eventsOnDay.length ? '-events' : '',
-        date >= range.gte && date < range.lt ? '-selected' : ''
-      ],
-      'ev-click': (ev) => {
-        if (ev.shiftKey) {
-          dateEnd >= resolve(lt) ? lt.set(dateEnd) : gte.set(date)
-          return
-        }
-
-        gte.set(date)
-        lt.set(dateEnd)
-      }
-    }
-
-    if (!eventsOnDay.length) return h('CalendarDay', opts)
-
-    return h('CalendarDay', opts, [
-      // TODO add awareness of whether I'm going to events
-      // TODO try a FontAwesome circle
-      h('div.dot', [
-        // Math.random() > 0.3 ? h('div') : ''
-      ])
-    ])
+  function setRange ({ gte, lt }) {
+    // TODO some type checking
+    if (gte) state.range.gte.set(gte)
+    if (lt) state.range.lt.set(lt)
   }
 }
 
-function DayName (day, index) {
-  return h('CalendarDayName', {
-    style: {
-      'grid-row': `${index + 1} / ${index + 2}`,
-      'grid-column': '1 / 2'
-    }
-  }, day.substr(0, 1))
+function startOfDay (d = new Date()) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate())
 }
 
-function getDay (date) {
-  const dayIndex = date.getDay()
-  return dayIndex === 0 ? 7 : dayIndex
-
-  // Weeks run 0...6 (Sun - Sat)
-  // this shifts those days around by 1
+function endOfDay (d = new Date()) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
 }

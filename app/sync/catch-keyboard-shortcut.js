@@ -104,8 +104,8 @@ function genericShortcuts (ev, { tabs, search, goTo, back }) {
 function goToMessage (ev, { goTo }) {
   const msg = ev.target
 
-  if (msg.dataset && msg.dataset.id) {
-    goTo(msg.dataset.id)
+  if (msg.dataset && msg.dataset.key) {
+    goTo(msg.dataset.key)
     // TODO - rm the dataset.root decorator
   }
 }

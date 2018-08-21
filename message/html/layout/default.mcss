@@ -34,10 +34,9 @@ Message -default {
     div.meta {
       display: flex
       justify-content: flex-end
-      align-items: center
+      align-items: baseline
 
-      a {
-        $textSubtle
+      i, div, a {
         margin-left: .5rem
       }
     }
@@ -115,5 +114,37 @@ Message -default {
 
     grid-column: 2 / 3
     flex-basis: 100%
+  }
+
+  /* UnreadFeature (search codebase for this if extracting) */
+
+  /* initially read */
+  -read {
+  }
+
+  /* initially unread */
+  -unread {
+    section.top {
+      div.meta {
+        i.unread {
+          display: initial
+          transition: color 1s ease-in
+          color: hotpink
+        }
+      }
+    }
+  }
+
+  /* initially unread, but subsequently marked read */
+  -unread {
+    -read {
+      section.top {
+        div.meta {
+          i.unread {
+            color: #bbb
+          }
+        }
+      }
+    }
   }
 }

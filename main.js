@@ -16,6 +16,7 @@ const patchbay = {
     message: bulk(__dirname, [ 'message/**/*.js' ]),
     router: bulk(__dirname, [ 'router/**/*.js' ]),
     styles: bulk(__dirname, [ 'styles/**/*.js' ]),
+    sbot: bulk(__dirname, [ 'sbot/**/*.js' ]),
 
     config: require('./config'), // shouldn't be in here ?
     contextMenu: require('patch-context'),

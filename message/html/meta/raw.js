@@ -9,14 +9,11 @@ exports.needs = nest({
 })
 
 exports.create = (api) => {
-  const symbol = '\u2699' // gear ⚙
-
   return nest('message.html.meta', raw)
 
   function raw (msg, { rawMessage } = {}) {
-    return h('a', {
+    return h('i.toggle-raw-msg.fa.fa-plus', {
       title: 'View raw data',
-      classList: 'toggle-raw-msg',
       style: {
         order: 99,
         color: '#a8a8a8',
@@ -25,7 +22,7 @@ exports.create = (api) => {
       'ev-click': () => (rawMessage() === null)
         ? rawMessage.set(buildRawMsg(msg))
         : rawMessage.set(null)
-    }, symbol)
+    })
   }
 }
 

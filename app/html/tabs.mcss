@@ -9,6 +9,7 @@ Hypertabs {
   flex-direction: column
 
   height: 100% /* needed to stop scroller blowing out */
+  overflow: hidden
 
   nav {
     display: flex
