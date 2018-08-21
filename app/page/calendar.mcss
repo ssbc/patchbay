@@ -64,8 +64,19 @@ Calendar {
   div.months {
     display: flex
 
-    div.Marama {
+    div.month {
       margin-right: 20px
+
+      div.month-name {
+        font-size: 20px
+        font-weight: bold
+        text-align: left
+        cursor: pointer
+        margin-bottom: 5px
+      }
+
+      div.Marama {
+      }
     }
   }
 
