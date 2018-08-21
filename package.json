@@ -19,6 +19,9 @@
       "es2040"
     ]
   },
+  "standard": {
+    "globals": [ "IntersectionObserver" ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ssbc/patchbay.git"
