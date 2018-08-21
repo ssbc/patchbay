@@ -76,7 +76,6 @@ This runs an embedded sbot with all the right plugins already installed.
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
-npm run rebuild
 ```
 
 Patchbay doesn't give you a way to join pubs yet, so this is good if you've already done that with another client (like Patchwork).
@@ -114,7 +113,6 @@ Install Patchbay
 git clone https://github.com/ssbc/patchbay.git
 cd patchbay
 npm install
-npm run rebuild
 ```
 
 ## Running the desktop app
