@@ -20,7 +20,7 @@ exports.create = function (api) {
   function app () {
     console.log('STARTING app')
 
-    window = api.app.sync.window(window)
+    window = api.app.sync.window(window) // eslint-disable-line no-global-assign
 
     const initialTabs = api.settings.sync.get('patchbay.defaultTabs')
     const App = h('App', api.app.html.tabs(initialTabs))

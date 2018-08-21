@@ -35,7 +35,6 @@ exports.create = function (api) {
 
   function menuItem () {
     return h('a', {
-      style: { order: 1 },
       'ev-click': () => api.app.sync.goTo({ page: 'posts' })
     }, '/posts')
   }
@@ -227,7 +226,7 @@ exports.create = function (api) {
             // className: computed(root.md, r => r ? '' : '-loading'),
             attributes: {
               tabindex: '0', // needed to be able to navigate and show focus()
-              'data-id': key // TODO do this with decorators?
+              'data-key': key // TODO do this with decorators?
             }
           }, [
             h('section.authored', [

@@ -6,6 +6,8 @@ Message -mini {
 
   display: flex
 
+  /* TODO - bring style inline with default.mcss */
+
   section.timestamp {
     order: 0
     position: initial
@@ -33,6 +35,15 @@ Message -mini {
 
   section.meta {
     order: 3
+
+    display: flex
+    justify-content: flex-end
+    align-items: center
+
+
+    i, div, a {
+      margin-left: .5rem
+    }
   }
 
   section.raw-content {

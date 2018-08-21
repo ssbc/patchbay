@@ -64,8 +64,19 @@ Calendar {
   div.months {
     display: flex
 
-    div.CalendarMonth {
+    div.month {
       margin-right: 20px
+
+      div.month-name {
+        font-size: 20px
+        font-weight: bold
+        text-align: left
+        cursor: pointer
+        margin-bottom: 5px
+      }
+
+      div.Marama {
+      }
     }
   }
 
@@ -80,101 +91,10 @@ Calendar {
 }
 
 
-CalendarMonth {
-  --day-radius: 6px
-  --day-border-radius: 2px
-  --day-gap: 1px
-
-  width: calc(7 * 2 * var(--day-radius) +  6 * var(--day-gap))
-  /* max of 6 weeks + day labels, with gaps between each */
-
-  div.month-name {
-    font-size: 20px
-    font-weight: bold
-    text-align: left
-    cursor: pointer
-    margin-bottom: 5px
-  }
-
-  div.days {
-    grid-gap: var(--day-gap)
-    justify-content: start
-    align-content: start
-
-    div.CalendarDay {}
-  }
-}
-
-CalendarDay {
-  width: calc(2 * var(--day-radius))
-  height: calc(2 * var(--day-radius))
-  cursor: pointer
-
-  border-radius: var(--day-border-radius)
-
-  display: flex
-  justify-content: center
-  align-items: center
-
-  -past {
-    background: hsl(0, 0%, 20%)
-  }
-
-  -future {
-    background: hsl(0, 0%, 80%)
-  }
-
-  -selected {
-    background: deeppink
-
-    -future {
-      background: deepskyblue
-    }
-  }
-
-  -events {
-    /* border-radius: var(--day-radius) */
-    /* background: hsla(277, 57%, 45%, 1) */
-
-    div {
-      background: #fff
-      width: 6px
-      height: 6px
-      border-radius: 8px
-
-      display: flex
-      justify-content: center
-      align-items: center
-
-      div {
-        background: #000
-        width: 4px
-        height: 4px
-        border-radius: 4px
-      }
-    }
-
-    -past {
-    }
-  }
-}
-
-CalendarDayName {
-  color: hsl(0, 0%, 40%)
-  font-family: arial
-  font-size: calc(2 * var(--day-radius) - 3px)
-  /* line-height: calc(2 * var(--day-radius) - 2px) */
-
-  width: calc(2 * var(--day-radius))
-  height: calc(2 * var(--day-radius))
-
-  display: flex
-  align-items: center
-  justify-content: center
-}
 
 CalendarEvents {
   width: 50rem
+  margin-right: 6rem
 
   div {
     width: 50rem

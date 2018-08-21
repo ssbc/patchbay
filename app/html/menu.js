@@ -18,13 +18,22 @@ exports.create = function (api) {
     const hoverClass = Value('')
     const connectionClass = when(api.sbot.obs.connection, '', '-disconnected')
 
+    const menuItems = api.app.html.menuItem(api.app.sync.goTo).map(item => {
+      // Remove custom order from dependencies that give app.html.menuItem
+      item.style.order = null
+      return item
+    })
+    const sortedMenuItems = Object.values(menuItems).sort((a, b) =>
+      a.text.localeCompare(b.text)
+    )
+
     // TODO: move goTo out into each menuItem
     _menu = h('Menu', {
       classList: [ hoverClass, connectionClass ],
       'ev-mouseover': () => hoverClass.set('-open'),
       'ev-mouseout': () => hoverClass.set('')
     }, [
-      h('div', api.app.html.menuItem(api.app.sync.goTo))
+      h('div', sortedMenuItems)
     ])
 
     return _menu
