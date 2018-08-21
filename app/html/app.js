@@ -29,8 +29,9 @@ exports.create = function (api) {
     // runs all the functions in app/sync/initialise
 
     api.history.obs.location()(loc => {
-      if (!api.app.html.tabs().currentPage()) // close
+      if (!api.app.html.tabs().currentPage()) { // close
         api.app.sync.goTo(loc || {})
+      }
     })
 
     return App
