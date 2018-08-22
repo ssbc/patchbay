@@ -184,4 +184,4 @@ TODO!
 
 ## License
 
-MIT
+AGPL-3.0
