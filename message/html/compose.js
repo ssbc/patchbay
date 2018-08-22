@@ -62,7 +62,7 @@ exports.create = function (api) {
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
       value: computed(meta.channel, ch => ch ? '#' + ch : null),
-      disabled: meta.channel ?  true : undefined,
+      disabled: meta.channel ? true : undefined,
       title: meta.channel ? 'Reply is in same channel as original message' : undefined
     })
 
