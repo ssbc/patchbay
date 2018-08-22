@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const extend = require('xtend')
 const ref = require('ssb-ref')
-const { h, when } = require('mutant')
+const { h } = require('mutant')
 
 exports.gives = nest('message.html.render')
 
