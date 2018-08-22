@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const extend = require('xtend')
 const ref = require('ssb-ref')
-const { h, when } = require('mutant')
+const { h } = require('mutant')
 
 exports.gives = nest('message.html.render')
 
@@ -45,7 +45,7 @@ exports.create = function (api) {
     const metaData = [
       name ? h('div', [ h('strong', 'Name: '), name ]) : undefined,
       description ? h('div', [ h('strong', 'Description: '), description ]) : undefined,
-      image ? h('img', { src: api.blob.sync.url(image), style: { 'margin-top': '.5rem' } }): undefined
+      image ? h('img', { src: api.blob.sync.url(image), style: { 'margin-top': '.5rem' } }) : undefined
     ]
 
     if (!ref.isFeed(about)) {
