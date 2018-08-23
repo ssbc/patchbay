@@ -16,9 +16,10 @@ exports.needs = nest({
   'about.obs': {
     name: 'first',
     imageUrl: 'first',
-    description: 'first'
+    description: 'first',
+    latestValue: 'first',
+    groupedValues: 'first'
   },
-  'about.obs.groupedValues': 'first',
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
@@ -66,10 +67,15 @@ exports.create = function (api) {
     )
     var names = dictToCollection(namesRecord)
 
+    var publicWebHosting = Struct({
+      current: api.about.obs.latestValue(id, 'publicWebHosting'),
+      new: Value()
+    })
+
     var lightbox = hyperlightbox()
 
-    var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
-      return name || avatar.link
+    var isPossibleUpdate = computed([name.new, avatar.new, publicWebHosting.new], (name, avatar, publicWebHostingValue) => {
+      return name || avatar.link || publicWebHostingValue != publicWebHosting.current()
     })
 
     var avatarSrc = computed([avatar], avatar => {
@@ -133,6 +139,17 @@ exports.create = function (api) {
               'ev-keyup': e => name.new.set(e.target.value)
             })
           ])
+        ]),
+        h('section.viewer', [
+          h('header', 'Public viewers'),
+          h('section', [
+            h('span', 'Show my posts on public viewers'),
+            h('input', {
+              type: 'checkbox',
+              checked: publicWebHosting.current,
+              'ev-change': e => publicWebHosting.new.set(e.target.checked)
+            })
+          ]),
         ]),
         when(isPossibleUpdate, h('section.action', [
           h('button.cancel', { 'ev-click': clearNewSelections }, 'cancel'),
@@ -215,6 +232,7 @@ exports.create = function (api) {
 
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
+      if (publicWebHosting.new() != publicWebHosting.current()) msg.publicWebHosting = publicWebHosting.new()
 
       api.message.html.confirm(msg, (err, data) => {
         if (err) return console.error(err)
