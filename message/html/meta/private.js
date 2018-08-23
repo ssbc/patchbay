@@ -9,15 +9,13 @@ exports.needs = nest({
 })
 
 exports.create = (api) => {
-  return nest('message.html.meta', private)
+  return nest('message.html.meta', privateMeta)
 
-  function private (msg) {
+  function privateMeta (msg) {
     if (msg.value.private) {
       return h('i.fa.fa-lock', {
         title: 'Private'
       })
-    } else {
-      return null;
     }
   }
 }
