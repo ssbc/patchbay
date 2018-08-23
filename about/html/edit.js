@@ -40,6 +40,8 @@ exports.create = function (api) {
   function edit (id) {
     // TODO - get this to wait till the connection is present !
 
+    var isMe = api.keys.sync.id() === id
+
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
       new: Dict()
@@ -69,13 +71,13 @@ exports.create = function (api) {
 
     var publicWebHosting = Struct({
       current: api.about.obs.latestValue(id, 'publicWebHosting'),
-      new: Value()
+      new: Value(api.about.obs.latestValue(id, 'publicWebHosting')())
     })
 
     var lightbox = hyperlightbox()
 
     var isPossibleUpdate = computed([name.new, avatar.new, publicWebHosting.new], (name, avatar, publicWebHostingValue) => {
-      return name || avatar.link || publicWebHostingValue != publicWebHosting.current()
+      return name || avatar.link || (isMe && publicWebHostingValue !== publicWebHosting.current())
     })
 
     var avatarSrc = computed([avatar], avatar => {
@@ -140,17 +142,18 @@ exports.create = function (api) {
             })
           ])
         ]),
-        h('section.viewer', [
-          h('header', 'Public viewers'),
-          h('section', [
-            h('span', 'Show my posts on public viewers'),
-            h('input', {
-              type: 'checkbox',
-              checked: publicWebHosting.current,
-              'ev-change': e => publicWebHosting.new.set(e.target.checked)
-            })
-          ])
-        ]),
+        isMe
+          ? h('section.viewer', [
+            h('header', 'Public viewers'),
+            h('section', [
+              h('span', 'Show my posts on public viewers'),
+              h('input', {
+                type: 'checkbox',
+                checked: publicWebHosting.current,
+                'ev-change': e => publicWebHosting.new.set(e.target.checked)
+              })
+            ])
+          ]) : '',
         when(isPossibleUpdate, h('section.action', [
           h('button.cancel', { 'ev-click': clearNewSelections }, 'cancel'),
           h('button.confirm', { 'ev-click': handleUpdateClick }, 'confirm changes')
@@ -232,7 +235,7 @@ exports.create = function (api) {
 
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
-      if (publicWebHosting.new() != publicWebHosting.current()) msg.publicWebHosting = publicWebHosting.new()
+      if (publicWebHosting.new() !== publicWebHosting.current()) msg.publicWebHosting = publicWebHosting.new()
 
       api.message.html.confirm(msg, (err, data) => {
         if (err) return console.error(err)
