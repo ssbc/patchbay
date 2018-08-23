@@ -77,7 +77,7 @@
     "pull-abortable": "^4.1.1",
     "pull-next-query": "^1.0.0",
     "pull-scroll": "^1.0.9",
-    "pull-stream": "^3.6.8",
+    "pull-stream": "^3.6.9",
     "read-directory": "^3.0.0",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
@@ -109,7 +109,8 @@
   },
   "devDependencies": {
     "electro": "^2.1.1",
-    "electron": "^2.0.7",
+    "electron": "^2.0.8",
+    "eslint-config-standard": "^11.0.0",
     "standard": "^11.0.1"
   }
 }
