@@ -226,7 +226,7 @@ function Calendar (state) {
 
         return h('div.month', [
           h('div.month-name', { 'ev-click': setMonthRange }, MONTH_NAMES[i]),
-          Month({ year, month: i + 1, events, range, onSelect, styles: {weekFormat: 'columns'} })
+          Month({ year, monthIndex: i, events, range, onSelect, styles: {weekFormat: 'columns'} })
         ])
       })
     }))

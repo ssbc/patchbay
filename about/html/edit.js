@@ -149,7 +149,7 @@ exports.create = function (api) {
               checked: publicWebHosting.current,
               'ev-change': e => publicWebHosting.new.set(e.target.checked)
             })
-          ]),
+          ])
         ]),
         when(isPossibleUpdate, h('section.action', [
           h('button.cancel', { 'ev-click': clearNewSelections }, 'cancel'),
