@@ -222,6 +222,7 @@ exports.create = function (api) {
     function clearNewSelections () {
       name.new.set(null)
       avatar.new.set({})
+      publicWebHosting.new.set(publicWebHosting.current())
     }
 
     function handleUpdateClick () {
