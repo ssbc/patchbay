@@ -36,8 +36,7 @@ const post = {
 
 // from more specialized to more general
 const sockets = combine(
-  require('ssb-horcrux'),
-
+  require('patchbay-scry'),
   require('patchbay-dark-crystal'),
   require('patchbay-poll'),
   require('ssb-chess'),
