@@ -62,7 +62,7 @@ exports.create = function (api) {
         computed(state.opts, opts => {
           return Scroller({
             streamToBottom: source(opts),
-            render: msg => h('pre', JSON.stringify(msg, null, 2)),
+            render: buildRawMsg,
             comparer: (a, b) => {
               if (a && b && a.key && b.key) return a.key === b.key
               return a === b
@@ -172,4 +172,51 @@ function defaulSSBQueryValue () {
 
 // $map - optional, can be used to pluck data you want out. Doing this reduces the amount of data sent over muxrpc, which speeds up loading
 `
+}
+
+// forked from message/html/meta/raw.js
+// but modified
+
+function buildRawMsg (msg) {
+  return h('pre',
+    linkify(colorKeys(splitLines(
+      json5.stringify(msg, 0, 2)
+    )))
+  )
+}
+
+function splitLines (text) {
+  const chunks = text.split(/(\n)/g)
+  return chunks
+}
+
+function colorKeys (chunks) {
+  var newArray = []
+  chunks.forEach(chunk => {
+    if (typeof chunk !== 'string') return newArray.push(chunk)
+
+    var arr = chunk.split(/^(\s*\w+)/)
+    for (var i = 1; i < arr.length; i += 2) {
+      arr[i] = h('span', arr[i])
+    }
+    newArray = [...newArray, ...arr]
+  })
+
+  return newArray
+}
+
+function linkify (chunks) {
+  var newArray = []
+  chunks.forEach(chunk => {
+    if (typeof chunk !== 'string') return newArray.push(chunk)
+
+    // regex lifted from ssb-ref
+    var arr = chunk.split(/((?:@|%|&)[A-Za-z0-9/+]{43}=\.[\w\d]+)/g)
+    for (var i = 1; i < arr.length; i += 2) {
+      arr[i] = h('a', {href: arr[i]}, arr[i])
+    }
+    newArray = [...newArray, ...arr]
+  })
+
+  return newArray
 }

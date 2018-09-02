@@ -47,7 +47,10 @@ Query {
           word-wrap: break-word
           white-space: pre-wrap
 
-          /* margin: 0 0 3rem 0 */
+          span {
+            color: hsl(0, 50%, 50%)
+            /* font-weight: 600 */
+          }
         }
       }
     }
