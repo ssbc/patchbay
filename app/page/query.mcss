@@ -17,7 +17,7 @@ Query {
       justify-self: stretch
 
       color: #fff
-      font-family: monospace
+      font-family: "ubunutu mono", monospace
 
       background: rgb(40 , 0, 40)
       padding: 1rem
@@ -43,6 +43,7 @@ Query {
 
       section.content {
         pre {
+          font-family: "ubunutu mono", monospace
           word-wrap: break-word
           white-space: pre-wrap
 
