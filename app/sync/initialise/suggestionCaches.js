@@ -11,7 +11,8 @@ exports.create = function (api) {
   return nest('app.sync.initialise', init)
 
   function init () {
-    api.about.async.suggest()
+    // lazy load abouts on first use, can be quite heavy during startup
+    //api.about.async.suggest()
     api.channel.async.suggest()
   }
 }
