@@ -12,7 +12,7 @@ exports.needs = nest({
 
 const defaults = {
   patchbay: {
-    defaultTabs: ['/notifications', '/posts', '/inbox', 'chess'],
+    defaultTabs: ['/posts', '/inbox', '/notifications', 'chess'],
     accessibility: {
       invert: false,
       saturation: 100,
