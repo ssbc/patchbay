@@ -84,6 +84,7 @@
     "scuttle-blog": "^1.0.1",
     "scuttle-poll": "^1.4.1",
     "scuttlebot": "^12.0.0",
+    "secure-scuttlebutt": "git+https://github.com/ssbc/secure-scuttlebutt.git#blob-unboxer",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
