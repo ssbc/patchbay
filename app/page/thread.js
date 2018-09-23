@@ -48,7 +48,7 @@ exports.create = function (api) {
     })
 
     const content = map(messages, m => {
-      const message = api.message.html.render(resolve(m), {pageId: root, showUnread: true})
+      const message = api.message.html.render(resolve(m), { pageId: root })
       markReadWhenVisible(message)
       return message
     }, { comparer })

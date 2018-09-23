@@ -19,7 +19,7 @@ exports.create = (api) => {
   return nest('message.html.layout', messageLayout)
 
   function messageLayout (msg, opts = {}) {
-    const { layout, showUnread } = opts
+    const { layout, showUnread = true } = opts
     if (!(layout === undefined || layout === 'default')) return
 
     var { author, timestamp, meta, action, backlinks } = api.message.html
