@@ -49,13 +49,13 @@
     "depject": "^4.1.1",
     "depnest": "^1.3.0",
     "electron-default-menu": "^1.0.1",
-    "electron-window-state": "^4.1.1",
+    "electron-window-state": "^5.0.1",
     "font-awesome": "^4.7.0",
     "hypercrop": "^1.1.0",
     "hyperfile": "^2.0.0",
     "hyperlightbox": "^1.0.0",
     "hypertabs": "^5.0.1",
-    "json5": "^1.0.1",
+    "json5": "^2.0.1",
     "libnested": "^1.3.2",
     "lodash": "^4.17.10",
     "marama": "^1.2.2",
@@ -83,7 +83,7 @@
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
     "scuttle-poll": "^1.3.4",
-    "scuttlebot": "^12.0.0",
+    "scuttlebot": "^12.1.0",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
@@ -110,8 +110,8 @@
   },
   "devDependencies": {
     "electro": "^2.1.1",
-    "electron": "^2.0.8",
+    "electron": "^3.0.0",
     "eslint-config-standard": "^12.0.0",
-    "standard": "^11.0.1"
+    "standard": "^12.0.1"
   }
 }
