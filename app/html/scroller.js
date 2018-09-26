@@ -47,11 +47,12 @@ function keyscroll (content) {
   }
 
   return function scroll (d) {
-    selectChild((!curMsgEl || d === 'first') ? content.firstChild
+    const child = (!curMsgEl || d === 'first') ? content.firstChild
       : (!curMsgEl || d === 'last') ? content.lastChild
         : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
           : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-            : curMsgEl)
+            : curMsgEl
+    selectChild(child)
 
     return curMsgEl
   }
