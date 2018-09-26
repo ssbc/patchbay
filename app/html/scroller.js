@@ -7,16 +7,16 @@ exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
   function Scroller (opts = {}) {
-    const { prepend = [], content = null, append = [], classList = [], className = '', title = '' } = opts
+    const { prepend, content = null, append, classList = [], className = '', title = '' } = opts
 
     const contentSection = h('section.content', { title: '' }, content)
 
     const container = h('Scroller',
       { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },
       [
-        h('section.top', prepend),
+        prepend ? h('section.top', prepend) : null,
         contentSection,
-        h('section.bottom', append)
+        append ? h('section.bottom', append) : null
       ]
     )
 
