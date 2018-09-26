@@ -38,14 +38,12 @@ button {
 
   :disabled {
     color: grey
-    background: #fff
-
-    cursor: initial
+    background: rgba(255,255,255,.3)
+    cursor: not-allowed
+    border: none
 
     :hover {
-      color: grey
-      background: #fff
-      border: 1px #b9b9b9 solid
+      background: rgba(255,0,0,.3)
     }
   }
 
