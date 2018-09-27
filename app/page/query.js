@@ -4,6 +4,7 @@ const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const json5 = require('json5')
 const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -44,7 +45,10 @@ exports.create = function (api) {
         // console.error(err)
         return err
       }
-      if (isValidOpts(newOpts)) state.opts.set(newOpts)
+      // NOTE - this is the piece which auto-runs the quers
+      if (!isValidOpts(newOpts)) return
+      if (isEqual(resolve(state.opts), newOpts)) return
+      state.opts.set(newOpts)
     })
 
     const activateQuery = () => state.opts.set(json5.parse(resolve(state.input)))
@@ -66,7 +70,8 @@ exports.create = function (api) {
             comparer: (a, b) => {
               if (a && b && a.key && b.key) return a.key === b.key
               return a === b
-            }
+            },
+            cb: console.error
           })
         })
       ])
