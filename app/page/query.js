@@ -70,8 +70,8 @@ exports.create = function (api) {
             comparer: (a, b) => {
               if (a && b && a.key && b.key) return a.key === b.key
               return a === b
-            },
-            cb: console.error
+            }
+            // cb: console.error // TODO better error catching with stream
           })
         })
       ])
@@ -218,7 +218,7 @@ function linkify (chunks) {
     // regex lifted from ssb-ref
     var arr = chunk.split(/((?:@|%|&)[A-Za-z0-9/+]{43}=\.[\w\d]+)/g)
     for (var i = 1; i < arr.length; i += 2) {
-      arr[i] = h('a', {href: arr[i]}, arr[i])
+      arr[i] = h('a', { href: arr[i] }, arr[i])
     }
     newArray = [...newArray, ...arr]
   })
