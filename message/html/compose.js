@@ -3,7 +3,7 @@ const nest = require('depnest')
 const ssbMentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
-const blobFiles = require('ssb-blob-files')
+// const blobFiles = require('ssb-blob-files')
 
 exports.gives = nest('message.html.compose')
 
@@ -12,7 +12,7 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'meme.async.suggest': 'first',
-  // 'blob.html.input': 'first', // TODO extract fileInput creator below out into patchcore
+  'blob.html.input': 'first', // TODO extract fileInput creator below out into patchcore
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
   'drafts.sync.set': 'first',
@@ -111,27 +111,13 @@ exports.create = function (api) {
       }))
     })
 
-    var fileInput = h('input', {
-      type: 'file',
-      // accept,
-      attributes: { multiple: true },
-      'ev-click': () => hasContent.set(true),
-      'ev-change': (ev) => {
-        warningMessages.set([])
-
-        const files = ev.target.files
-        const opts = {
-          stripExif: api.settings.obs.get('patchbay.removeExif', true),
-          isPrivate
-        }
-        blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
-      }
+    var fileInput = api.blob.html.input(onAdded, {
+      removeExif: api.settings.obs.get('patchbay.removeExif', true),
+      private: isPrivate
     })
-    function afterBlobed (err, result) {
-      if (err) {
-        console.error(err)
-        warningMessages.push(err.message)
-        return
+    function onAdded (result) {
+      if (result.error) {
+        return warningMessages.push(result.error.message)
       }
 
       files.push(result)
@@ -146,6 +132,41 @@ exports.create = function (api) {
 
       console.log('added:', result)
     }
+    // var fileInput = h('input', {
+    //   type: 'file',
+    //   // accept,
+    //   attributes: { multiple: true },
+    //   'ev-click': () => hasContent.set(true),
+    //   'ev-change': (ev) => {
+    //     warningMessages.set([])
+
+    //     const files = ev.target.files
+    //     const opts = {
+    //       stripExif: api.settings.obs.get('patchbay.removeExif', true),
+    //       isPrivate
+    //     }
+    //     blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
+    //   }
+    // })
+    // function afterBlobed (err, result) {
+    //   if (err) {
+    //     console.error(err)
+    //     warningMessages.push(err.message)
+    //     return
+    //   }
+
+    //   files.push(result)
+    //   filesById[result.link] = result
+
+    //   const pos = textArea.selectionStart
+    //   const embed = result.type.match(/^image/) ? '!' : ''
+    //   const spacer = embed ? '\n' : ' '
+    //   const insertLink = spacer + embed + '[' + result.name + ']' + '(' + result.link + ')' + spacer
+
+    //   textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
+
+    //   console.log('added:', result)
+    // }
 
     var publishBtn = h('button', { 'ev-click': publish }, isPrivate ? 'Reply' : 'Publish')
 

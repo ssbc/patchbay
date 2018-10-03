@@ -74,7 +74,7 @@
     "patchbay-gatherings": "^3.0.0",
     "patchbay-poll": "^1.1.1",
     "patchbay-scry": "^1.2.0",
-    "patchcore": "^1.28.1",
+    "patchcore": "^1.28.2",
     "pull-abortable": "^4.1.1",
     "pull-next-query": "^1.0.0",
     "pull-notify": "^0.1.1",
