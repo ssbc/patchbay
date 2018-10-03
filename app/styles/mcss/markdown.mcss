@@ -24,8 +24,8 @@ Markdown {
   }
 
   pre {
-    background-color: #f5f5f5
-    color: #c121dc
+    background-color: var(--highlight)
+    color: var(--magenta)
     padding: .3rem
     white-space: pre-wrap
     word-wrap: break-word
@@ -42,7 +42,7 @@ Markdown {
   }
 
   blockquote {
-    color: #666
+    color: var(--em)
     font-style: italic
     font-size: 1rem
 
@@ -94,8 +94,8 @@ Markdown {
 }
 
 $code {
-  background-color: #f5f5f5
-  color: #c121dc
+  background-color: var(--highlight)
+  color: var(--magenta)
   border: 1px solid #e6e6e6
   border-radius: 2px
 }

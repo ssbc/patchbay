@@ -41,14 +41,14 @@ Calendar {
 
       a {
         text-align: center
-        color: #000
+        color: var(--primary)
         width: 30px
         display: inline-block
         margin-left: 10px
 
         :hover {
-          color: #ffffff
-          background: #000
+          color: var(--background)
+          background: var(--primary)
           cursor: pointer
           text-decoration: none
         }
@@ -57,7 +57,7 @@ Calendar {
 
     p.percentage {
       font-size: 20px
-      color: #8b8b8b
+      color: var(--highlight)
     }
   }
 

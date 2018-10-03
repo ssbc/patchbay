@@ -5,15 +5,15 @@ button {
   font-size: .7rem
   letter-spacing: 1.4px
 
-  color: #666
-  background-color: #fff
+  color: var(--em)
+  background-color: var(--background)
 
   min-width: 6rem
   min-height: 1.8rem
 
   padding: .2rem 1rem
   cursor: pointer
-  border: 1px #b9b9b9 solid
+  border: 1px var(--highlight) solid
   outline: none
 
   display: flex
@@ -25,56 +25,56 @@ button {
 
   :focus {
     outline: none
-    /* border-color: #0088cc */
-    /* box-shadow: 0 0 4px #0088cc */
+    /* border-color: var(--blue) */
+    /* box-shadow: 0 0 4px var(--blue) */
   }
 
   :hover {
-    color: #fff
-    background-color: #15d6b4
-    border: 1px solid #15d6b4
+    color: var(--background)
+    background-color: var(--cyan)
+    border: 1px solid var(--cyan)
     outline: none
   }
 
   :disabled {
     color: grey
-    background: #fff
+    background: var(--background)
 
     cursor: initial
 
     :hover {
       color: grey
-      background: #fff
-      border: 1px #b9b9b9 solid
+      background: var(--background)
+      border: 1px var(--highlight) solid
     }
   }
 
   -subtle {
-    color: #b9b9b9
+    color: var(--highlight)
     border: 1px solid rgba(0,0,0,0)
     background: none
 
     :hover {
-      color: #fff
-      background-color: rgba(200,0,0,.5)
-      border: 1px solid rgba(200,0,0,.5)
+      color: var(--background)
+      background-color: var(--red)
+      border: 1px solid var(--red)
     }
   }
 
   -primary {
-    color: #fff
-    background-color: #9754de
-    border: 1px solid #9754de
+    color: var(--background)
+    background-color: var(--violet)
+    border: 1px solid var(--violet)
 
     :hover { 
-      background-color: #de54cc
-      border: 1px solid #de54cc
+      background-color: var(--magenta)
+      border: 1px solid var(--magenta)
     }
   }
 
   -active {
-    color: #aa2cda
-    border: 1px solid #aa2cda
+    color: var(--violet)
+    border: 1px solid var(--violet)
   }
 
   -showMore {

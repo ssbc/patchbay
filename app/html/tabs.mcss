@@ -14,7 +14,7 @@ Hypertabs {
   nav {
     display: flex
     
-    background: linear-gradient(to bottom, #efefef, #e5e5e5)
+    background: linear-gradient(to bottom, var(--highlight), var(--highlight))
 
     section.tabs {
       flex-grow: 1
@@ -30,7 +30,7 @@ Hypertabs {
 
         min-width: 3.5rem
         font-size: .9rem
-        background-color: #efefef
+        background-color: var(--highlight)
         overflow: hidden
 
         padding: 0
@@ -45,7 +45,7 @@ Hypertabs {
         }
 
         -selected {
-          color: #222
+          color: var(--em)
           $backgroundPrimary
 
           a.link {
@@ -62,10 +62,10 @@ Hypertabs {
 
 
         a {
-          color: #666
+          color: var(--em)
 
           :hover {
-            color: #0088cc
+            color: var(--blue)
             text-decoration: none
           }
         }
@@ -97,7 +97,7 @@ Hypertabs {
 
           :hover {
             background: #aaaaaa
-            color: #fff
+            color: var(--background)
             font-weight: 600
           }
         }

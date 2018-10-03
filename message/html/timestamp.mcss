@@ -1,4 +1,4 @@
 a.Timestamp {
-  color: #666
+  color: var(--em)
 }
 

@@ -1,5 +1,5 @@
 Menu {
-  background-color: #0088cc
+  background-color: var(--blue)
   width: .7rem 
   height: .7rem
   border-radius: 1rem
@@ -13,7 +13,7 @@ Menu {
     top: .5em
     right: 0
     padding: 2rem 1rem .5rem
-    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 1.5rem, #f5f5f5 1.5rem, #f5f5f5)
+    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 1.5rem, var(--highlight) 1.5rem, var(--highlight))
     z-index: 5
   }
 
