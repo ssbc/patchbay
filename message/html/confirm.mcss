@@ -7,7 +7,7 @@ MessageConfirm {
       max-height: 70vh
       overflow-y: auto
 
-      background-color: white
+      background-color: var(--background)
 
       div {
         header.author {

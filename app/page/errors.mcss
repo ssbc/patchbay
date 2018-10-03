@@ -13,7 +13,7 @@ Error {
   padding: 1rem
 
   header {
-    color: red
+    color: var(--red)
     font-weight: 600
   }
 

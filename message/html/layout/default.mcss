@@ -94,7 +94,7 @@ Message -default {
     pre {
       border: 1px gainsboro solid
       padding: .8rem
-      background-color: var(--highlight)
+      background-color: var(--em)
       color: var(--magenta)
       padding: .3rem
       white-space: pre-wrap

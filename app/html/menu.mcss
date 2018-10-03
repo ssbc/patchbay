@@ -25,11 +25,11 @@ Menu {
   }
 
   -newMsg {
-    background-color: white
+    background-color: var(--background)
   }
 
   -disconnected {
-    background-color: red
+    background-color: var(--red)
   }
 }
 

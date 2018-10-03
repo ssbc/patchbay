@@ -29,7 +29,7 @@ Compose {
 
   section.warning {
     color: var(--background)
-    background-color: red
+    background-color: var(--red)
 
     height: 0
     padding: 0 .5rem
