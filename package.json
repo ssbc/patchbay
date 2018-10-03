@@ -88,6 +88,7 @@
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
+    "ssb-blob-files": "^1.0.0",
     "ssb-blobs": "^1.1.5",
     "ssb-chess": "^2.4.1",
     "ssb-chess-db": "^1.0.4",
