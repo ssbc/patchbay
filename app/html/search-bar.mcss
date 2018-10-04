@@ -1,5 +1,6 @@
 SearchBar {
   input {
+    color: var(--primary)
     height: 1.4rem
 
     padding-left: .7rem

@@ -5,12 +5,14 @@ Compose {
   padding: .5rem .5rem 1rem 5.5rem
 
   textarea {
+    color: var(--primary)
     border: 1px solid var(--highlight)
     border-top-left-radius: 0
     border-top-right-radius: 0
   }
 
   input.channel {
+    color: var(--primary)
     border: 1px solid var(--highlight)
     border-bottom: none
     border-bottom-left-radius: 0
@@ -65,7 +67,7 @@ Compose {
       cursor: pointer
       color: transparent
       font-family: FontAwesome
-      border: 1px rgba(0,0,0,0) solid
+      border: 1px var(--background) solid
 
       ::-webkit-file-upload-button {
         visibility: hidden

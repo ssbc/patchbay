@@ -13,7 +13,7 @@ Menu {
     top: .5em
     right: 0
     padding: 2rem 1rem .5rem
-    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 1.5rem, var(--highlight) 1.5rem, var(--highlight))
+    background: linear-gradient(var(--background), var(--background) 1.5rem, var(--highlight) 1.5rem, var(--highlight))
     z-index: 5
   }
 

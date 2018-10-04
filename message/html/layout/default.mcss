@@ -94,7 +94,7 @@ Message -default {
       border: 1px var(--highlight) solid
       padding: .8rem
       background-color: var(--highlight)
-      color: var(--magenta)
+      color: var(--primary)
       padding: .3rem
       white-space: pre-wrap
       word-wrap: break-word
