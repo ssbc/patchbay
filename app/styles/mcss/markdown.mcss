@@ -3,6 +3,9 @@ Markdown {
   }
 
   p {
+    :first-of-type { margin-top: 0 }
+    :last-of-type { margin-bottom: 0 }
+
     a {
       img { margin 0 .5rem }
 
@@ -17,7 +20,7 @@ Markdown {
 
   hr {
     height: 0
-    border: solid #ddd
+    border: solid var(--highlight)
     border-width: 1px 0 0
     clear: both
     margin-bottom: .9em
@@ -86,7 +89,7 @@ Markdown {
     margin-bottom: .5em
   }
   h1 { font-size: 1.4rem }
-  h2 { font-size: 1.2em }
+  h2 { font-size: 1.2rem }
   h3 { font-size: 1.15rem }
   h4 { font-size: 1.12rem }
   h5 { font-size: 1.1rem }
@@ -96,6 +99,6 @@ Markdown {
 $code {
   background-color: var(--highlight)
   color: var(--magenta)
-  border: 1px solid #e6e6e6
+  border: 1px solid var(--highlight)
   border-radius: 2px
 }

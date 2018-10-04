@@ -13,7 +13,7 @@ exports.create = (api) => {
 
   // UnreadFeature (search codebase for this if extracting)
   function unread (msg) {
-    return h('i.unread.fa.fa-bell', {
+    return h('i.unread.fa.fa-star', {
       title: 'A new message'
     })
   }

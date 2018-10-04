@@ -39,13 +39,11 @@ button {
   :disabled {
     color: grey
     background: var(--background)
-
-    cursor: initial
+    cursor: not-allowed
+    border: none
 
     :hover {
-      color: grey
-      background: var(--background)
-      border: 1px var(--highlight) solid
+      background: var(--highlight)
     }
   }
 

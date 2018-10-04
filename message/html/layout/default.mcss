@@ -3,6 +3,7 @@ Message -default {
 
   display: grid
   grid-template-columns: 5rem auto
+  grid-row-gap: .5rem
 
   section.avatar {
     grid-column: 1 / 2
@@ -45,8 +46,6 @@ Message -default {
   section.content {
     grid-column: 2 / 3
     grid-row: 2 / span 1
-
-    margin-bottom: .5rem
 
     (img) {
       max-width: 100%

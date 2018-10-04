@@ -14,7 +14,7 @@ body {
   font-family: helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.4;
-  color: var(--primary)
+  color: #93a1a1; // XXX hardcode
 }
 
 * {
@@ -27,7 +27,7 @@ a:link, a:visited, a:active {
 }
 
 a:hover, a:focus {
-  color: var(--indigo)
+  color: var(--indigo);
   text-decoration: underline;
 }
 
@@ -36,7 +36,8 @@ input:focus, .compose:focus {
 }
 
 input, textarea {
-  border: 1px solid var(--highlight)
+  background: var(--background);
+  border: 1px solid var(--highlight);
   font-family: sans-serif;
 }
 

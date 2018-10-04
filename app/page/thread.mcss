@@ -1,6 +1,6 @@
 Thread {
   section.top {
-    border-bottom: solid 1px gainsboro
+    /* border-bottom: solid 1px gainsboro */
 
     section.recipients {
       display: flex

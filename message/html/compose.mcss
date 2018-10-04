@@ -27,29 +27,27 @@ Compose {
     }
   }
 
-  section.warning {
+  section.warnings {
     color: var(--background)
-    background-color: var(--red)
 
-    height: 0
-    padding: 0 .5rem
-    transition: all ease-in .1s
-
-    display: flex
-    justify-content: space-between
-
-
-    -open {
-      padding: .5rem
-      height: initial
-    }
-
-    i.fa { margin-right: .5rem }
     div.warning {
-      strong { margin-right: .3rem }
-    }
-    div.close {
-      cursor: pointer
+      background-color: var(--red)
+      padding: .5rem
+      margin-bottom: 5px
+
+      display: flex
+      justify-content: start
+      align-items: center
+
+      i.fa-exclamation-triangle { margin-right: .5rem }
+
+      div.message {
+        flex-grow: 1
+        font-weight: 600
+        margin-right: .3rem
+      }
+
+      i.fa-times { cursor: pointer }
     }
   }
 

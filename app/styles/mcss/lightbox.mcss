@@ -14,7 +14,7 @@ body {
     margin: auto
     z-index: 2
     background: var(--highlight)
-    border: 1px solid #eee
+    border: 1px solid var(--highlight)
     border-radius: .2em
   }
 }

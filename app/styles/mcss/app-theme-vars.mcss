@@ -33,3 +33,9 @@ App {
   --scrollbar-color: var(--primary)
   --scrollbar-color-hover: var(--em)
 }
+
+html {
+  body {
+    color: var(--primary)
+  }
+}

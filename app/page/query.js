@@ -4,6 +4,7 @@ const Scroller = require('mutant-scroll')
 const next = require('pull-next-query')
 const json5 = require('json5')
 const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -44,7 +45,10 @@ exports.create = function (api) {
         // console.error(err)
         return err
       }
-      if (isValidOpts(newOpts)) state.opts.set(newOpts)
+      // NOTE - this is the piece which auto-runs the quers
+      if (!isValidOpts(newOpts)) return
+      if (isEqual(resolve(state.opts), newOpts)) return
+      state.opts.set(newOpts)
     })
 
     const activateQuery = () => state.opts.set(json5.parse(resolve(state.input)))
@@ -67,6 +71,7 @@ exports.create = function (api) {
               if (a && b && a.key && b.key) return a.key === b.key
               return a === b
             }
+            // cb: console.error // TODO better error catching with stream
           })
         })
       ])
@@ -213,7 +218,7 @@ function linkify (chunks) {
     // regex lifted from ssb-ref
     var arr = chunk.split(/((?:@|%|&)[A-Za-z0-9/+]{43}=\.[\w\d]+)/g)
     for (var i = 1; i < arr.length; i += 2) {
-      arr[i] = h('a', {href: arr[i]}, arr[i])
+      arr[i] = h('a', { href: arr[i] }, arr[i])
     }
     newArray = [...newArray, ...arr]
   })

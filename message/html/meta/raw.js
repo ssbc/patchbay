@@ -16,7 +16,7 @@ exports.create = (api) => {
       title: 'View raw data',
       style: {
         order: 99,
-        color: '#a8a8a8',
+        color: 'var(--highlight)',
         cursor: 'pointer'
       },
       'ev-click': () => (rawMessage() === null)

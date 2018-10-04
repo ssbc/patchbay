@@ -7,16 +7,16 @@ exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
   function Scroller (opts = {}) {
-    const { prepend = [], content = null, append = [], classList = [], className = '', title = '' } = opts
+    const { prepend, content = null, append, classList = [], className = '', title = '' } = opts
 
     const contentSection = h('section.content', { title: '' }, content)
 
     const container = h('Scroller',
       { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },
       [
-        h('section.top', prepend),
+        prepend ? h('section.top', prepend) : null,
         contentSection,
-        h('section.bottom', append)
+        append ? h('section.bottom', append) : null
       ]
     )
 
@@ -47,11 +47,12 @@ function keyscroll (content) {
   }
 
   return function scroll (d) {
-    selectChild((!curMsgEl || d === 'first') ? content.firstChild
+    const child = (!curMsgEl || d === 'first') ? content.firstChild
       : (!curMsgEl || d === 'last') ? content.lastChild
         : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
           : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-            : curMsgEl)
+            : curMsgEl
+    selectChild(child)
 
     return curMsgEl
   }

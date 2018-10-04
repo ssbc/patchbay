@@ -106,7 +106,7 @@ AboutEditor {
           ::before {
             position: absolute
 
-            background: #fff
+            background: var(--background)
             color: var(--em)
             border: 1px solid var(--em)
             border-radius: .2rem
