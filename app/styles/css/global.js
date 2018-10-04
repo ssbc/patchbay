@@ -14,7 +14,7 @@ body {
   font-family: helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.4;
-  color: #93a1a1; // XXX hardcode
+  color: var(--primary)
 }
 
 * {

@@ -39,9 +39,9 @@ Markdown {
     }
   }
 
-  p code {
+  (code) {
     $code
-    padding: 0.1rem .2rem
+      padding: 0.1rem .2rem
   }
 
   blockquote {

@@ -5,13 +5,13 @@ Compose {
   padding: .5rem .5rem 1rem 5.5rem
 
   textarea {
-    border: 1px solid gainsboro
+    border: 1px solid var(--highlight)
     border-top-left-radius: 0
     border-top-right-radius: 0
   }
 
   input.channel {
-    border: 1px solid gainsboro
+    border: 1px solid var(--highlight)
     border-bottom: none
     border-bottom-left-radius: 0
     border-bottom-right-radius: 0
@@ -88,7 +88,7 @@ Compose {
       }
 
       :hover, :focus {
-        border: 1px gainsboro solid
+        border: 1px var(--highlight) solid
         outline: none
         box-shadow: none
       }

@@ -38,14 +38,14 @@ SettingsPage {
           width: 600px
           max-width: 600px
           min-height: 200px
-          border: 1px solid gainsboro
+          border: 1px solid var(--highlight)
         }
 
         input {
           font-size: 1rem
 
           padding: .5rem
-          border: 1px solid gainsboro
+          border: 1px solid var(--highlight)
 
           width: 600px
           max-width: 600px
