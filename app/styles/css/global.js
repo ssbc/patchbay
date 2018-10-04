@@ -14,7 +14,7 @@ body {
   font-family: helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.4;
-  color: #222;
+  color: #93a1a1; // XXX hardcode
 }
 
 * {
@@ -22,12 +22,12 @@ body {
 }
 
 a:link, a:visited, a:active {
-  color: #0088cc;
+  color: var(--blue);
   text-decoration: none;
 }
 
 a:hover, a:focus {
-  color: #005580;
+  color: var(--indigo);
   text-decoration: underline;
 }
 
@@ -36,7 +36,8 @@ input:focus, .compose:focus {
 }
 
 input, textarea {
-  border: 1px solid gainsboro;
+  background: var(--background);
+  border: 1px solid var(--highlight);
   font-family: sans-serif;
 }
 

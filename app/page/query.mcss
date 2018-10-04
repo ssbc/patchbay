@@ -16,7 +16,7 @@ Query {
     textarea {
       justify-self: stretch
 
-      color: #fff
+      color: var(--background)
       font-family: "ubunutu mono", monospace
 
       background: rgb(40 , 0, 40)
@@ -48,7 +48,7 @@ Query {
           white-space: pre-wrap
 
           span {
-            color: hsl(0, 50%, 50%)
+            color: var(--red)
             /* font-weight: 600 */
           }
         }

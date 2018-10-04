@@ -1,5 +1,5 @@
 Filter {
-  color: #444
+  color: var(--em)
   $threadWidth
 
   i {
@@ -7,14 +7,14 @@ Filter {
     top: 3rem
 
     font-size: 1.2rem
-    color: #b3b3b3
+    color: var(--highlight)
     cursor: pointer
   }
   i.fa-filter {
     right: 2rem
 
     -active {
-      color: #555
+      color: var(--em)
     }
   }
   i.fa-angle-up {
@@ -23,7 +23,7 @@ Filter {
   i.custom {
     right: 3.5rem
     font-size: .8rem
-    color: #666
+    color: var(--em)
 
     ::before {
       content: 'custom'
@@ -31,7 +31,7 @@ Filter {
   }
 
   div.options {
-    background-color: #fff
+    background-color: var(--background)
 
     padding: .5rem
     border: 1px gainsboro solid

@@ -5,7 +5,7 @@ SettingsPage {
   justify-content: center
 
   div.container {
-    background-color: hsla(0, 0%, 100%, .3)
+    background-color: var(--highlight)
     padding: 1rem
     margin: 1rem 0
 

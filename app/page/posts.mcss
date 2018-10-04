@@ -25,7 +25,7 @@ Posts {
         }
         
         div.toggle {
-          color: #999
+          color: var(--em)
           cursor: pointer
 
           padding: .25rem .5rem
@@ -34,12 +34,12 @@ Posts {
           i { margin-right: .3rem }
 
           -active {
-            color: #222
-            i { color: #9754de }
+            color: var(--em)
+            i { color: var(--violet) }
           }
 
           :hover {
-            border: 1px solid #9754de
+            border: 1px solid var(--violet)
           }
         }
       
@@ -98,7 +98,7 @@ ThreadCard {
     div.name {
       text-align: end
       a {
-        color: #222
+        color: var(--em)
         font-weight: 600
         text-decoration: none
       }
@@ -110,8 +110,8 @@ ThreadCard {
 
     div.root {
       div.Markdown {
-        background-color: #000
-        color: #fff
+        background-color: var(--highlight)
+        color: var(--em)
         line-height: 1.4rem
         padding: 2rem
 

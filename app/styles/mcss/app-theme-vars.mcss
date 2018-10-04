@@ -1,12 +1,41 @@
 App {
-  --app-border-background: rgb(0, 0, 0)
-  --app-border-background-mid: rgba(218, 139, 255, 0.47)
-  --app-border-width: .3rem
-  --app-border-color: rgb(255, 255, 255)
+  --base03: #002b36
+  --base02: #073642
+  --base01: #586e75
+  --base00: #657b83
+  --base0: #839496
+  --base1: #93a1a1
+  --base2: #eee8d5
+  --base3: #fdf6e3
+  --yellow: #b58900
+  --orange: #cb4b16
+  --red: #dc322f
+  --magenta: #d33682
+  --violet: #6c71c4
+  --blue: #268bd2
+  --cyan: #2aa198
+  --green: #859900
 
-  --page-background: rgb(255, 255, 255)
-  --page-color: #222
+  --em: var(--base01)
+  --primary: var(--base00)
+  --secondary: var(--base1)
+  --highlight: var(--base2)
+  --background: var(--base3)
 
-  --scrollbar-color: rgba(65, 3, 82, 0.48)
-  --scrollbar-color-hover: rgba(65, 3, 82, 0.55)
+  --app-border-background: var(--highlight)
+  --app-border-background-mid: var(--highlight)
+  --app-border-width: 0
+  --app-border-color: var(--secondary)
+
+  --page-background: var(--background)
+  --page-color: var(--primary)
+
+  --scrollbar-color: var(--primary)
+  --scrollbar-color-hover: var(--em)
+}
+
+html {
+  body {
+    color: var(--primary)
+  }
 }

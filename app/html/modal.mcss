@@ -31,7 +31,7 @@ Modal {
 
   -dark {
     div.content {
-      background: #000
+      background: var(--primary)
     }
   }
 }

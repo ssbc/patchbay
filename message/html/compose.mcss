@@ -22,16 +22,16 @@ Compose {
       box-shadow: none
     }
     :disabled {
-      background-color: #f1f1f1
+      background-color: var(--highlight)
       cursor: not-allowed
     }
   }
 
   section.warnings {
-    color: #fff
+    color: var(--background)
 
     div.warning {
-      background-color: red
+      background-color: var(--red)
       padding: .5rem
       margin-bottom: 5px
 
@@ -76,8 +76,8 @@ Compose {
 
         content: '\f0c6'
         font-size: 1rem
-        color: #666;
-        background-color: #fff
+        color: var(--em);
+        background-color: var(--background)
 
         outline: none
         white-space: nowrap

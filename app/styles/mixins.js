@@ -19,24 +19,24 @@ $textPrimary {
 }
 
 $textSubtle {
-  color: gray
+  color: var(--secondary)
 }
 
 $colorPrimary {
-  color: #fff
-  background-color: #3dc8c3
+  color: var(--background)
+  background-color: var(--cyan)
 
   (a) {
-    color: #5c6bc0
+    color: var(--violet)
   }
 }
 
 $borderPrimary {
-  border: 1px solid #3dc8c3
+  border: 1px solid var(--cyan)
 }
 
 $backgroundPrimary {
-  background-color: #fff
+  background-color: var(--background)
 }
 
 $avatarLarge {

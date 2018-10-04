@@ -62,7 +62,7 @@ ImageSearchDetails {
       padding: .2rem
       padding-right: 2rem
       min-width: 39rem
-      background-color: rgba(0,0,0,.1)
+      background-color: var(--highlight)
 
       text-align: right
       margin-top: .2rem
