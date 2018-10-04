@@ -12,7 +12,6 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'meme.async.suggest': 'first',
-  // 'blob.html.input': 'first', // TODO extract fileInput creator below out into patchcore
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
   'drafts.sync.set': 'first',
