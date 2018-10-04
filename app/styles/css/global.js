@@ -27,7 +27,7 @@ a:link, a:visited, a:active {
 }
 
 a:hover, a:focus {
-  color: var(--indigo);
+  color: var(--magenta);
   text-decoration: underline;
 }
 
@@ -36,6 +36,7 @@ input:focus, .compose:focus {
 }
 
 input, textarea {
+  color: var(--primary);
   background: var(--background);
   border: 1px solid var(--highlight);
   font-family: sans-serif;
