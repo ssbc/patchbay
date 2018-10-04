@@ -8,7 +8,7 @@ Modal {
   bottom: var(--app-border-width)
   left: var(--app-border-width)
   right: var(--app-border-width)
-  background: rgba(15, 0, 25, 0.78)
+  background: var(--magenta)
 
   div.content {
     max-width: 90vw

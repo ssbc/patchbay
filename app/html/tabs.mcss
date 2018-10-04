@@ -96,7 +96,7 @@ Hypertabs {
           justify-content: center
 
           :hover {
-            background: #aaaaaa
+            background: #var(--secondary)
             color: var(--background)
             font-weight: 600
           }

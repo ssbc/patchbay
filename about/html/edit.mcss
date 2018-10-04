@@ -195,7 +195,7 @@ PatchProfileCrop {
   overflow: auto
   max-width: 100%
   padding: 1rem
-  border: 1px solid #eee
+  border: 1px solid var(--highlight)
   border-radius: .2em
 
   display: flex

@@ -57,7 +57,7 @@ Relationships {
         div.explainer {
           visibility: hidden
           position: absolute
-          background: #fff
+          background: var(--background)
           width: 24rem
           left: 1rem
           bottom: 2rem
