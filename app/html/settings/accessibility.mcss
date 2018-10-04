@@ -16,7 +16,6 @@ AccessibilityStyles {
     }
 
     input[type=range] {
-      filter: drop-shadow(0 0 8px rgba(0,0,0,.2))
       :focus {
         box-shadow: none
       }

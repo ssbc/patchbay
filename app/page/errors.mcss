@@ -19,7 +19,7 @@ Error {
 
   pre {
     padding: 1rem
-    border: 1px gainsboro solid
+    border: 1px var(--highlight) solid
   }
 }
 

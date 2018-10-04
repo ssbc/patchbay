@@ -60,7 +60,7 @@ AboutEditor {
 
     header {
       margin-bottom: .8rem
-      border-bottom: 1px gainsboro solid
+      border-bottom: 1px var(--highlight) solid
     }
 
     section {
@@ -146,13 +146,13 @@ AboutEditor {
           display: flex
           cursor: pointer
 
-          border: 1px gainsboro solid
+          border: 1px var(--highlight) solid
           margin: 0 .4rem .5rem 0
 
           div { padding: .3rem }
 
           div.name {
-            border-right: 1px gainsboro solid
+            border-right: 1px var(--highlight) solid
           }
 
           div.count {
@@ -162,7 +162,7 @@ AboutEditor {
         }
 
         input {
-          border: 1px gainsboro solid
+          border: 1px var(--highlight) solid
           font-size: 1rem
           height: 1.7rem
         }

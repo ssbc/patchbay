@@ -48,9 +48,9 @@ button {
   }
 
   -subtle {
-    color: var(--highlight)
-    border: 1px solid rgba(0,0,0,0)
-    background: none
+    color: var(--secondary)
+    border: 1px solid var(--background)
+    background: var(--highlight)
 
     :hover {
       color: var(--background)

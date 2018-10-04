@@ -29,7 +29,7 @@ Posts {
           cursor: pointer
 
           padding: .25rem .5rem
-          border: 1px solid rgba(0,0,0,0)
+          border: 1px solid var(--background)
 
           i { margin-right: .3rem }
 

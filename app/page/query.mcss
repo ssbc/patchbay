@@ -16,10 +16,10 @@ Query {
     textarea {
       justify-self: stretch
 
-      color: var(--background)
+      color: var(--primary)
       font-family: "ubunutu mono", monospace
 
-      background: rgb(40 , 0, 40)
+      background: var(--background)
       padding: 1rem
       border: none
 

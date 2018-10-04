@@ -35,7 +35,7 @@ Hypertabs {
 
         padding: 0
         margin-left: .6rem
-        border: 1px gainsboro solid
+        border: 1px var(--highlight) solid
         border-bottom: none
 
         :hover {

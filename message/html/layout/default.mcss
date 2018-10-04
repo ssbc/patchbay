@@ -91,10 +91,10 @@ Message -default {
     grid-row: 3 / span 1
 
     pre {
-      border: 1px gainsboro solid
+      border: 1px var(--highlight) solid
       padding: .8rem
-      background-color: var(--em)
-      color: var(--magenta)
+      background-color: var(--highlight)
+      color: var(--primary)
       padding: .3rem
       white-space: pre-wrap
       word-wrap: break-word

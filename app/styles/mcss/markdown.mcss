@@ -28,7 +28,7 @@ Markdown {
 
   pre {
     background-color: var(--highlight)
-    color: var(--magenta)
+    color: var(--primary)
     padding: .3rem
     white-space: pre-wrap
     word-wrap: break-word
@@ -39,9 +39,9 @@ Markdown {
     }
   }
 
-  p code {
+  (code) {
     $code
-    padding: 0.1rem .2rem
+      padding: 0.1rem .2rem
   }
 
   blockquote {
@@ -98,7 +98,7 @@ Markdown {
 
 $code {
   background-color: var(--highlight)
-  color: var(--magenta)
+  color: var(--primary)
   border: 1px solid var(--highlight)
   border-radius: 2px
 }
