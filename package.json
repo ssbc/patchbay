@@ -90,7 +90,7 @@
     "ssb-backlinks": "^0.7.3",
     "ssb-blob-files": "^1.1.1",
     "ssb-blobs": "^1.1.5",
-    "ssb-chess": "^2.4.1",
+    "ssb-chess-mithril": "1.0.0",
     "ssb-chess-db": "^1.0.4",
     "ssb-config": "^2.3.0",
     "ssb-ebt": "^5.2.3",

@@ -39,7 +39,7 @@ const sockets = combine(
   require('patchbay-scry'),
   require('patchbay-dark-crystal'),
   require('patchbay-poll'),
-  require('ssb-chess'),
+  require('ssb-chess-mithril'),
   require('patchbay-gatherings'),
   require('patchbay-book'),
   patchbay,
