@@ -83,11 +83,9 @@ Markdown {
 
   (p) {
     img.emoji {
-      :first-of-type {
-        :last-of-type {
-          width: 3rem
-          height: 3rem
-        }
+      :only-child {
+        width: 3rem
+        height: 3rem
       }
     }
   }
