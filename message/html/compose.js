@@ -4,6 +4,7 @@ const ssbMentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
 const blobFiles = require('ssb-blob-files')
+const get = require('lodash/get')
 
 exports.gives = nest('message.html.compose')
 
@@ -12,7 +13,6 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'meme.async.suggest': 'first',
-  // 'blob.html.input': 'first', // TODO extract fileInput creator below out into patchcore
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
   'drafts.sync.set': 'first',
@@ -83,6 +83,15 @@ exports.create = function (api) {
         blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
       },
       'ev-focus': send(textAreaFocused.set, true),
+      'ev-paste': ev => {
+        const files = get(ev, 'clipboardData.files')
+        if (!files || !files.length) return
+        const opts = {
+          stripExif: api.settings.obs.get('patchbay.removeExif', true),
+          isPrivate
+        }
+        blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
+      },
       placeholder
     })
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target

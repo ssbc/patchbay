@@ -25,7 +25,7 @@ exports.create = function (api) {
       })
     )
     avatar.classList.add('Avatar')
-    avatar.style.setProperty('--avatar-size', Number.isNaN(size) ? size : `${size}rem`)
+    avatar.style.setProperty('--avatar-size', isNaN(size) ? size : `${size}rem`)
 
     return avatar
   }

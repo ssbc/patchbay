@@ -39,17 +39,15 @@ exports.create = function (api) {
       'ev-click': () => {
         lb.remove()
         api.message.async.publish(content, cb)
-      }},
-    'okay'
-    )
+      }
+    }, 'okay')
 
     var cancel = h('button.cancel.-subtle', {
       'ev-click': () => {
         lb.remove()
         cb(null)
-      }},
-    'cancel'
-    )
+      }
+    }, 'cancel')
 
     okay.addEventListener('keydown', (ev) => {
       if (ev.keyCode === 27) cancel.click() // escape
