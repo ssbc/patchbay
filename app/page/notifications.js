@@ -66,9 +66,13 @@ exports.create = function (api) {
     const query = [{
       $filter: {
         dest: api.keys.sync.id(),
-        timestamp: { $gt: 0 },
+        timestamp: { $gt: 0 }
+      }
+    }, {
+      $filter: {
         value: {
           author: { $ne: api.keys.sync.id() } // not my messages!
+          // NOTE putting this in second filter might be necessary to stop index trying to use this author value
         }
       }
     }]
