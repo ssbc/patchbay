@@ -29,7 +29,10 @@ exports.create = (api) => {
           remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
         })
       } else {
-        config = merge(config, { keys })
+        config = merge(config, {
+          keys,
+          remote: `net:127.0.0.1:${config.port}~shs:${pubkey}`
+        })
       }
     }
     return config
