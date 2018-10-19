@@ -84,7 +84,7 @@
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
     "scuttle-poll": "^1.3.4",
-    "scuttlebot": "^12.1.0",
+    "scuttlebot": "^13.0.0",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
@@ -105,7 +105,7 @@
     "ssb-search": "^1.1.2",
     "ssb-sort": "^1.1.0",
     "ssb-unread": "^1.0.1",
-    "ssb-ws": "^2.1.1",
+    "ssb-ws": "^3.0.0",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",
     "xtend": "^4.0.1"
