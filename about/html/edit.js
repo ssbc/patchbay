@@ -59,7 +59,7 @@ exports.create = function (api) {
     var namesRecord = Dict()
     // TODO constrain query to one name per peer?
     pull(
-      links({dest: id, rel: 'about', values: true}),
+      links({ dest: id, rel: 'about', values: true }),
       pull.map(e => e.value.content.name),
       pull.filter(Boolean),
       pull.drain(name => {
@@ -186,7 +186,7 @@ exports.create = function (api) {
     }
 
     function Crop (data, cb) {
-      var img = h('img', {src: data})
+      var img = h('img', { src: data })
 
       var crop = h('div')
 

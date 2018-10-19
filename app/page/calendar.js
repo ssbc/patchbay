@@ -103,7 +103,7 @@ function Events (state, api) {
       pull.asyncMap((key, cb) => {
         api.sbot.async.get(key, (err, value) => {
           if (err) return cb(err)
-          cb(null, {key, value})
+          cb(null, { key, value })
         })
       }),
       pull.drain(msg => gatherings.push(msg))
@@ -163,7 +163,7 @@ function getGatherings (year, events, api) {
         content: {
           type: 'about',
           startDateTime: {
-            epoch: {$gt: 0}
+            epoch: { $gt: 0 }
           }
         }
       }
@@ -226,7 +226,7 @@ function Calendar (state) {
 
         return h('div.month', [
           h('div.month-name', { 'ev-click': setMonthRange }, MONTH_NAMES[i]),
-          Month({ year, monthIndex: i, events, range, onSelect, styles: {weekFormat: 'columns'} })
+          Month({ year, monthIndex: i, events, range, onSelect, styles: { weekFormat: 'columns' } })
         ])
       })
     }))

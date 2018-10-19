@@ -9,7 +9,7 @@ exports.create = function (api) {
   return nest('message.html.author', messageAuthor)
 
   function messageAuthor (msg) {
-    return h('div', {title: msg.value.author}, [
+    return h('div', { title: msg.value.author }, [
       api.about.html.link(msg.value.author)
     ])
   }

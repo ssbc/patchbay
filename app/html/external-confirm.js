@@ -16,14 +16,14 @@ exports.create = function (api) {
       'ev-click': () => {
         lb.remove()
         open(href)
-      }},
+      } },
     'open'
     )
 
     var cancel = h('button.cancel.-subtle', {
       'ev-click': () => {
         lb.remove()
-      }},
+      } },
     'cancel'
     )
 

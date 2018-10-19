@@ -14,7 +14,7 @@ exports.create = (api) => {
     }
 
     const lb = h('Modal', { classList: [when(isOpen, '-open', '-close'), className], 'ev-click': closeMe },
-      h('div.content', {'ev-click': (ev) => ev.stopPropagation()}, [
+      h('div.content', { 'ev-click': (ev) => ev.stopPropagation() }, [
         content
       ]))
 

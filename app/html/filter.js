@@ -32,7 +32,7 @@ exports.create = function (api) {
     const peopleIFollow = api.contact.obs.following(myId)
     const channelsIFollow = api.channel.obs.subscribed(myId)
 
-    const filterSettings = api.settings.obs.get('filter', {exclude: {}})
+    const filterSettings = api.settings.obs.get('filter', { exclude: {} })
 
     const channelInput = h('input', {
       value: filterSettings().exclude.channels,
@@ -145,7 +145,7 @@ exports.create = function (api) {
       if (inputText[0] === '#') {
         api.channel.async.suggest(inputText.slice(1), cb)
       }
-    }, {cls: 'PatchSuggest'})
+    }, { cls: 'PatchSuggest' })
     channelInput.addEventListener('suggestselect', ev => {
       const channels = channelInput.value.trim()
 
@@ -157,7 +157,7 @@ exports.create = function (api) {
     addSuggest(userInput, (inputText, cb) => {
       inputText = inputText.replace(/^@/, '')
       api.about.async.suggest(inputText, cb)
-    }, {cls: 'PatchSuggest'})
+    }, { cls: 'PatchSuggest' })
     userInput.addEventListener('suggestselect', ev => userId.set(ev.detail.id))
 
     function followFilter (msg) {

@@ -12,7 +12,7 @@ exports.create = function (api) {
 
   function init () {
     // lazy load abouts on first use, can be quite heavy during startup
-    //api.about.async.suggest()
+    // api.about.async.suggest()
     api.channel.async.suggest()
   }
 }
