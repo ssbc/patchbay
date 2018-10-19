@@ -89,7 +89,7 @@ exports.create = function (api) {
       if (state.sort === BY_START) page = PageByStart(state)
 
       page.title = '/posts'
-      page.id = api.app.sync.locationId({page: 'posts'}) // this is needed because our page is a computed
+      page.id = api.app.sync.locationId({ page: 'posts' }) // this is needed because our page is a computed
       page.scroll = keyscroll(page.querySelector('section.content'))
       return page
     })

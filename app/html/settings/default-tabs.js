@@ -20,7 +20,7 @@ exports.create = function (api) {
     const defaultTabs = api.settings.obs.get('patchbay.defaultTabs', '')
     const setDefaultTabs = (ev) => {
       const tabs = ev.target.value.split(',').map(s => s.trim()).filter(Boolean)
-      api.settings.sync.set({patchbay: {defaultTabs: tabs}})
+      api.settings.sync.set({ patchbay: { defaultTabs: tabs } })
     }
 
     return {

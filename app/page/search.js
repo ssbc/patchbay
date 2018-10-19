@@ -70,7 +70,7 @@ function createOrRegExp (ary) {
 }
 
 function highlight (el, query) {
-  var searcher = new TextNodeSearcher({container: el})
+  var searcher = new TextNodeSearcher({ container: el })
   searcher.query = query
   searcher.highlight()
   return el

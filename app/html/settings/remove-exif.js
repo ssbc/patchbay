@@ -19,7 +19,7 @@ exports.create = function (api) {
   function removeExif () {
     const removeExif = api.settings.obs.get('patchbay.removeExif', true)
     const toggleRemoveExif = (ev) => {
-      api.settings.sync.set({patchbay: {removeExif: ev.target.checked}})
+      api.settings.sync.set({ patchbay: { removeExif: ev.target.checked } })
     }
 
     return {

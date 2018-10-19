@@ -55,7 +55,7 @@ function linkify (text) {
 
   var arr = text.split(refRegex)
   for (var i = 1; i < arr.length; i += 2) {
-    arr[i] = h('a', {href: arr[i]}, arr[i])
+    arr[i] = h('a', { href: arr[i] }, arr[i])
   }
   return arr
 }
