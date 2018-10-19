@@ -1,14 +1,16 @@
 Modal {
-  display: flex
-  flex-direction: row
   position: fixed
-  z-index: 90
-
   top: var(--app-border-width)
   bottom: var(--app-border-width)
   left: var(--app-border-width)
   right: var(--app-border-width)
+  z-index: 90
+
   background: rgba(15, 0, 25, 0.78)
+
+  display: grid
+  justify-content: center
+  align-content: center
 
   div.content {
     max-width: 90vw
@@ -17,12 +19,13 @@ Modal {
 
     $backgroundPrimary
     box-shadow: rgba(0,0,0,.34) 2px 6px 10px
-    margin: auto
+    margin: calc(var(--app-border-width) + 2.3rem) auto var(--app-border-width) auto
+    /* 2.3rem is height of Hypertabs > nav */
     $dontSelect
   }
 
   -open {
-    display: flex
+    display: grid
   }
 
   -close {

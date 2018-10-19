@@ -23,7 +23,7 @@ exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
   function threadPage (location) {
-    const root = get(location, 'value.content.root', location.key)
+    const root = get(location, 'value.content.root') || get(location, 'value.content.about') || location.key
     const msg = location.key
     if (msg !== root) scrollDownToMessage(msg)
 

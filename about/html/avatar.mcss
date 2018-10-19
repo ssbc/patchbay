@@ -1,6 +1,13 @@
 Avatar {
-  width: 4rem
-  height: 4rem
+  --avatar-size: 4rem
+
+  width: var(--avatar-size)
+  height: var(--avatar-size)
 
   transition: background-color .15s ease-out
+
+  img {
+    width: var(--avatar-size)
+    height: var(--avatar-size)
+  }
 }

@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { isBlob, isFeed, isMsg } = require('ssb-ref')
+const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.sync.routes')
 
@@ -46,7 +46,7 @@ exports.create = (api) => {
       [ loc => loc.page === 'search' && loc.query, pages.search ],
       [ loc => loc.page === 'settings', pages.settings ],
 
-      [ loc => isBlob(loc.blob), pages.blob ],
+      [ loc => loc.blob && isBlobLink(loc.blob), pages.blob ],
       [ loc => isPresent(loc.channel), pages.channel ],
       [ loc => isFeed(loc.feed), pages.profile ],
       [ loc => isMsg(loc.key), pages.thread ]

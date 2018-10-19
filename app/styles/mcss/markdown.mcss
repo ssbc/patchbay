@@ -3,6 +3,9 @@ Markdown {
   }
 
   p {
+    :first-of-type { margin-top: 0 }
+    :last-of-type { margin-bottom: 0 }
+
     a {
       img { margin 0 .5rem }
 
@@ -76,6 +79,15 @@ Markdown {
     width: 1.2em
     vertical-align: middle
     margin-top: -0.2em
+  }
+
+  (p) {
+    img.emoji {
+      :only-child {
+        width: 3rem
+        height: 3rem
+      }
+    }
   }
 
 

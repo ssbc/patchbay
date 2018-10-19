@@ -40,13 +40,13 @@ exports.create = function (api) {
       resetFeed({ container, content })
 
       pull(
-        pullMentions({old: false, live: true}),
+        pullMentions({ old: false, live: true }),
         filterDownThrough(),
         Scroller(container, content, api.message.html.render, true, false)
       )
 
       pull(
-        pullMentions({reverse: true, live: false}),
+        pullMentions({ reverse: true, live: false }),
         filterUpThrough(),
         Scroller(container, content, api.message.html.render, false, false)
       )
@@ -57,15 +57,22 @@ exports.create = function (api) {
     return container
   }
 
-  // NOTE - this currently hits mentions AND the patchwork message replies
+  // NOTE - currently this stream is know to pick up:
+  //   - post mentions (public)
+  //     - patchwork replies (public)
+  //   - scry (public, private)
+
   function pullMentions (opts) {
     const query = [{
       $filter: {
         dest: api.keys.sync.id(),
-        timestamp: {$gt: 0},
+        timestamp: { $gt: 0 }
+      }
+    }, {
+      $filter: {
         value: {
-          author: {$ne: api.keys.sync.id()}, // not my messages!
-          private: {$ne: true} // not private mentions
+          author: { $ne: api.keys.sync.id() } // not my messages!
+          // NOTE putting this in second filter might be necessary to stop index trying to use this author value
         }
       }
     }]
@@ -79,6 +86,10 @@ exports.create = function (api) {
     return api.sbot.pull.stream(server => {
       return pull(
         next(server.backlinks.read, _opts, ['timestamp']),
+        pull.filter(m => {
+          if (m.value.content.type !== 'post') return true
+          return !m.value.private // no private posts
+        }),
         pull.filter(m => !api.message.sync.isBlocked(m))
       )
     })
