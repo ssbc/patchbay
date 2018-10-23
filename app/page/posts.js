@@ -259,7 +259,7 @@ exports.create = function (api) {
         )
         // h('div', 'non-match')
       ),
-      h('ThreadCard -loading')
+      // h('ThreadCard -loading')
     )
   }
 
@@ -417,9 +417,10 @@ function keyscroll (content) {
   function selectChild (el) {
     if (!el) { return }
 
-    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
-    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
-    el.focus()
+    content.parentElement.scrollTop = el.offsetTop - content.parentElement.offsetTop - 10
+    // if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
+    // ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    if (el.focus) el.focus()
     curMsgEl = el
   }
 }

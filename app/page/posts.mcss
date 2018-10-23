@@ -183,5 +183,8 @@ ThreadCard {
         }
       }
     }
+    (a) {
+      color: #db67ed
+    }
   }
 }

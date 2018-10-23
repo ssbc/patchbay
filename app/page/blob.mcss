@@ -3,9 +3,13 @@ Blob {
   height: 100%
 
   display: grid
-  grid: 1fr / 1fr
-  align-items: stretch
-  justify-items: stretch
+  grid: 1fr auto / 1fr
+  grid-gap: .5rem
+
+  img {
+    max-width: 100%
+    max-height: 100%
+  }
 
   iframe {
     border: 0
