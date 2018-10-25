@@ -47,18 +47,21 @@ exports.create = (api) => {
 
           switch (header) {
             case '89504e47':
+              // 'image/png'
               return isImage.set(true)
-            // type = 'image/png'
             case '47494638':
+              // 'image/gif'
               return isImage.set(true)
-            // type = 'image/gif'
             case 'ffd8ffe0':
             case 'ffd8ffe1':
             case 'ffd8ffe2':
             case 'ffd8ffe3':
             case 'ffd8ffe8':
+              // 'image/jpeg'
               return isImage.set(true)
-            // type = 'image/jpeg'
+            case 'ffd8ffdb':
+              // 'image/???'
+              return isImage.set(true)
             default:
               isImage.set(false)
             // type = 'unknown' // Or you can use the blob.type as fallback
