@@ -35,35 +35,29 @@ exports.create = function (api) {
   function getVotes (cb) {
     const myKey = api.keys.sync.id()
 
-    var messages = {}
-
     return pull(
       api.sbot.pull.stream(server => {
         return server.query.read({
           limit: 10000,
           reverse: true,
           query:
+          // Gets all votes/likes made by you
             [{ $filter: {
               value:
                 {
+                  // TODO: filter for the last month only
                   author: myKey,
                   content: {
                     type: 'vote'
                   }
                 }
-            } }]
+            } },
+            {
+              // Extracts the liked post's link
+              $map: ['value', 'content', 'vote', 'link']
+            }
+            ]
         })
-      }),
-      pull.drain((msg) => {
-        messages[msg.key] = msg
-      }, function (err) {
-        if (err) throw err
-
-        console.log('Went through ' + Object.keys(messages).length, new Date())
-
-        let msgs = Object.values(messages)
-
-        cb(msgs)
       })
     )
   }
@@ -82,14 +76,10 @@ exports.create = function (api) {
       container.scroll(0)
       content.innerHTML = ''
 
-      getVotes((msgs) => {
-        console.log('msgs', msgs)
-
-        pull(
-          pull.values(msgs),
-          Scroller(container, content, api.message.html.render)
-        )
-      })
+      pull(
+        getVotes(),
+        Scroller(container, content, text => h('p', h('a', { href: text }, text)))
+      )
     }
 
     container.title = '/thankful'
