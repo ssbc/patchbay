@@ -33,7 +33,7 @@ exports.create = function (api) {
     }, '/thankful')
   }
 
-  function getVotes (cb) {
+  function getVotes (resultCb) {
     const myKey = api.keys.sync.id()
 
     return pull(
@@ -60,13 +60,30 @@ exports.create = function (api) {
             ]
         })
       }),
-      pull.asyncMap((postLink, cb) => {
-        // Takes the link of the liked post
+      pull.asyncMap((postLink, mapCb) => {
+        // Gets the post that the link points to
         api.sbot.async.get(postLink, (err, post) => {
           if (err) console.error('asyncMap error', err)
           // And extracts the author of it
-          cb(null, post.author)
+          mapCb(null, post.author)
         })
+      }),
+      pull.collect((err, likeList) => {
+        if (err) console.error(err)
+
+        const authorLikes = {}
+
+        likeList.forEach(author => {
+          if (authorLikes[author] === undefined) {
+            authorLikes[author] = 1
+          } else {
+            authorLikes[author]++
+          }
+        })
+
+        resultCb(null, Object.keys(authorLikes).map(author => {
+          return { author: author, likes: authorLikes[author] }
+        }))
       })
     )
   }
@@ -85,10 +102,14 @@ exports.create = function (api) {
       container.scroll(0)
       content.innerHTML = ''
 
-      pull(
-        getVotes(),
-        Scroller(container, content, text => h('p', text))
-      )
+      getVotes((err, authorLikes) => {
+        if (err) console.error(err)
+
+        pull(
+          pull.values(authorLikes),
+          Scroller(container, content, text => h('p', JSON.stringify(text)))
+        )
+      })
     }
 
     container.title = '/thankful'
