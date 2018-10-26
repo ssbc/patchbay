@@ -16,6 +16,7 @@ exports.needs = nest({
   'contact.obs.following': 'first',
   'sbot.pull.log': 'first',
   'sbot.pull.stream': 'first',
+  'sbot.async.get': 'first',
   'message.html.render': 'first'
 })
 
@@ -58,6 +59,14 @@ exports.create = function (api) {
             }
             ]
         })
+      }),
+      pull.asyncMap((postLink, cb) => {
+        // Takes the link of the liked post
+        api.sbot.async.get(postLink, (err, post) => {
+          if (err) console.error('asyncMap error', err)
+          // And extracts the author of it
+          cb(null, post.author)
+        })
       })
     )
   }
@@ -78,7 +87,7 @@ exports.create = function (api) {
 
       pull(
         getVotes(),
-        Scroller(container, content, text => h('p', h('a', { href: text }, text)))
+        Scroller(container, content, text => h('p', text))
       )
     }
 
