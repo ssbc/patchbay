@@ -26,6 +26,7 @@ var createSbot = require('scuttlebot')
   .use(require('ssb-search'))
   .use(require('ssb-unread'))
   .use(require('ssb-ws'))
+  .use(require('ssb-blob-content'))
   // .use(require('ssb-mutual')) // this is has recursion problems atm
 
 // pull config options out of depject
