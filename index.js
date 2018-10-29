@@ -76,7 +76,7 @@ electron.app.on('ready', () => {
 
 function startBackgroundProcess () {
   if (!windows.background) {
-    windows.background = openWindow(Path.join(__dirname, 'background-process.js'), {
+    windows.background = openWindow(Path.join(__dirname, 'server.js'), {
       connect: false,
       center: true,
       fullscreen: false,

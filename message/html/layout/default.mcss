@@ -72,14 +72,16 @@ Message -default {
     }
 
     div.actions {
-      display: flex
-      justify-content: flex-end
+      display: grid
+      grid-auto-flow: column
 
       font-size: .9rem
       a {
         margin-left: .5em
       }
 
+      a.likes { grid-column: 1 }
+      a.like, a.unlike { grid-column: 2 }
       a.unlike {
         $textSubtle
       }

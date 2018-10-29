@@ -3,7 +3,7 @@ Blob {
   height: 100%
 
   display: grid
-  grid: 1fr 10rem / 1fr
+  grid: 1fr auto / 1fr
   grid-gap: .5rem
 
   img {

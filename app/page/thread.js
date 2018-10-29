@@ -55,10 +55,18 @@ exports.create = function (api) {
 
     const { container } = api.app.html.scroller({ prepend: Header({ isPrivate, recps }), content, append: composer })
     container.classList.add('Thread')
-    container.title = msg
+    container.title = root
     api.message.async.name(root, (err, name) => {
       if (err) throw err
       container.title = name
+
+      // TODO tidy this up
+      // over-ride message.async.name OR create message.async.subject
+      onceTrue(messages, msgs => {
+        const { subject } = msgs[0].value.content
+        if (!subject) return
+        container.title = subject
+      })
     })
 
     container.scrollDownToMessage = scrollDownToMessage

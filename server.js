@@ -1,3 +1,4 @@
+// formerly background-process.js
 var fs = require('fs')
 var Path = require('path')
 var electron = require('electron')
