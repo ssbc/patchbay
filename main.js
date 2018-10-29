@@ -6,6 +6,10 @@ const bulk = require('bulk-require')
 // polyfills
 require('setimmediate')
 
+const patchcore = require('patchcore')
+delete patchcore.patchcore.message.html.action.reply
+// prune an action we don't want
+
 const patchbay = {
   patchbay: {
     about: bulk(__dirname, [ 'about/**/*.js' ]),
@@ -23,40 +27,27 @@ const patchbay = {
     suggestions: require('patch-suggest'),
     settings: require('patch-settings'),
     drafts: require('patch-drafts'),
-    inbox: require('patch-inbox'), // TODO - ideally this would be a standalone patch-* module
     history: require('patch-history')
   }
 }
-
-const post = {
-  patchbay: {
-    message: bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
-  }
-}
-
-// from more specialized to more general
-const sockets = combine(
-  require('patchbay-scry'),
-  require('patchbay-dark-crystal'),
-  require('patchbay-poll'),
-  require('ssb-chess-mithril'),
-  require('patchbay-gatherings'),
-  require('patchbay-book'),
-  patchbay,
-  require('patchcore'),
-  post
-)
-
-// remove patchcore reply for our version
-var pcReplyIndex = sockets.message.html.action.findIndex(x => x.name === 'reply')
-if (pcReplyIndex !== -1) { delete sockets.message.html.action[pcReplyIndex] }
-
-const api = entry(sockets, nest('app.html.app', 'first'))
-const app = api.app.html.app
-
 module.exports = patchbay
 
 // for electro[n]
 if (typeof window !== 'undefined') {
-  document.body.appendChild(app())
+  // TODO spin up settings check which modules are wanted
+  const plugins = [
+    require('patchbay-scry'),
+    require('patchbay-dark-crystal'),
+    require('patchbay-poll'),
+    require('patch-inbox'), // TODO needs work
+    require('ssb-chess-mithril'),
+    require('patchbay-book'),
+    require('patchbay-gatherings')
+  ]
+  const args = [ ...plugins, patchbay, patchcore ]
+  // plugings loaded first will over-ride core modules loaded later
+  const sockets = combine.apply(null, args)
+
+  const api = entry(sockets, nest('app.html.app', 'first'))
+  document.body.appendChild(api.app.html.app())
 }
