@@ -164,6 +164,29 @@ This is ultimately reduced along with all other `router.sync.router` modules int
 Giving modules here will add settings sections to the settings page (`app.page.settings`).
 
 
+### Requiring the core of patchbay
+
+If you don't want the default modules, you can grab the main part of patchbay and pick and choose modules like this:
+
+```js
+const patchcore = require('patchcore')
+const patchbay = require('patchbay/main')
+const combine = require('depject')
+const entry = require('depject/entry')
+const nest = require('depnest')
+
+const sockets = combine(
+  require('patchbay-dark-crystal'), // the module(s) you want
+  patchbay,
+  patchcore // required
+)
+
+const api = entry(sockets, nest('app.html.app', 'first'))
+document.body.appendChild(api.app.html.app())
+```
+
+You'll need to be running your own sbot and launch this with electro / electron. See `index.js` to see that
+
 ### How to add a new page
 
 e.g. to add a 'cats' page to the app:
