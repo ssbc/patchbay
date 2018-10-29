@@ -34,18 +34,19 @@ module.exports = patchbay
 
 // for electro[n]
 if (typeof window !== 'undefined') {
-  // modules loaded first over-ride core modules loaded later
-  const sockets = combine(
+  // TODO spin up settings check which modules are wanted
+  const plugins = [
     require('patchbay-scry'),
     require('patchbay-dark-crystal'),
     require('patchbay-poll'),
-    require('ssb-chess-mithril'),
-    require('patchbay-gatherings'),
-    require('patchbay-book'),
     require('patch-inbox'), // TODO needs work
-    patchbay,
-    patchcore
-  )
+    require('ssb-chess-mithril'),
+    require('patchbay-book'),
+    require('patchbay-gatherings')
+  ]
+  const args = [ ...plugins, patchbay, patchcore ]
+  // plugings loaded first will over-ride core modules loaded later
+  const sockets = combine.apply(null, args)
 
   const api = entry(sockets, nest('app.html.app', 'first'))
   document.body.appendChild(api.app.html.app())
