@@ -23,8 +23,8 @@ exports.create = function (api) {
 
   function menuItem () {
     return h('a', {
-      'ev-click': () => api.app.sync.goTo({ page: 'blogs' })
-    }, '/blogs')
+      'ev-click': () => api.app.sync.goTo({ page: 'shortcuts' })
+    }, '/shortcuts')
   }
 
   function shortcutsPage (location) {
