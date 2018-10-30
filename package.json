@@ -83,6 +83,7 @@
     "read-directory": "^3.0.1",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
+    "secure-scuttlebutt": "git+https://github.com/ssbc/secure-scuttlebutt.git",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
