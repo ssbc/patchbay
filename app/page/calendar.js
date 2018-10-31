@@ -3,6 +3,7 @@ const { h, Array: MutantArray, map, Struct, computed, watch, throttle, resolve }
 const Month = require('marama')
 
 const pull = require('pull-stream')
+const paraMap = require('pull-paramap')
 const { isMsg } = require('ssb-ref')
 
 exports.gives = nest({
@@ -14,6 +15,7 @@ exports.needs = nest({
   'app.sync.goTo': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first',
+  'message.sync.unbox': 'first',
   'sbot.async.get': 'first',
   'sbot.pull.stream': 'first'
 })
@@ -43,7 +45,7 @@ exports.create = (api) => {
       })
     })
 
-    watch(state.year, year => getGatherings(year, state.events, api))
+    watch(state.year, year => getGatherings(year, state.events, Query))
     watchAttending(state.attending, api)
 
     const page = h('CalendarPage', { title: '/calendar' }, [
@@ -54,6 +56,10 @@ exports.create = (api) => {
     page.scroll = (i) => scroll(state.range, i)
 
     return page
+  }
+
+  function Query (opts) {
+    return api.sbot.pull.stream(server => server.query.read(opts))
   }
 }
 
@@ -103,7 +109,9 @@ function Events (state, api) {
       pull.asyncMap((key, cb) => {
         api.sbot.async.get(key, (err, value) => {
           if (err) return cb(err)
-          cb(null, {key, value})
+
+          if (typeof value.content === 'object') cb(null, {key, value})
+          else cb(null, api.message.sync.unbox({key, value}))
         })
       }),
       pull.drain(msg => gatherings.push(msg))
@@ -149,7 +157,8 @@ function watchAttending (attending, api) {
   )
 }
 
-function getGatherings (year, events, api) {
+
+function getGatherings (year, events, Query) {
   // gatherings specify times with `about` messages which have a startDateTime
   // NOTE - this gets a window of about messages around the current year but does not gaurentee
   //        that we got all events in this year (e.g. something booked 6 months agead would be missed)
@@ -163,32 +172,37 @@ function getGatherings (year, events, api) {
         content: {
           type: 'about',
           startDateTime: {
-            epoch: {$gt: 0}
+            epoch: {$is: 'number'}
           }
         }
       }
     }
   }, {
     $map: {
-      key: ['value', 'content', 'about'], // gathering
-      date: ['value', 'content', 'startDateTime', 'epoch']
+      key: ['value', 'content', 'about'],
+      date: ['value', 'content', 'startDateTime', 'epoch'],
+      ts: ['value', 'timestamp']
     }
   }]
-
   const opts = { reverse: false, live: true, query }
 
+  var target
   pull(
-    api.sbot.pull.stream(server => server.query.read(opts)),
+    Query(opts),
     pull.filter(m => !m.sync),
-    pull.filter(r => isMsg(r.key) && Number.isInteger(r.date)),
-    pull.map(r => {
-      return { key: r.key, date: new Date(r.date) }
+    pull.filter(m => m.date > 0 && Number.isInteger(m.date)),
+    pull.map(m => {
+      m.date = new Date(m.date)
+      return m
     }),
-    pull.drain(({ key, date }) => {
-      var target = events.find(ev => ev.data.key === key)
-      if (target && target.date <= date) events.delete(target)
+    pull.drain(({ key, date, ts }) => {
+      target = events.find(ev => ev.data.key === key)
+      if (target && target.data.ts <= ts) events.delete(target)
+      // TODO causally sorted about messages
+      // could do this with a backlinks query, paramap'd
 
-      events.push({ date, data: { key } })
+
+      events.push({ date, data: { key, ts } })
     })
   )
 }
