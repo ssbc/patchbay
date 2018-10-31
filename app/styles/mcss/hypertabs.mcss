@@ -27,6 +27,7 @@ Hypertabs {
 
         z-index: 1000
         min-width: 3.5rem
+        max-width: 18rem
         font-size: .9rem
         background: rgba(0, 0, 0, 0)
           
