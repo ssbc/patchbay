@@ -2,6 +2,7 @@ const combine = require('depject')
 const entry = require('depject/entry')
 const nest = require('depnest')
 const bulk = require('bulk-require')
+const values = require('lodash/values')
 
 // polyfills
 require('setimmediate')
@@ -30,21 +31,28 @@ const patchbay = {
     history: require('patch-history')
   }
 }
-module.exports = patchbay
+
+const plugins = {
+  scry: require('patchbay-scry'),
+  darkCrystal: require('patchbay-dark-crystal'),
+  poll: require('patchbay-poll'),
+  inbox: require('patch-inbox'), // TODO needs work
+  chess: require('ssb-chess-mithril'),
+  book: require('patchbay-book'),
+  gatherings: require('patchbay-gatherings')
+}
+
+module.exports = {
+  plugins,
+  patchbay,
+  patchcore
+}
 
 // for electro[n]
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && !module.parent.parent) {
+  // debugger
   // TODO spin up settings check which modules are wanted
-  const plugins = [
-    require('patchbay-scry'),
-    require('patchbay-dark-crystal'),
-    require('patchbay-poll'),
-    require('patch-inbox'), // TODO needs work
-    require('ssb-chess-mithril'),
-    require('patchbay-book'),
-    require('patchbay-gatherings')
-  ]
-  const args = [ ...plugins, patchbay, patchcore ]
+  const args = [ ...values(plugins), patchbay, patchcore ]
   // plugings loaded first will over-ride core modules loaded later
   const sockets = combine.apply(null, args)
 
