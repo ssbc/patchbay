@@ -36,17 +36,21 @@ exports.create = function (api) {
   function getVotes (resultCb) {
     const myKey = api.keys.sync.id()
 
+    const sinceDate = new Date().setMonth(new Date().getMonth() - 1)
+
     return pull(
       api.sbot.pull.stream(server => {
         return server.query.read({
           limit: 10000,
           reverse: true,
           query:
-          // Gets all votes/likes made by you
+          // Gets all votes/likes made by you in the last month
             [{ $filter: {
               value:
                 {
-                  // TODO: filter for the last month only
+                  timestamp: {
+                    $gt: sinceDate
+                  },
                   author: myKey,
                   content: {
                     type: 'vote'
@@ -83,7 +87,7 @@ exports.create = function (api) {
 
         resultCb(null, Object.keys(authorLikes).map(author => {
           return { author: author, likes: authorLikes[author] }
-        }))
+        }).sort((a, b) => b.likes - a.likes))
       })
     )
   }
