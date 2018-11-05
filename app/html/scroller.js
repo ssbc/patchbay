@@ -7,7 +7,7 @@ exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
   function Scroller (opts = {}) {
-    const { prepend, content = null, append, classList = [], className = '', title = '' } = opts
+    const { prepend, content = null, append, classList = [], className = '', title = '', scrollIntoView } = opts
 
     const contentSection = h('section.content', { title: '' }, content)
 
@@ -20,7 +20,7 @@ exports.create = function (api) {
       ]
     )
 
-    container.scroll = keyscroll(contentSection)
+    container.scroll = keyscroll(contentSection, scrollIntoView)
 
     return {
       content: contentSection,
@@ -29,7 +29,7 @@ exports.create = function (api) {
   }
 }
 
-function keyscroll (content) {
+function keyscroll (content, scrollIntoView = false) {
   var curMsgEl
 
   if (!content) return () => {}
@@ -60,9 +60,13 @@ function keyscroll (content) {
   function selectChild (el) {
     if (!el) { return }
 
-    content.parentElement.scrollTop = el.offsetTop - content.parentElement.offsetTop - 10
-    // if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
-    // ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    if (scrollIntoView) {
+      if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
+      ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    } else {
+      content.parentElement.scrollTop = el.offsetTop - content.parentElement.offsetTop - 10
+    }
+
     if (el.focus) el.focus()
     curMsgEl = el
   }
