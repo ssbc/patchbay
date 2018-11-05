@@ -17,7 +17,8 @@ exports.needs = nest({
   'sbot.pull.log': 'first',
   'sbot.pull.stream': 'first',
   'sbot.async.get': 'first',
-  'message.html.render': 'first'
+  'message.html.render': 'first',
+  'about.html.image': 'first'
 })
 
 exports.create = function (api) {
@@ -111,7 +112,7 @@ exports.create = function (api) {
 
         pull(
           pull.values(authorLikes),
-          Scroller(container, content, text => h('p', JSON.stringify(text)))
+          Scroller(container, content, text => h('p', [api.about.html.image(text.author), text.likes]))
         )
       })
     }
