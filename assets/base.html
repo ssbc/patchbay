@@ -3,20 +3,6 @@
   <head></head>
   <body>
     <script>
-      // redirect console to main process
-      const { log: remoteLog, error: remoteErr } = require('console')
-      const { log: localLog, error: localErr } = console
-
-      console.log = function (...args) {
-        localLog(...args)
-        remoteLog(...args)
-      }
-
-      console.error = function (...args) {
-        localErr(...args)
-        remoteErr(...args)
-      }
-
       // redirect errors to stderr
       window.addEventListener('error', function (e) {
         e.preventDefault()

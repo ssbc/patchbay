@@ -84,7 +84,7 @@
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git#fix-ssb-ws-version",
-    "secure-scuttlebutt": "git+https://github.com/ssbc/secure-scuttlebutt.git#christianbundy",
+    "secure-scuttlebutt": "git+https://github.com/ssbc/secure-scuttlebutt.git#master",
     "setimmediate": "^1.0.5",
     "ssb-about": "^0.1.2",
     "ssb-backlinks": "^0.7.3",
