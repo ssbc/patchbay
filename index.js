@@ -8,56 +8,10 @@ var windows = {}
 var quitting = false
 
 console.log('STARTING electron')
-
 electron.app.on('ready', () => {
-  // set up menus
-  var menu = defaultMenu(electron.app, electron.shell)
-  var view = menu.find(x => x.label === 'View')
-  view.submenu = [
-    { role: 'reload' },
-    { role: 'toggledevtools' },
-    { type: 'separator' },
-    { role: 'resetzoom' },
-    { role: 'zoomin' },
-    { role: 'zoomout' },
-    { type: 'separator' },
-    { role: 'togglefullscreen' }
-  ]
-  var win = menu.find(x => x.label === 'Window')
-  win.submenu = [
-    { role: 'minimize' },
-    { role: 'zoom' },
-    { role: 'close', label: 'Close Window', accelerator: 'CmdOrCtrl+Shift+W' },
-    { type: 'separator' },
-    {
-      label: 'Close Tab',
-      accelerator: 'CmdOrCtrl+W',
-      click () {
-        windows.main.webContents.send('closeTab')
-      }
-    },
-    {
-      label: 'Select Next Tab',
-      accelerator: 'CmdOrCtrl+Shift+]',
-      click () {
-        windows.main.webContents.send('nextTab')
-      }
-    },
-    {
-      label: 'Select Previous Tab',
-      accelerator: 'CmdOrCtrl+Shift+[',
-      click () {
-        windows.main.webContents.send('previousTab')
-      }
-    },
-    { type: 'separator' },
-    { role: 'front' }
-  ]
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
+  startMenus()
 
   startBackgroundProcess()
-
   // wait until server has started before opening main window
   electron.ipcMain.once('server-started', function (ev, config) {
     openMainWindow()
@@ -158,4 +112,51 @@ function openWindow (path, opts) {
 
   window.loadURL('file://' + Path.join(__dirname, 'assets', 'base.html'))
   return window
+}
+
+function startMenus () {
+  var menu = defaultMenu(electron.app, electron.shell)
+  var view = menu.find(x => x.label === 'View')
+  view.submenu = [
+    { role: 'reload' },
+    { role: 'toggledevtools' },
+    { type: 'separator' },
+    { role: 'resetzoom' },
+    { role: 'zoomin' },
+    { role: 'zoomout' },
+    { type: 'separator' },
+    { role: 'togglefullscreen' }
+  ]
+  var win = menu.find(x => x.label === 'Window')
+  win.submenu = [
+    { role: 'minimize' },
+    { role: 'zoom' },
+    { role: 'close', label: 'Close Window', accelerator: 'CmdOrCtrl+Shift+W' },
+    { type: 'separator' },
+    {
+      label: 'Close Tab',
+      accelerator: 'CmdOrCtrl+W',
+      click () {
+        windows.main.webContents.send('closeTab')
+      }
+    },
+    {
+      label: 'Select Next Tab',
+      accelerator: 'CmdOrCtrl+Shift+]',
+      click () {
+        windows.main.webContents.send('nextTab')
+      }
+    },
+    {
+      label: 'Select Previous Tab',
+      accelerator: 'CmdOrCtrl+Shift+[',
+      click () {
+        windows.main.webContents.send('previousTab')
+      }
+    },
+    { type: 'separator' },
+    { role: 'front' }
+  ]
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
 }

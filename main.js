@@ -50,7 +50,6 @@ module.exports = {
 
 // for electro[n]
 if (typeof window !== 'undefined' && !module.parent.parent) {
-  // debugger
   // TODO spin up settings check which modules are wanted
   const args = [ ...values(plugins), patchbay, patchcore ]
   // plugings loaded first will over-ride core modules loaded later
