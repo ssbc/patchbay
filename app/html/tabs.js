@@ -22,7 +22,7 @@ exports.create = function (api) {
     'app.html.tabs': tabs
   })
 
-  function tabs (initialTabs = []) {
+  function tabs ({ initial = [], prepend, append } = {}) {
     if (_tabs) return _tabs
 
     const onSelect = (indexes) => {
@@ -47,12 +47,9 @@ exports.create = function (api) {
 
     const search = api.app.html.searchBar()
     const menu = api.app.html.menu()
+    if (append === undefined) append = h('div.navExtra', [ search, menu ])
 
-    _tabs = Tabs({
-      onSelect,
-      onClose,
-      append: h('div.navExtra', [ search, menu ])
-    })
+    _tabs = Tabs({ onSelect, onClose, prepend, append })
     _tabs.currentPage = () => {
       const currentPage = _tabs.get(_tabs.selected[0])
       return currentPage && currentPage.firstChild
@@ -62,8 +59,8 @@ exports.create = function (api) {
     _tabs.closeCurrentTab = () => { _tabs.currentPage() && _tabs.remove(_tabs.selected[0]) }
 
     // # TODO: review - this works but is strange
-    initialTabs.forEach(p => api.app.sync.goTo(p))
-    if (initialTabs[0]) api.app.sync.goTo(initialTabs[0])
+    initial.forEach(p => api.app.sync.goTo(p))
+    if (initial[0]) api.app.sync.goTo(initial[0])
     return _tabs
   }
 }

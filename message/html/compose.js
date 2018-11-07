@@ -1,8 +1,10 @@
-const { h, when, send, resolve, Value, computed } = require('mutant')
+const { h, when, send, resolve, Value, Array: MutantArray, computed } = require('mutant')
 const nest = require('depnest')
 const ssbMentions = require('ssb-mentions')
 const extend = require('xtend')
 const addSuggest = require('suggest-box')
+const blobFiles = require('ssb-blob-files')
+const get = require('lodash/get')
 
 exports.gives = nest('message.html.compose')
 
@@ -11,12 +13,12 @@ exports.needs = nest({
   'channel.async.suggest': 'first',
   'emoji.async.suggest': 'first',
   'meme.async.suggest': 'first',
-  'blob.html.input': 'first',
   'message.html.confirm': 'first',
   'drafts.sync.get': 'first',
   'drafts.sync.set': 'first',
   'drafts.sync.remove': 'first',
-  'settings.obs.get': 'first'
+  'settings.obs.get': 'first',
+  'sbot.obs.connection': 'first'
 })
 
 exports.create = function (api) {
@@ -62,8 +64,8 @@ exports.create = function (api) {
       'ev-focus': send(channelInputFocused.set, true),
       placeholder: '#channel (optional)',
       value: computed(meta.channel, ch => ch ? '#' + ch : null),
-      disabled: when(meta.channel, true),
-      title: when(meta.channel, 'Reply is in same channel as original message')
+      disabled: meta.channel ? true : undefined,
+      title: meta.channel ? 'Reply is in same channel as original message' : undefined
     })
 
     var draftPerstTimeout = null
@@ -81,8 +83,19 @@ exports.create = function (api) {
         blurTimeout = setTimeout(() => textAreaFocused.set(false), 200)
       },
       'ev-focus': send(textAreaFocused.set, true),
+      'ev-paste': ev => {
+        const files = get(ev, 'clipboardData.files')
+        if (!files || !files.length) return
+        const opts = {
+          stripExif: api.settings.obs.get('patchbay.removeExif', true),
+          isPrivate
+        }
+        debugger
+        blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
+      },
       placeholder
     })
+
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
     // load draft
@@ -93,45 +106,60 @@ exports.create = function (api) {
     }
 
     var isPrivate = location.page === 'private' ||
-          (location.key && !location.value) ||
-          (location.value && location.value.private)
+      (location.key && !location.value) ||
+      (location.value && location.value.private)
 
-    var warningMessage = Value(null)
-    var warning = h('section.warning',
-      { className: when(warningMessage, '-open', '-closed') },
-      [
-        h('div.warning', warningMessage),
-        h('div.close', { 'ev-click': () => warningMessage.set(null) }, 'x')
-      ]
-    )
-    var fileInput = api.blob.html.input(file => {
-      const megabytes = file.size / 1024 / 1024
-      if (megabytes >= 5) {
-        const rounded = Math.floor(megabytes * 100) / 100
-        warningMessage.set([
+    var warningMessages = MutantArray([])
+    var warning = computed(warningMessages, msgs => {
+      if (!msgs.length) return
+
+      return h('section.warnings', msgs.map((m, i) => {
+        return h('div.warning', [
           h('i.fa.fa-exclamation-triangle'),
-          h('strong', file.name),
-          ` is ${rounded}MB - the current limit is 5MB`
+          h('div.message', m),
+          h('i.fa.fa-times', { 'ev-click': () => warningMessages.deleteAt(i) })
         ])
+      }))
+    })
+
+    var fileInput = h('input', {
+      type: 'file',
+      // accept,
+      attributes: { multiple: true },
+      'ev-click': () => hasContent.set(true),
+      'ev-change': (ev) => {
+        warningMessages.set([])
+
+        const files = ev.target.files
+        const opts = {
+          stripExif: api.settings.obs.get('patchbay.removeExif', true),
+          isPrivate
+        }
+        blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
+      }
+    })
+    function afterBlobed (err, result) {
+      if (err) {
+        console.error(err)
+        warningMessages.push(err.message)
         return
       }
 
-      files.push(file)
-      filesById[file.link] = file
+      files.push(result)
+      filesById[result.link] = result
 
       const pos = textArea.selectionStart
-      const embed = file.type.match(/^image/) ? '!' : ''
+      const embed = result.type.match(/^image/) ? '!' : ''
       const spacer = embed ? '\n' : ' '
-      const insertLink = spacer + embed + '[' + file.name + ']' + '(' + file.link + ')' + spacer
+      const insertLink = spacer + embed + '[' + result.name + ']' + '(' + result.link + ')' + spacer
 
       textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
 
-      console.log('added:', file)
-    }, { private: isPrivate, removeExif: api.settings.obs.get('patchbay.removeExif', true) })
+      console.log('added:', result)
+    }
 
-    fileInput.onclick = () => hasContent.set(true)
-
-    var publishBtn = h('button', { 'ev-click': publish }, isPrivate ? 'Reply' : 'Publish')
+    var isPublishing = Value(false)
+    var publishBtn = h('button', { 'ev-click': publish, disabled: isPublishing }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
       fileInput,
@@ -165,7 +193,7 @@ exports.create = function (api) {
       if (inputText[0] === '#') {
         api.channel.async.suggest(inputText.slice(1), cb)
       }
-    }, {cls: 'PatchSuggest'})
+    }, { cls: 'PatchSuggest' })
     channelInput.addEventListener('suggestselect', ev => {
       channelInput.value = ev.detail.id // HACK : this over-rides the markdown value
     })
@@ -178,14 +206,15 @@ exports.create = function (api) {
       if (char === '#') api.channel.async.suggest(wordFragment, cb)
       if (char === ':') api.emoji.async.suggest(wordFragment, cb)
       if (char === '&') api.meme.async.suggest(wordFragment, cb)
-    }, {cls: 'PatchSuggest'})
+    }, { cls: 'PatchSuggest' })
 
     return composer
 
     // scoped
 
     function publish () {
-      publishBtn.disabled = true
+      if (resolve(isPublishing)) return
+      isPublishing.set(true)
 
       const channel = channelInput.value.startsWith('#')
         ? channelInput.value.substr(1).trim()
@@ -215,7 +244,7 @@ exports.create = function (api) {
           content = prepublish(content)
         }
       } catch (err) {
-        publishBtn.disabled = false
+        isPublishing.set(false)
         if (cb) cb(err)
         else throw err
       }
@@ -223,7 +252,7 @@ exports.create = function (api) {
       return api.message.html.confirm(content, done)
 
       function done (err, msg) {
-        publishBtn.disabled = false
+        isPublishing.set(false)
         if (err) throw err
         else if (msg) {
           textArea.value = ''

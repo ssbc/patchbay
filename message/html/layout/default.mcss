@@ -3,6 +3,7 @@ Message -default {
 
   display: grid
   grid-template-columns: 5rem auto
+  grid-row-gap: .5rem
 
   section.avatar {
     grid-column: 1 / 2
@@ -46,8 +47,6 @@ Message -default {
     grid-column: 2 / 3
     grid-row: 2 / span 1
 
-    margin-bottom: .5rem
-
     (img) {
       max-width: 100%
     }
@@ -73,14 +72,16 @@ Message -default {
     }
 
     div.actions {
-      display: flex
-      justify-content: flex-end
+      display: grid
+      grid-auto-flow: column
 
       font-size: .9rem
       a {
         margin-left: .5em
       }
 
+      a.likes { grid-column: 1 }
+      a.like, a.unlike { grid-column: 2 }
       a.unlike {
         $textSubtle
       }

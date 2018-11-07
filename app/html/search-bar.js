@@ -68,13 +68,13 @@ exports.create = function (api) {
       if (char === '@') api.about.async.suggest(word, cb)
       if (char === '#') api.channel.async.suggest(word, cb)
       if (char === '/') cb(null, getPagesSuggestions(word))
-    }, {cls: 'PatchSuggest'})
+    }, { cls: 'PatchSuggest' })
 
     // TODO extract
     function getPagesSuggestions (word) {
       const pages = [
-        'blogs', 'calendar', 'posts', 'public', 'private', 'inbox', 'profile', 'notifications', 'settings',
-        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal', 'postRank'
+        'blogs', 'calendar', 'posts', 'public', 'private', 'inbox', 'profile', 'notifications', 'settings', 'shortcuts',
+        'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal', 'postRank', 'scry', 'scry/new'
       ]
 
       return pages

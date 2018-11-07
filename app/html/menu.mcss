@@ -24,6 +24,10 @@ Menu {
     }
   }
 
+  -newMsg {
+    background-color: white
+  }
+
   -disconnected {
     background-color: red
   }

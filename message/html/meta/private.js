@@ -9,12 +9,13 @@ exports.needs = nest({
 })
 
 exports.create = (api) => {
-  return nest('message.html.meta', unread)
+  return nest('message.html.meta', privateMeta)
 
-  // UnreadFeature (search codebase for this if extracting)
-  function unread (msg) {
-    return h('i.unread.fa.fa-star', {
-      title: 'A new message'
-    })
+  function privateMeta (msg) {
+    if (msg.value.private) {
+      return h('i.fa.fa-lock', {
+        title: 'Private'
+      })
+    }
   }
 }

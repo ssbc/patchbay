@@ -23,7 +23,7 @@ exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
   function threadPage (location) {
-    const root = get(location, 'value.content.root', location.key)
+    const root = get(location, 'value.content.root') || get(location, 'value.content.about') || location.key
     const msg = location.key
     if (msg !== root) scrollDownToMessage(msg)
 
@@ -48,17 +48,25 @@ exports.create = function (api) {
     })
 
     const content = map(messages, m => {
-      const message = api.message.html.render(resolve(m), {pageId: root, showUnread: true})
+      const message = api.message.html.render(resolve(m), { pageId: root })
       markReadWhenVisible(message)
       return message
     }, { comparer })
 
     const { container } = api.app.html.scroller({ prepend: Header({ isPrivate, recps }), content, append: composer })
     container.classList.add('Thread')
-    container.title = msg
+    container.title = root
     api.message.async.name(root, (err, name) => {
       if (err) throw err
       container.title = name
+
+      // TODO tidy this up
+      // over-ride message.async.name OR create message.async.subject
+      onceTrue(messages, msgs => {
+        const { subject } = msgs[0].value.content
+        if (!subject) return
+        container.title = subject
+      })
     })
 
     container.scrollDownToMessage = scrollDownToMessage

@@ -2,7 +2,6 @@ const nest = require('depnest')
 const dataurl = require('dataurl-')
 const hyperfile = require('hyperfile')
 const hypercrop = require('hypercrop')
-const hyperlightbox = require('hyperlightbox')
 const {
   h, Value, Dict, Struct,
   map, computed, when, dictToCollection, onceTrue
@@ -16,9 +15,11 @@ exports.needs = nest({
   'about.obs': {
     name: 'first',
     imageUrl: 'first',
-    description: 'first'
+    description: 'first',
+    latestValue: 'first',
+    groupedValues: 'first'
   },
-  'about.obs.groupedValues': 'first',
+  'app.html.modal': 'first',
   'blob.sync.url': 'first',
   'keys.sync.id': 'first',
   'message.html.confirm': 'first',
@@ -38,6 +39,8 @@ exports.create = function (api) {
   // TODO refactor this to use obs better
   function edit (id) {
     // TODO - get this to wait till the connection is present !
+
+    var isMe = api.keys.sync.id() === id
 
     var avatar = Struct({
       current: api.about.obs.imageUrl(id),
@@ -66,10 +69,13 @@ exports.create = function (api) {
     )
     var names = dictToCollection(namesRecord)
 
-    var lightbox = hyperlightbox()
+    var publicWebHosting = Struct({
+      current: api.about.obs.latestValue(id, 'publicWebHosting'),
+      new: Value(api.about.obs.latestValue(id, 'publicWebHosting')())
+    })
 
-    var isPossibleUpdate = computed([name.new, avatar.new], (name, avatar) => {
-      return name || avatar.link
+    var isPossibleUpdate = computed([name.new, avatar.new, publicWebHosting.new], (name, avatar, publicWebHostingValue) => {
+      return name || avatar.link || (isMe && publicWebHostingValue !== publicWebHosting.current())
     })
 
     var avatarSrc = computed([avatar], avatar => {
@@ -94,8 +100,12 @@ exports.create = function (api) {
       })
     })
 
+    const modalContent = Value()
+    const isOpen = Value(false)
+    const modal = api.app.html.modal(modalContent, { isOpen })
+
     return h('AboutEditor', [
-      lightbox,
+      modal,
       h('section.avatar', [
         h('section', [
           h('img', { src: avatarSrc })
@@ -134,6 +144,18 @@ exports.create = function (api) {
             })
           ])
         ]),
+        isMe
+          ? h('section.viewer', [
+            h('header', 'Public viewers'),
+            h('section', [
+              h('span', 'Show my posts on public viewers'),
+              h('input', {
+                type: 'checkbox',
+                checked: publicWebHosting.current,
+                'ev-change': e => publicWebHosting.new.set(e.target.checked)
+              })
+            ])
+          ]) : '',
         when(isPossibleUpdate, h('section.action', [
           h('button.cancel', { 'ev-click': clearNewSelections }, 'cancel'),
           h('button.confirm', { 'ev-click': handleUpdateClick }, 'confirm changes')
@@ -142,9 +164,9 @@ exports.create = function (api) {
     ])
 
     function dataUrlCallback (data) {
-      const cropCallback = (err, cropData) => {
+      const cropEl = Crop(data, (err, cropData) => {
         if (err) throw err
-        if (!cropData) return lightbox.close()
+        if (!cropData) return isOpen.set(false)
 
         var _data = dataurl.parse(cropData)
         api.sbot.async.addBlob(pull.once(_data.data), (err, hash) => {
@@ -158,17 +180,17 @@ exports.create = function (api) {
             height: 512
           })
         })
-        lightbox.close()
-      }
+        isOpen.set(false)
+      })
 
-      const cropEl = Crop(data, cropCallback)
-      lightbox.show(cropEl)
+      modalContent.set(cropEl)
+      isOpen.set(true)
     }
 
     function Crop (data, cb) {
-      var img = h('img', {src: data})
+      var img = h('img', { src: data })
 
-      var crop = h('div')
+      var crop = Value()
 
       waitForImg()
 
@@ -186,7 +208,7 @@ exports.create = function (api) {
         }
 
         var canvas = hypercrop(img)
-        crop = (
+        crop.set(
           h('PatchProfileCrop', [
             h('header', 'click and drag to crop your image'),
             canvas,
@@ -202,6 +224,7 @@ exports.create = function (api) {
     function clearNewSelections () {
       name.new.set(null)
       avatar.new.set({})
+      publicWebHosting.new.set(publicWebHosting.current())
     }
 
     function handleUpdateClick () {
@@ -215,6 +238,7 @@ exports.create = function (api) {
 
       if (newName) msg.name = newName
       if (newAvatar.link) msg.image = newAvatar
+      if (publicWebHosting.new() !== publicWebHosting.current()) msg.publicWebHosting = publicWebHosting.new()
 
       api.message.html.confirm(msg, (err, data) => {
         if (err) return console.error(err)

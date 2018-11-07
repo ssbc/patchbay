@@ -1,11 +1,11 @@
 const nest = require('depnest')
-const requireStyle = require('require-style')
-const { assign } = Object
+const getMCSS = require('marama/lib/get-mcss')
 
-exports.gives = nest('styles.css')
+exports.gives = nest('styles.mcss')
 
 exports.create = function (api) {
-  return nest('styles.css', (sofar = {}) => {
-    return assign(sofar, { mcss: requireStyle('marama') })
+  return nest('styles.mcss', (sofar = {}) => {
+    sofar.marama = getMCSS()
+    return sofar
   })
 }

@@ -17,13 +17,14 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('app.html.app', app)
 
-  function app () {
+  function app (initialTabs) {
     console.log('STARTING app')
 
-    window = api.app.sync.window(window)
+    window = api.app.sync.window(window) // eslint-disable-line no-global-assign
 
-    const initialTabs = api.settings.sync.get('patchbay.defaultTabs')
-    const App = h('App', api.app.html.tabs(initialTabs))
+    const App = h('App', api.app.html.tabs({
+      initial: initialTabs || api.settings.sync.get('patchbay.defaultTabs')
+    }))
 
     api.app.sync.initialise(App)
     // runs all the functions in app/sync/initialise
