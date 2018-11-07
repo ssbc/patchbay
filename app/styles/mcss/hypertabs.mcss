@@ -27,6 +27,7 @@ Hypertabs {
 
         z-index: 1000
         min-width: 3.5rem
+        max-width: 18rem
         font-size: .9rem
         background: rgba(0, 0, 0, 0)
           
@@ -61,18 +62,17 @@ Hypertabs {
 
         a.close {
           visibility: hidden
-          font-family: monospace
-          font-weight: 600
+          font-family: FontAwesome
           line-height: 1rem
-
-          width: .9rem
-          height: .9rem
-          /* border-radius: 1rem */
-
-          margin-right: .3rem
+          font-weight: 300
 
           display: flex
           justify-content: center
+
+          ::before {
+            content: '\f00d'
+            /* visibility: visible */
+          }
 
           :hover {
             background: var(--page-background)
@@ -83,7 +83,9 @@ Hypertabs {
         :hover {
           background: var(--app-border-background-mid)
           a.link { color: var(--app-border-color) }
-          a.close { visibility: visible }
+          a.close { 
+            ::before { visibility: visible }
+          }
           transition: all .2s ease-in
         }
 
@@ -99,11 +101,10 @@ Hypertabs {
             cursor: default
           }
           a.close {
-            visibility: visible
             color: var(--page-color)
 
-            :hover {
-            }
+            ::before { visibility: visible }
+            :hover { }
           }
 
           :hover {

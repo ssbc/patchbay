@@ -50,7 +50,11 @@ exports.create = function (api) {
     }, 'cancel')
 
     okay.addEventListener('keydown', (ev) => {
+      ev.preventDefault()
+      ev.stopPropagation()
+
       if (ev.keyCode === 27) cancel.click() // escape
+      if (ev.keyCode === 13) okay.click() // enter
     })
 
     lb.show(h('MessageConfirm', [
