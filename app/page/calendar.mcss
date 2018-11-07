@@ -35,6 +35,10 @@ Calendar {
     text-align: left
     align-content: flex-start
 
+    display: grid
+    justify-content: space-between
+    grid-auto-flow: column
+
     div.year { 
       font-size: 40px
       font-weight: bold
@@ -53,11 +57,14 @@ Calendar {
           text-decoration: none
         }
       }
+
     }
 
-    p.percentage {
-      font-size: 20px
-      color: #8b8b8b
+    div.actions {
+      display: grid
+      justify-content: space-between
+      grid-auto-flow: column
+      grid-gap: 1rem
     }
   }
 

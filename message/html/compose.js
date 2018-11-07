@@ -90,10 +90,12 @@ exports.create = function (api) {
           stripExif: api.settings.obs.get('patchbay.removeExif', true),
           isPrivate
         }
+        debugger
         blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
       },
       placeholder
     })
+
     textArea.publish = publish // TODO: fix - clunky api for the keyboard shortcut to target
 
     // load draft
@@ -156,7 +158,8 @@ exports.create = function (api) {
       console.log('added:', result)
     }
 
-    var publishBtn = h('button', { 'ev-click': publish }, isPrivate ? 'Reply' : 'Publish')
+    var isPublishing = Value(false)
+    var publishBtn = h('button', { 'ev-click': publish, disabled: isPublishing }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
       fileInput,
@@ -210,7 +213,8 @@ exports.create = function (api) {
     // scoped
 
     function publish () {
-      publishBtn.disabled = true
+      if (resolve(isPublishing)) return
+      isPublishing.set(true)
 
       const channel = channelInput.value.startsWith('#')
         ? channelInput.value.substr(1).trim()
@@ -240,7 +244,7 @@ exports.create = function (api) {
           content = prepublish(content)
         }
       } catch (err) {
-        publishBtn.disabled = false
+        isPublishing.set(false)
         if (cb) cb(err)
         else throw err
       }
@@ -248,7 +252,7 @@ exports.create = function (api) {
       return api.message.html.confirm(content, done)
 
       function done (err, msg) {
-        publishBtn.disabled = false
+        isPublishing.set(false)
         if (err) throw err
         else if (msg) {
           textArea.value = ''
