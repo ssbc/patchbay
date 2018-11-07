@@ -21,11 +21,11 @@ exports.create = (api) => {
       const pubkey = keys.id.slice(1).replace(`.${keys.curve}`, '')
 
       config = merge(config, {
-        connections: {
-          incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] }
-        },
-        keys,
-        remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+        keys
+        // connections: {
+        //   incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] }
+        // },
+        // remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
       })
     }
     return config
