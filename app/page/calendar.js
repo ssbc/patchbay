@@ -1,10 +1,7 @@
 const nest = require('depnest')
 const { h, Array: MutantArray, map, Struct, computed, watch, throttle, resolve } = require('mutant')
 const Month = require('marama')
-
 const pull = require('pull-stream')
-const paraMap = require('pull-paramap')
-const { isMsg } = require('ssb-ref')
 
 exports.gives = nest({
   'app.page.calendar': true,
@@ -17,7 +14,9 @@ exports.needs = nest({
   'message.html.render': 'first',
   'message.sync.unbox': 'first',
   'sbot.async.get': 'first',
-  'sbot.pull.stream': 'first'
+  'sbot.pull.stream': 'first',
+  'scry.html.button': 'first',
+  'gathering.html.button': 'first'
 })
 
 exports.create = (api) => {
@@ -48,8 +47,13 @@ exports.create = (api) => {
     watch(state.year, year => getGatherings(year, state.events, Query))
     watchAttending(state.attending, api)
 
+    const actions = [
+      api.scry.html.button(),
+      api.gathering.html.button()
+    ]
+
     const page = h('CalendarPage', { title: '/calendar' }, [
-      Calendar(state),
+      Calendar(state, actions),
       Events(state, api)
     ])
 
@@ -96,7 +100,7 @@ function scroll (range, i) {
 }
 
 function Events (state, api) {
-  return h('CalendarEvents', computed([state.events, state.range], (events, range) => {
+  return h('CalendarEvents', { title: '' }, computed([state.events, state.range], (events, range) => {
     const keys = events
       .filter(ev => ev.date >= range.gte && ev.date < range.lt)
       .sort((a, b) => a.date - b.date)
@@ -110,8 +114,8 @@ function Events (state, api) {
         api.sbot.async.get(key, (err, value) => {
           if (err) return cb(err)
 
-          if (typeof value.content === 'object') cb(null, {key, value})
-          else cb(null, api.message.sync.unbox({key, value}))
+          if (typeof value.content === 'object') cb(null, { key, value })
+          else cb(null, api.message.sync.unbox({ key, value }))
         })
       }),
       pull.drain(msg => gatherings.push(msg))
@@ -157,7 +161,6 @@ function watchAttending (attending, api) {
   )
 }
 
-
 function getGatherings (year, events, Query) {
   // gatherings specify times with `about` messages which have a startDateTime
   // NOTE - this gets a window of about messages around the current year but does not gaurentee
@@ -172,7 +175,7 @@ function getGatherings (year, events, Query) {
         content: {
           type: 'about',
           startDateTime: {
-            epoch: {$is: 'number'}
+            epoch: { $is: 'number' }
           }
         }
       }
@@ -201,7 +204,6 @@ function getGatherings (year, events, Query) {
       // TODO causally sorted about messages
       // could do this with a backlinks query, paramap'd
 
-
       events.push({ date, data: { key, ts } })
     })
   )
@@ -212,17 +214,18 @@ function getGatherings (year, events, Query) {
 
 const MONTH_NAMES = [ 'Ja', 'Fe', 'Ma', 'Ap', 'Ma', 'Ju', 'Ju', 'Au', 'Se', 'Oc', 'No', 'De' ]
 
-function Calendar (state) {
+function Calendar (state, actions) {
   // TODO assert events is an Array of object
   // of form { date, data }
 
-  return h('Calendar', [
+  return h('Calendar', { title: '' }, [
     h('div.header', [
       h('div.year', [
         state.year,
         h('a', { 'ev-click': () => state.year.set(state.year() - 1) }, '-'),
         h('a', { 'ev-click': () => state.year.set(state.year() + 1) }, '+')
-      ])
+      ]),
+      h('div.actions', actions)
     ]),
     h('div.months', computed(throttle(state, 100), ({ today, year, events, attending, range }) => {
       events = events.map(ev => {

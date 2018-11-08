@@ -1,3 +1,6 @@
+/* TODO depricate this carefully (see styles/mcss/hypertabs.mcss) */
+/* NOTE there are some active styles in here still */
+
 Hypertabs {
   position: fixed
   top: 0
@@ -38,21 +41,12 @@ Hypertabs {
         border: 1px var(--highlight) solid
         border-bottom: none
 
-        :hover {
-          a.close {
-            visibility: visible
-          }
-        }
-
         -selected {
           color: var(--em)
           $backgroundPrimary
 
           a.link {
             max-width: calc(100% - 2rem)
-          }
-          a.close {
-            visibility: visible
           }
         }
 
@@ -81,27 +75,6 @@ Hypertabs {
 
           padding: .5rem 0 .5rem .6rem
         }
-
-        a.close {
-          visibility: hidden
-          font-family: monospace
-          line-height: 1rem
-          width: .9rem
-          height: .9rem
-          /* border-radius: 1rem */
-
-          margin-right: .3rem
-
-          display: flex
-          justify-content: center
-
-          :hover {
-            background: #aaaaaa
-            color: var(--background)
-            font-weight: 600
-          }
-        }
-
       }
 
     }
