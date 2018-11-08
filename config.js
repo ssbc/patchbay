@@ -2,6 +2,7 @@ const nest = require('depnest')
 const Config = require('ssb-config/inject')
 const ssbKeys = require('ssb-keys')
 const Path = require('path')
+const merge = require('lodash/merge')
 
 const appName = process.env.ssb_appname || 'ssb'
 const opts = appName === 'ssb'
@@ -18,16 +19,18 @@ exports.create = (api) => {
 
       const keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
       const pubkey = keys.id.slice(1).replace(`.${keys.curve}`, '')
-
-      config.key = keys
-      if (!process.platform.startsWith('win')) {
-        config.connections = {
-          incoming: {
-            unix: [{ 'scope': 'local', 'transform': 'noauth' }]
-          }
+      const socketSettings = (process.platform.startsWith('win'))
+        ? {}
+        : {
+          connections: {
+            incoming: {
+              unix: [{ 'scope': 'local', 'transform': 'noauth' }]
+            }
+          },
+          remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
         }
-        config.remote = `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
-      }
+
+      merge(config, { keys }, socketSettings)
     }
     return config
   })
