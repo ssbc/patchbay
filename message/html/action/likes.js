@@ -15,7 +15,7 @@ exports.create = (api) => {
   function likes (msg) {
     if (!ref.isMsgId(msg.key)) return
 
-    const symbol = '\u2713' // tick  🗸
+    const symbol = '\u2714' // heavy check mark ✔
 
     var likes = api.message.obs.likes(msg.key)
 
