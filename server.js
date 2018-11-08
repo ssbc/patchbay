@@ -1,27 +1,39 @@
 const electron = require('electron')
+const fs = require('fs')
+const { join } = require('path')
 const Client = require('ssb-client')
 const scuttleshell = require('scuttle-shell')
 
 // Get config options from depject
 const config = require('./config').create().config.sync.load()
-const startFrontend = () => electron.ipcRenderer.send('server-started')
 
-// Check if scuttle-shell is already running
-// TODO - make this check for scuttle-shell specifically (and not just an sbot)
-Client(config.keys, config, (err, server) => {
-  // err implies no server currently running
-  if (err) {
-    console.warn('client connection failed:', err)
-    console.log('> starting scuttle-shell')
-    scuttleshell.start({}, (startErr) => {
-      if (startErr) return console.error('> scuttle-shell: failed to start', startErr)
+// check if manifest.json exists (has any sbot ever started?)
+if (!fs.existsSync(join(config.path, 'manifest.json'))) startScuttleShell()
+else {
+  // check if there's a server running we can connect to
+  Client(config.keys, config, (err, server) => {
+    if (err) startScuttleShell()
+    else {
+      console.log('> scuttle-shell / sbot already running')
+      server.close() // close this connection (app starts one of its own)
 
       startFrontend()
-    })
-  } else {
-    console.log('> scuttle-shell / sbot already running')
-    server.close() // close this connection (app starts one of its own)
+    }
+  })
+}
+
+// helpers
+
+function startScuttleShell () {
+  console.log('> scuttle-shell: starting')
+
+  scuttleshell.start({}, (startErr) => {
+    if (startErr) return console.error('> scuttle-shell: failed to start', startErr)
 
     startFrontend()
-  }
-})
+  })
+}
+
+function startFrontend () {
+  electron.ipcRenderer.send('server-started')
+}
