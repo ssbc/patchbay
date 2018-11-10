@@ -13,25 +13,29 @@ exports.gives = nest('config.sync.load')
 exports.create = (api) => {
   var config
   return nest('config.sync.load', () => {
-    if (!config) {
-      console.log('LOADING config')
-      config = Config(appName, opts)
+    if (config) return config
 
-      const keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
-      const pubkey = keys.id.slice(1).replace(`.${keys.curve}`, '')
-      const socketSettings = (process.platform.startsWith('win'))
-        ? {}
-        : {
-          connections: {
-            incoming: {
-              unix: [{ 'scope': 'local', 'transform': 'noauth' }]
-            }
-          },
-          remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+    console.log('LOADING config')
+    config = Config(appName, opts)
+    config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
+    config.remote = buildRemote(config)
+
+    if (process.platform !== 'win32') {
+      config = merge(config, {
+        connections: {
+          incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] }
         }
-
-      merge(config, { keys }, socketSettings)
+      })
     }
+
     return config
   })
+}
+
+function buildRemote (config) {
+  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
+
+  return process.platform !== 'win32'
+    ? `net:127.0.0.1:${config.port}~shs:${pubkey}`
+    : `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
 }
