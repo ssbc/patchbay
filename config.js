@@ -5,9 +5,7 @@ const Path = require('path')
 const merge = require('lodash/merge')
 
 const appName = process.env.ssb_appname || 'ssb'
-const opts = appName === 'ssb'
-  ? null
-  : null // require('./default-config.json')
+const opts = appName === 'ssb' ? null : null
 
 exports.gives = nest('config.sync.load')
 exports.create = (api) => {
@@ -18,24 +16,30 @@ exports.create = (api) => {
     console.log('LOADING config')
     config = Config(appName, opts)
     config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
-    config.remote = buildRemote(config)
 
-    if (process.platform !== 'win32') {
-      config = merge(config, {
-        connections: {
-          incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] }
-        }
-      })
-    }
+    config = merge(
+      config,
+      Connections(config),
+      Remote(config)
+    )
 
     return config
   })
 }
 
-function buildRemote (config) {
-  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
+function Connections (config) {
+  const connections = (process.platform === 'win32')
+    ? undefined // this seems wrong?
+    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] } }
 
-  return process.platform !== 'win32'
-    ? `net:127.0.0.1:${config.port}~shs:${pubkey}`
+  return connections ? { connections } : {}
+}
+
+function Remote (config) {
+  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
+  const remote = (process.platform === 'win32')
+    ? undefined // `net:127.0.0.1:${config.port}~shs:${pubkey}` // currently broken
     : `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+
+  return remote ? { remote } : {}
 }
