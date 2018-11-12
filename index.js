@@ -21,6 +21,13 @@ electron.app.on('ready', () => {
     quitting = true
   })
 
+  electron.app.on('activate', function (e) {
+    // reopen the app when dock icon clicked on macOS
+    if (windows.main) {
+      windows.main.show()
+    }
+  })
+
   // allow inspecting of background process
   electron.ipcMain.on('open-background-devtools', function (ev, config) {
     if (windows.background) {
