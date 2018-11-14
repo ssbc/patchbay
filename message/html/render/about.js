@@ -42,6 +42,12 @@ exports.create = function (api) {
     if (image && ref.isBlob(image.link)) image = image.link
     about = about || link
 
+    // Safety check - are the incoming things actually text
+    if(typeof name != 'string')
+      name = undefined
+    if(typeof description != 'string')
+      description = undefined
+    
     const metaData = [
       name ? h('div', [ h('strong', 'Name: '), name ]) : undefined,
       description ? h('div', [ h('strong', 'Description: '), description ]) : undefined,
