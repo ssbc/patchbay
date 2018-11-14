@@ -12,7 +12,14 @@ exports.create = function (api) {
     const contentSection = h('section.content', { title: '' }, content)
 
     const container = h('Scroller',
-      { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },
+      {
+        classList,
+        className,
+        title,
+        style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' },
+        intersectionBindingViewport: { rootMargin: '1000px' } // mutant magic
+        // TODO (watch for breaks e.g. stuff stops updating after scrolling)
+      },
       [
         prepend ? h('section.top', prepend) : null,
         contentSection,
