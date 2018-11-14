@@ -258,7 +258,7 @@ exports.create = function (api) {
           ]
         )
         // h('div', 'non-match')
-      ),
+      )
       // h('ThreadCard -loading')
     )
   }
