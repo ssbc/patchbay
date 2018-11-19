@@ -90,7 +90,7 @@ exports.create = function (api) {
           stripExif: api.settings.obs.get('patchbay.removeExif', true),
           isPrivate
         }
-        debugger
+
         blobFiles(files, api.sbot.obs.connection, opts, afterBlobed)
       },
       placeholder
