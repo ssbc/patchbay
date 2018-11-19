@@ -74,7 +74,7 @@
     "patchbay-gatherings": "^3.2.8",
     "patchbay-poll": "^1.1.3",
     "patchbay-scry": "^1.3.3",
-    "patchcore": "^2.0.0",
+    "patchcore": "github:ssbc/patchcore#markdown-it",
     "pull-abortable": "^4.1.1",
     "pull-next-query": "^1.0.0",
     "pull-notify": "^0.1.1",
