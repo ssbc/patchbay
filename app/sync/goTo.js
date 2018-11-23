@@ -43,8 +43,8 @@ exports.create = function (api) {
 
         if (loc.action === 'quote' && page.firstChild && page.firstChild.addQuote) {
           page.firstChild.addQuote(loc.value)
-          tabs.currentPage().scroll('last')
-        } else if (loc.action === 'reply') { tabs.currentPage().scroll('last') }
+          tabs.currentPage().keyboardScroll('last')
+        } else if (loc.action === 'reply') { tabs.currentPage().keyboardScroll('last') }
 
         return true
       }

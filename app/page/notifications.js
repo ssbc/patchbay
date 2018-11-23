@@ -42,19 +42,23 @@ exports.create = function (api) {
       pull(
         pullMentions({ old: false, live: true }),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
         pullMentions({ reverse: true, live: false }),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()
 
     container.title = '/notifications'
     return container
+  }
+
+  function render (msg) {
+    return api.message.html.render(msg, { showTitle: true })
   }
 
   // NOTE - currently this stream is know to pick up:

@@ -1,14 +1,16 @@
 const nest = require('depnest')
 const { h, Value } = require('mutant')
-const { isMsg } = require('ssb-ref')
+// const { isMsg } = require('ssb-ref')
 
 exports.needs = nest({
   'about.html.avatar': 'first',
   'keys.sync.id': 'first',
-  'message.html.action': 'map',
   'message.html.author': 'first',
   'message.html.backlinks': 'first',
+  'message.html.like': 'first',
   'message.html.meta': 'map',
+  'message.html.quote': 'first',
+  'message.html.reply': 'first',
   'message.html.timestamp': 'first',
   'sbot.async.run': 'first'
 })
@@ -19,30 +21,38 @@ exports.create = (api) => {
   return nest('message.html.layout', messageLayout)
 
   function messageLayout (msg, opts = {}) {
-    const { layout, showUnread = true } = opts
-    if (!(layout === undefined || layout === 'default')) return
+    if (!(opts.layout === undefined || opts.layout === 'default')) return
+    const { showUnread = true, showTitle } = opts
 
-    var { author, timestamp, meta, action, backlinks } = api.message.html
-    if (!isMsg(msg.key)) action = () => {}
+    var { author, timestamp, like, meta, backlinks, quote, reply } = api.message.html
 
     var rawMessage = Value(null)
 
     var el = h('Message -default',
       { attributes: { tabindex: '0' } }, // needed to be able to navigate and show focus()
       [
-        h('section.avatar', {}, api.about.html.avatar(msg.value.author)),
-        h('section.top', [
+        h('section.left', [
+          h('div.avatar', {}, api.about.html.avatar(msg.value.author)),
           h('div.author', {}, author(msg)),
-          h('div.title', {}, opts.title),
-          h('div.meta', {}, meta(msg, { rawMessage }))
+          h('div.timestamp', {}, timestamp(msg))
         ]),
-        h('section.content', {}, opts.content),
-        h('section.raw-content', rawMessage),
-        h('section.bottom', [
-          h('div.timestamp', {}, timestamp(msg)),
-          h('div.actions', {}, action(msg))
+
+        h('section.body', [
+          showTitle ? h('div.title', {}, opts.title) : null,
+          h('div.content', {}, opts.content),
+          h('footer.backlinks', {}, backlinks(msg)),
+          h('div.raw-content', rawMessage)
         ]),
-        h('footer.backlinks', {}, backlinks(msg))
+
+        h('section.right', [
+          h('div.meta', {}, meta(msg, { rawMessage })),
+          // isMsg(msg.key) ?     // don't show actions if no msg.key
+          h('div.actions', [
+            like(msg),
+            quote(msg),
+            reply(msg)
+          ])
+        ])
       ]
     )
 

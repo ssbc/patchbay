@@ -45,9 +45,9 @@ exports.create = function (api) {
       const _opts = merge({}, opts, {
         query: [{
           $filter: {
-            timestamp: {$gt: 0, $lt: undefined},
+            timestamp: { $gt: 0, $lt: undefined },
             value: {
-              content: { recps: {$not: true} }
+              content: { recps: { $not: true } }
             }
           }
         }],
@@ -63,18 +63,18 @@ exports.create = function (api) {
 
       const render = (msg) => {
         // if (msg.value.content.type === 'about') debugger
-        return api.message.html.render(msg)
+        return api.message.html.render(msg, { showTitle: true })
       }
 
       // TODO - change to use ssb-query, streamed by publish time
       pull(
-        createStream({old: false, live: true}),
+        createStream({ old: false, live: true }),
         filterUpThrough(),
         Scroller(container, content, render, true, false)
       )
 
       pull(
-        createStream({reverse: true, live: false}),
+        createStream({ reverse: true, live: false }),
         filterDownThrough(),
         Scroller(container, content, render, false, false)
       )
