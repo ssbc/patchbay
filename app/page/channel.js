@@ -70,7 +70,7 @@ exports.create = function (api) {
     ])
 
     // TODO better scroll hack for keyboard shortcuts
-    page.scroll = container.scroll
+    page.keyboardScroll = container.keyboardScroll
 
     return page
   }

@@ -90,7 +90,7 @@ exports.create = function (api) {
 
       page.title = '/posts'
       page.id = api.app.sync.locationId({ page: 'posts' }) // this is needed because our page is a computed
-      page.scroll = keyscroll(page.querySelector('section.content'))
+      page.keyboardScroll = keyscroll(page.querySelector('section.content'))
       return page
     })
 

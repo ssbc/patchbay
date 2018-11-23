@@ -27,7 +27,7 @@ exports.create = function (api) {
       ]
     )
 
-    container.scroll = keyscroll(contentSection, scrollIntoView)
+    container.keyboardScroll = KeyboardScroll(contentSection, scrollIntoView)
 
     return {
       content: contentSection,
@@ -36,7 +36,7 @@ exports.create = function (api) {
   }
 }
 
-function keyscroll (content, scrollIntoView = false) {
+function KeyboardScroll (content, scrollIntoView = false) {
   var curMsgEl
 
   if (!content) return () => {}
@@ -59,7 +59,9 @@ function keyscroll (content, scrollIntoView = false) {
         : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
           : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
             : curMsgEl
+
     selectChild(child)
+    curMsgEl = child
 
     return curMsgEl
   }
@@ -71,10 +73,11 @@ function keyscroll (content, scrollIntoView = false) {
       if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
       ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
     } else {
-      content.parentElement.scrollTop = el.offsetTop - content.parentElement.offsetTop - 10
+      const height = el.offsetTop - content.parentElement.offsetTop - 10
+      // content.parentElement.scroll({ top: height, behavior: 'smooth' })
+      content.parentElement.scrollTop = height
     }
 
     if (el.focus) el.focus()
-    curMsgEl = el
   }
 }
