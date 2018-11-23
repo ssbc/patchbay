@@ -1,6 +1,7 @@
-var { h, computed } = require('mutant')
-var nest = require('depnest')
+const { h, computed } = require('mutant')
+const nest = require('depnest')
 const Scuttle = require('scuttle-thread')
+const { isLink } = require('ssb-ref')
 
 exports.needs = nest({
   'keys.sync.id': 'first',
@@ -19,6 +20,8 @@ exports.create = (api) => {
     // TODO make this full-async :
     //   - get whether i like this currently
     //   - only update after I click like/ unlike
+
+    if (!isLink(msg.key)) return
 
     return computed(api.message.obs.likes(msg.key), likes => {
       const iLike = likes.includes(id)
