@@ -1,15 +1,16 @@
-const { h, computed } = require('mutant')
+const { h, computed, map } = require('mutant')
 const nest = require('depnest')
 const Scuttle = require('scuttle-thread')
 const { isLink } = require('ssb-ref')
 
+exports.gives = nest('message.html.like')
+
 exports.needs = nest({
+  'about.obs.name': 'first',
   'keys.sync.id': 'first',
   'message.obs.likes': 'first',
   'sbot.obs.connection': 'first'
 })
-
-exports.gives = nest('message.html.like')
 
 exports.create = (api) => {
   return nest('message.html.like', like)
@@ -23,12 +24,17 @@ exports.create = (api) => {
 
     if (!isLink(msg.key)) return
 
-    return computed(api.message.obs.likes(msg.key), likes => {
+    const likes = api.message.obs.likes(msg.key)
+    const names = map(likes, id => api.about.obs.name(id))
+    // TODO should really just calculate this on hover ...
+
+    return computed([likes, names], (likes, names) => {
       const iLike = likes.includes(id)
 
       return h('MessageLike',
         {
           className: iLike ? '-liked' : '',
+          title: names.join('\n'),
           'ev-click': () => publishLike(msg, !iLike)
         },
         [
