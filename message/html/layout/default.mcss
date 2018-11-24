@@ -2,7 +2,7 @@ Message -default {
   padding: 1rem .5rem
 
   display: grid
-  grid-template-columns: 6rem 1fr auto
+  grid-template-columns: 6rem 1fr minmax(6rem, auto)
   grid-gap: 1.5rem
 
   section.left {
@@ -86,24 +86,29 @@ Message -default {
     grid-column: 3
 
     display: grid
-    justify-items: end
+    justify-items: start
     align-content: space-between
 
     div.meta {
       grid-row: 1
 
       display: grid
-      justify-items: end
+      justify-items: start
       grid-gap: .5rem
 
       i, div, a { }
 
       a.channel { grid-row: 1 }
+
+      i.toggle-raw-msg { visibility: hidden }
+      :hover {
+        i.toggle-raw-msg { visibility: visible }
+      }
     }
 
     div.actions {
       grid-row: 2
-      justify-self: end
+      justify-self: start
 
       display: grid
       grid-auto-flow: column

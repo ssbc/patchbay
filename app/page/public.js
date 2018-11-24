@@ -39,7 +39,7 @@ exports.create = function (api) {
       placeholder: 'Write a public message'
     })
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu] })
+    const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu], className: 'PublicFeed' })
 
     const createStream = (opts) => api.sbot.pull.stream(server => {
       const _opts = merge({}, opts, {

@@ -31,11 +31,10 @@ Filter {
   }
 
   div.options {
-    background-color: #fff
+    background: rgba(0,0,0,.02)
 
     padding: .5rem
     border: 1px gainsboro solid
-    margin: 0 .5rem .5rem .5rem
 
     -hidden {
       height: 0
