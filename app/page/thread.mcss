@@ -1,4 +1,6 @@
 Thread {
+  /* background: rgb(244, 234, 255) */
+
   section.top {
     /* border-bottom: solid 1px gainsboro */
 

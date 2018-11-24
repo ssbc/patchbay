@@ -1,5 +1,5 @@
 Message -default {
-  padding: 1rem .5rem
+  padding: 1rem 0
 
   display: grid
   grid-template-columns: 6rem 1fr minmax(6rem, auto)
@@ -34,6 +34,9 @@ Message -default {
   }
 
   section.body {
+    /* padding: .5rem */
+    background: rgba(255,255,255, .5)
+
     grid-column: 2
 
     display: grid
@@ -98,7 +101,11 @@ Message -default {
 
       i, div, a { }
 
-      a.channel { grid-row: 1 }
+      a.channel {
+        grid-row: 1
+        color: gray
+        letter-spacing: 1px
+      }
 
       i.toggle-raw-msg { visibility: hidden }
       :hover {
@@ -120,6 +127,12 @@ Message -default {
       i.MessageQuote { margin-top: 3px }
       i.MessageReply { margin-top: 1px }
     }
+  }
+
+  :focus {
+    outline: #e794e7 solid 2px
+
+    /* section.body { background: rgba(255,255,255, 1) } */
   }
 
   /* UnreadFeature (search codebase for this if extracting) */
