@@ -1,5 +1,10 @@
 const nest = require('depnest')
 const { assign } = Object
+const fs = require('fs')
+const path = require('path')
+
+const hljsPath = '../../../node_modules/highlight.js/styles/github.css'
+const hljs = fs.readFileSync(path.join(__dirname, hljsPath), 'utf8')
 
 exports.gives = nest('styles.css')
 
@@ -50,5 +55,5 @@ textarea:focus {
   border-color: none;
 }
 
-
+${hljs}
 `
