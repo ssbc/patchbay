@@ -1,4 +1,13 @@
 Markdown {
+  (a) {
+    color: #3c1842
+    text-decoration: underline
+
+    :hover {
+      color: #a341b4
+    }
+  }
+
   p, ul, ol {
   }
 
@@ -7,7 +16,7 @@ Markdown {
     :last-of-type { margin-bottom: 0 }
 
     a {
-      img { margin 0 .5rem }
+      img { margin: .5rem 0 }
 
       :only-of-type {
         img {
@@ -45,9 +54,14 @@ Markdown {
   }
 
   blockquote {
+    font-size: .9rem
+    line-height: 1.4rem
     color: #666
-    font-style: italic
-    font-size: 1rem
+
+    background: rgba(0,0,0,.05)
+    padding: 1rem
+    border-left: 4px solid rgba(0,0,0,.1)
+    margin: 0
 
     p {
       :last-child {

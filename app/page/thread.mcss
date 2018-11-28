@@ -48,7 +48,7 @@ Thread {
 
   section.bottom {
     // copied from Message.-default
-    padding: 1rem .5rem
+    padding: 1rem 0
     display: grid
     grid-template-columns: 6rem 1fr minmax(6rem, auto)
     grid-gap: 1.5rem

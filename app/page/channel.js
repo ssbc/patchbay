@@ -51,20 +51,25 @@ exports.create = function (api) {
       const openChannelSource = api.feed.pull.channel(channelName)
 
       pull(
-        openChannelSource({old: false}),
+        openChannelSource({ old: false }),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
-        openChannelSource({reverse: true}),
+        openChannelSource({ reverse: true }),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()
 
-    var page = h('Page -channel', {title: channel}, [
+    // TODO rollups
+    function render (msg) {
+      return api.message.html.render(msg, { showTitle: true })
+    }
+
+    var page = h('Page -channel', { title: channel }, [
       // filterMenu, // TODO - extract non-scroller els like filterMenu here
       container
     ])

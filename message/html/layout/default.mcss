@@ -145,10 +145,15 @@ Message -default {
   -unread {
     section.right {
       div.meta {
-        i.unread {
+        div.unread {
           display: initial
-          transition: color 1s ease-in
+          padding: 1px 4px
+
+          transition: color, border 1s ease-in
+
           color: hotpink
+          border: 1px solid hotpink
+          border-radius: 2px
         }
       }
     }
@@ -159,8 +164,9 @@ Message -default {
     -read {
       section.right {
         div.meta {
-          i.unread {
+          div.unread {
             color: #bbb
+            border: 1px solid #bbb
           }
         }
       }
