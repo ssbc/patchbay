@@ -6,6 +6,6 @@ exports.gives = nest('styles.css')
 
 exports.create = function (api) {
   return nest('styles.css', (sofar = {}) => {
-    return assign(sofar, { highlightJs: requireStyle('highlight.js/styles/github.css') })
+    return assign(sofar, { highlightJs: requireStyle('highlight.js/styles/solarized-dark.css') })
   })
 }
