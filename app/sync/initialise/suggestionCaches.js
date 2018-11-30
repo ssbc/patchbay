@@ -12,7 +12,10 @@ exports.create = function (api) {
 
   function init () {
     // lazy load abouts on first use, can be quite heavy during startup
-    // api.about.async.suggest()
+    setTimeout(() => {
+      console.log('> loading @mentions cache')
+      api.about.async.suggest()
+    }, 20e3)
     api.channel.async.suggest()
   }
 }

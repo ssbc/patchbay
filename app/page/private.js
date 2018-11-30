@@ -50,7 +50,7 @@ exports.create = function (api) {
       placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.' }
     )
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ] })
+    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ], className: 'PrivateFeed' })
 
     function draw () {
       resetFeed({ container, content })
@@ -58,19 +58,23 @@ exports.create = function (api) {
       pull(
         pullPrivate({ old: false, live: true }),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
         pullPrivate({ reverse: true }),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()
 
     container.title = '/private'
     return container
+  }
+
+  function render (msg) {
+    return api.message.html.render(msg, { showTitle: true })
   }
 
   function pullPrivate (opts) {

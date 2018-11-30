@@ -57,7 +57,7 @@ exports.create = (api) => {
       Events(state, api)
     ])
 
-    page.scroll = (i) => scroll(state.range, i)
+    page.keyboardScroll = (i) => scroll(state.range, i)
 
     return page
   }

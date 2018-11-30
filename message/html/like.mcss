@@ -1,0 +1,22 @@
+MessageLike {
+  color: gray
+  cursor: pointer
+
+  display: grid
+  grid-template-columns: auto auto
+  align-items: center
+  grid-gap: .2rem
+
+  span.count {}
+  i.fa {}
+
+  -liked {
+    i.fa { color: red }
+  }
+
+  :hover { 
+    i.fa {
+      color: red
+    }
+  }
+}

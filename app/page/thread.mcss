@@ -1,7 +1,10 @@
 Thread {
+  /* background: rgb(244, 234, 255) */
+
   section.top {
     /* border-bottom: solid 1px var(--highlight) */
 
+    // for private threads
     section.recipients {
       display: flex
       justify-content: center
@@ -39,8 +42,17 @@ Thread {
         color: var(--primary)
       }
     }
+  }
 
+  section.content {}
+
+  section.bottom {
+    // copied from Message.-default
+    padding: 1rem 0
+    display: grid
+    grid-template-columns: 6rem 1fr minmax(6rem, auto)
+    grid-gap: 1.5rem
+
+    div.Compose { grid-column: 2 }
   }
 }
-
-

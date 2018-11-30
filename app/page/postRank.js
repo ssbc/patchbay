@@ -151,7 +151,7 @@ exports.create = function (api) {
 
     function draw () {
       // reset
-      container.scroll(0)
+      container.keyboardScroll(0)
       content.innerHTML = ''
 
       getPosts(channelPostBoost, friendPostBoost, friendVoteBoost, friendCommentBoost, threshold,

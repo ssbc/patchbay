@@ -1,0 +1,19 @@
+PrivateFeed {
+  section.top {
+    // copied from Message.-default
+    padding: 1rem .5rem
+    display: grid
+    grid-template-columns: 6rem 1fr minmax(6rem, auto)
+    grid-gap: 1.5rem
+
+    div.Compose {
+      grid-row: 1
+      grid-column: 2
+    }
+
+    div.Filter {
+      grid-row: 2
+      grid-column: 2
+    }
+  }
+}

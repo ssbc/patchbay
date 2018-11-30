@@ -1,6 +1,6 @@
 Message {
   /* UnreadFeature (search codebase for this if extracting) */
-  (i.unread) {
+  (div.unread) {
     display: none
   }
 }

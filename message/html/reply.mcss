@@ -1,0 +1,6 @@
+MessageReply {
+  color: #c9c9c9
+
+  cursor: pointer
+  :hover { color: gray }
+}

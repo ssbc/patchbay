@@ -10,7 +10,7 @@ Scroller {
   display: grid
   justify-content: stretch
   align-content: start
-  grid-template-columns: auto minmax(740px, 900px) auto
+  grid-template-columns: auto minmax(740px, 1100px) auto
 
   section {
     grid-column: 2 / 3

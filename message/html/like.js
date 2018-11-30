@@ -1,50 +1,53 @@
-var { h, computed, when } = require('mutant')
-var nest = require('depnest')
-
-exports.needs = nest({
-  'keys.sync.id': 'first',
-  'message.obs.likes': 'first',
-  'sbot.async.publish': 'first'
-})
+const { h, computed, map } = require('mutant')
+const nest = require('depnest')
+const Scuttle = require('scuttle-thread')
+const { isLink } = require('ssb-ref')
 
 exports.gives = nest('message.html.like')
 
+exports.needs = nest({
+  'about.obs.name': 'first',
+  'keys.sync.id': 'first',
+  'message.obs.likes': 'first',
+  'sbot.obs.connection': 'first'
+})
+
 exports.create = (api) => {
-  return nest('message.html.like', function like (msg) {
-    var id = api.keys.sync.id()
-    var liked = computed([api.message.obs.likes(msg.key), id], doesLike)
-    return when(liked,
-      h('a.unlike', {
-        href: '#',
-        'ev-click': () => publishLike(msg, false)
-      }, 'Unlike'),
-      h('a.like', {
-        href: '#',
-        'ev-click': () => publishLike(msg, true)
-      }, 'Like')
-    )
-  })
+  return nest('message.html.like', like)
 
-  function publishLike (msg, status = true) {
-    var like = status ? {
-      type: 'vote',
-      channel: msg.value.content.channel,
-      vote: { link: msg.key, value: 1, expression: 'Like' }
-    } : {
-      type: 'vote',
-      channel: msg.value.content.channel,
-      vote: { link: msg.key, value: 0, expression: 'Unlike' }
-    }
-    if (msg.value.content.recps) {
-      like.recps = msg.value.content.recps.map(function (e) {
-        return e && typeof e !== 'string' ? e.link : e
-      })
-      like.private = true
-    }
-    api.sbot.async.publish(like)
+  function like (msg) {
+    const id = api.keys.sync.id()
+
+    // TODO make this full-async :
+    //   - get whether i like this currently
+    //   - only update after I click like/ unlike
+
+    if (!isLink(msg.key)) return
+
+    const likes = api.message.obs.likes(msg.key)
+    const names = map(likes, id => api.about.obs.name(id))
+    // TODO should really just calculate this on hover ...
+
+    return computed([likes, names], (likes, names) => {
+      const iLike = likes.includes(id)
+
+      return h('MessageLike',
+        {
+          className: iLike ? '-liked' : '',
+          title: names.join('\n'),
+          'ev-click': () => publishLike(msg, !iLike)
+        },
+        [
+          h('span.count', likes.length ? likes.length : ''),
+          h('i.fa', { className: iLike ? 'fa-heart' : 'fa-heart-o' })
+        ]
+      )
+    })
   }
-}
 
-function doesLike (likes, userId) {
-  return likes.includes(userId)
+  function publishLike (msg, value = true) {
+    const scuttle = Scuttle(api.sbot.obs.connection)
+
+    scuttle.like(msg, { value }, console.log)
+  }
 }

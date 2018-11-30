@@ -36,7 +36,7 @@ exports.create = function (api) {
     const { container, content } = api.app.html.scroller({ prepend: [searchHeader, filterMenu] })
 
     function renderMsg (msg) {
-      var el = api.message.html.render(msg)
+      var el = api.message.html.render(msg, { showTitle: true })
       var queryTerms = query.split(whitespace)
 
       highlight(el, createOrRegExp(queryTerms))

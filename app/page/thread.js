@@ -82,9 +82,9 @@ exports.create = function (api) {
         // wait till we're on the right page
         if (tabs.currentPage().id !== locationId) return setTimeout(locateKey, 200)
 
-        if (!tabs.currentPage().scroll) return setTimeout(locateKey, 200)
+        if (!tabs.currentPage().keyboardScroll) return setTimeout(locateKey, 200)
 
-        tabs.currentPage().scroll('first')
+        tabs.currentPage().keyboardScroll('first')
         const msg = tabs.currentPage().querySelector(`[data-id='${id}']`)
         if (!msg) return setTimeout(locateKey, 200)
 

@@ -237,7 +237,7 @@ exports.create = function (api) {
       upScrollAborter = Abort()
       downScrollAborter = Abort()
 
-      container.scroll(0)
+      container.keyboardScroll(0)
       content.innerHTML = ''
     }
 
