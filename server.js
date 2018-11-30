@@ -34,3 +34,5 @@ var config = require('./config').create().config.sync.load()
 var sbot = createSbot(config)
 var manifest = sbot.getManifest()
 fs.writeFileSync(Path.join(config.path, 'manifest.json'), JSON.stringify(manifest))
+
+module.exports = (cb) => cb()
