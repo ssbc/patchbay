@@ -3,7 +3,7 @@ MessageLike {
   cursor: pointer
 
   display: grid
-  grid-template-columns: auto auto
+  grid-template-columns: minmax(0.6rem, auto) auto
   align-items: center
   grid-gap: .2rem
 
