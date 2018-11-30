@@ -39,21 +39,7 @@ electron.app.on('ready', () => {
 function startBackgroundProcess () {
   if (windows.background) return
 
-  windows.background = openWindow(Path.join(__dirname, 'server.js'), {
-    title: 'patchbay-server',
-    show: false,
-    connect: false,
-    width: 150,
-    height: 150,
-    center: true,
-    fullscreen: false,
-    fullscreenable: false,
-    maximizable: false,
-    minimizable: false,
-    resizable: false,
-    skipTaskbar: true,
-    useContentSize: true
-  })
+  require('./server')
 }
 
 function openMainWindow () {

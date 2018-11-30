@@ -1,7 +1,6 @@
 // formerly background-process.js
 var fs = require('fs')
 var Path = require('path')
-var electron = require('electron')
 
 console.log('STARTING SBOT')
 
@@ -35,4 +34,3 @@ var config = require('./config').create().config.sync.load()
 var sbot = createSbot(config)
 var manifest = sbot.getManifest()
 fs.writeFileSync(Path.join(config.path, 'manifest.json'), JSON.stringify(manifest))
-electron.ipcRenderer.send('server-started')
