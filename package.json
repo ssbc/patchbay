@@ -44,6 +44,7 @@
   "homepage": "https://github.com/ssbc/patchbay#readme",
   "dependencies": {
     "bulk-require": "^1.0.1",
+    "chart.js": "^2.7.3",
     "cross-script": "^1.0.5",
     "dataurl-": "^0.1.0",
     "depject": "^4.1.1",
