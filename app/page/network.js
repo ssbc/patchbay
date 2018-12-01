@@ -32,7 +32,7 @@ exports.create = function (api) {
 
   function networkPage (location) {
     const minsPerStep = 20
-    const scale = 7 * DAY
+    const scale = 1 * DAY
 
     const data = Dict({
       [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
