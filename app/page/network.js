@@ -31,11 +31,15 @@ exports.create = function (api) {
   }
 
   function networkPage (location) {
-    const minsPerStep = 5
+    const minsPerStep = 20
+    const scale = 7 * DAY
 
-    const data = Dict()
+    const data = Dict({
+      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
+      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
+    })
     onceTrue(api.sbot.obs.connection, server => {
-      getData({ data, server, minsPerStep })
+      getData({ data, server, minsPerStep, scale })
     })
 
     const latest = Value(toTimeBlock(Date.now(), minsPerStep))
@@ -48,16 +52,17 @@ exports.create = function (api) {
     const range = computed([latest], (latest) => {
       return {
         upper: latest + minsPerStep * MINUTE,
-        lower: latest + minsPerStep * MINUTE - DAY
+        lower: latest + minsPerStep * MINUTE - scale
       }
     })
 
     //
 
-    const canvas = h('canvas', { height: 300, width: 1200, style: { height: '300px', width: '1200px' } })
+    const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
     const page = h('NetworkPage', { title: '/network' }, [
       h('div.container', [
         h('h1', 'Network'),
+        h('header', `Messages received per 20-minute block over the last ${scale / DAY} days`),
         canvas
       ])
     ])
@@ -68,11 +73,20 @@ exports.create = function (api) {
   }
 }
 
-function getData ({ data, server, minsPerStep }) {
+function getData ({ data, server, minsPerStep, scale }) {
+  const upperEnd = toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE
+  const lowerBound = upperEnd - scale
+
   const query = [
     {
       $filter: {
-        timestamp: { $gte: toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - DAY }
+        timestamp: { $gte: lowerBound }
+      }
+    }, {
+      $filter: {
+        value: {
+          author: { $ne: server.id }
+        }
       }
     }, {
       $map: {
@@ -174,7 +188,8 @@ function chartConfig ({ lower, upper }) {
             min: lower,
             max: upper,
             tooltipFormat: 'HH:mm',
-            stepSize: 240
+            stepSize: 4 * 60
+            // stepSize: 240
           },
           bounds: 'ticks',
           ticks: {
@@ -182,7 +197,7 @@ function chartConfig ({ lower, upper }) {
           },
           gridLines: {
             display: false
-          },
+          }
           // maxBarThickness: 2
         }],
 
