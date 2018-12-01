@@ -1,0 +1,12 @@
+NetworkPage {
+  width: 100%
+
+  display: grid
+  justify-content: center
+
+  div.container {
+    header {
+      margin: 1rem 0
+    }
+  }
+}
