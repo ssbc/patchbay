@@ -31,7 +31,7 @@ exports.create = function (api) {
   }
 
   function networkPage (location) {
-    const minsPerStep = 20
+    const minsPerStep = 10
     const scale = 1 * DAY
 
     const data = Dict({
@@ -61,7 +61,7 @@ exports.create = function (api) {
     const page = h('NetworkPage', { title: '/network' }, [
       h('div.container', [
         h('h1', 'Network'),
-        h('header', `Messages received per 20-minute block over the last ${scale / DAY} days`),
+        h('header', `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`),
         canvas
       ])
     ])

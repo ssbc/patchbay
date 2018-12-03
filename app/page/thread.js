@@ -63,7 +63,7 @@ exports.create = function (api) {
       // TODO tidy this up
       // over-ride message.async.name OR create message.async.subject
       onceTrue(messages, msgs => {
-        const { subject } = msgs[0].value.content
+        const subject = get(msgs, ' [0].value.content.subject')
         if (!subject) return
         container.title = subject
       })
