@@ -4,23 +4,19 @@
   <body>
     <script>
       // redirect console to main process
-      var electron = require('electron')
-      var localLog = console.log
-      var localError = console.error
-      var remoteLog = electron.remote.getGlobal('console').log
-      var remoteError = electron.remote.getGlobal('console').error
+      const { log: remoteLog, error: remoteErr } = require('console')
+      const { log: localLog, error: localErr } = console
 
       console.log = function (...args) {
-        localLog.apply(console, args)
+        localLog(...args)
         remoteLog(...args)
       }
 
       console.error = function (...args) {
-        localError.apply(console, args)
-        remoteError(...args)
+        localErr(...args)
+        remoteErr(...args)
       }
 
-      process.exit = electron.remote.app.quit
       // redirect errors to stderr
       window.addEventListener('error', function (e) {
         e.preventDefault()
