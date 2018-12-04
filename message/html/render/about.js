@@ -58,7 +58,7 @@ exports.create = function (api) {
       return [
         h('p', [
           'Describes ',
-          h('a', { href: about }, [about.slice(0, 7), '...']),
+          h('a', { href: about }, [(about.slice && about.slice(0, 7)) || '', '...']),
           ' as: '
         ]),
         ...metaData
