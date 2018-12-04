@@ -86,7 +86,7 @@
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
     "scuttle-thread": "^1.0.1",
-    "scuttlebot": "~13.0.2",
+    "scuttlebot": "^13.2.1",
     "setimmediate": "^1.0.5",
     "ssb-about": "^2.0.0",
     "ssb-backlinks": "^0.7.3",
