@@ -1,6 +1,6 @@
 const nest = require('depnest')
 const extend = require('xtend')
-const ref = require('ssb-ref')
+const { isFeed, isMsg, isBlob } = require('ssb-ref')
 const { h } = require('mutant')
 
 exports.gives = nest('message.html.render')
@@ -18,12 +18,14 @@ exports.create = function (api) {
   return nest('message.html.render', about)
 
   function about (msg, opts) {
+    // TODO write schemas for different sorts of about message
     if (msg.value.content.type !== 'about') return
 
     const { name, description, image, about } = msg.value.content
     if (!name && !description && !image) return
-
-    if (ref.isMsg(about)) return
+    if (!isFeed(about)) return
+    // mix : note this looked like it was intended to deal with all about message but the logic sucked
+    // I've made it explicitly handle only about messages for people, as that's what it was actually doing
 
     const element = api.message.html.layout(msg, extend({
       content: renderContent(msg),
@@ -39,7 +41,7 @@ exports.create = function (api) {
     if (!about) return
 
     // TODO : build better normalizers
-    if (image && ref.isBlob(image.link)) image = image.link
+    if (image && isBlob(image.link)) image = image.link
     about = about || link
 
     const metaData = [
@@ -54,16 +56,16 @@ exports.create = function (api) {
         : undefined
     ]
 
-    if (!ref.isFeed(about)) {
-      return [
-        h('p', [
-          'Describes ',
-          h('a', { href: about }, [about.slice(0, 7), '...']),
-          ' as: '
-        ]),
-        ...metaData
-      ]
-    }
+    // if (!isFeed(about)) {
+    //   return [
+    //     h('p', [
+    //       'Describes ',
+    //       h('a', { href: about }, [about.slice(0, 7), '...']),
+    //       ' as: '
+    //     ]),
+    //     ...metaData
+    //   ]
+    // }
 
     const target = author === about
       ? 'themself '
