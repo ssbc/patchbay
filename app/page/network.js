@@ -15,6 +15,7 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.sync.goTo': 'first',
   'sbot.obs.connection': 'first'
 })
 
