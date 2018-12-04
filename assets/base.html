@@ -2,27 +2,13 @@
 <html>
   <head></head>
   <body>
-    <script>
-      // redirect console to main process
-      const { log: remoteLog, error: remoteErr } = require('console')
-      const { log: localLog, error: localErr } = console
-
-      console.log = function (...args) {
-        localLog(...args)
-        remoteLog(...args)
-      }
-
-      console.error = function (...args) {
-        localErr(...args)
-        remoteErr(...args)
-      }
-
-      // redirect errors to stderr
-      window.addEventListener('error', function (e) {
-        e.preventDefault()
-        console.error(e.error.stack || 'Uncaught ' + e.error)
-      })
-    </script>
   </body>
+  <script>
+    // redirect errors to stderr
+    window.addEventListener('error', function (e) {
+      e.preventDefault()
+      require('console').error(e.error.stack || 'Uncaught ' + e.error)
+    })
+  </script>
 </html>
 

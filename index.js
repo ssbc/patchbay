@@ -7,6 +7,10 @@ var Path = require('path')
 var windows = {}
 var quitting = false
 
+process.on('uncaughtException', function (error) {
+    console.error(error)
+});
+
 console.log('STARTING electron')
 electron.app.on('ready', () => {
   startMenus()
