@@ -11,11 +11,7 @@ console.log('STARTING electron')
 electron.app.on('ready', () => {
   startMenus()
 
-  startBackgroundProcess()
-  // wait until server has started before opening main window
-  electron.ipcMain.once('server-started', function (ev, config) {
-    openMainWindow()
-  })
+  startBackgroundProcess(openMainWindow)
 
   electron.app.on('before-quit', function () {
     quitting = true
@@ -36,24 +32,10 @@ electron.app.on('ready', () => {
   })
 })
 
-function startBackgroundProcess () {
+function startBackgroundProcess (cb) {
   if (windows.background) return
 
-  windows.background = openWindow(Path.join(__dirname, 'server.js'), {
-    title: 'patchbay-server',
-    show: false,
-    connect: false,
-    width: 150,
-    height: 150,
-    center: true,
-    fullscreen: false,
-    fullscreenable: false,
-    maximizable: false,
-    minimizable: false,
-    resizable: false,
-    skipTaskbar: true,
-    useContentSize: true
-  })
+  require('./server')(cb)
 }
 
 function openMainWindow () {
