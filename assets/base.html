@@ -4,10 +4,12 @@
   <body>
   </body>
   <script>
+    const serverConsole = require('console')
+
     // redirect errors to stderr
     window.addEventListener('error', function (e) {
       e.preventDefault()
-      require('console').error(e.error.stack || 'Uncaught ' + e.error)
+      serverConsole.error(e.error.stack || 'Uncaught ' + e.error)
     })
   </script>
 </html>
