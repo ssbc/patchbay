@@ -196,7 +196,7 @@ exports.create = function (api) {
     })
   }
 
-  // TODO - extract somewhere?
+  // TODO - do a paraMap on the createStream which pre-filters what should be displayable
   function render (state, key) {
     const root = buildRoot(key)
     const { recent, repliesCount, likesCount, backlinksCount, participants } = buildThread(key)

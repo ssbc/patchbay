@@ -14,60 +14,63 @@ exports.create = (api) => {
 
   function blobPage (location) {
     const { blob } = location
+    const title = blob.slice(0, 9) + '...'
+    const src = api.blob.sync.url(blob)
 
-    const isImage = Value()
-    fetchMime()
+    const content = Value()
+    isImage(blob, (err, isImage) => {
+      if (err) return console.log(err)
 
-    return h('Blob', { title: blob.slice(0, 9) + '...' }, [
-      when(isImage,
-        h('img', { src: api.blob.sync.url(blob) }),
-        h('iframe', {
-          src: api.blob.sync.url(blob),
-          sandbox: ''
-        })
-      ),
+      if (isImage) content.set(h('img', { src }))
+      else content.set(h('iframe', { src, sandbox: '' }))
+    })
+
+    const page = h('Blob', { title }, [
+      content,
       h('a', { href: api.blob.sync.url(blob), target: '_blank' }, 'Open in browser')
     ])
 
-    // helpers
+    return page
+  }
 
-    function fetchMime () {
-      pull(
-        api.sbot.pull.stream(server => server.blobs.get(blob)),
-        pull.take(1),
-        pull.collect((err, data) => {
-          if (err) throw err
+  // helpers
 
-          // dig into the headers and get the 'magic numbers'
-          // mix: I copied this from the internet, it ight be terrible!
-          const arr = (new Uint8Array(data[0])).subarray(0, 4)
-          var header = ''
-          for (var i = 0; i < arr.length; i++) header += arr[i].toString(16)
-          // console.log(header)
+  function isImage (blob, cb) {
+    pull(
+      api.sbot.pull.stream(server => server.blobs.get(blob)),
+      pull.take(1),
+      pull.collect((err, data) => {
+        if (err) throw err
 
-          switch (header) {
-            case '89504e47':
-              // 'image/png'
-              return isImage.set(true)
-            case '47494638':
-              // 'image/gif'
-              return isImage.set(true)
-            case 'ffd8ffe0':
-            case 'ffd8ffe1':
-            case 'ffd8ffe2':
-            case 'ffd8ffe3':
-            case 'ffd8ffe8':
-              // 'image/jpeg'
-              return isImage.set(true)
-            case 'ffd8ffdb':
-              // 'image/???'
-              return isImage.set(true)
-            default:
-              isImage.set(false)
-            // type = 'unknown' // Or you can use the blob.type as fallback
-          }
-        })
-      )
-    }
+        // dig into the headers and get the 'magic numbers'
+        // mix: I copied this from the internet, it ight be terrible!
+        const arr = (new Uint8Array(data[0])).subarray(0, 4)
+        var header = ''
+        for (var i = 0; i < arr.length; i++) header += arr[i].toString(16)
+        // console.log(header)
+
+        switch (header) {
+          case '89504e47':
+            // 'image/png'
+            return cb(null, true)
+          case '47494638':
+            // 'image/gif'
+            return cb(null, true)
+          case 'ffd8ffe0':
+          case 'ffd8ffe1':
+          case 'ffd8ffe2':
+          case 'ffd8ffe3':
+          case 'ffd8ffe8':
+            // 'image/jpeg'
+            return cb(null, true)
+          case 'ffd8ffdb':
+            // 'image/???'
+            return cb(null, true)
+          default:
+            return cb(null, false)
+          // type = 'unknown' // Or you can use the blob.type as fallback
+        }
+      })
+    )
   }
 }
