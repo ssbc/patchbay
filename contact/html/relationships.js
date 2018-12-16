@@ -76,10 +76,13 @@ exports.create = function (api) {
             when(ImFollowing.sync, h('div.relationship-status', relationshipStatus))
           ]),
           h('section -blocking', [
-            when(ImBlockingThem,
+            when(ImBlockingThem, [
               h('button', { 'ev-click': () => unblock(id, console.log) }, 'unblock'),
-              h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK')
-            ),
+              h('button', { 'ev-click': () => unblock({ id, private: true }, console.log) }, 'private unblock')
+            ], [
+              h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK'),
+              h('button', { 'ev-click': () => block({ id, private: true }, console.log) }, 'PRIVATE BLOCK')
+            ]),
             h('div.explainer', [
               "Blocking tells everyone you don't want to communicate with a person.",
               h('ul', [
