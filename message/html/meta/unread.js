@@ -13,8 +13,6 @@ exports.create = (api) => {
 
   // UnreadFeature (search codebase for this if extracting)
   function unread (msg) {
-    return h('i.unread.fa.fa-bell', {
-      title: 'A new message'
-    })
+    return h('div.unread', { title: 'A new message' }, 'new')
   }
 }

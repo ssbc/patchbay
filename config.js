@@ -7,41 +7,53 @@ const merge = require('lodash/merge')
 const settings = require('patch-settings').patchSettings
 
 const appName = process.env.ssb_appname || 'ssb'
-const opts = appName === 'ssb'
-  ? null
-  : null // require('./default-config.json')
+const opts = appName === 'ssb' ? null : null
 
 exports.gives = nest('config.sync.load')
 exports.create = (api) => {
   var config
   return nest('config.sync.load', () => {
-    if (!config) {
-      console.log('LOADING config')
-      config = Config(appName, opts)
+    if (config) return config
 
-      const keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
-      const pubkey = keys.id.slice(1).replace(`.${keys.curve}`, '')
+    console.log('LOADING config')
+    config = Config(appName, opts)
+    config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
 
-      if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
-        merge(config, {
-          connections: {
-            outgoing: {
-              "onion": [{ "transform": "shs" }]
-            }
-          }
-        })
+    config = merge(
+      config,
+      Connections(config),
+      Remote(config)
+    )
 
-        delete config.connections.outgoing.net
-      }
-
-      config = merge(config, {
+    if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
+      merge(config, {
         connections: {
-          incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] }
-        },
-        keys,
-        remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+          outgoing: {
+            "onion": [{ "transform": "shs" }]
+          }
+        }
       })
+
+      delete config.connections.outgoing.net
     }
+    
     return config
   })
+}
+
+function Connections (config) {
+  const connections = (process.platform === 'win32')
+    ? undefined // this seems wrong?
+    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] } }
+
+  return connections ? { connections } : {}
+}
+
+function Remote (config) {
+  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
+  const remote = (process.platform === 'win32')
+    ? undefined // `net:127.0.0.1:${config.port}~shs:${pubkey}` // currently broken
+    : `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+
+  return remote ? { remote } : {}
 }

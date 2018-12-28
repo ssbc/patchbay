@@ -2,9 +2,14 @@ const combine = require('depject')
 const entry = require('depject/entry')
 const nest = require('depnest')
 const bulk = require('bulk-require')
+const values = require('lodash/values')
 
 // polyfills
 require('setimmediate')
+
+const patchcore = require('patchcore')
+delete patchcore.patchcore.message.html.action.reply
+// prune an action we don't want
 
 const patchbay = {
   patchbay: {
@@ -23,40 +28,33 @@ const patchbay = {
     suggestions: require('patch-suggest'),
     settings: require('patch-settings'),
     drafts: require('patch-drafts'),
-    inbox: require('patch-inbox'), // TODO - ideally this would be a standalone patch-* module
     history: require('patch-history')
   }
 }
 
-const post = {
-  patchbay: {
-    message: bulk(__dirname, [ 'post-patchcore/message/**/*.js' ])
-  }
+const plugins = {
+  scry: require('patchbay-scry'),
+  darkCrystal: require('patchbay-dark-crystal'),
+  poll: require('patchbay-poll'),
+  inbox: require('patch-inbox'), // TODO needs work
+  chess: require('ssb-chess-mithril'),
+  book: require('patchbay-book'),
+  gatherings: require('patchbay-gatherings')
 }
 
-// from more specialized to more general
-const sockets = combine(
-  require('patchbay-scry'),
-  require('patchbay-dark-crystal'),
-  require('patchbay-poll'),
-  require('ssb-chess'),
-  require('patchbay-gatherings'),
-  require('patchbay-book'),
+module.exports = {
+  plugins,
   patchbay,
-  require('patchcore'),
-  post
-)
-
-// remove patchcore reply for our version
-var pcReplyIndex = sockets.message.html.action.findIndex(x => x.name === 'reply')
-if (pcReplyIndex !== -1) { delete sockets.message.html.action[pcReplyIndex] }
-
-const api = entry(sockets, nest('app.html.app', 'first'))
-const app = api.app.html.app
-
-module.exports = patchbay
+  patchcore
+}
 
 // for electro[n]
-if (typeof window !== 'undefined') {
-  document.body.appendChild(app())
+if (typeof window !== 'undefined' && !module.parent.parent) {
+  // TODO spin up settings check which modules are wanted
+  const args = [ ...values(plugins), patchbay, patchcore ]
+  // plugings loaded first will over-ride core modules loaded later
+  const sockets = combine.apply(null, args)
+
+  const api = entry(sockets, nest('app.html.app', 'first'))
+  document.body.appendChild(api.app.html.app())
 }

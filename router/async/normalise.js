@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { isBlob, isFeed, isMsg } = require('ssb-ref')
+const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.async.normalise')
 
@@ -27,11 +27,14 @@ exports.create = (api) => {
         if (err) cb(err)
         else {
           if (typeof value.content === 'string') value = api.message.sync.unbox(value)
-          cb(null, {key: location, value})
+          cb(null, { key: location, value })
         }
       })
-    } else if (isBlob(location)) cb(null, { blob: location })
-    else if (isChannel(location)) cb(null, { channel: location })
+    } else if (isBlobLink(location)) {
+      // handles public & private blobs
+      // TODO - parse into link and query?
+      cb(null, { blob: location })
+    } else if (isChannel(location)) cb(null, { channel: location })
     else if (isFeed(location)) cb(null, { feed: location })
     else if (isPage(location)) cb(null, { page: location.substring(1) })
 

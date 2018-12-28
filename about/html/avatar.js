@@ -14,16 +14,19 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('about.html.avatar', avatar)
 
-  function avatar (id) {
+  function avatar (id, size = 4) {
     const src = api.about.obs.imageUrl(id)
     const color = computed(src, src => src.match(/^http/) ? 'rgba(0,0,0,0)' : api.about.obs.color(id))
 
-    return api.about.html.link(id,
+    const avatar = api.about.html.link(id,
       h('img', {
-        className: 'Avatar',
         style: { 'background-color': color },
         src
       })
     )
+    avatar.classList.add('Avatar')
+    avatar.style.setProperty('--avatar-size', isNaN(size) ? size : `${size}rem`)
+
+    return avatar
   }
 }

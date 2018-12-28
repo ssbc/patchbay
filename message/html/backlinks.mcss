@@ -1,0 +1,20 @@
+MessageBacklinks {
+  font-size: .8rem
+  color: grey
+
+  background: rgba(0,0,0,.05)
+  padding: .7rem 1rem 1rem
+  margin-top: 1rem
+
+  header {
+    font-weight: 600
+    letter-spacing: 1px
+  }
+
+  ul {
+    margin-bottom: 0
+    li {
+      a { color: grey }
+    }
+  }
+}

@@ -47,24 +47,24 @@ exports.create = function (api) {
           .filter(m => ref.isFeed(typeof m === 'string' ? m : m.link))
         return content
       },
-      placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.'}
+      placeholder: 'Write a private message. \n\n@mention users in the first message to start a private thread.' }
     )
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
-    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ] })
+    const { container, content } = api.app.html.scroller({ prepend: [ composer, filterMenu ], className: 'PrivateFeed' })
 
     function draw () {
       resetFeed({ container, content })
 
       pull(
-        pullPrivate({old: false, live: true}),
+        pullPrivate({ old: false, live: true }),
         filterDownThrough(),
-        Scroller(container, content, api.message.html.render, true, false)
+        Scroller(container, content, render, true, false)
       )
 
       pull(
-        pullPrivate({reverse: true}),
+        pullPrivate({ reverse: true }),
         filterUpThrough(),
-        Scroller(container, content, api.message.html.render, false, false)
+        Scroller(container, content, render, false, false)
       )
     }
     draw()
@@ -73,13 +73,17 @@ exports.create = function (api) {
     return container
   }
 
+  function render (msg) {
+    return api.message.html.render(msg, { showTitle: true })
+  }
+
   function pullPrivate (opts) {
     const query = [{
       $filter: {
-        timestamp: {$gt: 0},
+        timestamp: { $gt: 0 },
         value: {
           content: {
-            recps: {$truthy: true}
+            recps: { $truthy: true }
           }
         }
       }

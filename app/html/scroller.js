@@ -7,20 +7,27 @@ exports.create = function (api) {
   return nest('app.html.scroller', Scroller)
 
   function Scroller (opts = {}) {
-    const { prepend = [], content = null, append = [], classList = [], className = '', title = '' } = opts
+    const { prepend, content = null, append, classList = [], className = '', title = '', scrollIntoView } = opts
 
     const contentSection = h('section.content', { title: '' }, content)
 
     const container = h('Scroller',
-      { classList, className, title, style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' } },
+      {
+        classList,
+        className,
+        title,
+        style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' },
+        intersectionBindingViewport: { rootMargin: '1000px' } // mutant magic
+        // TODO (watch for breaks e.g. stuff stops updating after scrolling)
+      },
       [
-        h('section.top', prepend),
+        prepend ? h('section.top', prepend) : null,
         contentSection,
-        h('section.bottom', append)
+        append ? h('section.bottom', append) : null
       ]
     )
 
-    container.scroll = keyscroll(contentSection)
+    container.keyboardScroll = KeyboardScroll(contentSection, scrollIntoView)
 
     return {
       content: contentSection,
@@ -29,7 +36,7 @@ exports.create = function (api) {
   }
 }
 
-function keyscroll (content) {
+function KeyboardScroll (content, scrollIntoView = false) {
   var curMsgEl
 
   if (!content) return () => {}
@@ -47,11 +54,14 @@ function keyscroll (content) {
   }
 
   return function scroll (d) {
-    selectChild((!curMsgEl || d === 'first') ? content.firstChild
+    const child = (!curMsgEl || d === 'first') ? content.firstChild
       : (!curMsgEl || d === 'last') ? content.lastChild
         : d < 0 ? curMsgEl.previousElementSibling || content.firstChild
           : d > 0 ? curMsgEl.nextElementSibling || content.lastChild
-            : curMsgEl)
+            : curMsgEl
+
+    selectChild(child)
+    curMsgEl = child
 
     return curMsgEl
   }
@@ -59,9 +69,15 @@ function keyscroll (content) {
   function selectChild (el) {
     if (!el) { return }
 
-    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
-    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
-    el.focus()
-    curMsgEl = el
+    if (scrollIntoView) {
+      if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
+      ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    } else {
+      const height = el.offsetTop - content.parentElement.offsetTop - 10
+      // content.parentElement.scroll({ top: height, behavior: 'smooth' })
+      content.parentElement.scrollTop = height
+    }
+
+    if (el.focus) el.focus()
   }
 }

@@ -1,119 +1,138 @@
 Message -default {
-  padding: 1rem .5rem
+  padding: 1rem 0
 
   display: grid
-  grid-template-columns: 5rem auto
+  grid-template-columns: 6rem 1fr minmax(6rem, auto)
+  grid-gap: 1.5rem
 
-  section.avatar {
-    grid-column: 1 / 2
-    grid-row: 1 / span 4
-    a img {
+  section.left {
+    grid-column: 1
+
+    display: grid
+    align-content: start
+    justify-items: end
+
+    div.avatar {
+      grid-row: 1
+      a img { }
     }
-  }
 
-  section.top {
-    grid-column: 2 / 3
-    grid-row: 1 / span 1
-
-    display: flex
-    align-items: baseline
-    
     div.author {
+      grid-row: 2
       font-weight: 600
-      margin-right: .5rem
+      text-align: right
       (a) { color: #222 }
     }
 
-    div.title {
-      flex-grow: 1
-      font-size: .9rem
-      $textSubtle
-      (a) { $textSubtle }
-    }
-
-    div.meta {
-      display: flex
-      justify-content: flex-end
-      align-items: baseline
-
-      i, div, a {
-        margin-left: .5rem
-      }
-    }
-  }
-
-  section.content {
-    grid-column: 2 / 3
-    grid-row: 2 / span 1
-
-    margin-bottom: .5rem
-
-    (img) {
-      max-width: 100%
-    }
-    (video) {
-      max-width: 100%
-    }
-  }
-
-  section.bottom {
-    grid-column: 2 / 3
-    grid-row: 4 / span 1
-
-    display: flex
-    align-items: center
-
     div.timestamp {
-      flex-grow: 1
-
+      grid-row: 3
       a {
         font-size: .9rem
         $textSubtle
       }
     }
+  }
+
+  section.body {
+    /* padding: .5rem */
+    background: rgba(255,255,255, .5)
+
+    grid-column: 2
+
+    display: grid
+    align-content: start
+
+    div.title {
+      grid-row: 1
+      font-size: .9rem
+      $textSubtle
+      (a) { $textSubtle }
+    }
+
+    div.content {
+      grid-row: 2
+      (img) {
+        max-width: 100%
+      }
+      (video) {
+        max-width: 100%
+      }
+    }
+
+    footer.backlinks {
+      grid-row: 3
+    }
+
+    div.raw-content {
+      grid-row: 4
+      pre {
+        border: 1px gainsboro solid
+        padding: .8rem
+        background-color: #f5f5f5
+        color: #c121dc
+        padding: .3rem
+        white-space: pre-wrap
+        word-wrap: break-word
+
+        span {
+          font-weight: 600
+        }
+        a {
+          word-break: break-all
+        }
+      }
+    }
+
+  }
+
+  section.right {
+    grid-column: 3
+
+    display: grid
+    justify-items: start
+    align-content: space-between
+
+    div.meta {
+      grid-row: 1
+
+      display: grid
+      justify-items: start
+      grid-gap: .5rem
+
+      i, div, a { }
+
+      a.channel {
+        grid-row: 1
+        color: gray
+        letter-spacing: 1px
+      }
+
+      i.toggle-raw-msg { visibility: hidden }
+      :hover {
+        i.toggle-raw-msg { visibility: visible }
+      }
+    }
 
     div.actions {
-      display: flex
-      justify-content: flex-end
+      grid-row: 2
+      justify-self: start
+
+      display: grid
+      grid-auto-flow: column
+      grid-gap: .8rem
 
       font-size: .9rem
-      a {
-        margin-left: .5em
-      }
 
-      a.unlike {
-        $textSubtle
-      }
+      div.MessageLike { }
+      i.MessageQuote { margin-top: 3px }
+      i.MessageReply { margin-top: 1px }
     }
   }
 
-  section.raw-content {
-    grid-column: 2 / 3
-    grid-row: 3 / span 1
+  :focus {
+    outline: #e794e7 solid 2px
 
-    pre {
-      border: 1px gainsboro solid
-      padding: .8rem
-      background-color: #f5f5f5
-      color: #c121dc
-      padding: .3rem
-      white-space: pre-wrap
-      word-wrap: break-word
-
-      span {
-        font-weight: 600
-      }
-      a {
-        word-break: break-all
-      }
-    }
-  }
-
-  footer.backlinks {
-    grid-row: 5 / span 1
-
-    grid-column: 2 / 3
-    flex-basis: 100%
+    /* section.body { background: rgba(255,255,255, 1) } */
   }
 
   /* UnreadFeature (search codebase for this if extracting) */
@@ -124,12 +143,17 @@ Message -default {
 
   /* initially unread */
   -unread {
-    section.top {
+    section.right {
       div.meta {
-        i.unread {
+        div.unread {
           display: initial
-          transition: color 1s ease-in
+          padding: 1px 4px
+
+          transition: color, border 1s ease-in
+
           color: hotpink
+          border: 1px solid hotpink
+          border-radius: 2px
         }
       }
     }
@@ -138,10 +162,11 @@ Message -default {
   /* initially unread, but subsequently marked read */
   -unread {
     -read {
-      section.top {
+      section.right {
         div.meta {
-          i.unread {
+          div.unread {
             color: #bbb
+            border: 1px solid #bbb
           }
         }
       }

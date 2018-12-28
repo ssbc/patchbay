@@ -6,6 +6,6 @@ exports.gives = nest('styles.css')
 
 exports.create = function (api) {
   return nest('styles.css', (sofar = {}) => {
-    return assign(sofar, { css: requireStyle('font-awesome') })
+    return assign(sofar, { fontAwesome: requireStyle('font-awesome') })
   })
 }

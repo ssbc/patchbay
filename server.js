@@ -1,3 +1,4 @@
+// formerly background-process.js
 var fs = require('fs')
 var Path = require('path')
 var electron = require('electron')
@@ -11,6 +12,8 @@ var createSbot = require('scuttlebot')
   .use(require('scuttlebot/plugins/invite'))
   .use(require('scuttlebot/plugins/local'))
   .use(require('scuttlebot/plugins/logging'))
+  .use(require('scuttlebot/plugins/unix-socket'))
+  .use(require('scuttlebot/plugins/no-auth'))
   .use(require('ssb-about'))
   .use(require('ssb-backlinks'))
   .use(require('ssb-blobs'))

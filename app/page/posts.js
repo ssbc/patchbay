@@ -89,8 +89,8 @@ exports.create = function (api) {
       if (state.sort === BY_START) page = PageByStart(state)
 
       page.title = '/posts'
-      page.id = api.app.sync.locationId({page: 'posts'}) // this is needed because our page is a computed
-      page.scroll = keyscroll(page.querySelector('section.content'))
+      page.id = api.app.sync.locationId({ page: 'posts' }) // this is needed because our page is a computed
+      page.keyboardScroll = keyscroll(page.querySelector('section.content'))
       return page
     })
 
@@ -196,7 +196,7 @@ exports.create = function (api) {
     })
   }
 
-  // TODO - extract somewhere?
+  // TODO - do a paraMap on the createStream which pre-filters what should be displayable
   function render (state, key) {
     const root = buildRoot(key)
     const { recent, repliesCount, likesCount, backlinksCount, participants } = buildThread(key)
@@ -258,8 +258,8 @@ exports.create = function (api) {
           ]
         )
         // h('div', 'non-match')
-      ),
-      h('ThreadCard -loading')
+      )
+      // h('ThreadCard -loading')
     )
   }
 
@@ -417,9 +417,10 @@ function keyscroll (content) {
   function selectChild (el) {
     if (!el) { return }
 
-    if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
-    ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
-    el.focus()
+    content.parentElement.scrollTop = el.offsetTop - content.parentElement.offsetTop - 10
+    // if (!el.scrollIntoViewIfNeeded && !el.scrollIntoView) return
+    // ;(el.scrollIntoViewIfNeeded || el.scrollIntoView).call(el)
+    if (el.focus) el.focus()
     curMsgEl = el
   }
 }

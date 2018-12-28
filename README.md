@@ -26,33 +26,7 @@ If you'd like to hack on Patchbay, check out the Developer Install below.
 
 ## Keyboard shortcuts
 
-`CmdOrCtrl` is the `command` key on Apple keyboards or the `ctrl` key on PC keyboards.
-
-### Tabs and window
-
-- `h` / `CmdOrCtrl+Shift+]` : tabs left
-- `j` / `CmdOrCtrl+Shift+[`: tabs right
-- `x` / `CmdOrCtrl+w` : close tab
-- `CmdOrCtrl+Shift+w` will close the current window
-
-### Message feeds
-
-`j` : next message (down)
-`k` : previous message
-`o` : open message thread (and scroll to position of this message in that thread)
-` ` ` : toggle raw message view for currently selected message (` ` ` = backtick, lives on the same key as `~`)
-
-composing : cttrl + enter = post
-
-### Nav bar thing
-
-`@` : start a person query
-`#` : start a channel query
-`?` : start a search query
-`/` : start a navigation  (e.g. /public)  - need to re-instate suggestions for this
-
-you can also paste a message id (starts with `%`) in here to navigate to it. Same with blobs (`&`)
-
+[See here](./app/page/SHORTCUTS.md) or in patchbay for to the page `/shortcuts`
 ---
 
 ## Developer Install
@@ -163,6 +137,29 @@ This is ultimately reduced along with all other `router.sync.router` modules int
 
 Giving modules here will add settings sections to the settings page (`app.page.settings`).
 
+
+### Requiring the core of patchbay
+
+If you don't want the default modules, you can grab the main part of patchbay and pick and choose modules like this:
+
+```js
+const patchcore = require('patchcore')
+const patchbay = require('patchbay/main')
+const combine = require('depject')
+const entry = require('depject/entry')
+const nest = require('depnest')
+
+const sockets = combine(
+  require('patchbay-dark-crystal'), // the module(s) you want
+  patchbay,
+  patchcore // required
+)
+
+const api = entry(sockets, nest('app.html.app', 'first'))
+document.body.appendChild(api.app.html.app())
+```
+
+You'll need to be running your own sbot and launch this with electro / electron. See `index.js` to see that
 
 ### How to add a new page
 

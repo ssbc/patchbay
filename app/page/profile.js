@@ -57,17 +57,21 @@ exports.create = function (api) {
 
     pull(
       source({ query, live: true, old: false }),
-      Scroller(container, content, api.message.html.render, true, false)
+      Scroller(container, content, render, true, false)
     )
 
     // how to handle when have scrolled past the start???
 
     pull(
       source({ query, reverse: true, limit: 50 }),
-      Scroller(container, content, api.message.html.render, false, false)
+      Scroller(container, content, render, false, false)
     )
 
     watch(api.about.obs.name(id), name => { container.title = '@' + name })
     return container
+  }
+
+  function render (msg) {
+    return api.message.html.render(msg, { showTitle: true })
   }
 }

@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { isBlob, isFeed, isMsg } = require('ssb-ref')
+const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
 
 exports.gives = nest('router.sync.routes')
 
@@ -11,6 +11,7 @@ exports.needs = nest({
     'errors': 'first',
     'channel': 'first',
     'imageSearch': 'first',
+    'network': 'first',
     'notifications': 'first',
     'posts': 'first',
     'postRank': 'first',
@@ -20,6 +21,7 @@ exports.needs = nest({
     'query': 'first',
     'search': 'first',
     'settings': 'first',
+    'shortcuts': 'first',
     'thread': 'first'
   },
   'keys.sync.id': 'first'
@@ -36,6 +38,7 @@ exports.create = (api) => {
       [ loc => loc.page === 'calendar', pages.calendar ],
       [ loc => loc.page === 'errors', pages.errors ],
       [ loc => loc.page === 'imageSearch', pages.imageSearch ],
+      [ loc => loc.page === 'network', pages.network ],
       [ loc => loc.page === 'notifications', pages.notifications ],
       [ loc => loc.page === 'posts', pages.posts ],
       [ loc => loc.page === 'postRank', pages.postRank ],
@@ -45,8 +48,9 @@ exports.create = (api) => {
       [ loc => loc.page === 'query', pages.query ],
       [ loc => loc.page === 'search' && loc.query, pages.search ],
       [ loc => loc.page === 'settings', pages.settings ],
+      [ loc => loc.page === 'shortcuts', pages.shortcuts ],
 
-      [ loc => isBlob(loc.blob), pages.blob ],
+      [ loc => loc.blob && isBlobLink(loc.blob), pages.blob ],
       [ loc => isPresent(loc.channel), pages.channel ],
       [ loc => isFeed(loc.feed), pages.profile ],
       [ loc => isMsg(loc.key), pages.thread ]
