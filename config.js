@@ -36,7 +36,14 @@ exports.create = (api) => {
 
       delete config.connections.outgoing.net
     }
-    
+
+    let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', "3")
+    if (pubHopConnections != "3") {
+      config.friendPub = { hops: parseInt(pubHopConnections) }
+      config.gossip.friends = true
+      config.gossip.global = false
+    }
+
     return config
   })
 }
