@@ -1,12 +1,15 @@
 const nest = require('depnest')
-const { h, computed } = require('mutant')
+const { h, computed, onceTrue, Value } = require('mutant')
 
 exports.gives = nest({
   'app.html.settings': true
 })
 
 exports.needs = nest({
+  'about.html.image': 'first',
+  'about.obs.name': 'first',
   'app.html.settings': 'map',
+  'sbot.obs.connection': 'first',
   'settings.obs.get': 'first',
   'settings.sync.set': 'first'
 })
@@ -24,7 +27,15 @@ exports.create = function (api) {
       alert("please restart patchbay for this to take effect")
     }
 
+    let pubs = Value({})
+
     const pubHopConnectionsText = computed([pubHopConnections], function(pubHopConnections) {
+      onceTrue(api.sbot.obs.connection, sbot => {
+        sbot.friendPub.pubsWithinHops(parseInt(pubHopConnections), (err, pubsInHops) => {
+          pubs.set(pubsInHops)
+        })
+      })
+
       switch (pubHopConnections) {
       case "0":
         return "Own pub only"
@@ -35,6 +46,19 @@ exports.create = function (api) {
       default: // 3
         return "All pubs"
       }
+    })
+
+    function pubImageLink (id, ownerId) {
+      return h('a', {
+        href: id,
+        title: computed([api.about.obs.name(id), api.about.obs.name(ownerId)], (name, ownerName) => {
+          return '@' + name + ', owner ' + ownerName
+        })
+      }, api.about.html.image(id))
+    }
+
+    const pubsHtml = computed([pubs], function(pubs) {
+      return Object.values(pubs).map(pub => pubImageLink(pub.id, pub.owner))
     })
     
     return {
@@ -55,7 +79,8 @@ exports.create = function (api) {
             h('option', 1),
             h('option', 2),
             h('option', 3)]),
-          h('div', ["Current setting: ", pubHopConnectionsText])
+          h('div', ["Current setting: ", pubHopConnectionsText]),
+          h('div', pubsHtml)
         ])
       ])
     }
