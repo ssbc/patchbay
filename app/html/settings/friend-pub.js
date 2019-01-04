@@ -31,9 +31,12 @@ exports.create = function (api) {
 
     const pubHopConnectionsText = computed([pubHopConnections], function(pubHopConnections) {
       onceTrue(api.sbot.obs.connection, sbot => {
-        sbot.friendPub.pubsWithinHops(parseInt(pubHopConnections), (err, pubsInHops) => {
-          pubs.set(pubsInHops)
-        })
+        if (pubHopConnections == "3") // all
+          pubs.set([])
+        else
+          sbot.friendPub.pubsWithinHops(parseInt(pubHopConnections), (err, pubsInHops) => {
+            pubs.set(pubsInHops)
+          })
       })
 
       switch (pubHopConnections) {
