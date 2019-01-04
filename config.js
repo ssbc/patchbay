@@ -25,18 +25,6 @@ exports.create = (api) => {
       Remote(config)
     )
 
-    if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
-      merge(config, {
-        connections: {
-          outgoing: {
-            "onion": [{ "transform": "shs" }]
-          }
-        }
-      })
-
-      delete config.connections.outgoing.net
-    }
-
     let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', "3")
     if (pubHopConnections != "3") {
       config.friendPub = { hops: parseInt(pubHopConnections) }
