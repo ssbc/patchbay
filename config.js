@@ -30,7 +30,7 @@ exports.create = (api) => {
 function Connections (config) {
   const connections = (process.platform === 'win32')
     ? undefined // this seems wrong?
-    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth' }] } }
+    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth', server: true }] } }
 
   return connections ? { connections } : {}
 }
