@@ -1,6 +1,6 @@
 {
   "name": "patchbay",
-  "version": "7.15.6",
+  "version": "7.15.6-scuttle-shell-alpha",
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
