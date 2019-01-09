@@ -85,7 +85,7 @@
     "read-directory": "^3.0.1",
     "require-style": "^1.0.1",
     "scuttle-blog": "^1.0.1",
-    "scuttle-shell": "ssbc/scuttle-shell#updateDeps",
+    "scuttle-shell": "ssbc/scuttle-shell#refactor_config",
     "scuttle-thread": "^1.0.1",
     "setimmediate": "^1.0.5",
     "ssb-blob-files": "^1.1.3",
