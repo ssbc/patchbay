@@ -70,10 +70,11 @@ exports.create = function (api) {
       if (char === '/') cb(null, getPagesSuggestions(word))
     }, { cls: 'PatchSuggest' })
 
-    // TODO extract
+    // TODO extract - as in when something supplies something as a menuItem, this should also be auto-populated...
     function getPagesSuggestions (word) {
       const pages = [
         'blogs', 'calendar', 'posts', 'public', 'private', 'inbox', 'profile', 'notifications', 'settings', 'shortcuts',
+        'network',
         'gatherings', 'chess', 'books', 'imageSearch', 'polls', 'query', 'dark-crystal', 'postRank', 'scry', 'scry/new'
       ]
 

@@ -5,8 +5,15 @@ NetworkPage {
   justify-content: center
 
   div.container {
-    header {
-      margin: 1rem 0
+    section {
+      margin-bottom: 2rem
+      h2 {
+        font-size: .8rem
+        text-transform: uppercase
+        letter-spacing: 2px
+      }
+      p {
+      }
     }
   }
 }
