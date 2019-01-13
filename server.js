@@ -1,37 +1,39 @@
-// formerly background-process.js
-var fs = require('fs')
-var Path = require('path')
-var electron = require('electron')
+const electron = require('electron')
+const fs = require('fs')
+const { join } = require('path')
+const Client = require('ssb-client')
+const scuttleshell = require('scuttle-shell')
 
-console.log('STARTING SBOT')
+// Get config options from depject
+const config = require('./config').create().config.sync.load()
 
-var createSbot = require('ssb-server')
-  .use(require('ssb-server/plugins/master'))
-  .use(require('ssb-server/plugins/gossip'))
-  .use(require('ssb-server/plugins/replicate'))
-  .use(require('ssb-server/plugins/invite'))
-  .use(require('ssb-server/plugins/local'))
-  .use(require('ssb-server/plugins/logging'))
-  .use(require('ssb-server/plugins/unix-socket'))
-  .use(require('ssb-server/plugins/no-auth'))
-  .use(require('ssb-about'))
-  .use(require('ssb-backlinks'))
-  .use(require('ssb-blobs'))
-  .use(require('ssb-chess-db'))
-  .use(require('ssb-ebt'))
-  .use(require('ssb-friends'))
-  .use(require('ssb-meme'))
-  .use(require('ssb-private'))
-  .use(require('ssb-query'))
-  .use(require('ssb-search'))
-  .use(require('ssb-unread'))
-  .use(require('ssb-ws'))
-  // .use(require('ssb-mutual')) // this is has recursion problems atm
+// check if manifest.json exists (has any sbot ever started?)
+if (!fs.existsSync(join(config.path, 'manifest.json'))) startScuttleShell()
+else {
+  // check if there's a server running we can connect to
+  Client(config.keys, config, (err, server) => {
+    if (err) startScuttleShell()
+    else {
+      console.log('> scuttle-shell / sbot already running')
+      server.close() // close this connection (app starts one of its own)
 
-// pull config options out of depject
-var config = require('./config').create().config.sync.load()
+      startFrontend()
+    }
+  })
+}
 
-var sbot = createSbot(config)
-var manifest = sbot.getManifest()
-fs.writeFileSync(Path.join(config.path, 'manifest.json'), JSON.stringify(manifest))
-electron.ipcRenderer.send('server-started')
+// helpers
+
+function startScuttleShell () {
+  console.log('> scuttle-shell: starting')
+
+  scuttleshell.start({}, (startErr) => {
+    if (startErr) return console.error('> scuttle-shell: failed to start', startErr)
+
+    startFrontend()
+  })
+}
+
+function startFrontend () {
+  electron.ipcRenderer.send('server-started')
+}
