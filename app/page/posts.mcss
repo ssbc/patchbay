@@ -178,7 +178,7 @@ ThreadCard {
     section.content-preview {
       div.root {
         div.Markdown {
-          background: #6f0055
+          background: #ecdde8
           transition: background .2s ease-in
         }
       }
