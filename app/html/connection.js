@@ -22,7 +22,7 @@ exports.create = function (api) {
     const { connection, localPeers } = api.sbot.obs
 
     return h('Connection', computed([connection, localPeers()], (connection, localPeers) => {
-      if (localPeers) {
+      if (localPeers.length) {
         return h('i.fa.fa-user-circle-o', {
           title: 'peers on your local network!',
           'ev-click': () => api.app.sync.goTo('/network'),
