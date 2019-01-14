@@ -15,8 +15,10 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'about.html.avatar': 'first',
   'app.sync.goTo': 'first',
-  'sbot.obs.connection': 'first'
+  'sbot.obs.connection': 'first',
+  'sbot.obs.localPeers': 'first'
 })
 
 exports.create = function (api) {
@@ -35,78 +37,35 @@ exports.create = function (api) {
     const minsPerStep = 10
     const scale = 1 * DAY
 
-    const data = Dict({
-      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
-      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
-    })
-    onceTrue(api.sbot.obs.connection, server => {
-      getData({ data, server, minsPerStep, scale })
-    })
-
-    const latest = Value(toTimeBlock(Date.now(), minsPerStep))
-    // start of the most recent bar
-    setInterval(() => {
-      latest.set(toTimeBlock(Date.now(), minsPerStep))
-    }, minsPerStep / 4 * MINUTE)
-
-    const range = computed([latest], (latest) => {
-      return {
-        upper: latest + minsPerStep * MINUTE,
-        lower: latest + minsPerStep * MINUTE - scale
-      }
-    })
-
-    //
-
+    const state = buildState({ api, minsPerStep, scale })
     const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
+
     const page = h('NetworkPage', { title: '/network' }, [
       h('div.container', [
         h('h1', 'Network'),
-        h('header', `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`),
-        canvas
+        h('section', [
+          h('h2', 'Local Peers'),
+          computed(state.localPeers, peers => {
+            if (!peers.length) return h('p', 'There aren\'t currently any peers on the same wifi / LAN as you')
+
+            return peers.map(peer => api.about.html.avatar(peer))
+          })
+        ]),
+        h('section', [
+          h('h2', 'Received'),
+          h('p', `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`),
+          canvas
+        ])
       ])
     ])
 
-    initialiseChart({ canvas, data, range })
+    initialiseChart({ canvas, state })
 
     return page
   }
 }
 
-function getData ({ data, server, minsPerStep, scale }) {
-  const upperEnd = toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE
-  const lowerBound = upperEnd - scale
-
-  const query = [
-    {
-      $filter: {
-        timestamp: { $gte: lowerBound }
-      }
-    }, {
-      $filter: {
-        value: {
-          author: { $ne: server.id }
-        }
-      }
-    }, {
-      $map: {
-        ts: ['timestamp']
-      }
-    }
-  ]
-
-  pull(
-    server.query.read({ query, live: true }),
-    pull.filter(m => !m.sync),
-    pull.map(m => toTimeBlock(m.ts, minsPerStep)),
-    pull.drain(ts => {
-      if (data.has(ts)) data.put(ts, data.get(ts) + 1)
-      else data.put(ts, 1)
-    })
-  )
-}
-
-function initialiseChart ({ canvas, data, range }) {
+function initialiseChart ({ canvas, state: { data, range } }) {
   var chart = new Chart(canvas.getContext('2d'), chartConfig(range))
 
   watch(range, ({ lower, upper }) => {
@@ -145,6 +104,69 @@ function initialiseChart ({ canvas, data, range }) {
 }
 
 // ///// HELPERS /////
+
+function buildState ({ api, minsPerStep, scale }) {
+  const data = Dict({
+    [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
+    [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
+  })
+  onceTrue(api.sbot.obs.connection, server => {
+    getData({ data, server, minsPerStep, scale })
+  })
+
+  const latest = Value(toTimeBlock(Date.now(), minsPerStep))
+  // start of the most recent bar
+  setInterval(() => {
+    latest.set(toTimeBlock(Date.now(), minsPerStep))
+  }, minsPerStep / 4 * MINUTE)
+
+  const range = computed([latest], (latest) => {
+    return {
+      upper: latest + minsPerStep * MINUTE,
+      lower: latest + minsPerStep * MINUTE - scale
+    }
+  })
+
+  return {
+    data,
+    range,
+    localPeers: throttle(api.sbot.obs.localPeers(), 1000)
+  }
+}
+
+function getData ({ data, server, minsPerStep, scale }) {
+  const upperEnd = toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE
+  const lowerBound = upperEnd - scale
+
+  const query = [
+    {
+      $filter: {
+        timestamp: { $gte: lowerBound }
+      }
+    }, {
+      $filter: {
+        value: {
+          author: { $ne: server.id }
+        }
+      }
+    }, {
+      $map: {
+        ts: ['timestamp']
+      }
+    }
+  ]
+
+  pull(
+    server.query.read({ query, live: true }),
+    pull.filter(m => !m.sync),
+    pull.map(m => toTimeBlock(m.ts, minsPerStep)),
+    pull.drain(ts => {
+      if (data.has(ts)) data.put(ts, data.get(ts) + 1)
+      else data.put(ts, 1)
+    })
+  )
+}
+
 
 function toTimeBlock (ts, minsPerStep) {
   return Math.floor(ts / (minsPerStep * MINUTE)) * (minsPerStep * MINUTE)
