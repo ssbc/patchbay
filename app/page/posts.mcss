@@ -110,8 +110,8 @@ ThreadCard {
 
     div.root {
       div.Markdown {
-        background-color: #000
-        color: #fff
+        background-color: #fff
+        color: #111
         line-height: 1.4rem
         padding: 2rem
 
