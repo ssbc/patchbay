@@ -7,6 +7,7 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'app.html.connection': 'first',
   'app.html.menu': 'first',
   'app.html.searchBar': 'first',
   'app.sync.goTo': 'first',
@@ -46,8 +47,13 @@ exports.create = function (api) {
     }
 
     const search = api.app.html.searchBar()
-    const menu = api.app.html.menu()
-    if (append === undefined) append = h('div.navExtra', [ search, menu ])
+    if (append === undefined) {
+      append = h('div.navExtra', [
+        search,
+        api.app.html.connection(),
+        api.app.html.menu()
+      ])
+    }
 
     _tabs = Tabs({ onSelect, onClose, prepend, append })
     _tabs.currentPage = () => {
