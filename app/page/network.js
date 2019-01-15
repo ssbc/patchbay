@@ -16,6 +16,7 @@ exports.gives = nest({
 
 exports.needs = nest({
   'about.html.avatar': 'first',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'sbot.obs.connection': 'first',
   'sbot.obs.localPeers': 'first',
@@ -80,7 +81,9 @@ exports.create = function (api) {
 
     initialiseChart({ canvas, state })
 
-    return page
+    var { container } = api.app.html.scroller({ prepend: page })
+    container.title = '/network'
+    return container
   }
 }
 
