@@ -42,7 +42,7 @@ exports.create = function (api) {
     const state = buildState({ api, minsPerStep, scale })
     const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
 
-    const page = h('NetworkPage', { title: '/network' }, [
+    const page = h('NetworkPage', [
       h('div.container', [
         h('h1', 'Network'),
         h('section', [
