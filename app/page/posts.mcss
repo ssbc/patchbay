@@ -122,6 +122,7 @@ ThreadCard {
           :first-of-type { margin-top: 0 }
         }
         (img) { max-width: 100% }
+        (a) { color: #db67ed }
       }
     }
 
