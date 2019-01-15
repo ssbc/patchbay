@@ -18,7 +18,8 @@ exports.needs = nest({
   'about.html.avatar': 'first',
   'app.sync.goTo': 'first',
   'sbot.obs.connection': 'first',
-  'sbot.obs.localPeers': 'first'
+  'sbot.obs.localPeers': 'first',
+  'sbot.obs.connectedPeers': 'first'
 })
 
 exports.create = function (api) {
@@ -44,16 +45,34 @@ exports.create = function (api) {
       h('div.container', [
         h('h1', 'Network'),
         h('section', [
-          h('h2', 'Local Peers'),
+          h('h2', [
+            'Local Peers',
+            h('i.fa.fa-question-circle-o', { title: 'these are people on the same WiFi/ LAN as you right now. You might not know some of them yet, but you can click through to find out more about them and follow them if you like.' })
+          ]),
           computed(state.localPeers, peers => {
-            if (!peers.length) return h('p', 'There aren\'t currently any peers on the same wifi / LAN as you')
+            if (!peers.length) return h('p', 'No local peers (on same wifi/ LAN)')
 
             return peers.map(peer => api.about.html.avatar(peer))
           })
         ]),
         h('section', [
-          h('h2', 'Received'),
-          h('p', `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`),
+          h('h2', [
+            'Remote Peers',
+            h('i.fa.fa-question-circle-o', { title: 'these are peers which have fixed addresses, and are likely friends of friends (a.k.a. pubs)' })
+          ]),
+          computed(state.remotePeers, peers => {
+            if (!peers.length) return h('p', 'No remote peers connected')
+
+            return peers.map(peer => api.about.html.avatar(peer))
+          })
+        ]),
+        h('section', [
+          h('h2', [
+            'Received Messages',
+            h('i.fa.fa-question-circle-o', {
+              title: `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`
+            })
+          ]),
           canvas
         ])
       ])
@@ -127,10 +146,16 @@ function buildState ({ api, minsPerStep, scale }) {
     }
   })
 
+  const localPeers = throttle(api.sbot.obs.localPeers(), 1000)
+  const remotePeers = computed([localPeers, throttle(api.sbot.obs.connectedPeers(), 1000)], (local, connected) => {
+    return connected.filter(peer => !local.includes(peer))
+  })
+
   return {
     data,
     range,
-    localPeers: throttle(api.sbot.obs.localPeers(), 1000)
+    localPeers,
+    remotePeers
   }
 }
 
