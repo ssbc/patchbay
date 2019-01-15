@@ -15,8 +15,12 @@ exports.gives = nest({
 })
 
 exports.needs = nest({
+  'about.html.avatar': 'first',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
-  'sbot.obs.connection': 'first'
+  'sbot.obs.connection': 'first',
+  'sbot.obs.localPeers': 'first',
+  'sbot.obs.connectedPeers': 'first'
 })
 
 exports.create = function (api) {
@@ -35,78 +39,55 @@ exports.create = function (api) {
     const minsPerStep = 10
     const scale = 1 * DAY
 
-    const data = Dict({
-      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
-      [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
-    })
-    onceTrue(api.sbot.obs.connection, server => {
-      getData({ data, server, minsPerStep, scale })
-    })
-
-    const latest = Value(toTimeBlock(Date.now(), minsPerStep))
-    // start of the most recent bar
-    setInterval(() => {
-      latest.set(toTimeBlock(Date.now(), minsPerStep))
-    }, minsPerStep / 4 * MINUTE)
-
-    const range = computed([latest], (latest) => {
-      return {
-        upper: latest + minsPerStep * MINUTE,
-        lower: latest + minsPerStep * MINUTE - scale
-      }
-    })
-
-    //
-
+    const state = buildState({ api, minsPerStep, scale })
     const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
-    const page = h('NetworkPage', { title: '/network' }, [
+
+    const page = h('NetworkPage', [
       h('div.container', [
         h('h1', 'Network'),
-        h('header', `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`),
-        canvas
+        h('section', [
+          h('h2', [
+            'Local Peers',
+            h('i.fa.fa-question-circle-o', { title: 'these are people on the same WiFi/ LAN as you right now. You might not know some of them yet, but you can click through to find out more about them and follow them if you like.' })
+          ]),
+          computed(state.localPeers, peers => {
+            if (!peers.length) return h('p', 'No local peers (on same wifi/ LAN)')
+
+            return peers.map(peer => api.about.html.avatar(peer))
+          })
+        ]),
+        h('section', [
+          h('h2', [
+            'Remote Peers',
+            h('i.fa.fa-question-circle-o', { title: 'these are peers which have fixed addresses, and are likely friends of friends (a.k.a. pubs)' })
+          ]),
+          computed(state.remotePeers, peers => {
+            if (!peers.length) return h('p', 'No remote peers connected')
+
+            return peers.map(peer => api.about.html.avatar(peer))
+          })
+        ]),
+        h('section', [
+          h('h2', [
+            'Received Messages',
+            h('i.fa.fa-question-circle-o', {
+              title: `Messages received per ${minsPerStep}-minute block over the last ${scale / DAY} days`
+            })
+          ]),
+          canvas
+        ])
       ])
     ])
 
-    initialiseChart({ canvas, data, range })
+    initialiseChart({ canvas, state })
 
-    return page
+    var { container } = api.app.html.scroller({ prepend: page })
+    container.title = '/network'
+    return container
   }
 }
 
-function getData ({ data, server, minsPerStep, scale }) {
-  const upperEnd = toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE
-  const lowerBound = upperEnd - scale
-
-  const query = [
-    {
-      $filter: {
-        timestamp: { $gte: lowerBound }
-      }
-    }, {
-      $filter: {
-        value: {
-          author: { $ne: server.id }
-        }
-      }
-    }, {
-      $map: {
-        ts: ['timestamp']
-      }
-    }
-  ]
-
-  pull(
-    server.query.read({ query, live: true }),
-    pull.filter(m => !m.sync),
-    pull.map(m => toTimeBlock(m.ts, minsPerStep)),
-    pull.drain(ts => {
-      if (data.has(ts)) data.put(ts, data.get(ts) + 1)
-      else data.put(ts, 1)
-    })
-  )
-}
-
-function initialiseChart ({ canvas, data, range }) {
+function initialiseChart ({ canvas, state: { data, range } }) {
   var chart = new Chart(canvas.getContext('2d'), chartConfig(range))
 
   watch(range, ({ lower, upper }) => {
@@ -145,6 +126,75 @@ function initialiseChart ({ canvas, data, range }) {
 }
 
 // ///// HELPERS /////
+
+function buildState ({ api, minsPerStep, scale }) {
+  const data = Dict({
+    [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
+    [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
+  })
+  onceTrue(api.sbot.obs.connection, server => {
+    getData({ data, server, minsPerStep, scale })
+  })
+
+  const latest = Value(toTimeBlock(Date.now(), minsPerStep))
+  // start of the most recent bar
+  setInterval(() => {
+    latest.set(toTimeBlock(Date.now(), minsPerStep))
+  }, minsPerStep / 4 * MINUTE)
+
+  const range = computed([latest], (latest) => {
+    return {
+      upper: latest + minsPerStep * MINUTE,
+      lower: latest + minsPerStep * MINUTE - scale
+    }
+  })
+
+  const localPeers = throttle(api.sbot.obs.localPeers(), 1000)
+  const remotePeers = computed([localPeers, throttle(api.sbot.obs.connectedPeers(), 1000)], (local, connected) => {
+    return connected.filter(peer => !local.includes(peer))
+  })
+
+  return {
+    data,
+    range,
+    localPeers,
+    remotePeers
+  }
+}
+
+function getData ({ data, server, minsPerStep, scale }) {
+  const upperEnd = toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE
+  const lowerBound = upperEnd - scale
+
+  const query = [
+    {
+      $filter: {
+        timestamp: { $gte: lowerBound }
+      }
+    }, {
+      $filter: {
+        value: {
+          author: { $ne: server.id }
+        }
+      }
+    }, {
+      $map: {
+        ts: ['timestamp']
+      }
+    }
+  ]
+
+  pull(
+    server.query.read({ query, live: true }),
+    pull.filter(m => !m.sync),
+    pull.map(m => toTimeBlock(m.ts, minsPerStep)),
+    pull.drain(ts => {
+      if (data.has(ts)) data.put(ts, data.get(ts) + 1)
+      else data.put(ts, 1)
+    })
+  )
+}
+
 
 function toTimeBlock (ts, minsPerStep) {
   return Math.floor(ts / (minsPerStep * MINUTE)) * (minsPerStep * MINUTE)

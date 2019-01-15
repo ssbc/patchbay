@@ -1,35 +1,47 @@
 Menu {
-  background-color: #0088cc
-  width: .7rem 
-  height: .7rem
-  border-radius: 1rem
+  color: #fff
+  pointer: cursor
 
-  margin: 0 .5rem
+  align-self: stretch
+  // this means menu button has more verical height which make it easier to hit
+  display: grid
+  align-content: center
 
   div {
     display: none
+
+    color: #444
+    font-family: sans
+    line-height: 1.4rem
+    min-width: 10rem
 
     position: absolute
     top: .5em
     right: 0
     padding: 2rem 1rem .5rem
-    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 1.5rem, #f5f5f5 1.5rem, #f5f5f5)
+    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 1.5rem, #fff 1.5rem, #fff)
     z-index: 5
+
+    margin-top: .4rem
+
+    a {
+      cursor: pointer
+      text-decoration: none
+
+      padding: 0 .3rem
+
+      :hover {
+        background: fuchsia
+        color: white
+      }
+    }
   }
 
-  -open {
+  :hover {
     div {
       display: flex
       flex-direction: column
     }
-  }
-
-  -newMsg {
-    background-color: white
-  }
-
-  -disconnected {
-    background-color: red
   }
 }
 

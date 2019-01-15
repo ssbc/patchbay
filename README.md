@@ -57,9 +57,9 @@ Patchbay doesn't give you a way to join pubs yet, so this is good if you've alre
 
 ### Harder Install (full dev setup)
 
-Install a standalone scuttlebot (your gossip server)
+Install a standalone ssb-server (your gossip server)
 ```sh
-npm install scuttlebot@latest -g
+npm install ssb-server@latest -g
 ```
 
 ```sh

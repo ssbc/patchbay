@@ -1,0 +1,19 @@
+Connection {
+  color: #fff
+
+  i.fa-user-circle-o {
+    cursor: pointer
+
+    -newMsg { color: fuchsia }
+  }
+
+  i.fa-circle-thin {
+    color: white
+
+    -newMsg { color: fuchsia }
+  }
+
+  i.fa-exclamation-circle {
+    color: red
+  }
+}
