@@ -31,7 +31,15 @@ exports.create = function (api) {
       var href = anchor.getAttribute('href')
       if (!href || href === '#') return
 
-      var url = new URL(href)
+      var url
+
+      try {
+        var url = new URL(href)
+      } catch (e) {
+        // In case we pass an invalid URL
+        url = {}
+      }
+
       var opts = {
         altKey: ev.altKey,
         ctrlKey: ev.ctrlKey,
