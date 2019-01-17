@@ -15,7 +15,7 @@ exports.create = (api) => {
 
     console.log('LOADING config')
     config = Config(appName, opts)
-    config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
+    // config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
 
     config = merge(
       config,

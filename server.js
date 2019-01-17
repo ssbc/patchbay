@@ -24,6 +24,7 @@ var createSbot = require('ssb-server')
   .use(require('ssb-private'))
   .use(require('ssb-query'))
   .use(require('ssb-search'))
+  .use(require('ssb-suggest'))
   .use(require('ssb-unread'))
   .use(require('ssb-ws'))
   // .use(require('ssb-mutual')) // this is has recursion problems atm
