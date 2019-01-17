@@ -1,5 +1,6 @@
 const nest = require('depnest')
 const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
+const ssbUri = require('ssb-uri')
 
 exports.gives = nest('router.async.normalise')
 
@@ -20,6 +21,14 @@ exports.create = (api) => {
     // if someone has given you an annoying html encoded location
     if (location.match(/^%25.*%3D.sha256$/)) {
       location = decodeURIComponent(location)
+    }
+
+    if (location.startsWith('ssb:')) {
+      try {
+        location = ssbUri.toSigilLink(location)
+      } catch (err) {
+        cb(err)
+      }
     }
 
     if (isMsg(location)) {

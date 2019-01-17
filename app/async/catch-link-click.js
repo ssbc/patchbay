@@ -1,5 +1,4 @@
 const nest = require('depnest')
-const Url = require('url')
 
 exports.gives = nest('app.async.catchLinkClick')
 
@@ -32,7 +31,7 @@ exports.create = function (api) {
       var href = anchor.getAttribute('href')
       if (!href || href === '#') return
 
-      var url = Url.parse(href)
+      var url = new URL(href)
       var opts = {
         altKey: ev.altKey,
         ctrlKey: ev.ctrlKey,

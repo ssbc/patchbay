@@ -18,9 +18,11 @@ exports.create = function (api) {
     if (_search) return _search
 
     function goToLocation (location, ev) {
+      const prefixes = ['@', '#', '%', '&', '/', 'ssb:']
+
       if (location[0] === '?') {
         location = { page: 'search', query: location.substring(1) }
-      } else if (!['@', '#', '%', '&', '/'].includes(location[0])) {
+      } else if (prefixes.some(p => !location.startsWith(p)) === false) {
         location = { page: 'search', query: location }
       }
 
