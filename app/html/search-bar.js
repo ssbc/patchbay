@@ -22,7 +22,7 @@ exports.create = function (api) {
 
       if (location[0] === '?') {
         location = { page: 'search', query: location.substring(1) }
-      } else if (prefixes.some(p => !location.startsWith(p)) === false) {
+      } else if (prefixes.every(p => !location.startsWith(p))) {
         location = { page: 'search', query: location }
       }
 
