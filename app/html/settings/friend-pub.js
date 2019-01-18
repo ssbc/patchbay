@@ -20,9 +20,10 @@ exports.create = function (api) {
   })
 
   function pubHopConnections () {
-    const pubHopConnections = api.settings.obs.get('patchbay.pubHopConnections', "3")
+    const pubHopAll = 3
+    const pubHopConnections = api.settings.obs.get('patchbay.pubHopConnections', pubHopAll)
     const changeHopSettings = (ev) => {
-      api.settings.sync.set({patchbay: {pubHopConnections: ev.target.value}})
+      api.settings.sync.set({ patchbay: { pubHopConnections: parseInt(ev.target.value) }})
 
       alert("please restart patchbay for this to take effect")
     }
@@ -30,21 +31,22 @@ exports.create = function (api) {
     let pubs = Value({})
 
     const pubHopConnectionsText = computed([pubHopConnections], function(pubHopConnections) {
+      pubHopConnections = parseInt(pubHopConnections)
       onceTrue(api.sbot.obs.connection, sbot => {
-        if (pubHopConnections == "3") // all
+        if (pubHopConnections == pubHopAll)
           pubs.set([])
         else
-          sbot.friendPub.pubsWithinHops(parseInt(pubHopConnections), (err, pubsInHops) => {
+          sbot.friendPub.pubsWithinHops(pubHopConnections, (err, pubsInHops) => {
             pubs.set(pubsInHops)
           })
       })
 
       switch (pubHopConnections) {
-      case "0":
+      case 0:
         return "Own pub only"
-      case "1":
+      case 1:
         return "Pubs run by friends"
-      case "2":
+      case 2:
         return "Pubs run by friends of friends"
       default: // 3
         return "All pubs"

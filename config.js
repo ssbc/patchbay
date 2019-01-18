@@ -22,15 +22,9 @@ exports.create = (api) => {
     config = merge(
       config,
       Connections(config),
-      Remote(config)
+      Remote(config),
+      PubHopSettings(config)
     )
-
-    let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', "3")
-    if (pubHopConnections != "3") {
-      config.friendPub = { hops: parseInt(pubHopConnections) }
-      config.gossip.friends = true
-      config.gossip.global = false
-    }
 
     return config
   })
@@ -51,4 +45,19 @@ function Remote (config) {
     : `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
 
   return remote ? { remote } : {}
+}
+
+function PubHopSettings (config) {
+  const pubHopAll = 3
+  let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
+  if (pubHopConnections != pubHopAll) {
+    return {
+      friendPub: { hops: pubHopConnections },
+      gossip: {
+        friends: true,
+        global: false
+      }
+    }
+  } else
+    return {}
 }
