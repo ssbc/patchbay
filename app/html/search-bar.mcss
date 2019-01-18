@@ -5,8 +5,6 @@ SearchBar {
     padding-left: .7rem
     padding-right: .5rem
 
-    margin-left: 1rem
-
     border-radius: 0
     font-size: .9rem
   }
