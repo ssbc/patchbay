@@ -1,6 +1,5 @@
 const nest = require('depnest')
 const Config = require('ssb-config/inject')
-const ssbKeys = require('ssb-keys')
 const Path = require('path')
 const merge = require('lodash/merge')
 
@@ -15,7 +14,6 @@ exports.create = (api) => {
 
     console.log('LOADING config')
     config = Config(appName, opts)
-    // config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
 
     config = merge(
       config,
@@ -29,8 +27,8 @@ exports.create = (api) => {
 
 function Connections (config) {
   const connections = (process.platform === 'win32')
-    ? undefined // this seems wrong?
-    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth', server: true }] } }
+    ? undefined
+    : { incoming: { unix: [{ scope: 'local', transform: 'noauth', server: true }] } }
 
   return connections ? { connections } : {}
 }
