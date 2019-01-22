@@ -16,6 +16,7 @@ exports.gives = nest({
 
 exports.needs = nest({
   'about.html.avatar': 'first',
+  'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'sbot.obs.connection': 'first',
   'sbot.obs.localPeers': 'first',
@@ -41,7 +42,7 @@ exports.create = function (api) {
     const state = buildState({ api, minsPerStep, scale })
     const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
 
-    const page = h('NetworkPage', { title: '/network' }, [
+    const page = h('NetworkPage', [
       h('div.container', [
         h('h1', 'Network'),
         h('section', [
@@ -80,7 +81,9 @@ exports.create = function (api) {
 
     initialiseChart({ canvas, state })
 
-    return page
+    var { container } = api.app.html.scroller({ prepend: page })
+    container.title = '/network'
+    return container
   }
 }
 
