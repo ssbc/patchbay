@@ -124,7 +124,7 @@ ThreadCard {
         (img) { max-width: 100% }
         (pre) { background-color: #000; }
         (code) { background-color: #000; }
-
+        (a) { color: #db67ed }
       }
     }
 
