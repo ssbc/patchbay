@@ -7,16 +7,20 @@ console.log('STARTING SBOT')
 
 var createSbot = require('ssb-server')
   .use(require('ssb-server/plugins/master'))
-  .use(require('ssb-server/plugins/gossip'))
-  .use(require('ssb-server/plugins/replicate'))
-  .use(require('ssb-server/plugins/invite'))
-  .use(require('ssb-server/plugins/local'))
   .use(require('ssb-server/plugins/logging'))
   .use(require('ssb-server/plugins/unix-socket'))
   .use(require('ssb-server/plugins/no-auth'))
+
+  .use(require('ssb-gossip'))
+  .use(require('ssb-replicate'))
+  .use(require('ssb-friends'))
+  .use(require('ssb-invite'))
+
+  .use(require('ssb-blobs'))
+  .use(require('ssb-ws'))
+
   .use(require('ssb-about'))
   .use(require('ssb-backlinks'))
-  .use(require('ssb-blobs'))
   .use(require('ssb-chess-db'))
   .use(require('ssb-ebt'))
   .use(require('ssb-friends'))
@@ -25,8 +29,8 @@ var createSbot = require('ssb-server')
   .use(require('ssb-query'))
   .use(require('ssb-search'))
   .use(require('ssb-suggest'))
+
   .use(require('ssb-unread'))
-  .use(require('ssb-ws'))
   // .use(require('ssb-mutual')) // this is has recursion problems atm
 
 // pull config options out of depject
