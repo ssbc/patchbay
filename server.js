@@ -10,6 +10,7 @@ var createSbot = require('ssb-server')
   .use(require('ssb-server/plugins/logging'))
   .use(require('ssb-server/plugins/unix-socket'))
   .use(require('ssb-server/plugins/no-auth'))
+  .use(require('ssb-server/plugins/local'))
 
   .use(require('ssb-gossip'))
   .use(require('ssb-replicate'))
