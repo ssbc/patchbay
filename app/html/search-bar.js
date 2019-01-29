@@ -42,6 +42,8 @@ exports.create = function (api) {
         }
       }
     })
+    // NOTE - this input is sometimes set by
+    // function buildSearchBarTermFromLocation (app/html/tabs.js)
 
     input.addEventListener('suggestselect', ev => {
       input.value = ev.detail.id // HACK : this over-rides the markdown value

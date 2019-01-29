@@ -78,6 +78,7 @@
     "patchbay-scry": "^1.5.0",
     "patchcore": "^2.1.4",
     "pull-abortable": "^4.1.1",
+    "pull-merge": "^1.0.4",
     "pull-next-query": "^1.0.0",
     "pull-notify": "^0.1.1",
     "pull-scroll": "^1.0.9",

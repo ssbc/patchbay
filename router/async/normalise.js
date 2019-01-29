@@ -34,12 +34,17 @@ exports.create = (api) => {
       // handles public & private blobs
       // TODO - parse into link and query?
       cb(null, { blob: location })
-    } else if (isChannel(location)) cb(null, { channel: location })
+    } else if (isChannelMulti(location)) cb(null, { channels: location.split('+') })
+    else if (isChannel(location)) cb(null, { channel: location })
     else if (isFeed(location)) cb(null, { feed: location })
     else if (isPage(location)) cb(null, { page: location.substring(1) })
 
     return true
   }
+}
+
+function isChannelMulti (str) {
+  return typeof str === 'string' && str.split('+').every(isChannel)
 }
 
 function isChannel (str) {
