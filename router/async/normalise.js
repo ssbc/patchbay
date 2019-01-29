@@ -44,7 +44,10 @@ exports.create = (api) => {
 }
 
 function isChannelMulti (str) {
-  return typeof str === 'string' && str.split('+').every(isChannel)
+  if (typeof str !== 'string') return false
+
+  const channels = str.split('+')
+  return channels.length > 1 && channels.every(isChannel)
 }
 
 function isChannel (str) {

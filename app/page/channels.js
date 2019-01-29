@@ -40,7 +40,6 @@ exports.create = function (api) {
         ),
         pull.unique(m => m.key)
       )
-   
 
       pull(
         Source({ old: false }),
