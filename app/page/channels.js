@@ -30,13 +30,17 @@ exports.create = function (api) {
     function draw () {
       resetFeed({ container, content })
 
-      const Source = (opts) => pullMerge(
-        channelNames.map(name => api.feed.pull.channel(name)(opts)),
-        (a, b) => {
-          if (opts.reverse) return (a.value.timestamp > b.value.timestamp) ? -1 : +1
-          else return (a.value.timestamp < b.value.timestamp) ? -1 : +1
-        }
+      const Source = (opts) => pull(
+        pullMerge(
+          channelNames.map(name => api.feed.pull.channel(name)(opts)),
+          (a, b) => {
+            if (opts.reverse) return (a.value.timestamp > b.value.timestamp) ? -1 : +1
+            else return (a.value.timestamp < b.value.timestamp) ? -1 : +1
+          }
+        ),
+        pull.unique(m => m.key)
       )
+   
 
       pull(
         Source({ old: false }),
