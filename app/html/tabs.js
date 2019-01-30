@@ -80,6 +80,8 @@ function buildSearchBarTermFromLocation (location) {
   const keys = Object.keys(location)
   if (page && keys.length === 1) return '/' + page
 
+  if (location.channels) return location.channels.join('+')
+
   return keys
     .map(k => location[k])
     .join(', ')
