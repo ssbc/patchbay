@@ -1,6 +1,6 @@
 const nest = require('depnest')
 const extend = require('xtend')
-const { isFeed, isMsg, isBlob } = require('ssb-ref')
+const { isFeed, isBlob } = require('ssb-ref')
 const { h } = require('mutant')
 
 exports.gives = nest('message.html.render')

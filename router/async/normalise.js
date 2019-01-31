@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
+const { isBlobLink, isFeed, isMsg, parseLink } = require('ssb-ref')
 const ssbUri = require('ssb-uri')
 
 exports.gives = nest('router.async.normalise')
@@ -31,12 +31,19 @@ exports.create = (api) => {
       }
     }
 
-    if (isMsg(location)) {
-      api.sbot.async.get(location, (err, value) => {
+    var link = parseLink(location)
+
+    if (link && isMsg(link.link)) {
+      var params = { id: link.link }
+      if (link.query && link.query.unbox) {
+        params.private = true
+        params.unbox = link.query.unbox
+      }
+      api.sbot.async.get(params, function (err, value) {
         if (err) cb(err)
         else {
           if (typeof value.content === 'string') value = api.message.sync.unbox(value)
-          cb(null, { key: location, value })
+          cb(null, { key: link.link, value })
         }
       })
     } else if (isBlobLink(location)) {
