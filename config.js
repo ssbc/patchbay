@@ -1,13 +1,9 @@
 const nest = require('depnest')
 const Config = require('ssb-config/inject')
-const ssbKeys = require('ssb-keys')
 const Path = require('path')
 const merge = require('lodash/merge')
 // settings not available in api yet, so we need to load it manually
 const settings = require('patch-settings').patchSettings
-
-const appName = process.env.ssb_appname || 'ssb'
-const opts = appName === 'ssb' ? null : null
 
 exports.gives = nest('config.sync.load')
 exports.create = (api) => {
@@ -16,35 +12,39 @@ exports.create = (api) => {
     if (config) return config
 
     console.log('LOADING config')
-    config = Config(appName, opts)
-    config.keys = ssbKeys.loadOrCreateSync(Path.join(config.path, 'secret'))
+    config = Config(process.env.ssb_appname || 'ssb')
 
-    config = merge(
-      config,
-      Connections(config),
-      Remote(config),
-      PubHopSettings(config)
-    )
+    config = addSockets(config)
+    config = fixLocalhost(config)
+    config = PubHopSettings(config)
 
     return config
   })
 }
 
-function Connections (config) {
-  const connections = (process.platform === 'win32')
-    ? undefined // this seems wrong?
-    : { incoming: { unix: [{ 'scope': 'local', 'transform': 'noauth', server: true }] } }
+function addSockets (config) {
+  if (process.platform === 'win32') return config
 
-  return connections ? { connections } : {}
+  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
+  return merge(
+    config,
+    {
+      connections: {
+        incoming: { unix: [{ scope: 'local', transform: 'noauth', server: true }] }
+      },
+      remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}` // overwrites
+    }
+  )
 }
 
-function Remote (config) {
-  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
-  const remote = (process.platform === 'win32')
-    ? undefined // `net:127.0.0.1:${config.port}~shs:${pubkey}` // currently broken
-    : `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}`
+function fixLocalhost (config) {
+  if (process.platform !== 'win32') return config
 
-  return remote ? { remote } : {}
+  // without this host defaults to :: which doesn't work on windows 10?
+  config.connections.incoming.net[0].host = '127.0.0.1'
+  config.connections.incoming.ws[0].host = '127.0.0.1'
+  config.host = '127.0.0.1'
+  return config
 }
 
 function PubHopSettings (config) {

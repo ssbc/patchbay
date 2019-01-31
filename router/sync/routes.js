@@ -10,6 +10,7 @@ exports.needs = nest({
     'blogs': 'first',
     'errors': 'first',
     'channel': 'first',
+    'channels': 'first',
     'imageSearch': 'first',
     'network': 'first',
     'notifications': 'first',
@@ -51,6 +52,7 @@ exports.create = (api) => {
       [ loc => loc.page === 'shortcuts', pages.shortcuts ],
 
       [ loc => loc.blob && isBlobLink(loc.blob), pages.blob ],
+      [ loc => isPresent(loc.channels), pages.channels ],
       [ loc => isPresent(loc.channel), pages.channel ],
       [ loc => isFeed(loc.feed), pages.profile ],
       [ loc => isMsg(loc.key), pages.thread ]
@@ -62,5 +64,8 @@ exports.create = (api) => {
 }
 
 function isPresent (content) {
-  return typeof content === 'string' && content.length > 1
+  return (
+    (typeof content === 'string' && content.length > 1) ||
+    (Array.isArray(content) && content.length > 1)
+  )
 }

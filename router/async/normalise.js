@@ -1,5 +1,6 @@
 const nest = require('depnest')
 const { isBlobLink, isFeed, isMsg } = require('ssb-ref')
+const ssbUri = require('ssb-uri')
 
 exports.gives = nest('router.async.normalise')
 
@@ -22,6 +23,14 @@ exports.create = (api) => {
       location = decodeURIComponent(location)
     }
 
+    if (location.startsWith('ssb:')) {
+      try {
+        location = ssbUri.toSigilLink(location)
+      } catch (err) {
+        cb(err)
+      }
+    }
+
     if (isMsg(location)) {
       api.sbot.async.get(location, (err, value) => {
         if (err) cb(err)
@@ -34,12 +43,20 @@ exports.create = (api) => {
       // handles public & private blobs
       // TODO - parse into link and query?
       cb(null, { blob: location })
-    } else if (isChannel(location)) cb(null, { channel: location })
+    } else if (isChannelMulti(location)) cb(null, { channels: location.split('+') })
+    else if (isChannel(location)) cb(null, { channel: location })
     else if (isFeed(location)) cb(null, { feed: location })
     else if (isPage(location)) cb(null, { page: location.substring(1) })
 
     return true
   }
+}
+
+function isChannelMulti (str) {
+  if (typeof str !== 'string') return false
+
+  const channels = str.split('+')
+  return channels.length > 1 && channels.every(isChannel)
 }
 
 function isChannel (str) {

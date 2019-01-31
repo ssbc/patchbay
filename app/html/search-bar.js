@@ -18,9 +18,11 @@ exports.create = function (api) {
     if (_search) return _search
 
     function goToLocation (location, ev) {
+      const prefixes = ['@', '#', '%', '&', '/', 'ssb:']
+
       if (location[0] === '?') {
         location = { page: 'search', query: location.substring(1) }
-      } else if (!['@', '#', '%', '&', '/'].includes(location[0])) {
+      } else if (prefixes.every(p => !location.startsWith(p))) {
         location = { page: 'search', query: location }
       }
 
@@ -42,6 +44,8 @@ exports.create = function (api) {
         }
       }
     })
+    // NOTE - this input is sometimes set by
+    // function buildSearchBarTermFromLocation (app/html/tabs.js)
 
     input.addEventListener('suggestselect', ev => {
       input.value = ev.detail.id // HACK : this over-rides the markdown value
