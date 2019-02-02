@@ -1,11 +1,12 @@
 const nest = require('depnest')
-const { h, map, computed, when } = require('mutant')
+const { h, map, computed, when, Value } = require('mutant')
 
 exports.gives = nest('contact.html.relationships')
 
 exports.needs = nest({
-  'about.html.image': 'first',
-  'about.obs.name': 'first',
+  // 'about.html.image': 'first',
+  'about.html.avatar': 'first',
+  // 'about.obs.name': 'first',
   'contact.async.follow': 'first',
   'contact.async.unfollow': 'first',
   'contact.async.block': 'first',
@@ -22,103 +23,112 @@ exports.create = function (api) {
     'contact.html.relationships': relationships
   })
 
-  function relationships (id) {
-    var rawFollowing = api.contact.obs.following(id)
-    var rawFollowers = api.contact.obs.followers(id)
+  function relationships (feedId) {
+    const rawFollowing = api.contact.obs.following(feedId)
+    const rawFollowers = api.contact.obs.followers(feedId)
 
-    var friends = computed([rawFollowing, rawFollowers], (following, followers) => {
+    // mix: TODO rework this
+    const friends = computed([rawFollowing, rawFollowers], (following, followers) => {
       return [...following].filter(follow => followers.includes(follow))
     })
-    var following = computed([rawFollowing, friends], (following, friends) => {
+    const following = computed([rawFollowing, friends], (following, friends) => {
       return [...following].filter(follow => !friends.includes(follow))
     })
-    var followers = computed([rawFollowers, friends], (followers, friends) => {
+    const followers = computed([rawFollowers, friends], (followers, friends) => {
       return [...followers].filter(follower => !friends.includes(follower))
     })
+    const blockers = api.contact.obs.blockers(feedId)
+    const blocking = api.contact.obs.blocking(feedId)
 
-    var myId = api.keys.sync.id()
-    var ImFollowing = api.contact.obs.following(myId)
-    var IFollowThem = computed([ImFollowing], ImFollowing => ImFollowing.includes(id))
-    var theyFollowMe = computed([rawFollowing], following => following.includes(myId))
-
-    var relationshipStatus = computed([IFollowThem, theyFollowMe], (IFollowThem, theyFollowMe) => {
-      return IFollowThem && theyFollowMe ? '- you are friends'
-        : IFollowThem ? '- you follow them'
-          : theyFollowMe ? '- they follow you'
-            : ''
-    })
-
-    function imageLink (id) {
-      return h('a',
-        { href: id, title: computed(api.about.obs.name(id), name => '@' + name) },
-        api.about.html.image(id)
-      )
+    const modes = [
+      { label: 'Friends', data: friends },
+      { label: 'Follows', data: following },
+      { label: 'Followers', data: followers },
+      { label: 'Blocked by', data: blockers, hideEmpty: true },
+      { label: 'Blocking', data: blocking, hideEmpty: true }
+    ]
+    const mode = Value(0)
+    const setMode = (i) => {
+      if (mode() === i) mode.set()
+      else mode.set(i)
     }
 
-    const { unfollow, follow, block, unblock } = api.contact.async
-    const blockers = api.contact.obs.blockers(id)
-    const blocking = api.contact.obs.blocking(id)
-    const ImBlockingThem = computed(blockers, blockers => blockers.includes(myId))
+    const avatar = api.about.html.avatar
 
     return h('Relationships', [
       h('header', 'Relationships'),
-      id !== myId
-        ? h('div.your-status', [
-          h('header', 'Your status'),
-          h('section -friendship', [
-            when(ImFollowing.sync,
-              when(IFollowThem,
-                h('button', { 'ev-click': () => unfollow(id) }, 'Unfollow'),
-                h('button', { 'ev-click': () => follow(id) }, 'Follow')
-              ),
-              h('button', { disabled: 'disabled' }, 'Loading...')
-            ),
-            when(ImFollowing.sync, h('div.relationship-status', relationshipStatus))
-          ]),
-          h('section -blocking', [
-            when(ImBlockingThem,
-              h('button', { 'ev-click': () => unblock(id, console.log) }, 'unblock'),
-              h('button', { 'ev-click': () => block(id, console.log) }, 'BLOCK')
-            ),
-            h('div.explainer', [
-              "Blocking tells everyone you don't want to communicate with a person.",
-              h('ul', [
-                h('li', 'You will no longer receive messages from this person'),
-                h('li', "This person won't get any new information about you (including this block)"),
-                h('li', "Your followers will see you have blocked this person - their apps need to know so that they don't pass your information on.")
-              ])
-            ])
-          ])
-        ])
-        : undefined,
-      computed(blockers, blockers => {
-        if (blockers.length === 0) return ''
+      RelationshipStatus({ feedId, rawFollowing, blockers, api }),
 
-        return h('div.blockers', [
-          h('header', 'Blocked by'),
-          h('section', blockers.map(imageLink))
-        ])
-      }),
-      h('div.friends', [
-        h('header', 'Friends'),
-        h('section', map(friends, imageLink))
-      ]),
-      h('div.follows', [
-        h('header', 'Follows'),
-        h('section', map(following, imageLink))
-      ]),
-      h('div.followers', [
-        h('header', 'Followers'),
-        h('section', map(followers, imageLink))
-      ]),
-      computed(blocking, blocking => {
-        if (blocking.length === 0) return ''
+      h('div.groups', [
+        h('div.tabs', modes.map(({ label, data, hideEmpty }, i) => {
+          return computed([data, mode], (d, mode) => {
+            if (hideEmpty && !d.length) return
 
-        return h('div.blocking', [
-          h('header', 'Blocking'),
-          h('section', blocking.map(imageLink))
-        ])
-      })
+            return h('div.tab',
+              {
+                className: mode === i ? '-active' : '',
+                'ev-click': () => setMode(i)
+              },
+              [
+                h('div.label', label),
+                h('div.count', d.length > 50 ? '50+' : d.length)
+              ]
+            )
+          })
+        })),
+        h('div.group', computed(mode, i => {
+          if (i === null) return
+
+          const { data } = modes[i]
+          return map(data, avatar)
+        }))
+      ])
     ])
   }
+}
+
+function RelationshipStatus ({ feedId, rawFollowing, blockers, api }) {
+  const myId = api.keys.sync.id()
+  if (feedId === myId) return
+
+  // mix: TODO oh lord this is ugly, refactor it !
+  const ImFollowing = api.contact.obs.following(myId)
+  const IFollowThem = computed([ImFollowing], ImFollowing => ImFollowing.includes(feedId))
+  const theyFollowMe = computed([rawFollowing], following => following.includes(myId))
+  const ImBlockingThem = computed(blockers, blockers => blockers.includes(myId))
+
+  const relationshipStatus = computed([IFollowThem, theyFollowMe], (IFollowThem, theyFollowMe) => {
+    return IFollowThem && theyFollowMe ? '- you are friends'
+      : IFollowThem ? '- you follow them'
+        : theyFollowMe ? '- they follow you'
+          : ''
+  })
+  const { unfollow, follow, block, unblock } = api.contact.async
+
+  return h('div.relationship-status', [
+    h('section -friendship', [
+      when(ImFollowing.sync,
+        when(IFollowThem,
+          h('button', { 'ev-click': () => unfollow(feedId) }, 'Unfollow'),
+          h('button', { 'ev-click': () => follow(feedId) }, 'Follow')
+        ),
+        h('button', { disabled: 'disabled' }, 'Loading...')
+      ),
+      when(ImFollowing.sync, h('div.relationship-status', relationshipStatus))
+    ]),
+    h('section -blocking', [
+      when(ImBlockingThem,
+        h('button -subtle', { 'ev-click': () => unblock(feedId, console.log) }, [ h('i.fa.fa-ban'), 'unblock' ]),
+        h('button -subtle', { 'ev-click': () => block(feedId, console.log) }, [ h('i.fa.fa-ban'), 'BLOCK' ])
+      ),
+      h('div.explainer', [
+        "Blocking tells everyone you don't want to communicate with a person.",
+        h('ul', [
+          h('li', 'You will no longer receive messages from this person'),
+          h('li', "This person won't get any new information about you (including this block)"),
+          h('li', "Your followers will see you have blocked this person - their apps need to know so that they don't pass your information on.")
+        ])
+      ])
+    ])
+  ])
 }

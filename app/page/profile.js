@@ -1,8 +1,9 @@
 const nest = require('depnest')
 const Scroller = require('pull-scroll')
 const pull = require('pull-stream')
-const { h, watch } = require('mutant')
+const { h, watch, onceTrue, map, Dict, dictToCollection } = require('mutant')
 const next = require('pull-next-query')
+const Mutual = require('ssb-mutual')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -17,7 +18,8 @@ exports.needs = nest({
   'contact.html.relationships': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first',
-  'sbot.pull.stream': 'first'
+  'sbot.pull.stream': 'first',
+  'sbot.obs.connection': 'first'
 })
 
 exports.create = function (api) {
@@ -34,9 +36,25 @@ exports.create = function (api) {
 
   function profilePage (location) {
     const { feed: id } = location
+
+    var balances = Dict()
+    onceTrue(api.sbot.obs.connection, sbot => {
+      if (!sbot.links) throw new Error('where ma sbot.links at?!')
+      var mutual = Mutual.init(sbot)
+      mutual.getAccountBalances(id, (err, data) => {
+        if (err) console.log(err)
+        if (data == null) return
+
+        balances.set(data)
+      })
+    })
+
     const profile = h('Profile', [
       h('section.edit', api.about.html.edit(id)),
       h('section.relationships', api.contact.html.relationships(id)),
+      h('section.credit', map(dictToCollection(balances), balance => {
+        return h('div', ['💰 ', balance.value, ' ', balance.key])
+      })),
       h('section.activity', [
         h('header', 'Activity')
         // ideally the scroller content would go in here
