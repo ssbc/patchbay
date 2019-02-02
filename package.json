@@ -112,6 +112,7 @@
     "ssb-sort": "^1.1.0",
     "ssb-suggest": "^1.0.3",
     "ssb-unread": "^1.0.2",
+    "ssb-uri": "^1.0.1",
     "ssb-ws": "^4.0.1",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",
