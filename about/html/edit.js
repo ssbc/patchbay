@@ -4,10 +4,9 @@ const hyperfile = require('hyperfile')
 const hypercrop = require('hypercrop')
 const {
   h, Value, Dict, Struct,
-  map, computed, when, dictToCollection, onceTrue
+  map, computed, when, dictToCollection
 } = require('mutant')
 const pull = require('pull-stream')
-const Mutual = require('ssb-mutual')
 
 exports.gives = nest('about.html.edit')
 
@@ -26,7 +25,6 @@ exports.needs = nest({
   'message.html.markdown': 'first',
   sbot: {
     'async.addBlob': 'first',
-    'obs.connection': 'first',
     'pull.links': 'first'
   }
 })
@@ -88,18 +86,6 @@ exports.create = function (api) {
       else return name.current
     })
 
-    var balances = Dict()
-    onceTrue(api.sbot.obs.connection, sbot => {
-      if (!sbot.links) throw new Error('where ma sbot.links at?!')
-      var mutual = Mutual.init(sbot)
-      mutual.getAccountBalances(id, (err, data) => {
-        if (err) console.log(err)
-        if (data == null) return
-
-        balances.set(data)
-      })
-    })
-
     const modalContent = Value()
     const isOpen = Value(false)
     const modal = api.app.html.modal(modalContent, { isOpen })
@@ -115,9 +101,6 @@ exports.create = function (api) {
       h('section.description', computed(api.about.obs.description(id), (descr) => {
         if (descr == null) return '' // TODO: should be in patchcore, I think...
         return api.message.html.markdown(descr)
-      })),
-      h('section.credit', map(dictToCollection(balances), balance => {
-        return h('div', ['💰 ', balance.value, ' ', balance.key])
       })),
       h('section.aliases', [
         h('header', 'Aliases'),

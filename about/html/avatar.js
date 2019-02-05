@@ -14,7 +14,7 @@ exports.needs = nest({
 exports.create = function (api) {
   return nest('about.html.avatar', avatar)
 
-  function avatar (id, size = 4) {
+  function avatar (id, size) {
     const src = api.about.obs.imageUrl(id)
     const color = computed(src, src => src.match(/^http/) ? 'rgba(0,0,0,0)' : api.about.obs.color(id))
 
@@ -25,8 +25,14 @@ exports.create = function (api) {
       })
     )
     avatar.classList.add('Avatar')
-    avatar.style.setProperty('--avatar-size', isNaN(size) ? size : `${size}rem`)
+    avatar.style.setProperty('--avatar-size', getSize(size))
 
     return avatar
   }
+}
+
+function getSize (size) {
+  if (typeof size === 'number') return `${size}rem`
+  if (typeof size === 'string' && size.length) return size
+  return '4rem'
 }

@@ -1,41 +1,19 @@
 Relationships {
+  margin-bottom: 2rem
+
   header {
     margin-bottom: .8rem
     border-bottom: 1px gainsboro solid
   }
 
-  div {
+  div.relationship-status {
+    margin: 0 
+    margin-bottom: 1rem
+
     display: flex
-    flex-wrap: wrap
     justify-content: space-between
-    align-content: flex-start
-
-    min-height: 5rem
-    margin-bottom: 2rem
-
-    header {
-      flex-basis: 100%
-      
-      $textSubtle
-      font-size: .9rem
-      
-      margin-bottom: .2rem
-    }
-
-    section a {
-      margin-right: .2rem
-
-      img { $avatar-small }
-    }
-  }
-
-  div.your-status {
-    justify-content: flex-start
     align-items: center
 
-    margin: 0 
-
-    display: flex
 
     section {
       button { margin: 0 }
@@ -52,14 +30,16 @@ Relationships {
         margin-left: 8rem
         position: relative
 
-        button {}
+        button {
+          i.fa { margin-right: .5rem }
+        }
 
         div.explainer {
           visibility: hidden
           position: absolute
           background: #fff
           width: 24rem
-          left: 1rem
+          left: -20rem
           bottom: 2rem
           padding: .5rem
           box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 8px
@@ -77,34 +57,46 @@ Relationships {
         }
       }
     }
-
   }
 
-  div.friends {
-    section a {
-      margin: 0 .2rem 0.2rem 0
+  div.groups {
+    div.tabs {
+      display: grid
+      grid-auto-flow: column
+      justify-content: start
+      grid-gap: 2rem
 
-      img { 
-        $avatar-large
+      div.tab {
+        color: #777
+        cursor: pointer
+        padding-bottom: .5rem
+        border-bottom: 2px solid #fff
+
+        margin: 1rem 0 .5rem
+
+        -active { border-bottom: 2px solid #666 }
+        :hover { color: #9754de }
+
+        display: grid
+        grid-auto-flow: column
+        grid-gap: .5rem
+
+        div.label {
+          text-transform: uppercase 
+          letter-spacing: 1px
+          font-size: .8rem
+          font-weight: 600
+        }
+        div.count {
+          font-size: .8rem
+          color: #999
+        }
       }
     }
-  }
 
-  div.follows {
-  }
-
-  div.followers {
+    div.group {
+      display: grid
+      grid-template-columns: repeat(auto-fit, 4rem)
+    }
   }
 }
-
-$avatar-large {
-  width: 56px
-  height: 56px
-}
-
-$avatar-small {
-  width: 32px
-  height: 32px
-}
-
-
