@@ -51,13 +51,15 @@ function PubHopSettings (config) {
   const pubHopAll = 3
   let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
   if (pubHopConnections != pubHopAll) {
-    return {
-      friendPub: { hops: pubHopConnections },
-      gossip: {
-        friends: true,
-        global: false
-      }
-    }
+    return merge(
+      config,
+      {
+        friendPub: { hops: pubHopConnections },
+        gossip: {
+          friends: true,
+          global: false
+        }
+      })
   } else
-    return {}
+    return config
 }
