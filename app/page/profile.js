@@ -16,6 +16,7 @@ exports.needs = nest({
   'app.html.scroller': 'first',
   'app.sync.goTo': 'first',
   'contact.html.relationships': 'first',
+  'contact.html.stats': 'first',
   'keys.sync.id': 'first',
   'message.html.render': 'first',
   'sbot.pull.stream': 'first',
@@ -55,6 +56,7 @@ exports.create = function (api) {
       h('section.credit', map(dictToCollection(balances), balance => {
         return h('div', ['💰 ', balance.value, ' ', balance.key])
       })),
+      h('section.stats', api.contact.html.stats(id)),
       h('section.activity', [
         h('header', 'Activity')
         // ideally the scroller content would go in here

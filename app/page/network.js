@@ -195,7 +195,6 @@ function getData ({ data, server, minsPerStep, scale }) {
   )
 }
 
-
 function toTimeBlock (ts, minsPerStep) {
   return Math.floor(ts / (minsPerStep * MINUTE)) * (minsPerStep * MINUTE)
 }
