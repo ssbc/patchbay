@@ -135,7 +135,7 @@ function getData ({ data, server, feedId, minsPerStep, scale }) {
       }
     }, {
       $map: {
-        ts: ['timestamp'],
+        ts: ['value', 'timestamp'],
         content: ['value', 'content']
       }
     }
