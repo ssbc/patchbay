@@ -16,7 +16,8 @@ exports.create = (api) => {
 
     config = addSockets(config)
     config = fixLocalhost(config)
-    config = PubHopSettings(config)
+    config = pubHopSettings(config)
+    config = torOnly(config)
 
     return config
   })
@@ -47,7 +48,7 @@ function fixLocalhost (config) {
   return config
 }
 
-function PubHopSettings (config) {
+function pubHopSettings (config) {
   const pubHopAll = 3
   let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
   if (pubHopConnections != pubHopAll) {
@@ -60,6 +61,22 @@ function PubHopSettings (config) {
           global: false
         }
       })
+  } else
+    return config
+}
+
+function torOnly (config) {
+  if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
+    config = merge(config, {
+      connections: {
+        outgoing: {
+          "onion": [{ "transform": "shs" }]
+        }
+      }
+    })
+
+    delete config.connections.outgoing.net
+    return config
   } else
     return config
 }
