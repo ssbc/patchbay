@@ -1,0 +1,8 @@
+FriendPub {
+  div {
+    input[type=range] {
+      vertical-align: middle
+      margin-left: 15px
+    }
+  }
+}

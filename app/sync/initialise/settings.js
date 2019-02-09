@@ -19,7 +19,8 @@ const defaults = {
       brightness: 100,
       contrast: 100
     },
-    customStyles: defaultStyles()
+    customStyles: defaultStyles(),
+    pubHopConnections: 3 // all
   },
   filter: {
     exclude: {
