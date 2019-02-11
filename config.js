@@ -2,6 +2,8 @@ const nest = require('depnest')
 const Config = require('ssb-config/inject')
 const Path = require('path')
 const merge = require('lodash/merge')
+// settings not available in api yet, so we need to load it manually
+const settings = require('patch-settings').patchSettings
 
 exports.gives = nest('config.sync.load')
 exports.create = (api) => {
@@ -14,6 +16,8 @@ exports.create = (api) => {
 
     config = addSockets(config)
     config = fixLocalhost(config)
+    config = pubHopSettings(config)
+    config = torOnly(config)
 
     return config
   })
@@ -42,4 +46,37 @@ function fixLocalhost (config) {
   config.connections.incoming.ws[0].host = '127.0.0.1'
   config.host = '127.0.0.1'
   return config
+}
+
+function pubHopSettings (config) {
+  const pubHopAll = 3
+  let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
+  if (pubHopConnections != pubHopAll) {
+    return merge(
+      config,
+      {
+        friendPub: { hops: pubHopConnections },
+        gossip: {
+          friends: true,
+          global: false
+        }
+      })
+  } else
+    return config
+}
+
+function torOnly (config) {
+  if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
+    config = merge(config, {
+      connections: {
+        outgoing: {
+          "onion": [{ "transform": "shs" }]
+        }
+      }
+    })
+
+    delete config.connections.outgoing.net
+    return config
+  } else
+    return config
 }
