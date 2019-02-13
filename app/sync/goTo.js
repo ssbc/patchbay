@@ -32,7 +32,8 @@ exports.create = function (api) {
 
     // currently do normalisation here only to generate normalised locationId
     api.router.async.normalise(location, (err, loc) => {
-      if (err) throw err
+      if (err) return console.error(err)
+
       const locationId = api.app.sync.locationId(loc)
 
       var page = tabs.get(locationId)

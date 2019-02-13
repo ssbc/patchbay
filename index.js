@@ -66,6 +66,7 @@ function openMainWindow () {
   windows.main = openWindow(Path.join(__dirname, 'main.js'), {
     title: 'Patchbay',
     show: true,
+
     x: windowState.x,
     y: windowState.y,
     minWidth: 800,

@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, Value, Dict, onceTrue, computed, watch, watchAll, throttle } = require('mutant')
+const { h, Value, Dict, dictToCollection, onceTrue, computed, watch, watchAll, throttle } = require('mutant')
 const Chart = require('chart.js')
 const pull = require('pull-stream')
 
@@ -68,6 +68,39 @@ exports.create = function (api) {
           })
         ]),
         h('section', [
+          h('h2', 'My state'),
+          // mix: hello friend, this area is a total Work In Progress. It's a mess but useful diagnostics.
+          // Let's redesign and revisit it aye!
+          h('div', ['My sequence: ', state.seq]),
+          h('div', [
+            'Replicated:',
+            h('div', computed([state.seq, dictToCollection(state.replication)], (seq, replication) => {
+              return replication.map(r => {
+                if (!r.value.replicating) {
+                  return h('div', [
+                    h('code', r.key),
+                    ' no ebt data'
+                  ])
+                }
+
+                const { requested, sent } = r.value.replicating
+                // TODO report that r.value.seq is NOT the current local value of the seq (well it's ok, just just gets out of sync)
+                // const reqDiff = requested - r.value.seq
+                const reqDiff = requested - seq
+                const sentDiff = sent - seq
+
+                return h('div', [
+                  h('code', r.key),
+                  ` - requested: ${requested} `,
+                  reqDiff === 0 ? h('i.fa.fa-check-circle-o') : `(${reqDiff})`,
+                  `, sent: ${sent} `,
+                  sentDiff === 0 ? h('i.fa.fa-check-circle-o') : `(${sentDiff})`
+                ])
+              })
+            }))
+          ])
+        ]),
+        h('section', [
           h('h2', [
             'Received Messages',
             h('i.fa.fa-question-circle-o', {
@@ -128,6 +161,30 @@ function initialiseChart ({ canvas, state: { data, range } }) {
 // ///// HELPERS /////
 
 function buildState ({ api, minsPerStep, scale }) {
+  // build localPeers, remotePeers
+  const localPeers = throttle(api.sbot.obs.localPeers(), 1000)
+  const remotePeers = computed([localPeers, throttle(api.sbot.obs.connectedPeers(), 1000)], (local, connected) => {
+    return connected.filter(peer => !local.includes(peer))
+  })
+
+  // build seq, replication (my current state, and replicated state)
+  const seq = Value()
+  const replication = Dict({})
+  onceTrue(api.sbot.obs.connection, server => {
+    setInterval(() => {
+      // TODO check ebt docs if this is best method
+      server.ebt.peerStatus(server.id, (err, data) => {
+        if (err) return console.error(err)
+
+        seq.set(data.seq)
+        for (var peer in data.peers) {
+          replication.put(peer, data.peers[peer])
+        }
+      })
+    }, 5e3)
+  })
+
+  // build data, range
   const data = Dict({
     [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE]: 0,
     [toTimeBlock(Date.now(), minsPerStep) + minsPerStep * MINUTE - scale]: 0
@@ -148,17 +205,13 @@ function buildState ({ api, minsPerStep, scale }) {
       lower: latest + minsPerStep * MINUTE - scale
     }
   })
-
-  const localPeers = throttle(api.sbot.obs.localPeers(), 1000)
-  const remotePeers = computed([localPeers, throttle(api.sbot.obs.connectedPeers(), 1000)], (local, connected) => {
-    return connected.filter(peer => !local.includes(peer))
-  })
-
   return {
-    data,
-    range,
     localPeers,
-    remotePeers
+    remotePeers,
+    seq,
+    replication,
+    data, // TODO rename this !!
+    range
   }
 }
 

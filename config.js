@@ -12,7 +12,9 @@ exports.create = (api) => {
     if (config) return config
 
     console.log('LOADING config')
-    config = Config(process.env.ssb_appname || 'ssb')
+    config = Config(process.env.ssb_appname || 'ssb', {
+      // friends: { hops: 2 }
+    })
 
     config = addSockets(config)
     config = fixLocalhost(config)
@@ -51,18 +53,17 @@ function fixLocalhost (config) {
 function pubHopSettings (config) {
   const pubHopAll = 3
   let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
-  if (pubHopConnections != pubHopAll) {
-    return merge(
-      config,
-      {
-        friendPub: { hops: pubHopConnections },
-        gossip: {
-          friends: true,
-          global: false
-        }
-      })
-  } else
-    return config
+  if (pubHopConnections === pubHopAll) return config
+
+  return merge(
+    config,
+    {
+      friendPub: { hops: pubHopConnections },
+      gossip: {
+        friends: true,
+        global: false
+      }
+    })
 }
 
 function torOnly (config) {
@@ -70,13 +71,12 @@ function torOnly (config) {
     config = merge(config, {
       connections: {
         outgoing: {
-          "onion": [{ "transform": "shs" }]
+          'onion': [{ 'transform': 'shs' }]
         }
       }
     })
 
     delete config.connections.outgoing.net
     return config
-  } else
-    return config
+  } else { return config }
 }
