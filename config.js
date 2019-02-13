@@ -18,8 +18,8 @@ exports.create = (api) => {
 
     config = addSockets(config)
     config = fixLocalhost(config)
-    config = pubHopSettings(config)
-    config = torOnly(config)
+    // config = pubHopSettings(config)
+    // config = torOnly(config)
 
     return config
   })
