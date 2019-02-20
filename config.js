@@ -12,8 +12,12 @@ exports.create = (api) => {
     if (config) return config
 
     console.log('LOADING config')
-    config = Config(process.env.ssb_appname || 'ssb', {
-      // friends: { hops: 2 }
+    config = Config(process.env.ssb_appname || 'ssb-patchbay', {
+      port: 38008, // followbot port
+      ws: {
+        port: 38989
+      },
+      friends: { hops: 2 }
     })
 
     config = addSockets(config)
