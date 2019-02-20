@@ -37,10 +37,7 @@ followbot('ssb-patchbay', {
 }, (err, sbot) => {
   if (err) throw err
 
-  // for some reason have to delay start otherwise blank
-  // setTimeout(() => {
-    electron.ipcRenderer.send('server-started')
-  // }, 15000)
+  electron.ipcRenderer.send('server-started')
 
   setInterval(() => {
     console.log(sbot.progress())
