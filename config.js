@@ -33,7 +33,7 @@ function addSockets (config) {
     config,
     {
       connections: {
-        incoming: { unix: [{ scope: 'local', transform: 'noauth', server: true }] }
+        incoming: { unix: [{ scope: 'device', transform: 'noauth', server: true }] }
       },
       remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}` // overwrites
     }
