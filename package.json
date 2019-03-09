@@ -98,7 +98,7 @@
     "ssb-ebt": "^5.3.11",
     "ssb-friend-pub": "^1.0.4",
     "ssb-friends": "^3.1.12",
-    "ssb-gossip": "^1.0.5",
+    "ssb-legacy-conn": "1.0.17",
     "ssb-invite": "^2.0.3",
     "ssb-meme": "^1.0.4",
     "ssb-mentions": "^0.5.0",
