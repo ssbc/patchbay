@@ -18,8 +18,11 @@ exports.create = (api) => {
 
     config = addSockets(config)
     config = fixLocalhost(config)
-    // config = pubHopSettings(config)
-    // config = torOnly(config)
+
+    if (false) {  // TODO figure out how to check if this is being run in/ out of electron
+      config = pubHopSettings(config)
+      config = torOnly(config)
+    }
 
     return config
   })
