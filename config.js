@@ -12,7 +12,10 @@ exports.create = (api) => {
     if (config) return config
 
     console.log('LOADING config')
+    var rootConfig = Config()
+
     config = Config(process.env.ssb_appname || 'ssb-patchbay', {
+      keys: rootConfig.keys,
       port: 38008, // followbot port
       ws: {
         port: 38989

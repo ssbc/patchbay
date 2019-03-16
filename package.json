@@ -95,7 +95,7 @@
     "ssb-blobs": "^1.1.12",
     "ssb-chess-db": "^1.0.5",
     "ssb-chess-mithril": "^1.0.7",
-    "ssb-config": "^3.2.3",
+    "ssb-config": "github:ssbc/ssb-config#override-keys",
     "ssb-ebt": "^5.3.11",
     "ssb-friend-pub": "^1.0.4",
     "ssb-friends": "^4.0.0",
