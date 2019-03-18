@@ -38,8 +38,10 @@ ahoy({
   title: 'Patchbay',
   config,
   plugins,
-  modulesDir: join(__dirname, 'node_modules'),
-  uiPath: join(__dirname, 'main.js'),
+  // modulesDir: join(__dirname, 'node_modules'),
+  modulesDir: '../../../../node_modules',
+  // uiPath: join(__dirname, 'main.js'),
+  uiPath: './main.js',
   onReady: (state) => {
     StartMenus(state)
   }
