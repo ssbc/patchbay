@@ -1,5 +1,4 @@
 const ahoy = require('ssb-ahoy')
-const { join } = require('path')
 const electron = require('electron')
 const defaultMenu = require('electron-default-menu')
 
@@ -34,18 +33,17 @@ const plugins = [
   'ssb-unread'
 ]
 
-ahoy({
-  title: 'Patchbay',
-  config,
-  plugins,
-  // modulesDir: join(__dirname, 'node_modules'),
-  modulesDir: '../../../../node_modules',
-  // uiPath: join(__dirname, 'main.js'),
-  uiPath: './main.js',
-  onReady: (state) => {
+ahoy(
+  {
+    title: 'Patchbay',
+    config,
+    plugins,
+    uiPath: './main.js'
+  },
+  (state) => {
     StartMenus(state)
   }
-})
+)
 
 function StartMenus ({ windows }) {
   const menu = defaultMenu(electron.app, electron.shell)
