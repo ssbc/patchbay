@@ -19,9 +19,12 @@ exports.create = (api) => {
     config = addSockets(config)
     config = fixLocalhost(config)
 
-    if (false) {  // TODO figure out how to check if this is being run in/ out of electron
+    try {
+      window
       config = pubHopSettings(config)
       config = torOnly(config)
+    } catch (e) {
+      console.log('TODO: decouple patchbay config from localStorage')
     }
 
     return config
