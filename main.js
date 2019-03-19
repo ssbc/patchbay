@@ -5,7 +5,7 @@ const values = require('lodash/values')
 
 const { patchcore, patchbay, plugins } = require('./exports')
 
-function App (config = {}) {
+function Start (config = {}) {
   // polyfills
   require('setimmediate')
 
@@ -18,7 +18,7 @@ function App (config = {}) {
   document.body.appendChild(api.app.html.app())
 }
 
-module.exports = App
+module.exports = Start
 
 // // for electro[n]
 // if (typeof window !== 'undefined' && !module.parent.parent) {

@@ -24,7 +24,7 @@ const plugins = [
   'ssb-backlinks',
   'ssb-chess-db',
   'ssb-ebt',
-  // 'ssb-friend-pub', // sooo noisy
+  'ssb-friend-pub', // sooo noisy
   'ssb-meme',
   'ssb-private',
   'ssb-query',
