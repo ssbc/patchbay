@@ -13,7 +13,7 @@ var createSbot = require('ssb-server')
   .use(require('ssb-server/plugins/onion'))
   .use(require('ssb-server/plugins/local'))
 
-  .use(require('ssb-gossip'))
+  .use(require('ssb-legacy-conn'))
   .use(require('ssb-replicate'))
   .use(require('ssb-friends'))
   .use(require('ssb-invite'))
