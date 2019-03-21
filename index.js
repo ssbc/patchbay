@@ -1,3 +1,4 @@
+
 var defaultMenu = require('electron-default-menu')
 var WindowState = require('electron-window-state')
 var electron = require('electron')
