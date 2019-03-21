@@ -12,7 +12,7 @@ const plugins = [
   'ssb-server/plugins/onion',
   'ssb-server/plugins/local',
 
-  'ssb-gossip',
+  'ssb-legacy-conn',
   'ssb-replicate',
   'ssb-friends',
   'ssb-invite',
