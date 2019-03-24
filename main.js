@@ -36,6 +36,7 @@ const plugins = {
   scry: require('patchbay-scry'),
   darkCrystal: require('patchbay-dark-crystal'),
   poll: require('patchbay-poll'),
+  hackyArt: require('patchbay-hacky-art'),
   inbox: require('patch-inbox'), // TODO needs work
   chess: require('ssb-chess-mithril'),
   book: require('patchbay-book'),
