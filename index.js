@@ -24,7 +24,7 @@ const plugins = [
   'ssb-backlinks',
   'ssb-chess-db',
   'ssb-ebt',
-  'ssb-friend-pub', // sooo noisy
+  'ssb-friend-pub',
   'ssb-meme',
   'ssb-private',
   'ssb-query',
@@ -38,7 +38,8 @@ ahoy(
     title: 'Patchbay',
     config,
     plugins,
-    uiPath: './main.js'
+    uiPath: './main.js',
+    appDir: '../patchbay' // uncomment when ssb-ahoy is symlinked in!
   },
   (state) => {
     StartMenus(state)
