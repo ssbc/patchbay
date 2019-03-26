@@ -45,7 +45,7 @@ exports.create = function (api) {
         ctrlKey: ev.ctrlKey,
         metaKey: ev.metaKey,
         shiftKey: ev.shiftKey,
-        isExternal: !!url.host
+        isExternal: !!url.host || url.protocol === 'magnet:'
       }
 
       cb(href, opts)
