@@ -5,7 +5,7 @@
 ## Tabs and window
 
 `h` / `CmdOrCtrl+Shift+]` : tabs left
-`j` / `CmdOrCtrl+Shift+[`: tabs right
+`l` / `CmdOrCtrl+Shift+[`: tabs right
 `x` / `CmdOrCtrl+w` : close tab
 `CmdOrCtrl+Shift+w` will close the current window
 
