@@ -1,7 +1,8 @@
 const nest = require('depnest')
-const { h, Value, Dict, dictToCollection, onceTrue, computed, watch, watchAll, throttle } = require('mutant')
+const { h, Value, Dict, dictToCollection, onceTrue, computed, watch, watchAll, throttle, resolve } = require('mutant')
 const Chart = require('chart.js')
 const pull = require('pull-stream')
+const { isInvite } = require('ssb-ref')
 
 const MINUTE = 60 * 1000
 const DAY = 24 * 60 * MINUTE
@@ -42,6 +43,36 @@ exports.create = function (api) {
     const state = buildState({ api, minsPerStep, scale })
     const canvas = h('canvas', { height: 500, width: 1200, style: { height: '500px', width: '1200px' } })
 
+    const inputInvite = ev => {
+      state.inviteResult.set(null)
+      const invite = ev.target.value.replace(/^\s*"?/, '').replace(/"?\s*$/, '')
+      if (!isInvite(invite)) {
+        state.invite.set()
+        return
+      }
+
+      ev.target.value = invite
+      state.invite.set(invite)
+    }
+    const useInvite = () => {
+      state.inviteProcessing.set(true)
+
+      onceTrue(api.sbot.obs.connection, server => {
+        server.invite.accept(resolve(state.invite), (err, data) => {
+          state.inviteProcessing.set(false)
+          state.invite.set()
+
+          if (err) {
+            state.inviteResult.set(false)
+            console.error(err)
+            return
+          }
+          state.inviteResult.set(true)
+          console.log(data)
+        })
+      })
+    }
+
     const page = h('NetworkPage', [
       h('div.container', [
         h('h1', 'Network'),
@@ -65,7 +96,26 @@ exports.create = function (api) {
             if (!peers.length) return h('p', 'No remote peers connected')
 
             return peers.map(peer => api.about.html.avatar(peer))
-          })
+          }),
+          h('div.invite', [
+            h('input', {
+              'placeholder': 'invite code for a remote peer (pub)',
+              'ev-input': inputInvite
+            }),
+            computed([state.invite, state.inviteProcessing], (invite, processing) => {
+              if (processing) return h('i.fa.fa-spinner.fa-pulse')
+              if (invite) return h('button -primary', { 'ev-click': useInvite }, 'use invite')
+
+              return h('button', { disabled: 'disabled', title: 'not a valid invite code' }, 'use invite')
+            }),
+            computed(state.inviteResult, result => {
+              if (result === null) return
+
+              return result
+                ? h('i.fa.fa-check')
+                : h('i.fa.fa-times')
+            })
+          ])
         ]),
         h('section', [
           h('h2', 'My state'),
@@ -211,7 +261,10 @@ function buildState ({ api, minsPerStep, scale }) {
     seq,
     replication,
     data, // TODO rename this !!
-    range
+    range,
+    invite: Value(),
+    inviteProcessing: Value(false),
+    inviteResult: Value(null)
   }
 }
 

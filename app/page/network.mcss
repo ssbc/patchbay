@@ -17,6 +17,24 @@ NetworkPage {
           margin-left: .5rem
         }
       }
+
+      div.invite {
+        margin-top: 1rem
+
+        display: grid
+        grid-template-columns: 55rem 8rem 2rem
+        grid-gap: 1rem
+
+        input {
+          padding-left: .5rem
+        }
+
+        i.fa {
+          color: fuchsia
+          justify-self: center
+          align-self: center
+        }
+      }
     }
   }
 }
