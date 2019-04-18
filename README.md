@@ -1,7 +1,7 @@
 # Patchbay
 
 Patchbay is a scuttlebutt client designed to be easy to modify and extend.
-It uses the same database as Patchwork and Patchfoo, so you can easily take it for a spin with your existing identity.
+It uses the same database as [Patchwork](https://github.com/ssbc/patchwork) and [Patchfoo](https://github.com/ssbc/patchfoo), so you can easily take it for a spin with your existing identity.
 
 ![](./screenshot.png)
 
@@ -16,7 +16,7 @@ Current features boasted:
 - gatherings - a booking system
 - chess - p2p chess games and chat
 - bookblub - a book review interface
-- blogs - can read blogposts created in Ticktack
+- blogs - can read blogposts created in [Ticktack](https://github.com/ticktackim/ticktack-workplan)
 
 ## Install
 

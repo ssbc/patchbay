@@ -23,7 +23,9 @@ exports.create = function (api) {
   return nest('app.page.thread', threadPage)
 
   function threadPage (location) {
-    const root = get(location, 'value.content.root') || get(location, 'value.content.about') || location.key
+    let root = get(location, 'value.content.root') || get(location, 'value.content.about') || location.key
+    if (location.value && location.value.unbox) // direct link with unbox key
+      root = location.key
     const msg = location.key
     if (msg !== root) scrollDownToMessage(msg)
 
@@ -41,6 +43,7 @@ exports.create = function (api) {
       placeholder: 'Write a reply',
       shrink: false
     })
+
     onceTrue(channel, ch => {
       const channelInput = composer.querySelector('input')
       channelInput.value = `#${ch}`
@@ -48,7 +51,10 @@ exports.create = function (api) {
     })
 
     const content = map(messages, m => {
-      const message = api.message.html.render(resolve(m), { pageId: root })
+      let msg = resolve(m)
+      if (msg.key == location.key && location.value && location.value.unbox) // we have an unbox key, so message is already unboxed
+        msg = location
+      const message = api.message.html.render(msg, { pageId: root })
       markReadWhenVisible(message)
       return message
     }, { comparer })

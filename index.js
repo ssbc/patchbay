@@ -39,7 +39,7 @@ ahoy(
     config,
     plugins,
     uiPath: './main.js',
-    appDir: '../patchbay' // uncomment when ssb-ahoy is symlinked in!
+    // appDir: '../patchbay' // uncomment when ssb-ahoy is symlinked in!
   },
   (state) => {
     StartMenus(state)

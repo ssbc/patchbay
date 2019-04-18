@@ -9,18 +9,15 @@ function Start (config = {}) {
   // polyfills
   require('setimmediate')
 
-  // TODO spin up settings check which modules are wanted
-  const args = [ ...values(plugins), patchbay, patchcore ]
-  // plugings loaded first will over-ride core modules loaded later
-  const sockets = combine.apply(null, args)
+  const sockets = combine.apply(null, [
+    ...values(plugins), // TODO spin up settings check which modules are wanted
+    patchbay,
+    patchcore
+  ])
+  // plugins loaded first will over-ride core modules loaded later
 
   const api = entry(sockets, nest('app.html.app', 'first'))
   document.body.appendChild(api.app.html.app())
 }
 
 module.exports = Start
-
-// // for electro[n]
-// if (typeof window !== 'undefined' && !module.parent.parent) {
-//   App()
-// }
