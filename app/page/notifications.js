@@ -1,8 +1,10 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
+const pullMerge = require('pull-merge')
 const Scroller = require('pull-scroll')
 const next = require('pull-next-query')
+const BookNotifications = require('scuttle-book/pull/notifications')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -88,13 +90,20 @@ exports.create = function (api) {
     }, opts)
 
     return api.sbot.pull.stream(server => {
-      return pull(
-        next(server.backlinks.read, _opts, ['timestamp']),
-        pull.filter(m => {
-          if (m.value.content.type !== 'post') return true
-          return !m.value.private // no private posts
-        }),
-        pull.filter(m => !api.message.sync.isBlocked(m))
+      const bookNotifications = BookNotifications(server)
+      return pullMerge(
+        pull(
+          next(server.backlinks.read, _opts, ['timestamp']),
+          pull.filter(m => {
+            if (m.value.content.type !== 'post') return true
+            return !m.value.private // no private posts
+          }),
+          pull.filter(m => !api.message.sync.isBlocked(m))
+        ),
+        pull(bookNotifications(api.keys.sync.id(), opts)),
+        (lhs, rhs) => {
+          return rhs.value.timestamp - lhs.value.timestamp
+        }
       )
     })
   }
