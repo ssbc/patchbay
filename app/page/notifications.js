@@ -67,6 +67,7 @@ exports.create = function (api) {
   //   - post mentions (public)
   //     - patchwork replies (public)
   //   - scry (public, private)
+  //   - reviews on scuttle-books you posted (public)
 
   function pullMentions (opts) {
     const query = [{
