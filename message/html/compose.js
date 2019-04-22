@@ -5,6 +5,7 @@ const extend = require('xtend')
 const addSuggest = require('suggest-box')
 const blobFiles = require('ssb-blob-files')
 const get = require('lodash/get')
+const datSharedFiles = require('dat-shared-files/lib')
 
 exports.gives = nest('message.html.compose')
 
@@ -158,11 +159,29 @@ exports.create = function (api) {
       console.log('added:', result)
     }
 
+    var datInput = h('input.dat', {
+      type: 'file',
+      'ev-click': () => hasContent.set(true),
+      'ev-change': (ev) => {
+        const file = ev.target.files[0]
+        console.log("files", files)
+        datSharedFiles.shareFile(file.path, (datLink) => {
+          console.log("dat link", datLink)
+
+          const pos = textArea.selectionStart
+          const insertLink = '[' + file.name + ']' + '(' + datLink + ')'
+
+          textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
+        })
+      }
+    })
+
     var isPublishing = Value(false)
     var publishBtn = h('button', { 'ev-click': publish, disabled: isPublishing }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
       fileInput,
+      datInput,
       publishBtn
     ])
 

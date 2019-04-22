@@ -92,6 +92,11 @@ Compose {
       }
     }
 
+    input.dat {
+      ::before {
+        content: '\f1e1'
+      }
+    }
   }
 
   -expanded {
