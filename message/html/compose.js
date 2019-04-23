@@ -126,7 +126,7 @@ exports.create = function (api) {
     var fileInput = h('input', {
       type: 'file',
       // accept,
-      attributes: { multiple: true },
+      attributes: { multiple: true, title: 'Add files as blobs' },
       'ev-click': () => hasContent.set(true),
       'ev-change': (ev) => {
         warningMessages.set([])
@@ -161,6 +161,7 @@ exports.create = function (api) {
 
     var datInput = h('input.dat', {
       type: 'file',
+      attributes: { title: 'Add file as dat link' },
       'ev-click': () => hasContent.set(true),
       'ev-change': (ev) => {
         const file = ev.target.files[0]
