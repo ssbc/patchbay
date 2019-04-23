@@ -164,12 +164,9 @@ exports.create = function (api) {
       'ev-click': () => hasContent.set(true),
       'ev-change': (ev) => {
         const file = ev.target.files[0]
-        console.log("files", files)
         datSharedFiles.shareFile(file.path, (datLink) => {
-          console.log("dat link", datLink)
-
           const pos = textArea.selectionStart
-          const insertLink = '[' + file.name + ']' + '(' + datLink + ')'
+          const insertLink = '[' + file.name + ']' + '(' + datLink + '/' + file.name + ')'
 
           textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
         })
