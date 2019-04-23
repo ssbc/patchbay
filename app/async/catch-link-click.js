@@ -34,7 +34,7 @@ exports.create = function (api) {
       var url
 
       try {
-        var url = new URL(href)
+        url = new URL(href)
       } catch (e) {
         // In case we pass an invalid URL
         url = {}
@@ -45,7 +45,7 @@ exports.create = function (api) {
         ctrlKey: ev.ctrlKey,
         metaKey: ev.metaKey,
         shiftKey: ev.shiftKey,
-        isExternal: !!url.host || url.protocol === 'magnet:'
+        isExternal: !!url.host || url.protocol === 'magnet:' || url.protocol === 'dat:'
       }
 
       cb(href, opts)
