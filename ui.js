@@ -9,11 +9,11 @@ function Start (config = {}) {
   // polyfills
   require('setimmediate')
 
-  const sockets = combine.apply(null, [
+  const sockets = combine(
     ...values(plugins), // TODO spin up settings check which modules are wanted
     patchbay,
     patchcore
-  ])
+  )
   // plugins loaded first will over-ride core modules loaded later
 
   const api = entry(sockets, nest('app.html.app', 'first'))

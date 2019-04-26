@@ -21,6 +21,8 @@ exports.create = (api) => {
 
     try {
       window
+      // HACK (mix): patch-settings currently uses localStorage as persistence
+      // this means trying to load config outside context of electron crashes app ):
       config = pubHopSettings(config)
       config = torOnly(config)
     } catch (e) {
