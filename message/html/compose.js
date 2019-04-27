@@ -123,7 +123,7 @@ exports.create = function (api) {
       }))
     })
 
-    var fileInput = h('input', {
+    var ssbBlobInput = h('input -ssb', {
       type: 'file',
       // accept,
       attributes: { multiple: true, title: 'Add files as blobs' },
@@ -159,7 +159,7 @@ exports.create = function (api) {
       console.log('added:', result)
     }
 
-    var datInput = h('input.dat', {
+    var datBlobInput = h('input -dat', {
       type: 'file',
       attributes: { title: 'Add file as dat link' },
       'ev-click': () => hasContent.set(true),
@@ -178,8 +178,23 @@ exports.create = function (api) {
     var publishBtn = h('button', { 'ev-click': publish, disabled: isPublishing }, isPrivate ? 'Reply' : 'Publish')
 
     var actions = h('section.actions', [
-      fileInput,
-      datInput,
+      h('div.attach', [
+        h('i.fa.fa-paperclip'),
+        h('div.attachers', [
+          h('div.attacher', { 'ev-click': () => ssbBlobInput.click() }, [
+            h('i.fa.fa-file-o'),
+            h('div.label', 'small file(s)'),
+            h('div.subtext', '< 5MB')
+          ]),
+          h('div.attacher', { 'ev-click': () => datBlobInput.click() }, [
+            h('i.fa.fa-file-archive-o'),
+            h('div.label', 'large file'),
+            h('div.subtext', 'DAT archive, (BETA)')
+          ]),
+          ssbBlobInput,
+          datBlobInput
+        ])
+      ]),
       publishBtn
     ])
 

@@ -57,46 +57,73 @@ Compose {
 
     margin-top: .4rem
 
-    input[type="file"] {
-      width: 1.8rem
-      height: 1.8rem
-      cursor: pointer
-      color: transparent
-      font-family: FontAwesome
-      border: 1px rgba(0,0,0,0) solid
+    div.attach {
+      position: relative
+      transition: opacity ease-in 1s
 
-      ::-webkit-file-upload-button {
-        visibility: hidden
+      :hover {
+        background-color: black
+        i.fa { color: white }
+
+        div.attachers { display: grid }
       }
 
-      ::before {
-        padding-top: .3rem
+      i.fa {
+        color: black
 
-        content: '\f0c6'
-        font-size: 1rem
-        color: #666;
-        background-color: #fff
+        width: 30px
+        height: 30px
 
-        outline: none
-        white-space: nowrap
-        -webkit-user-select: none
-
-        display: flex
+        display: grid
         justify-content: center
+        align-content: center
       }
 
-      :hover, :focus {
-        border: 1px gainsboro solid
-        outline: none
-        box-shadow: none
+      div.attachers {
+        position: absolute
+        top: 0
+        left: 30px
+
+        width: 250px
+
+        color: black
+        background: white
+        border: 1px solid black
+
+        display: none
+        justify-items: stretch
+        align-items: center
+        grid-gap: 2px
+        padding: 8px
+
+        div.attacher {
+          i.fa {}
+          div.label {}
+          div.subtext {
+            color: grey
+            font-size: 12px
+          }
+
+          display: grid
+          grid-template-columns: auto 1fr auto
+          grid-gap: 10px
+
+          padding: 3px 5px
+          cursor: pointer
+          :hover {
+            color: white
+            background: black
+
+            div.subtext { color: gainsboro }
+          }
+        }
+
+        input[type="file"] {
+          display: none
+        }
       }
     }
 
-    input.dat {
-      ::before {
-        content: '\f1e1'
-      }
-    }
   }
 
   -expanded {
