@@ -8,7 +8,6 @@ exports.needs = nest({
   'app.page.errors': 'first',
   'app.sync.goTo': 'first',
   'app.sync.initialise': 'first',
-  'app.sync.window': 'reduce',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
   'settings.sync.get': 'first'
@@ -19,8 +18,6 @@ exports.create = function (api) {
 
   function app (initialTabs) {
     console.log('STARTING app')
-
-    window = api.app.sync.window(window) // eslint-disable-line no-global-assign
 
     const App = h('App', api.app.html.tabs({
       initial: initialTabs || api.settings.sync.get('patchbay.defaultTabs')

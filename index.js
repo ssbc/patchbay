@@ -31,7 +31,7 @@ electron.app.on('ready', () => {
   // allow inspecting of background process
   electron.ipcMain.on('open-background-devtools', function (ev, config) {
     if (windows.background) {
-      windows.background.webContents.openDevTools({ detach: true })
+      windows.background.webContents.openDevTools({ mode: 'detach' })
     }
   })
 })

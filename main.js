@@ -24,7 +24,7 @@ const patchbay = {
     sbot: bulk(__dirname, [ 'sbot/**/*.js' ]),
 
     config: require('./config'), // shouldn't be in here ?
-    contextMenu: require('patch-context'),
+    // contextMenu: require('patch-context'), // TODO uninstall, this has been orphaned
     suggestions: require('patch-suggest'),
     settings: require('patch-settings'),
     drafts: require('patch-drafts'),
