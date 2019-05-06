@@ -16,6 +16,8 @@ exports.needs = nest({
 
 var whitespace = /\s+/
 
+// TODO : if query is a cypherlink, display backlinks to that cypherlink
+
 exports.create = function (api) {
   return nest('app.page.search', searchPage)
 

@@ -11,14 +11,23 @@ exports.gives = nest('app.sync.initialise')
 exports.needs = nest({
   'app.sync.goTo': 'first',
   'config.sync.load': 'first',
-  'sbot.async.get': 'first'
+  'sbot.async.get': 'first',
+  'settings.sync.get': 'first'
 })
 
 exports.create = function (api) {
   return nest('app.sync.initialise', function () {
-    const config = api.config.sync.load()
+    const { gateway } = api.config.sync.load()
 
-    setupContextMenuAndSpellCheck(config, { navigate: api.app.sync.goTo, get: api.sbot.async.get })
+    const config = {
+      gateway: gateway || 'https://viewer.scuttlebot.io',
+      localeCode: api.settings.sync.get('patchbay.localeCode') || 'en-GB'
+    }
+
+    setupContextMenuAndSpellCheck(config, {
+      navigate: api.app.sync.goTo,
+      get: api.sbot.async.get
+    })
   })
 }
 
@@ -27,8 +36,8 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
   window.spellCheckHandler = new SpellCheckHandler()
   window.spellCheckHandler.attachToInput()
 
-  // Start off as US English, America #1 (lol)
-  window.spellCheckHandler.switchLanguage('en-US')
+  window.spellCheckHandler.automaticallyIdentifyLanguages = false
+  window.spellCheckHandler.switchLanguage(config.localeCode)
 
   var contextMenuBuilder = new ContextMenuBuilder(window.spellCheckHandler, null, true)
 
@@ -67,6 +76,7 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
         menu.append(new MenuItem({
           label: 'Find Link References',
           click: function () {
+            console.log(extractedRef)
             navigateHandler('?' + extractedRef)
           }
         }))
@@ -163,9 +173,7 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
           label: 'Copy External Link',
           click: function () {
             const key = element.msg.key
-            const gateway = config.gateway ||
-              'https://viewer.scuttlebot.io'
-            const url = `${gateway}/${encodeURIComponent(key)}`
+            const url = `${config.gateway}/${encodeURIComponent(key)}`
             clipboard.writeText(url)
           }
         }))
