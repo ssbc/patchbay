@@ -117,9 +117,6 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
   setupContextMenuAndSpellCheck.menu = new ContextMenuListener((info) => {
     contextMenuBuilder.buildMenuForElement(info).then((menu) => {
       var element = document.elementFromPoint(info.x, info.y)
-      while (element && !element.msg) {
-        element = element.parentNode
-      }
 
       menu.append(new MenuItem({
         label: 'Inspect Server Process',
@@ -140,6 +137,11 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
           }
         }
       }))
+
+      // message related elements are decorated by message/html/decorate/context-menus.js
+      while (element && !element.msg) {
+        element = element.parentNode
+      }
 
       if (element && element.msg) {
         menu.append(new MenuItem({
@@ -178,6 +180,7 @@ function setupContextMenuAndSpellCheck (config, { navigate, get }) {
           }
         }))
       }
+
       menu.popup(remote.getCurrentWindow())
     }).catch((err) => {
       throw err
