@@ -37,12 +37,17 @@ Libsodium has some build dependencies. On ubuntu systems the following might hel
 sudo apt-get install m4 libtool eclipse-cdt-autotools
 ```
 
+You also might need these for the spellchecker:
+```sh
+sudo apt-get install libxext-dev libxtst-dev libxkbfile-dev
+```
+
 On MacOS you may need the following packages installed (in this example, via [Homebrew](https://brew.sh/)):
 ```sh
 brew install libtool automake autoconf
 ```
 
-### Easy Install
+### Embedded sever (recommended)
 
 This runs an embedded sbot with all the right plugins already installed.
 
@@ -55,7 +60,13 @@ npm install
 Patchbay doesn't give you a way to join pubs yet, so this is good if you've already done that with another client (like Patchwork).
 
 
-### Harder Install (full dev setup)
+### External server
+
+This method runs the ssb-server as a standalone command-line driven server.
+The danger in this is that you don't install the right plugin versions, and the server won't necessarily be started with the right config
+ (unless you add it to ~/.ssb/config etc).
+
+For this reason I wouldn't currently recommend this approach
 
 Install a standalone ssb-server (your gossip server)
 ```sh
@@ -175,10 +186,6 @@ e.g. to add a 'cats' page to the app:
   - e.g. add a link `<a href='/cats'>Cats!</a>` (which will be clicked up by listeners)
 
 
-
-### Module graph
-
-TODO!
 
 ## License
 

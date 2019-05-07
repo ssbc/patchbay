@@ -1,0 +1,21 @@
+Language {
+  p {}
+
+  div {
+    display: grid
+    grid-template-columns: 5.5rem 4rem
+    grid-gap: 0.5rem
+    justify-content: start
+
+    input {
+      font-size: 1rem
+      padding: .5rem
+    }
+
+    i.fa {
+      justify-self: center
+      align-self: center
+    }
+    button {}
+  }
+}

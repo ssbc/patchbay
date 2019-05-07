@@ -54,6 +54,7 @@ exports.create = (api) => {
     else if (isChannel(location)) cb(null, { channel: location })
     else if (isFeed(location)) cb(null, { feed: location })
     else if (isPage(location)) cb(null, { page: location.substring(1) })
+    else if (isSearch(location)) cb(null, { page: 'search', query: location.substring(1) })
 
     return true
   }
@@ -72,4 +73,8 @@ function isChannel (str) {
 
 function isPage (str) {
   return typeof str === 'string' && str[0] === '/' && str.length > 1
+}
+
+function isSearch (str) {
+  return typeof str === 'string' && str[0] === '?' && str.length > 1
 }
