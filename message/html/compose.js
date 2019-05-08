@@ -5,7 +5,7 @@ const extend = require('xtend')
 const addSuggest = require('suggest-box')
 const blobFiles = require('ssb-blob-files')
 const get = require('lodash/get')
-const datSharedFiles = require('dat-shared-files/lib')
+const datSharedFiles = require('dat-shared-files')
 
 exports.gives = nest('message.html.compose')
 
@@ -161,13 +161,20 @@ exports.create = function (api) {
 
     var datBlobInput = h('input -dat', {
       type: 'file',
-      attributes: { title: 'Add file as dat link' },
+      attributes: { multiple: true, title: 'Add files as dat link' },
       'ev-click': () => hasContent.set(true),
       'ev-change': (ev) => {
-        const file = ev.target.files[0]
-        datSharedFiles.shareFile(file.path, (datLink) => {
+        const filenames = Array.from(ev.target.files).map(f => f.path)
+        datSharedFiles.shareFiles(filenames, (err, datLink) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+
           const pos = textArea.selectionStart
-          const insertLink = '[' + file.name + ']' + '(' + datLink + '/' + file.name + ')'
+          let insertLink = datLink
+          if (filenames.length == 1)
+            insertLink = '[' + ev.target.files[0].name + ']' + '(' + datLink + '/' + ev.target.files[0].name + ')'
 
           textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
         })
@@ -188,7 +195,7 @@ exports.create = function (api) {
           ]),
           h('div.attacher', { 'ev-click': () => datBlobInput.click() }, [
             h('i.fa.fa-file-archive-o'),
-            h('div.label', 'large file'),
+            h('div.label', 'large file(s)'),
             h('div.subtext', 'DAT archive, (BETA)')
           ]),
           ssbBlobInput,
