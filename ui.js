@@ -6,6 +6,9 @@ const values = require('lodash/values')
 const { patchcore, patchbay, plugins } = require('./exports')
 
 function Start (config = {}) {
+  localStorage.patchbayConfig = JSON.stringify(config)
+  // HACK to get config accessible D:
+
   // polyfills
   require('setimmediate')
 
@@ -16,8 +19,8 @@ function Start (config = {}) {
   )
   // plugins loaded first will over-ride core modules loaded later
 
-  const api = entry(sockets, nest('app.html.app', 'first'))
-  document.body.appendChild(api.app.html.app())
+  const api = entry(sockets, nest('app.sync.start', 'first'))
+  api.app.sync.start(config)
 }
 
 module.exports = Start

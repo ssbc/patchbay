@@ -1,15 +1,13 @@
 const ahoy = require('ssb-ahoy')
 const StartMenus = require('./menu')
 
-const config = require('./config').create().config.sync.load()
-
 const plugins = [
   'ssb-server/plugins/master',
-  'ssb-server/plugins/logging',
   'ssb-server/plugins/unix-socket',
   'ssb-server/plugins/no-auth',
   'ssb-server/plugins/onion',
   'ssb-server/plugins/local',
+  'ssb-server/plugins/logging',
 
   'ssb-legacy-conn',
   'ssb-replicate',
@@ -35,9 +33,8 @@ const plugins = [
 ahoy(
   {
     title: 'Patchbay',
-    config,
     plugins,
-    // appDir: '../patchbay', // uncomment when ssb-ahoy is symlinked in!
+    appDir: '../patchbay', // uncomment when ssb-ahoy is symlinked in!
     uiPath: './ui.js'
   },
   (state) => {
