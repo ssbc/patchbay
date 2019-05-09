@@ -34,7 +34,7 @@ ahoy(
   {
     title: 'Patchbay',
     plugins,
-    appDir: '../patchbay', // uncomment when ssb-ahoy is symlinked in!
+    // appDir: '../patchbay', // only used when ssb-ahoy is symlinked in!
     uiPath: './ui.js'
   },
   (state) => {

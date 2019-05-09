@@ -41,7 +41,6 @@ function configModule (config) {
   return {
     gives: nest('config.sync.load'),
     create: api => nest('config.sync.load', () => {
-      console.log('called', config)
       return config
     })
   }
