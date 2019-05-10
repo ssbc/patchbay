@@ -10,7 +10,8 @@ exports.needs = nest({
   'config.sync.load': 'first',
   'history.obs.location': 'first',
   'history.sync.push': 'first',
-  'settings.sync.get': 'first'
+  'settings.sync.get': 'first',
+  'sbot.async.run': 'first'
 })
 
 exports.create = function (api) {
@@ -26,7 +27,11 @@ exports.create = function (api) {
 
     api.history.obs.location()(api.app.sync.goTo)
 
-    document.body.appendChild(App)
-    return App
+    api.sbot.async.run(server => {
+      server.whoami((err, data) => {
+        if (err) alert(err)
+        document.body.appendChild(App)
+      })
+    })
   }
 }

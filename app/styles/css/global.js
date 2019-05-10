@@ -17,6 +17,16 @@ body {
   color: #222;
 }
 
+body::before {
+  content: 'Loading...';
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+
+  position: absolute;
+  top: 35%;
+  left: 48%;
+}
+
 * {
   word-break: break-word;
 }
