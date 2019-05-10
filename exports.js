@@ -38,12 +38,14 @@ function configModule (config) {
   // This is needed to over-ride config.sync.load in patchcore.
   // By baking a fresh module with the config inside it,
   // we avoid a race condition around trying to set / get the config
-  return {
+  const configModule = {
     gives: nest('config.sync.load'),
     create: api => nest('config.sync.load', () => {
       return config
     })
   }
+
+  return { configModule }
 }
 
 module.exports = {
