@@ -190,12 +190,12 @@ exports.create = function (api) {
         h('div.attachers', [
           h('div.attacher', { 'ev-click': () => ssbBlobInput.click() }, [
             h('i.fa.fa-file-o'),
-            h('div.label', 'small file(s)'),
+            h('div.label', 'small files'),
             h('div.subtext', '< 5MB')
           ]),
           h('div.attacher', { 'ev-click': () => datBlobInput.click() }, [
             h('i.fa.fa-file-archive-o'),
-            h('div.label', 'large file(s)'),
+            h('div.label', 'large files'),
             h('div.subtext', 'DAT archive, (BETA)')
           ]),
           ssbBlobInput,
