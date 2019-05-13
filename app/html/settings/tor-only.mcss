@@ -1,0 +1,8 @@
+TorOnly {
+  p {}
+
+  div.alert {
+    padding: .5rem
+    background: #fdbdfd
+  }
+}

@@ -65,19 +65,6 @@ exports.create = function (api) {
       ])
     }
 
-    function updateConfig (hops) {
-      const configCustom = api.config.sync.getCustom()
-
-      const next = merge({}, configCustom, {
-        friendPub: { hops },
-        gossip: hops >= 3
-          ? { friends: true, global: true }
-          : { friends: true, global: false }
-      })
-
-      api.config.sync.setCustom(next)
-    }
-
     function updatePubs (hops) {
       onceTrue(api.sbot.obs.connection, sbot => {
         if (hops === pubHopAll) pubs.set({})
@@ -105,5 +92,18 @@ exports.create = function (api) {
         return '@' + name + ', owner ' + ownerName
       })
     }, api.about.html.image(id))
+  }
+
+  function updateConfig (hops) {
+    const configCustom = api.config.sync.getCustom()
+
+    const next = merge({}, configCustom, {
+      friendPub: { hops },
+      gossip: hops >= 3
+        ? { friends: true, global: true }
+        : { friends: true, global: false }
+    })
+
+    api.config.sync.setCustom(next)
   }
 }
