@@ -1,6 +1,6 @@
 const nest = require('depnest')
 const { h, Value, resolve, watch, computed } = require('mutant')
-const { clone, set, get, isEmpty } = require('lodash')
+const { cloneDeep, set, get, isEmpty } = require('lodash')
 
 exports.gives = nest({
   'app.html.settings': true
@@ -49,7 +49,7 @@ exports.create = function (api) {
   }
 
   function updateConfig (torOnly) {
-    var next = clone(api.config.sync.getCustom())
+    var next = cloneDeep(api.config.sync.getCustom())
 
     if (torOnly) {
       set(next, 'connections.outgoing.onion', [{ 'transform': 'shs' }])

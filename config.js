@@ -1,7 +1,7 @@
 const nest = require('depnest')
 const fs = require('fs')
 const { join } = require('path')
-const { get, clone, isEqual } = require('lodash')
+const { get, cloneDeep, isEqual } = require('lodash')
 
 // This is needed to over-ride config.sync.load in patchcore.
 // By baking a fresh module with the config inside it,
@@ -26,7 +26,7 @@ function configModule (config) {
       return writeCustomConfig(next)
     }
 
-    const next = clone(_config.custom)
+    const next = cloneDeep(_config.custom)
     next.set(path, arg)
     writeCustomConfig(next)
   }
