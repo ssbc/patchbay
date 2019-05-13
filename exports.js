@@ -1,9 +1,9 @@
 const bulk = require('bulk-require')
-const nest = require('depnest')
-
 const patchcore = require('patchcore')
 delete patchcore.patchcore.message.html.action.reply
 // prune an action we don't want
+
+const configModule = require('./config')
 
 const patchbay = {
   patchbay: {
@@ -32,20 +32,6 @@ const plugins = {
   chess: require('ssb-chess-mithril'),
   book: require('patchbay-book'),
   gatherings: require('patchbay-gatherings')
-}
-
-function configModule (config) {
-  // This is needed to over-ride config.sync.load in patchcore.
-  // By baking a fresh module with the config inside it,
-  // we avoid a race condition around trying to set / get the config
-  const configModule = {
-    gives: nest('config.sync.load'),
-    create: api => nest('config.sync.load', () => {
-      return config
-    })
-  }
-
-  return { configModule }
 }
 
 module.exports = {

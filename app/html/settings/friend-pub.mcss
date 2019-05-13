@@ -1,8 +1,39 @@
 FriendPub {
-  div {
+  display: grid
+  grid-gap: 1rem
+
+  div.description {}
+
+  div.slider {
+    display: grid
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
+
+    datalist {
+      grid-row: 1
+      grid-column: 1 / 9
+
+      display: grid
+      grid-template-columns: 1fr 1fr 1fr 1fr
+      justify-items: center
+    }
+
     input[type=range] {
-      vertical-align: middle
-      margin-left: 15px
+      grid-row: 2
+      grid-column: 2 / 8
+
+      margin-left: 0
+    }
+  }
+
+  div.alert {
+    padding: .5rem
+    background: #fdbdfd
+  }
+
+  div.Pubs {
+    div.description {
+      margin-bottom: .5rem
+  
     }
   }
 }
