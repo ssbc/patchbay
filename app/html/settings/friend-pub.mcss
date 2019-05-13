@@ -4,13 +4,16 @@ FriendPub {
 
   div.description {}
 
+  --range-options: 4
+  --cols: calc(2 * var(--range-options))
+
   div.slider {
     display: grid
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
+    grid-template-columns: repeat(var(--cols), 1fr)
 
     datalist {
       grid-row: 1
-      grid-column: 1 / 9
+      grid-column: 1 / calc(var(--cols) + 1)
 
       display: grid
       grid-template-columns: 1fr 1fr 1fr 1fr
@@ -19,7 +22,7 @@ FriendPub {
 
     input[type=range] {
       grid-row: 2
-      grid-column: 2 / 8
+      grid-column: 2 / var(--cols)
 
       margin-left: 0
     }

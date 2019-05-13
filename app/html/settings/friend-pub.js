@@ -43,7 +43,7 @@ exports.create = function (api) {
             h('option', { value: 0, label: 'My pub' }),
             h('option', { value: 1, label: 'My friend' }),
             h('option', { value: 2, label: 'A friends friend' }),
-            h('option', { value: 3, label: 'No limit' })
+            h('option', { value: 3, label: 'Any pub' })
           ]),
           h('input', {
             type: 'range',
