@@ -79,7 +79,7 @@ exports.create = function (api) {
 
   function Pubs (pubs) {
     return h('Pubs', [
-      h('div.description', 'Pubs you this means you will gossip with:'),
+      h('div.description', 'Pubs this means you will gossip with:'),
       h('div.pubs', computed([pubs], function (pubs) {
         return Object.values(pubs).map(pub => pubImageLink(pub.id, pub.owner))
       }))
