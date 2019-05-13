@@ -28,8 +28,9 @@ exports.create = function (api) {
     let pubs = Value({})
 
     watch(hops, hops => {
-      updateConfig(hops)
-      updatePubs(hops)
+      const intHops = parseInt(hops)
+      updateConfig(intHops)
+      updatePubs(intHops)
     })
 
     return {
