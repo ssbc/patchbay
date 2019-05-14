@@ -4,13 +4,14 @@
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
-    "lint": "standard --fix",
-    "rebuild": "cross-script npm rebuild --runtime=electron \"--target=$(electron -v)\" \"--abi=$(electron --abi)\" --disturl=https://atom.io/download/atom-shell",
-    "start": "electron index.js -- --title patchbay",
-    "start-frameless": "FRAME=false npm start",
-    "dev": "echo 'run your own sbot!' && electro main.js -- --title patchbay --icon ./assets/icon.png",
     "postinstall": "npm run rebuild",
-    "test": "standard"
+    "rebuild": "electron-builder install-app-deps",
+    "start": "electron index.js -- --title patchbay",
+    "dev": "echo 'run your own sbot!' && electro ui.js -- --title patchbay --icon ./assets/icon.png",
+    "start-frameless": "FRAME=false npm start",
+    "dist": "electron-builder",
+    "test": "standard",
+    "lint": "standard --fix"
   },
   "browserify": {
     "transform": [
@@ -91,7 +92,7 @@
     "scuttle-thread": "^1.0.1",
     "setimmediate": "^1.0.5",
     "ssb-about": "^2.0.1",
-    "ssb-ahoy": "github:ssbc/ssb-ahoy#add_config_picker",
+    "ssb-ahoy": "github:ssbc/ssb-ahoy#electron_4",
     "ssb-backlinks": "^0.7.3",
     "ssb-blob-files": "^1.1.6",
     "ssb-blobs": "^1.1.12",
@@ -123,8 +124,25 @@
   },
   "devDependencies": {
     "electro": "^2.1.1",
-    "electron": "^2.0.18",
+    "electron": "^4.2.0",
+    "electron-builder": "^20.40.2",
     "eslint-config-standard": "^12.0.0",
     "standard": "^12.0.1"
+  },
+  "build": {
+    "appId": "org.ssbc.patchbay",
+    "files": [
+      "!**/prebuilds/!(${os}-${arch})${/*}"
+    ],
+    "linux": {
+      "category": "Network",
+      "target": "AppImage"
+    },
+    "dmg": {
+      "icon": "build/dmg-icon.icns"
+    },
+    "win": {
+      "publisherName": "Secure Scuttlebutt Consortium"
+    }
   }
 }
