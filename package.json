@@ -98,7 +98,7 @@
     "ssb-chess-mithril": "1.0.10",
     "ssb-config": "^3.2.3",
     "ssb-ebt": "^5.3.11",
-    "ssb-friend-pub": "^1.0.5",
+    "ssb-friend-pub": "^1.0.7",
     "ssb-friends": "^3.1.12",
     "ssb-invite": "^2.0.3",
     "ssb-legacy-conn": "^1.0.25",
