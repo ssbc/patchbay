@@ -96,7 +96,7 @@
     "ssb-blobs": "^1.1.12",
     "ssb-chess-db": "^1.0.6",
     "ssb-chess-mithril": "1.0.10",
-    "ssb-config": "^3.2.3",
+    "ssb-config": "^3.3.0",
     "ssb-ebt": "^5.3.11",
     "ssb-friend-pub": "^1.0.7",
     "ssb-friends": "^3.1.12",
