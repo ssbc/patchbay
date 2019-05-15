@@ -27,6 +27,7 @@ const plugins = [
   'ssb-query',
   'ssb-search',
   'ssb-suggest',
+  'ssb-tangle',
   'ssb-unread'
 ]
 
