@@ -117,7 +117,7 @@
     "ssb-suggest": "^1.0.4",
     "ssb-unread": "^1.0.5",
     "ssb-uri": "^1.0.1",
-    "ssb-ws": "^6.0.0",
+    "ssb-ws": "6.0.0",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",
     "xtend": "^4.0.1"
@@ -131,9 +131,6 @@
   },
   "build": {
     "appId": "org.ssbc.patchbay",
-    "files": [
-      "!**/prebuilds/!(${os}-${arch})${/*}"
-    ],
     "linux": {
       "category": "Network",
       "target": "AppImage"
