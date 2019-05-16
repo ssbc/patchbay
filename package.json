@@ -102,7 +102,7 @@
     "ssb-ebt": "^5.6.4",
     "ssb-friend-pub": "^1.0.5",
     "ssb-friends": "^4.1.0",
-    "ssb-invite": "^2.1.3",
+    "ssb-invite": "~2.0.4",
     "ssb-legacy-conn": "^1.0.25",
     "ssb-meme": "^1.0.4",
     "ssb-mentions": "^0.5.0",
@@ -119,7 +119,7 @@
     "ssb-tangle": "^1.0.1",
     "ssb-unread": "^1.0.5",
     "ssb-uri": "^1.0.1",
-    "ssb-ws": "6.0.0",
+    "ssb-ws": "~6.0.0",
     "suggest-box": "^2.2.3",
     "text-node-searcher": "^1.1.1",
     "xtend": "^4.0.1"
