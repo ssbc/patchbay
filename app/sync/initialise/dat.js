@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const datSharedFiles = require('dat-shared-files/lib')
+const datSharedFiles = require('dat-shared-files')
 
 exports.gives = nest('app.sync.initialise')
 
@@ -9,7 +9,13 @@ exports.create = function (api) {
   function datShare () {
     if (process.env.DAT === 'false') return
 
-    datSharedFiles.shareFiles(links => {
+    datSharedFiles.shareAll((err, links) => {
+      if (err) {
+        console.error(err)
+
+        return
+      }
+
       links.forEach(link => console.log('Sharing: ' + link))
     })
   }
