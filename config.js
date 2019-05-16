@@ -2,6 +2,7 @@ const nest = require('depnest')
 const fs = require('fs')
 const { join } = require('path')
 const { get, cloneDeep, isEqual } = require('lodash')
+const JSON5 = require('json5')
 
 // This is needed to over-ride config.sync.load in patchcore.
 // By baking a fresh module with the config inside it,
@@ -54,7 +55,7 @@ function configModule (config) {
         join(config.path, 'config'),
         'utf8'
       )
-      return JSON.parse(str)
+      return JSON5.parse(str) // will read around comments
     } catch (e) {
       return {}
     }
