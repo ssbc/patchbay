@@ -49,11 +49,15 @@ function configModule (config) {
   }
 
   function readCustomConfig (config) {
-    const str = fs.readFileSync(
-      join(config.path, 'config'),
-      'utf8'
-    )
-    return JSON.parse(str)
+    try {
+      const str = fs.readFileSync(
+        join(config.path, 'config'),
+        'utf8'
+      )
+      return JSON.parse(str)
+    } catch (e) {
+      return {}
+    }
   }
 
   function writeCustomConfig (next) {
