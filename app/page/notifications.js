@@ -2,6 +2,7 @@ const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
 const pullMerge = require('pull-merge')
+const pullAbort = require('pull-abortable')
 const Scroller = require('pull-scroll')
 const next = require('pull-next-query')
 const BookNotifications = require('scuttle-book/pull/notifications')
@@ -38,17 +39,26 @@ exports.create = function (api) {
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [ filterMenu ] })
 
+    var abortableDown = pullAbort()
+    var abortableUp = pullAbort()
+
     function draw () {
       resetFeed({ container, content })
 
+      abortableDown.abort()
+      abortableDown = pullAbort()
       pull(
         pullMentions({ old: false, live: true }),
+        abortableDown,
         filterDownThrough(),
         Scroller(container, content, render, true, false)
       )
 
+      abortableUp.abort()
+      abortableUp = pullAbort()
       pull(
         pullMentions({ reverse: true, live: false }),
+        abortableUp,
         filterUpThrough(),
         Scroller(container, content, render, false, false)
       )

@@ -1,6 +1,7 @@
 const nest = require('depnest')
 const { h } = require('mutant')
 const pull = require('pull-stream')
+const pullAbortable = require('pull-abortable')
 const Scroller = require('pull-scroll')
 const next = require('pull-next-query')
 const merge = require('lodash/merge')
@@ -41,6 +42,8 @@ exports.create = function (api) {
     const { filterMenu, filterDownThrough, filterUpThrough, resetFeed } = api.app.html.filter(draw)
     const { container, content } = api.app.html.scroller({ prepend: [composer, filterMenu], className: 'PublicFeed' })
 
+    var abortLive = pullAbortable()
+    var abortReverse = pullAbortable()
     const createStream = (opts) => api.sbot.pull.stream(server => {
       const _opts = merge({}, opts, {
         query: [{
@@ -67,14 +70,20 @@ exports.create = function (api) {
       }
 
       // TODO - change to use ssb-query, streamed by publish time
+      abortLive.abort()
+      abortLive = pullAbortable()
       pull(
         createStream({ old: false, live: true }),
+        abortLive,
         filterUpThrough(),
         Scroller(container, content, render, true, false)
       )
 
+      abortReverse.abort()
+      abortReverse = pullAbortable()
       pull(
         createStream({ reverse: true, live: false }),
+        abortReverse,
         filterDownThrough(),
         Scroller(container, content, render, false, false)
       )
