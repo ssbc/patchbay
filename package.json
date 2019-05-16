@@ -70,7 +70,7 @@
     "open-external": "^0.1.1",
     "patch-drafts": "0.0.6",
     "patch-history": "^1.0.0",
-    "patch-inbox": "^1.3.1",
+    "patch-inbox": "^1.3.2",
     "patch-settings": "^1.1.2",
     "patch-suggest": "^3.0.1",
     "patchbay-book": "^2.0.3",
