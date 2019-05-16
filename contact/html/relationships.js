@@ -53,8 +53,6 @@ exports.create = function (api) {
       else mode.set(i)
     }
 
-    const avatar = api.about.html.avatar
-
     return h('Relationships', [
       h('header', 'Relationships'),
       RelationshipStatus({ feedId, rawFollowing, blockers, api }),
@@ -80,7 +78,10 @@ exports.create = function (api) {
           if (i === null) return
 
           const { data } = modes[i]
-          return map(data, avatar)
+          // NOTE - there's a race condition where putting a breakpoint here
+          // gives the cache time to load or something?
+          // INTERMITENT BUG perhaps with api.contacts.obs ?
+          return map(data, api.about.html.avatar)
         }))
       ])
     ])
