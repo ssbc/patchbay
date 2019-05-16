@@ -2,12 +2,8 @@ Hypertabs {
   display: flex
   flex-direction: column
 
-  top: var(--app-border-width)
-  bottom: var(--app-border-width)
-  left: var(--app-border-width)
-  right: var(--app-border-width)
-
   height: initial
+  overflow: hidden
 
   nav {
     height: 2.3rem
@@ -128,15 +124,20 @@ Hypertabs {
     // this brings the scroll-bar in
     padding: .5rem .4rem
 
-    height: 100% /* needed to stop making nav weird */
+    height: 100%
+    /* needed to stop making nav weird */
 
     display: flex
 
     div.page {
       flex-grow: 1
 
-      display: flex /*hack to get give Scroller context it needs */
+      display: flex
+      /*hack to get give Scroller context it needs */
+
+      top: 0
+      bottom: 0
+      /* stop that stupid thing where tab scrolls the whole page */
     }
   }
 }
-
