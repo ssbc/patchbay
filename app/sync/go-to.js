@@ -23,6 +23,7 @@ exports.create = function (api) {
   //   - router.sync.router would take (location, { position }) ?
 
   function goTo (location, options = {}) {
+    if (!location) return
     const {
       openBackground = false,
       split = false

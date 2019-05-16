@@ -7,6 +7,8 @@ exports.create = function (api) {
   return nest('app.sync.initialise', datShare)
 
   function datShare () {
+    if (process.env.DAT === 'false') return
+
     datSharedFiles.shareAll((err, links) => {
       if (err) {
         console.error(err)

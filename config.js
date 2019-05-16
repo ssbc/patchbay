@@ -1,82 +1,81 @@
 const nest = require('depnest')
-const Config = require('ssb-config/inject')
-const Path = require('path')
-const merge = require('lodash/merge')
-// settings not available in api yet, so we need to load it manually
-const settings = require('patch-settings').patchSettings
+const fs = require('fs')
+const { join } = require('path')
+const { get, cloneDeep, isEqual } = require('lodash')
+const JSON5 = require('json5')
 
-exports.gives = nest('config.sync.load')
-exports.create = (api) => {
-  var config
-  return nest('config.sync.load', () => {
-    if (config) return config
+// This is needed to over-ride config.sync.load in patchcore.
+// By baking a fresh module with the config inside it,
+// we avoid a race condition around trying to set / get the config
 
-    console.log('LOADING config')
-    config = Config(process.env.ssb_appname || 'ssb', {
-      // friends: { hops: 2 }
-    })
+function configModule (config) {
+  var _config = {
+    complete: config,
+    custom: readCustomConfig(config)
+  }
 
-    config = addSockets(config)
-    config = fixLocalhost(config)
-    config = pubHopSettings(config)
-    config = torOnly(config)
-
-    return config
-  })
-}
-
-function addSockets (config) {
-  if (process.platform === 'win32') return config
-
-  const pubkey = config.keys.id.slice(1).replace(`.${config.keys.curve}`, '')
-  return merge(
-    config,
-    {
-      connections: {
-        incoming: { unix: [{ scope: 'device', transform: 'noauth', server: true }] }
-      },
-      remote: `unix:${Path.join(config.path, 'socket')}:~noauth:${pubkey}` // overwrites
+  function Getter (conf) {
+    return function (path, fallback) {
+      if (!path) return conf
+      return get(conf, path, fallback)
     }
-  )
-}
+  }
 
-function fixLocalhost (config) {
-  if (process.platform !== 'win32') return config
+  function setCustomConfig (path, arg) {
+    if (!Array.isArray(path) && typeof path !== 'string') {
+      const next = path
+      return writeCustomConfig(next)
+    }
 
-  // without this host defaults to :: which doesn't work on windows 10?
-  config.connections.incoming.net[0].host = '127.0.0.1'
-  config.connections.incoming.ws[0].host = '127.0.0.1'
-  config.host = '127.0.0.1'
-  return config
-}
+    const next = cloneDeep(_config.custom)
+    next.set(path, arg)
+    writeCustomConfig(next)
+  }
 
-function pubHopSettings (config) {
-  const pubHopAll = 3
-  let pubHopConnections = settings.create().settings.sync.get('patchbay.pubHopConnections', pubHopAll)
-  if (pubHopConnections === pubHopAll) return config
+  return {
+    configModule: {
+      gives: nest({
+        'config.sync.load': true,
+        'config.sync.get': true,
+        'config.sync.getCustom': true,
+        'config.sync.setCustom': true
+      }),
+      create: api => nest({
+        'config.sync.load': () => _config.complete,
+        'config.sync.get': Getter(_config.complete),
+        'config.sync.getCustom': Getter(_config.custom),
+        'config.sync.setCustom': setCustomConfig
+      })
+    }
+  }
 
-  return merge(
-    config,
-    {
-      friendPub: { hops: pubHopConnections },
-      gossip: {
-        friends: true,
-        global: false
+  function readCustomConfig (config) {
+    try {
+      const str = fs.readFileSync(
+        join(config.path, 'config'),
+        'utf8'
+      )
+      return JSON5.parse(str) // will read around comments
+    } catch (e) {
+      return {}
+    }
+  }
+
+  function writeCustomConfig (next) {
+    if (typeof next !== 'object') throw new Error('config must be an object!')
+    if (isEqual(_config.custom, next)) return
+    if (get(_config.custom, 'caps.sign') !== get(next, 'caps.sign')) throw new Error('do not change the caps.sign!')
+
+    fs.writeFile(
+      join(_config.complete.path, 'config'),
+      JSON.stringify(next, null, 2),
+      (err) => {
+        if (err) return console.error(err)
+
+        _config.custom = next
       }
-    })
+    )
+  }
 }
 
-function torOnly (config) {
-  if (settings.create().settings.sync.get('patchbay.torOnly', false)) {
-    config = merge(config, {
-      connections: {
-        outgoing: {
-          'onion': [{ 'transform': 'shs' }]
-        }
-      }
-    })
-
-    delete config.connections.outgoing.net
-    return config
-  } else { return config }
-}
+module.exports = configModule
