@@ -5,7 +5,9 @@ const values = require('lodash/values')
 
 const { patchcore, patchbay, plugins, configModule } = require('./exports')
 
-function Start (config = {}) {
+function Start (config) {
+  if (!config) throw new Error('patchbay/ui.js needs to be provided with a valid server config')
+
   // polyfills
   require('setimmediate')
 
