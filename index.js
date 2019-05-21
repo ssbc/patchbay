@@ -28,7 +28,9 @@ const plugins = [
   'ssb-search',
   'ssb-suggest',
   'ssb-tangle',
-  'ssb-unread'
+  'ssb-unread',
+
+  'jsbot-patchql'
 ]
 
 ahoy(
