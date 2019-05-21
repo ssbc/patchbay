@@ -1,3 +1,4 @@
+const pull = require('pull-stream')
 const nest = require('depnest')
 const { ApolloClient } = require('apollo-client')
 const { InMemoryCache } = require('apollo-cache-inmemory')
@@ -5,6 +6,9 @@ const { createHttpLink } = require('apollo-link-http')
 const gql = require('graphql-tag').default
 // NOTE also depends on graphql module
 
+exports.needs = nest({
+  'sbot.pull.stream': 'first'
+})
 exports.gives = nest('app.sync.initialise')
 
 const mutation = gql`
@@ -20,6 +24,14 @@ exports.create = function (api) {
 
   function patchql () {
     if (process.env.PATCHQL === 'false') return
+
+    pull(
+      api.sbot.pull.stream(server => {
+        return pull.once(server.jsbotPatchql.start())
+      }),
+      pull.drain((result) => {
+      })
+    )
 
     // set up client connection
     const client = new ApolloClient({
