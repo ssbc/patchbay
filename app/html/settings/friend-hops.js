@@ -59,17 +59,6 @@ exports.create = function (api) {
         }),
       ])
     }
-
-    function updateHops (hops) {
-      onceTrue(api.sbot.obs.connection, sbot => {
-        if (hops === go) pubs.set({})
-        else {
-          sbot.friendPub.pubsWithinHops(hops, (_, pubsInHops) => {
-            pubs.set(pubsInHops)
-          })
-        }
-      })
-    }
   }
 
   function updateConfig (hops) {
