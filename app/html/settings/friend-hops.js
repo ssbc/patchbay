@@ -30,7 +30,7 @@ exports.create = function (api) {
 
     return {
       title: 'Friend Hops',
-      body: h('Friends', [
+      body: h('FriendHops', [
         h('div.description', [
           'Specify whose content you replicate, and thus the size and shape of your network.'
         ]),
