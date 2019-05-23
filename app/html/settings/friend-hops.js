@@ -36,10 +36,10 @@ exports.create = function (api) {
         ]),
         h('div.slider', [
           h('datalist', { id: 'friends-hop-datalist' }, [
-            h('option', { value: 0, label: '0' }),
-            h('option', { value: 1, label: '1' }),
-            h('option', { value: 2, label: '2' }),
-            h('option', { value: 3, label: '3' })
+            h('option', { value: 0, label: '0 - Only your messages' }),
+            h('option', { value: 1, label: '1 - You and your friend\'s messages' }),
+            h('option', { value: 2, label: '2 - You, your friend\'s, and your friend\'s friend\'s  messages' }),
+            h('option', { value: 3, label: '3 - You, your friend\'s, your friend\'s friend\'s, and their friend\'s messages' })
           ]),
           h('input', {
             type: 'range',
