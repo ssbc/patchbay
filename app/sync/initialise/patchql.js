@@ -7,9 +7,12 @@ const gql = require('graphql-tag').default
 // NOTE also depends on graphql module
 
 exports.needs = nest({
-  'sbot.pull.stream': 'first'
+  'sbot.async.run': 'first'
 })
-exports.gives = nest('app.sync.initialise')
+exports.gives = nest({
+  'app.sync.initialise': true,
+  'graphql.async.query': true
+})
 
 const mutation = gql`
   mutation process($chunkSize: Int) {
@@ -20,44 +23,57 @@ const mutation = gql`
   }
 `
 exports.create = function (api) {
-  return nest('app.sync.initialise', patchql)
+  var graphql
 
-  function patchql () {
+  return nest({
+    'app.sync.initialise': startPatchql,
+    'graphql.async.query': graphQuery
+  })
+
+  function startPatchql () {
     if (process.env.PATCHQL === 'false') return
 
-    pull(
-      api.sbot.pull.stream(server => {
-        return pull.once(server.jsbotPatchql.start())
-      }),
-      pull.drain((result) => {
-      })
-    )
-
-    // set up client connection
-    const client = new ApolloClient({
-      link: createHttpLink({ uri: 'http://localhost:8080/graphql' }), // set by jsbot-patchql
-      cache: new InMemoryCache()
-    })
+    graphql = GraphqlClient()
 
     var latestSequence
     var nextSequence
-    doProcess()
 
-    function doProcess () {
-      client.mutate({ mutation, variables: { chunkSize: 10e3 } })
+    api.sbot.async.run(server => {
+      server.jsbotPatchql.start({}, () => {
+        indexLoop()
+      })
+    })
+
+    function indexLoop () {
+      graphql.mutate({ mutation, variables: { chunkSize: 10e3 } })
         .then(res => {
           nextSequence = res.data.process.latestSequence
-          if (latestSequence === nextSequence) setTimeout(doProcess, 5e3)
+          if (latestSequence === nextSequence) setTimeout(indexLoop, 5e3)
           else {
             latestSequence = nextSequence
             console.log('patchql latestSequence:', latestSequence)
-            doProcess()
+            indexLoop()
           }
         })
         .catch(err => {
           console.error(err)
-          setTimeout(doProcess, 2e3)
+          return setTimeout(indexLoop, 2e3)
         })
     }
+  }
+
+  function graphQuery ({ query, variables }, cb) {
+    if (!graphql) return setTimeout(() => graphQuery({ query, variables }, cb), 1e3)
+
+    graphql.query({ query, variables })
+      .then(res => cb(null, res))
+      .catch(err => cb(err))
+  }
+
+  function GraphqlClient () {
+    return new ApolloClient({
+      link: createHttpLink({ uri: 'http://localhost:8080/graphql' }), // set by jsbot-patchql
+      cache: new InMemoryCache()
+    })
   }
 }

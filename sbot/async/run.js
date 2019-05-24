@@ -10,6 +10,7 @@ exports.needs = nest({
 exports.create = (api) => {
   return nest({
     'sbot.async.run': function run (fn) {
+      // fn(server)
       onceTrue(api.sbot.obs.connection, fn)
     }
   })
