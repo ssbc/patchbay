@@ -9,7 +9,10 @@ exports.create = function (api) {
   function Scroller (opts = {}) {
     const { prepend, content = null, append, classList = [], className = '', title = '', scrollIntoView } = opts
 
-    const contentSection = h('section.content', { title: '' }, content)
+    const contentSection = h('section.content', {
+      title: '',
+      intersectionBindingViewport: { rootMargin: '1000px' } // mutant magic
+    }, content)
 
     const container = h('Scroller',
       {
@@ -17,7 +20,6 @@ exports.create = function (api) {
         className,
         title,
         style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' },
-        intersectionBindingViewport: { rootMargin: '1000px' } // mutant magic
         // TODO (watch for breaks e.g. stuff stops updating after scrolling)
       },
       [
