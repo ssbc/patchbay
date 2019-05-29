@@ -30,16 +30,16 @@ exports.create = function (api) {
 
     return {
       title: 'Friend Hops',
-      body: h('Friends', [
+      body: h('FriendHops', [
         h('div.description', [
           'Specify whose content you replicate, and thus the size and shape of your network.'
         ]),
         h('div.slider', [
           h('datalist', { id: 'friends-hop-datalist' }, [
-            h('option', { value: 0, label: '0' }),
-            h('option', { value: 1, label: '1' }),
-            h('option', { value: 2, label: '2' }),
-            h('option', { value: 3, label: '3' })
+            h('option', { value: 0, label: '0 - Only your messages' }),
+            h('option', { value: 1, label: '1 - You and your friend\'s messages' }),
+            h('option', { value: 2, label: '2 - You, your friend\'s, and your friend\'s friend\'s  messages' }),
+            h('option', { value: 3, label: '3 - You, your friend\'s, your friend\'s friend\'s, and their friend\'s messages' })
           ]),
           h('input', {
             type: 'range',
@@ -58,17 +58,6 @@ exports.create = function (api) {
           ])
         }),
       ])
-    }
-
-    function updateHops (hops) {
-      onceTrue(api.sbot.obs.connection, sbot => {
-        if (hops === go) pubs.set({})
-        else {
-          sbot.friendPub.pubsWithinHops(hops, (_, pubsInHops) => {
-            pubs.set(pubsInHops)
-          })
-        }
-      })
     }
   }
 
