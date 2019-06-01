@@ -1,6 +1,8 @@
 const nest = require('depnest')
-const { h, computed, onceTrue, Value, watch } = require('mutant')
+const { h, computed, Value, watch } = require('mutant')
 const merge = require('lodash/merge')
+const fs = require('fs')
+const { join } = require('path')
 
 exports.gives = nest({
   'app.html.settings': true
@@ -32,14 +34,14 @@ exports.create = function (api) {
       title: 'Friend Hops',
       body: h('FriendHops', [
         h('div.description', [
-          'Specify whose content you replicate, and thus the size and shape of your network.'
+          'What you replicate (store a local copy of) is based on how many "hops" you replicate. If you replicate out to 1 hop, you are replicating the people you follow, at 2 hops, it is your follows and people they follow.'
         ]),
         h('div.slider', [
           h('datalist', { id: 'friends-hop-datalist' }, [
-            h('option', { value: 0, label: '0 - Only your messages' }),
-            h('option', { value: 1, label: '1 - You and your friend\'s messages' }),
-            h('option', { value: 2, label: '2 - You, your friend\'s, and your friend\'s friend\'s  messages' }),
-            h('option', { value: 3, label: '3 - You, your friend\'s, your friend\'s friend\'s, and their friend\'s messages' })
+            h('option', { value: 0, label: '0' }),
+            h('option', { value: 1, label: '1' }),
+            h('option', { value: 2, label: '2' }),
+            h('option', { value: 3, label: '3' })
           ]),
           h('input', {
             type: 'range',
@@ -50,13 +52,24 @@ exports.create = function (api) {
             'ev-change': (ev) => hops.set(ev.target.value)
           })
         ]),
-        computed(hops, (_hops) => {
-          if (_hops === hops.initial) return
-          return h('div.alert', [
+        h('div.alert',
+          { style: { opacity: computed(hops, (_hops) => (_hops === hops.initial) ? 0 : 1) } },
+          [
             h('i.fa.fa-warning'),
             ' please restart patchbay for this to take effect'
-          ])
-        }),
+          ]
+        ),
+        h('FollowGraph', {
+          className: computed(hops, hops => {
+            switch (parseInt(hops)) {
+              case 0: return '-zero'
+              case 1: return '-one'
+              case 2: return '-two'
+              default: return '-three'
+            }
+          }),
+          innerHTML: fs.readFileSync(join(__dirname, 'friend-hops-graph.svg'), 'utf8')
+        })
       ])
     }
   }
