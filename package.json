@@ -118,7 +118,7 @@
     "ssb-sort": "^1.1.0",
     "ssb-suggest": "^1.0.4",
     "ssb-tangle": "^1.0.1",
-    "ssb-unread": "^1.0.5",
+    "ssb-unread": "^1.0.8",
     "ssb-uri": "^1.0.1",
     "ssb-ws": "~6.0.0",
     "suggest-box": "^2.2.3",

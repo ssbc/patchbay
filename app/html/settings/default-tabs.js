@@ -20,10 +20,11 @@ exports.create = function (api) {
     const defaultTabs = api.settings.obs.get('patchbay.defaultTabs', '')
     const setDefaultTabs = (ev) => {
       const tabs = ev.target.value.split(',').map(s => s.trim()).filter(Boolean)
-      api.settings.sync.set({patchbay: {defaultTabs: tabs}})
+      api.settings.sync.set({ patchbay: { defaultTabs: tabs } })
     }
 
     return {
+      group: 'general',
       title: 'Default Tabs',
       body: h('DefaultTabs', [
         h('p', 'Comma-seperated list of tabs which will open on startup.'),
