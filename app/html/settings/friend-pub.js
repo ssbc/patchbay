@@ -33,6 +33,7 @@ exports.create = function (api) {
     })
 
     return {
+      group: 'gossip',
       title: 'Pub gossip',
       body: h('FriendPub', [
         h('div.description', [

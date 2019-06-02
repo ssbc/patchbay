@@ -13,6 +13,7 @@ exports.create = function (api) {
 
   function versionsData () {
     return {
+      group: 'general',
       title: 'Installer version',
       body: h('Version', [
         h('p', [
