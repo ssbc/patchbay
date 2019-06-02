@@ -26,15 +26,14 @@ exports.create = function (api) {
     hops.initial = hops()
 
     watch(hops, hops => {
-      const intHops = parseInt(hops)
-      updateConfig(intHops)
+      updateConfig(hops)
     })
 
     return {
       title: 'Friend Hops',
       body: h('FriendHops', [
         h('div.description', [
-          'What you replicate (store a local copy of) is based on how many "hops" you replicate. If you replicate out to 1 hop, you are replicating the people you follow, at 2 hops, it is your follows and people they follow.'
+          'What you replicate (store a local copy of) is based on how many "hops" you replicate. If you replicate out to 1 hop, you are replicating the people you follow, at 2 hops, it is your follows and people they follow. Play with the slider to see this visualised in the graphic below!'
         ]),
         h('div.slider', [
           h('datalist', { id: 'friends-hop-datalist' }, [
@@ -49,11 +48,15 @@ exports.create = function (api) {
             min: 0,
             max: 3,
             value: hops,
-            'ev-change': (ev) => hops.set(ev.target.value)
+            'ev-change': (ev) => hops.set(parseInt(ev.target.value))
           })
         ]),
         h('div.alert',
-          { style: { opacity: computed(hops, (_hops) => (_hops === hops.initial) ? 0 : 1) } },
+          {
+            style: {
+              opacity: computed(hops, (_hops) => (_hops === hops.initial) ? 0 : 1)
+            }
+          },
           [
             h('i.fa.fa-warning'),
             ' please restart patchbay for this to take effect'
@@ -61,7 +64,7 @@ exports.create = function (api) {
         ),
         h('FollowGraph', {
           className: computed(hops, hops => {
-            switch (parseInt(hops)) {
+            switch (hops) {
               case 0: return '-zero'
               case 1: return '-one'
               case 2: return '-two'

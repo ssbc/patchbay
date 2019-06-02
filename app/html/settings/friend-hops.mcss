@@ -27,17 +27,33 @@ FriendHops {
       margin-left: 0
     }
   }
+
+  div.alert {
+    padding: .5rem
+    background: #fdbdfd
+  }
 }
 
 FollowGraph {
-  /* TODO comment this out and set in html */
-  --out-node-fill: #e4e4e4
-  --out-node-stroke: #808080
+  --out-node-fill: #e4e4e4;
+  --out-node-stroke: #808080;
+  --out-edge-stroke: rgba(143, 143, 143, 0.3);
+  --out-edge-marker: var(--out-edge-stroke);
+  --out-circle-fill: rgba(0, 0, 0, 0);
+  --out-circle-stroke: rgba(0, 0, 0, 0.2);
+  --in-node-fill: rgba(255, 49, 221, 0.65);
+  --in-node-stroke: #ff0000;
+  --in-edge-stroke: rgba(255, 0, 115, 0.28);
+  --in-edge-marker: var(--in-edge-stroke);
+  --in-circle-fill: rgba(161, 120, 255, 0.3);
+  --in-circle-stroke: rgba(211, 14, 241, 0.17);
 
-  --out-edge-stroke: rgba(0, 0, 0, 0.2)
+  --font-size: 15px
 
-  --out-circle-fill: rgba(0, 0, 0, 0.1)
-  --out-circle-stroke: rgba(0, 0, 0, 0)
+  svg {
+    width: 100%
+    min-width: 900px
+  }
 
   /* DEFAULTS */
   (circle[data-type="circle"]) {
@@ -51,17 +67,17 @@ FollowGraph {
   (g[data-type="edges"]) {
     stroke: var(--out-edge-stroke)
   }
+  (marker) {
+    fill: var(--out-edge-marker)
+    stroke: var(--out-edge-marker)
+  }
 
+  (g[data-type="note"]) { font-size: var(--font-size) }
+  (text[data-type="note"]) { font-size: var(--font-size) }
   (g[data-type="note"][data-hop="2"]) { opacity: 0 }
   (g[data-type="note"][data-hop="3"]) { opacity: 0 }
+  /* DEFAULTS */
 
-
-  --in-node-fill: rgba(128,0,128,1)
-
-  --in-edge-stroke: rgba(255,0,0,0.8)
-
-  --in-circle-fill: rgba(255,0,0,0.1)
-  --in-circle-stroke: rgba(255,0,0,0.5)
 
   -zero {
     $zero-on
@@ -97,6 +113,7 @@ FollowGraph {
     }
   }
 
+  /* PARTIALS */
   $one-on {
     (circle[data-type="circle"][data-hop="1"]) {
       fill: var(--in-circle-fill)
@@ -104,9 +121,14 @@ FollowGraph {
     }
     (g[data-type="nodes"][data-hop="1"]) {
       fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
     }
     (g[data-type="edges"][data-hop="1"]) {
       stroke: var(--in-edge-stroke)
+    }
+    (marker[data-hop="1"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
     }
   }
 
@@ -117,9 +139,14 @@ FollowGraph {
     }
     (g[data-type="nodes"][data-hop="2"]) {
       fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
     }
     (g[data-type="edges"][data-hop="2"]) {
       stroke: var(--in-edge-stroke)
+    }
+    (marker[data-hop="2"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
     }
   }
 
@@ -130,18 +157,14 @@ FollowGraph {
     }
     (g[data-type="nodes"][data-hop="3"]) {
       fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
     }
     (g[data-type="edges"][data-hop="3"]) {
       stroke: var(--in-edge-stroke)
     }
+    (marker[data-hop="3"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
+    }
   }
-  
-
-
-  /* (g#one-hop-nodes) { fill: red } */
-  /* (g#two-hop-nodes) { fill: red } */
-  /* (g#three-hop-nodes) { fill: blue } */
-  /* (g#four-hop-nodes) { fill: blue } */
-
-  /* (circle#zero-hop-circle)  */
 }
