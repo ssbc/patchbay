@@ -28,12 +28,12 @@ exports.create = function (api) {
     let pubs = Value({})
 
     watch(hops, hops => {
-      const intHops = parseInt(hops)
-      updateConfig(intHops)
-      updatePubs(intHops)
+      updateConfig(hops)
+      updatePubs(hops)
     })
 
     return {
+      group: 'gossip',
       title: 'Pub gossip',
       body: h('FriendPub', [
         h('div.description', [
@@ -52,7 +52,7 @@ exports.create = function (api) {
             min: 0,
             max: 3,
             value: hops,
-            'ev-change': (ev) => hops.set(ev.target.value)
+            'ev-change': (ev) => hops.set(parseInt(ev.target.value))
           })
         ]),
         computed(hops, (_hops) => {
