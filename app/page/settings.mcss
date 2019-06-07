@@ -52,14 +52,6 @@ SettingsPage {
             margin-left: .3rem
           }
 
-          textarea {
-            min-width: 400px
-            width: 600px
-            max-width: 600px
-            min-height: 200px
-            border: 1px solid gainsboro
-          }
-
           input {
             font-size: 1rem
 

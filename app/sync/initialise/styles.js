@@ -1,6 +1,6 @@
 const nest = require('depnest')
 const compileCss = require('micro-css')
-const { h, computed } = require('mutant')
+const { h, computed, when } = require('mutant')
 const get = require('lodash/get')
 
 exports.gives = nest('app.sync.initialise')
@@ -17,6 +17,7 @@ exports.create = function (api) {
     const css = values(api.styles.css()).join('\n')
     const custom = api.settings.obs.get('patchbay.customStyles')
     const accessibility = api.settings.obs.get('patchbay.accessibility')
+    const openDyslexicEnabled = api.settings.obs.get('patchbay.accessibility.openDyslexicEnabled')
 
     document.head.appendChild(
       h('style', { innerHTML: css })
@@ -30,6 +31,11 @@ exports.create = function (api) {
         innerHTML: computed(accessibility, a11y => {
           return compileCss(accessibilityMcss(a11y))
         })
+      })
+    )
+    document.head.appendChild(
+      h('style', {
+        innerHTML: when(openDyslexicEnabled, '.App { font-family: OpenDyslexicRegular; }', '')
       })
     )
   }
