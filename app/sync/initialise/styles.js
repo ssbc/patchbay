@@ -52,16 +52,16 @@ function accessibilityMcss (settings) {
 
   const css = `
 body {
-  filter: ${invert ? 'invert()' : ''} saturate(${saturation}%) brightness(${brightness}%) contrast(${contrast}%)
+  filter: ${invert ? 'invert(1)' : ''} saturate(${saturation}%) brightness(${brightness}%) contrast(${contrast}%)
 
   (img) {
-    filter: ${invert ? 'invert()' : ''}
+    filter: ${invert ? 'invert(1)' : ''}
   }
   (video) {
-    filter: ${invert ? 'invert()' : ''}
+    filter: ${invert ? 'invert(1)' : ''}
   }
   (button) {
-    filter: ${invert ? 'invert()' : ''}
+    filter: ${invert ? 'invert(1)' : ''}
   }
 }
 `
