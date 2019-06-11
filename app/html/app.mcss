@@ -1,5 +1,6 @@
 App {
   background: var(--app-border-background)
+  font-family: arial, sans-serif, NotoColorEmoji
 
   overflow: hidden
 
