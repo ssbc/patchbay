@@ -16,7 +16,12 @@ exports.create = (api) => {
     }
 
     const lb = computed(isOpen, _isOpen => {
-      if (!_isOpen) return h('Modal -close')
+      if (!_isOpen) {
+        return h('Modal -close', [
+          content
+          // NOTE contnet must be in the DOM for any downstream mutant Observers to be updating
+        ])
+      }
 
       return h('Modal -open',
         {
