@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const sharp = require('sharp');
-const toIco = require('to-ico');
-const icnsConvert = require('@fiahfy/icns-convert');
+const fs = require('fs')
+const path = require('path')
+const sharp = require('sharp')
+const toIco = require('to-ico')
+const icnsConvert = require('@fiahfy/icns-convert')
 
 const image = sharp(path.resolve(__dirname, 'icon.svg'))
 const sizes = [24, 32, 48, 64, 96, 128, 256]
@@ -28,5 +28,5 @@ function createIco (bufs) {
 function createIcns (bufs) {
   icnsConvert(bufs).then((data) => {
     fs.writeFileSync(path.resolve(__dirname, 'icon.icns'), data)
-})
+  })
 }

@@ -24,8 +24,10 @@ exports.create = function (api) {
 
   function threadPage (location) {
     let root = get(location, 'value.content.root') || get(location, 'value.content.about') || location.key
-    if (location.value && location.value.unbox) // direct link with unbox key
+    if (location.value && location.value.unbox) {
+      // direct link with unbox key
       root = location.key
+    }
     const msg = location.key
     if (msg !== root) scrollDownToMessage(msg)
 
@@ -52,8 +54,10 @@ exports.create = function (api) {
 
     const content = map(messages, m => {
       let msg = resolve(m)
-      if (msg.key == location.key && location.value && location.value.unbox) // we have an unbox key, so message is already unboxed
+      if (msg.key === location.key && location.value && location.value.unbox) {
+        // we have an unbox key, so message is already unboxed
         msg = location
+      }
       const message = api.message.html.render(msg, { pageId: root })
       markReadWhenVisible(message)
       return message
@@ -137,7 +141,7 @@ exports.create = function (api) {
   var observer
   function markReadWhenVisible (el) {
     if (!observer) {
-      observer = new IntersectionObserver((entries, observer) => {
+      observer = new IntersectionObserver((entries, observer) => { // eslint-disable-line
         entries
           .filter(e => e.isIntersecting && e.target.dataset && e.target.dataset.key)
           .forEach(e => {

@@ -29,7 +29,7 @@ exports.create = function (api) {
 
     api.sbot.async.run(server => {
       server.whoami((err, data) => {
-        if (err) alert(err)
+        if (err) throw err
         document.body.appendChild(App)
       })
     })

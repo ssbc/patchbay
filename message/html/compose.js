@@ -173,8 +173,7 @@ exports.create = function (api) {
 
           const pos = textArea.selectionStart
           let insertLink = datLink
-          if (filenames.length == 1)
-            insertLink = '[' + ev.target.files[0].name + ']' + '(' + datLink + '/' + ev.target.files[0].name + ')'
+          if (filenames.length === 1) { insertLink = '[' + ev.target.files[0].name + ']' + '(' + datLink + '/' + ev.target.files[0].name + ')' }
 
           textArea.value = textArea.value.slice(0, pos) + insertLink + textArea.value.slice(pos)
         })

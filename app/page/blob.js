@@ -1,6 +1,6 @@
 const nest = require('depnest')
 const pull = require('pull-stream')
-const { h, Value, when } = require('mutant')
+const { h, Value } = require('mutant')
 
 exports.gives = nest('app.page.blob')
 

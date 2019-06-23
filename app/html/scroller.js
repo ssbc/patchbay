@@ -19,7 +19,7 @@ exports.create = function (api) {
         classList,
         className,
         title,
-        style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' },
+        style: { 'overflow-y': 'scroll', 'overflow-x': 'auto' }
         // TODO (watch for breaks e.g. stuff stops updating after scrolling)
       },
       [
