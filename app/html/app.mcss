@@ -1,13 +1,21 @@
 App {
   background: var(--app-border-background)
-  position: absolute
-
-  top: 0
-  bottom: 0
-  left: 0
-  right: 0
+  font-family: arial, sans-serif, NotoColorEmoji
 
   overflow: hidden
-  min-height: 0px
-}
 
+  min-height: 0px
+  height: 100%
+  width: 100%
+
+  position: relative
+
+  div.Hypertabs {
+    position: absolute
+
+    top: var(--app-border-width)
+    bottom: var(--app-border-width)
+    left: var(--app-border-width)
+    right: var(--app-border-width)
+  }
+}

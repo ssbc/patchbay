@@ -2,18 +2,6 @@
 /* NOTE there are some active styles in here still */
 
 Hypertabs {
-  position: fixed
-  top: 0
-  right: 0
-  left: 0
-  bottom: 0
-
-  display: flex
-  flex-direction: column
-
-  height: 100% /* needed to stop scroller blowing out */
-  overflow: hidden
-
   nav {
     display: flex
     
@@ -92,17 +80,4 @@ Hypertabs {
       margin: 0 .5rem
     }
   }
-
-  section.content {
-    display: flex
-
-    height: 100% /* needed to stop making nav weird */
-
-    div.page {
-      flex-grow: 1
-
-      display: flex /*hack to get give Scroller context it needs */
-    }
-  }
 }
-

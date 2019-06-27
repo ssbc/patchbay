@@ -1,8 +1,9 @@
 const nest = require('depnest')
 const { h, Value, Array: MutantArray, Struct, computed, when, map } = require('mutant')
 const pull = require('pull-stream')
-const Scroller = require('mutant-scroll')
+const pullAbortable = require('pull-abortable')
 const next = require('pull-next-query')
+const Scroller = require('mutant-scroll')
 const merge = require('lodash/merge')
 const get = require('lodash/get')
 const sort = require('ssb-sort')
@@ -83,7 +84,15 @@ exports.create = function (api) {
       ])
     ])
 
+    var abortLive = pullAbortable()
+    var abortReverse = pullAbortable()
+
     return computed(state, state => {
+      abortLive.abort()
+      abortLive = pullAbortable()
+      abortReverse.abort()
+      abortReverse = pullAbortable()
+
       var page
       if (state.sort === BY_UPDATE) page = PageByUpdate(state)
       if (state.sort === BY_START) page = PageByStart(state)
@@ -110,7 +119,10 @@ exports.create = function (api) {
             }
           }
           const defaults = { limit: 100, query: [{ $filter }] }
-          return next(server.query.read, merge({}, defaults, opts), ['timestamp'])
+          return pull(
+            next(server.query.read, merge({}, defaults, opts), ['timestamp']),
+            opts.live ? abortLive : abortReverse
+          )
         })
       }
 
@@ -170,6 +182,7 @@ exports.create = function (api) {
           // server.query.explain(merge({}, defaults, opts), console.log)
           return pull(
             next(server.query.read, merge({}, defaults, opts), ['value', 'timestamp']),
+            opts.live ? abortLive : abortReverse,
             pull.map(m => m.key)
           )
         })

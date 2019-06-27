@@ -21,7 +21,8 @@ exports.create = function (api) {
     const contrast = api.settings.obs.get('patchbay.accessibility.contrast')
 
     return {
-      title: 'Accessibility',
+      group: 'accessibility',
+      title: 'Accessibility Styles',
       body: h('AccessibilityStyles', [
         h('div', { 'ev-click': () => invert.set(!invert()) }, [
           h('label', 'Invert colors'),

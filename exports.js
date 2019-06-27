@@ -1,15 +1,9 @@
-const combine = require('depject')
-const entry = require('depject/entry')
-const nest = require('depnest')
 const bulk = require('bulk-require')
-const values = require('lodash/values')
-
-// polyfills
-require('setimmediate')
-
 const patchcore = require('patchcore')
 delete patchcore.patchcore.message.html.action.reply
 // prune an action we don't want
+
+const configModule = require('./config')
 
 const patchbay = {
   patchbay: {
@@ -23,7 +17,6 @@ const patchbay = {
     styles: bulk(__dirname, [ 'styles/**/*.js' ]),
     sbot: bulk(__dirname, [ 'sbot/**/*.js' ]),
 
-    config: require('./config'), // shouldn't be in here ?
     suggestions: require('patch-suggest'),
     settings: require('patch-settings'),
     drafts: require('patch-drafts'),
@@ -35,7 +28,6 @@ const plugins = {
   scry: require('patchbay-scry'),
   darkCrystal: require('patchbay-dark-crystal'),
   poll: require('patchbay-poll'),
-  // hackyArt: require('patchbay-hacky-art'), // TODO rework this to be in alignment with values
   inbox: require('patch-inbox'), // TODO needs work
   chess: require('ssb-chess-mithril'),
   book: require('patchbay-book'),
@@ -43,18 +35,8 @@ const plugins = {
 }
 
 module.exports = {
+  configModule,
   plugins,
   patchbay,
   patchcore
-}
-
-// for electro[n]
-if (typeof window !== 'undefined' && !module.parent.parent) {
-  // TODO spin up settings check which modules are wanted
-  const args = [ ...values(plugins), patchbay, patchcore ]
-  // plugings loaded first will over-ride core modules loaded later
-  const sockets = combine.apply(null, args)
-
-  const api = entry(sockets, nest('app.html.app', 'first'))
-  document.body.appendChild(api.app.html.app())
 }

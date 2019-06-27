@@ -1,54 +1,66 @@
 SettingsPage {
-  flex-grow: 1
-
-  display: flex
-  justify-content: center
-
   div.container {
     background-color: hsla(0, 0%, 100%, .3)
     padding: 1rem
     margin: 1rem 0
 
-    h1 {
-      text-transform: uppercase
-      font-size: .8rem
-      letter-spacing: 3.4px
-      margin-bottom: 3rem
-      margin-left: .3rem
-    }
+    display: grid
+    grid-template-columns: 8rem 1fr
+    grid-gap: 2rem
 
-    section {
-      margin-bottom: 3rem
-      h2 {
-        margin: 0
-        margin-left: .3rem
-        font-size: 1rem
-        text-transform: uppercase
-        letter-spacing: 2px
-      }
+    section.groups {
+      display: grid
+      align-content: start
+      grid-gap: 1px
 
       div {
-        p, div {
-          margin-top: .2rem
-          margin-left: .3rem
+        background: #fff
+        cursor: pointer
+
+        padding: .3rem .5rem
+
+        -active {
+          background: #000
+          color: #fff
         }
 
-        textarea {
-          min-width: 400px
-          width: 600px
-          max-width: 600px
-          min-height: 200px
-          border: 1px solid gainsboro
+        :hover {
+          background: #000
+          color: #fff
         }
+      }
+    }
 
-        input {
+    section.group-settings {
+      display: grid
+      grid-gap: 1rem
+
+      div.setting {
+        margin-bottom: 3rem
+        h2 {
           font-size: 1rem
+          text-transform: uppercase
+          letter-spacing: 2px
 
-          padding: .5rem
-          border: 1px solid gainsboro
+          margin: 0 0 1rem .3rem
+          border-bottom: 2px solid #3e3e3e
+        }
 
-          width: 600px
-          max-width: 600px
+        div {
+          p, div {
+            margin-top: .2rem
+            margin-left: .3rem
+          }
+
+          input {
+            font-size: 1rem
+
+            padding: .5rem
+            border: 1px solid gainsboro
+
+            width: 600px
+            max-width: 600px
+          }
         }
       }
     }

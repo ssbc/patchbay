@@ -2,7 +2,11 @@ CustomStyles {
   textarea {
     font-family: monospace
     line-height: 1.2rem
+    max-width: calc(100% - 1rem)
+    min-height: 400px
+    border: 1px solid gainsboro
   }
+
   button {
     display: block
     margin: .5rem 0

@@ -1,5 +1,5 @@
 const path = require('path')
-const { basename } = path
+// const { basename } = path
 const readDirectory = require('read-directory')
 const { each } = require('libnested')
 const nest = require('depnest')
@@ -7,7 +7,7 @@ const nest = require('depnest')
 const contents = readDirectory.sync(path.join(__dirname, '..'), {
   extensions: false,
   filter: '**/*.mcss',
-  ignore: '**/node_modules/**'
+  ignore: ['**/node_modules/**', 'dist/**']
 })
 
 exports.gives = nest('styles.mcss')
@@ -17,8 +17,9 @@ exports.create = function (api) {
 
   function mcss (sofar = {}) {
     each(contents, (content, [filename]) => {
-      const name = basename(filename)
-      sofar[name] = content
+      // const name = basename(filename)
+      // sofar[name] = content
+      sofar[filename] = content
     })
     return sofar
   }

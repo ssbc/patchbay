@@ -55,7 +55,7 @@ exports.create = function (api) {
     })
 
     return {
-      title: 'Langauge',
+      title: 'Language',
       body: h('Language', [
         h('p', 'This is only used for the spell checker currently. You have to use a valid language code (e.g. en-GB), but invalid guesses will be fixed!'),
         h('div', [

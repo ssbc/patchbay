@@ -1,0 +1,170 @@
+FriendHops {
+  display: grid
+  grid-gap: 1rem
+
+  div.description {}
+
+  --range-options: 4
+  --cols: calc(2 * var(--range-options))
+
+  div.slider {
+    display: grid
+    grid-template-columns: repeat(var(--cols), 1fr)
+
+    datalist {
+      grid-row: 1
+      grid-column: 1 / calc(var(--cols) + 1)
+
+      display: grid
+      grid-template-columns: 1fr 1fr 1fr 1fr
+      justify-items: center
+    }
+
+    input[type=range] {
+      grid-row: 2
+      grid-column: 2 / var(--cols)
+
+      margin-left: 0
+    }
+  }
+
+  div.alert {
+    padding: .5rem
+    background: #fdbdfd
+  }
+}
+
+FollowGraph {
+  --out-node-fill: #e4e4e4;
+  --out-node-stroke: #808080;
+  --out-edge-stroke: rgba(143, 143, 143, 0.3);
+  --out-edge-marker: var(--out-edge-stroke);
+  --out-circle-fill: rgba(0, 0, 0, 0);
+  --out-circle-stroke: rgba(0, 0, 0, 0.2);
+  --in-node-fill: rgba(255, 49, 221, 0.65);
+  --in-node-stroke: #ff0000;
+  --in-edge-stroke: rgba(255, 0, 115, 0.28);
+  --in-edge-marker: var(--in-edge-stroke);
+  --in-circle-fill: rgba(161, 120, 255, 0.3);
+  --in-circle-stroke: rgba(211, 14, 241, 0.17);
+
+  --font-size: 15px
+
+  svg {
+    width: 100%
+    min-width: 900px
+  }
+
+  /* DEFAULTS */
+  (circle[data-type="circle"]) {
+    fill: var(--out-circle-fill)
+    stroke: var(--out-circle-stroke)
+  }
+  (g[data-type="nodes"]) {
+    fill: var(--out-node-fill)
+    stroke: var(--out-node-stroke)
+  }
+  (g[data-type="edges"]) {
+    stroke: var(--out-edge-stroke)
+  }
+  (marker) {
+    fill: var(--out-edge-marker)
+    stroke: var(--out-edge-marker)
+  }
+
+  (g[data-type="note"]) { font-size: var(--font-size) }
+  (text[data-type="note"]) { font-size: var(--font-size) }
+  (g[data-type="note"][data-hop="2"]) { opacity: 0 }
+  (g[data-type="note"][data-hop="3"]) { opacity: 0 }
+  /* DEFAULTS */
+
+
+  -zero {
+    $zero-on
+  }
+
+  -one {
+    $zero-on
+    $one-on
+
+  }
+
+  -two {
+    $zero-on
+    $one-on
+    $two-on
+
+    (g[data-type="note"][data-hop="2"]) { opacity: 1 }
+  }
+
+  -three {
+    $zero-on
+    $one-on
+    $two-on
+    $three-on
+
+    (g[data-type="note"][data-hop="3"]) { opacity: 1 }
+  }
+
+  $zero-on {
+    (circle[data-type="circle"][data-hop="0"]) {
+      fill: var(--in-circle-fill)
+      stroke: var(--in-circle-stroke)
+    }
+  }
+
+  /* PARTIALS */
+  $one-on {
+    (circle[data-type="circle"][data-hop="1"]) {
+      fill: var(--in-circle-fill)
+      stroke: var(--in-circle-stroke)
+    }
+    (g[data-type="nodes"][data-hop="1"]) {
+      fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
+    }
+    (g[data-type="edges"][data-hop="1"]) {
+      stroke: var(--in-edge-stroke)
+    }
+    (marker[data-hop="1"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
+    }
+  }
+
+  $two-on {
+    (circle[data-type="circle"][data-hop="2"]) {
+      fill: var(--in-circle-fill)
+      stroke: var(--in-circle-stroke)
+    }
+    (g[data-type="nodes"][data-hop="2"]) {
+      fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
+    }
+    (g[data-type="edges"][data-hop="2"]) {
+      stroke: var(--in-edge-stroke)
+    }
+    (marker[data-hop="2"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
+    }
+  }
+
+  $three-on {
+    (circle[data-type="circle"][data-hop="3"]) {
+      fill: var(--in-circle-fill)
+      stroke: var(--in-circle-stroke)
+    }
+    (g[data-type="nodes"][data-hop="3"]) {
+      fill: var(--in-node-fill)
+      stroke: var(--in-node-stroke)
+    }
+    (g[data-type="edges"][data-hop="3"]) {
+      stroke: var(--in-edge-stroke)
+    }
+    (marker[data-hop="3"]) {
+      fill: var(--in-edge-marker)
+      stroke: var(--in-edge-marker)
+    }
+  }
+}

@@ -10,14 +10,13 @@ exports.gives = nest('app.sync.initialise')
 
 exports.needs = nest({
   'app.sync.goTo': 'first',
-  'config.sync.load': 'first',
   'sbot.async.get': 'first',
   'settings.sync.get': 'first'
 })
 
 exports.create = function (api) {
-  return nest('app.sync.initialise', function () {
-    const { gateway } = api.config.sync.load()
+  return nest('app.sync.initialise', function (_, _config) {
+    const { gateway } = _config
 
     const config = {
       gateway: gateway || 'https://viewer.scuttlebot.io',
