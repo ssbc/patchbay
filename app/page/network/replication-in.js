@@ -136,7 +136,7 @@ function initialiseChart ({ canvas, state: { data, range } }) {
     }
 
     chart.options.scales.yAxes[0].ticks.max = max
-    chart.options.scales.yAxes[0].stepSize = stepSize // not sure this works
+    chart.options.scales.yAxes[0].ticks.stepSize = stepSize // not sure this works
 
     chart.update()
   })

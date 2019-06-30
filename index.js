@@ -12,8 +12,6 @@ const plugins = [
   'ssb-legacy-conn',
   'ssb-replicate',
   'ssb-friends',
-  'ssb-invite',
-  'ssb-peer-invites',
 
   'ssb-blobs',
   'ssb-ws',
@@ -29,7 +27,13 @@ const plugins = [
   'ssb-search',
   'ssb-suggest',
   'ssb-tangle',
-  'ssb-unread'
+  'ssb-unread',
+
+  'ssb-invite',
+
+  'ssb-device-address', // for peer-invites
+  'ssb-identities', // for peer invites
+  'ssb-peer-invites'
 ]
 
 ahoy(

@@ -4,8 +4,8 @@ const { h, Value, computed } = require('mutant')
 const Connections = require('./connections')
 const ReplicationIn = require('./replication-in')
 const ReplicationOut = require('./replication-out')
-const InviteClassic = require('./invite-classic')
-// const InvitePeer = require('./invite-peer')
+const InvitePub = require('./invite-pub')
+const InvitePeer = require('./invite-peer')
 
 exports.gives = nest({
   'app.html.menuItem': true,
@@ -55,8 +55,8 @@ exports.create = function (api) {
         {
           name: 'invites',
           subgroups: [
-            // InvitePeer({ connection }),
-            InviteClassic({ connection })
+            InvitePub({ connection }),
+            InvitePeer({ connection })
           ]
         }
       ],
@@ -86,10 +86,6 @@ exports.create = function (api) {
         subgroup.body
       ])
     }
-
-    // Connected Peers tab
-    // Invites tab
-    // Traffic
 
     var { container } = api.app.html.scroller({ prepend: page })
     container.title = '/network'
