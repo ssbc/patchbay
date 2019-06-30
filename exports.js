@@ -7,15 +7,15 @@ const configModule = require('./config')
 
 const patchbay = {
   patchbay: {
-    about: bulk(__dirname, [ 'about/**/*.js' ]),
-    app: bulk(__dirname, [ 'app/**/*.js' ]),
-    blob: bulk(__dirname, [ 'blob/**/*.js' ]),
-    channel: bulk(__dirname, [ 'channel/**/*.js' ]),
-    contact: bulk(__dirname, [ 'contact/**/*.js' ]),
-    message: bulk(__dirname, [ 'message/**/*.js' ]),
-    router: bulk(__dirname, [ 'router/**/*.js' ]),
-    styles: bulk(__dirname, [ 'styles/**/*.js' ]),
-    sbot: bulk(__dirname, [ 'sbot/**/*.js' ]),
+    about: getModules('about/**/*.js'),
+    app: getModules('app/**/*.js'),
+    blob: getModules('blob/**/*.js'),
+    channel: getModules('channel/**/*.js'),
+    contact: getModules('contact/**/*.js'),
+    message: getModules('message/**/*.js'),
+    router: getModules('router/**/*.js'),
+    styles: getModules('styles/**/*.js'),
+    sbot: getModules('sbot/**/*.js'),
 
     suggestions: require('patch-suggest'),
     settings: require('patch-settings'),
@@ -39,4 +39,8 @@ module.exports = {
   plugins,
   patchbay,
   patchcore
+}
+
+function getModules (path) {
+  return bulk(__dirname, [path])
 }

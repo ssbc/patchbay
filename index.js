@@ -13,6 +13,7 @@ const plugins = [
   'ssb-replicate',
   'ssb-friends',
   'ssb-invite',
+  'ssb-peer-invites',
 
   'ssb-blobs',
   'ssb-ws',

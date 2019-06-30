@@ -1,0 +1,49 @@
+NetworkPage {
+  div.container {
+    background-color: hsla(0, 0%, 100%, .3)
+    margin: 1rem 0
+
+    display: grid
+    grid-template-columns: 8rem 1fr
+    grid-gap: 2rem
+
+    section.groups {
+      display: grid
+      align-content: start
+      grid-gap: 1px
+
+      div {
+        background: #fff
+        cursor: pointer
+
+        padding: .3rem .5rem
+
+        -active {
+          background: #000
+          color: #fff
+        }
+
+        :hover {
+          background: #000
+          color: #fff
+        }
+      }
+    }
+
+    section.subgroups {
+      display: grid
+      grid-gap: 2rem
+
+      div.subgroup {
+        h2 {
+          font-size: 1rem
+          text-transform: uppercase
+          letter-spacing: 2px
+
+          border-bottom: 2px solid #3e3e3e
+          margin: 0 0 1rem 0
+        }
+      }
+    }
+  }
+}
