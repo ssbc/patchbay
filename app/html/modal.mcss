@@ -28,7 +28,7 @@ Modal {
     display: grid
   }
 
-  -close {
+  -closed {
     display: none
   }
 
