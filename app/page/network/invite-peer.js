@@ -8,11 +8,13 @@ function isInvite (code) {
 
 module.exports = function InvitePeer ({ connection }) {
   const state = {
-    // use: {
-    //   invite: Value(),
-    //   processing: Value(false),
-    //   result: Value(null)
-    // },
+    use: {
+      invite: Value(),
+      opening: Value(false),
+      message: Value(null),
+      accepting: Value(false),
+      result: Value(null)
+    },
     create: {
       input: {
         private: Value(),
@@ -25,25 +27,41 @@ module.exports = function InvitePeer ({ connection }) {
   }
 
   const body = h('InvitePeer', [
-    // h('div.use', [
-    //   h('input', {
-    //     'placeholder': 'peer invite code',
-    //     'ev-input': handleInviteCode
-    //   }),
-    //   computed([state.use.invite, state.use.processing], (invite, processing) => {
-    //     if (processing) return h('i.fa.fa-spinner.fa-pulse')
-    //     if (invite) return h('button -primary', { 'ev-click': useInvite }, 'use invite')
+    h('div.use', [
+      h('input', {
+        'placeholder': 'peer invite code',
+        'ev-input': handleInput
+      }),
+      h('div.actions', computed(
+        [state.use.invite, state.use.opening, state.use.message, state.use.accepting],
+        (invite, opening, message, accepting) => {
+          if (opening || accepting) {
+            return [
+              h('button', { disabled: 'disabled' }, [
+                h('i.fa.fa-spinner.fa-pulse')
+              ])
+            ]
+          }
 
-    //     return h('button', { disabled: 'disabled', title: 'not a valid invite code' }, 'use invite')
-    //   }),
-    //   computed(state.use.result, result => {
-    //     if (result === null) return
+          return [
+            message && message.private ? h('div.private', message.private) : '',
+            message && message.reveal ? h('div.private', message.reveal) : '',
+            message
+              ? h('button -primary', { 'ev-click': acceptInvite }, 'accept invitation')
+              : invite
+                ? h('button -primary', { 'ev-click': openInvite }, 'use invite')
+                : h('button', { disabled: 'disabled', title: 'not a valid invite code' }, 'use invite')
+          ]
+        }
+      )),
+      computed(state.use.result, result => {
+        if (result === null) return
 
-    //     return result
-    //       ? h('i.fa.fa-check')
-    //       : h('i.fa.fa-times')
-    //   })
-    // ]),
+        return result
+          ? h('i.fa.fa-check')
+          : h('i.fa.fa-times')
+      })
+    ]),
     h('div.create', [
       h('textarea.private', {
         placeholder: 'private message to your friend',
@@ -94,37 +112,56 @@ module.exports = function InvitePeer ({ connection }) {
     })
   }
 
-  // function handleInviteCode (ev) {
-  //   state.use.result.set(null)
-  //   const invite = ev.target.value.replace(/^\s*"?/, '').replace(/"?\s*$/, '')
-  //   if (!isInvite(invite)) {
-  //     state.use.invite.set()
-  //     return
-  //   }
+  function handleInput (ev) {
+    state.use.result.set(null)
+    const invite = ev.target.value.replace(/^\s*"?/, '').replace(/"?\s*$/, '')
 
-  //   ev.target.value = invite
-  //   state.use.invite.set(invite)
-  // }
+    if (!isInvite(invite)) return
 
-  // function useInvite () {
-  //   state.use.processing.set(true)
+    ev.target.value = invite
+    state.use.invite.set(invite)
+  }
 
-  //   onceTrue(connection, server => {
-  //     // TODO use peerInvites
-  //     server.invite.accept(resolve(state.invite), (err, data) => {
-  //       state.inviteProcessing.set(false)
-  //       state.invite.set()
+  function openInvite () {
+    state.use.opening.set(true)
 
-  //       if (err) {
-  //         state.use.result.set(false)
-  //         console.error(err)
-  //         return
-  //       }
-  //       state.use.result.set(true)
-  //       console.log(data)
-  //     })
-  //   })
-  // }
+    console.log('openInvite', resolve(state.use.invite))
+    onceTrue(connection, server => {
+      server.peerInvites.openInvite(resolve(state.use.invite), (err, msg, opened) => {
+        state.use.opening.set(false)
+        if (err) {
+          state.use.result.set(false)
+          console.error(err)
+          return
+        }
+
+        console.log(err, msg, opened) // NOTE no opened arriving ...
+        // HACK
+        const m = opened || {
+          private: 'kiaora gorgeous, welcome'
+        }
+        state.use.message.set(m)
+      })
+    })
+  }
+
+  function acceptInvite () {
+    state.use.accepting.set(true)
+
+    onceTrue(connection, server => {
+      server.peerInvites.acceptInvite(resolve(state.use.invite), (err, confirm) => {
+        state.use.accepting.set(false)
+        if (err) {
+          state.use.result.set(false)
+          console.error(err)
+          return
+        }
+
+        console.log('peerInvites.acceptInvite worked:', confirm)
+        state.use.result.set(true)
+      })
+    })
+  }
 
   return {
     title: 'peer invites',

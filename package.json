@@ -113,7 +113,7 @@
     "ssb-mentions": "^0.5.0",
     "ssb-mutual": "^0.1.0",
     "ssb-ooo": "^1.1.1",
-    "ssb-peer-invites": "^1.2.0",
+    "ssb-peer-invites": "^1.2.2",
     "ssb-private": "^0.2.3",
     "ssb-query": "^2.1.0",
     "ssb-ref": "^2.13.6",
