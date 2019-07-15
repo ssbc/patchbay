@@ -1,0 +1,12 @@
+InvitePub {
+  display: grid
+  grid-template-columns: minmax(500px, 4fr) 1fr 3rem
+  grid-gap: 1rem
+
+  input {
+    font-size: 1rem
+
+    padding: .5rem
+    border: 1px solid gainsboro
+  }
+}

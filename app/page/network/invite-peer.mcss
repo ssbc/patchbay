@@ -1,0 +1,60 @@
+InvitePeer {
+  display: grid
+
+  div.use {
+    display: grid
+    grid-template-columns: minmax(500px, 4fr) 1fr 3rem
+    align-items: start
+    grid-gap: 1rem
+
+    textarea {
+      font-size: 1rem
+      min-height: 5rem
+
+      padding: .5rem
+    }
+
+    margin-bottom: 2rem
+  }
+
+  div.create {
+    p {}
+
+    div.form {
+      display: grid
+      grid-template-columns: minmax(500px, 4fr) 1fr 3rem
+      align-items: start
+      grid-gap: 1rem
+
+      div.inputs {
+        display: grid
+        grid-gap: 1rem
+
+        textarea {
+          font-size: 1rem
+          min-height: 3.5rem
+
+          padding: .5rem
+        }
+      }
+
+      margin-bottom: 1rem
+    }
+
+    div.result {
+      display: grid
+      grid-template-columns: minmax(500px, 4fr) 1fr 3rem
+
+      div.code {
+        padding: .5rem
+        user-select: all
+        background: deeppink
+
+        code {
+          color: white
+          font-weight: 600
+        }
+      }
+    }
+  }
+}
