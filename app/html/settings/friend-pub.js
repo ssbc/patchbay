@@ -33,11 +33,11 @@ exports.create = function (api) {
     })
 
     return {
-      group: 'gossip',
-      title: 'Pub gossip',
+      group: 'replication',
+      title: 'Pub replication',
       body: h('FriendPub', [
         h('div.description', [
-          'Limit gossip with pubs based on who owns the pub'
+          'Limit gossip with pubs (always online peers who help replication) based on who owns the pub'
         ]),
         h('div.slider', [
           h('datalist', { id: 'pub-gossip-datalist' }, [

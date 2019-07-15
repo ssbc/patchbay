@@ -7,31 +7,32 @@ module.exports = function Connections ({ localPeers, connectedPeers, avatar }) {
     {
       title: 'local peers',
       body: h('LocalPeers', [
-        computed(state.localPeers, peers => {
+        h('div.peers', computed(state.localPeers, peers => {
           if (!peers.length) return h('p', 'No local peers (on same wifi/ LAN)')
 
           return peers.map(peer => avatar(peer))
-        }),
+        })),
         h('p', [
           h('i.fa.fa-info-circle'),
-          'these are people on the same WiFi/ LAN as you right now. You might not know some of them yet, but you can click through to find out more about them and follow them if you like.'
+          'these are peers on the same WiFi/LAN as you right now. You might not know some of them yet, but you can click through to find out more about them and follow them if you like.'
         ])
       ])
     },
     {
       title: 'remote peers',
       body: h('RemotePeers', [
-        computed(state.remotePeers, peers => {
+        h('div.peers', computed(state.remotePeers, peers => {
           if (!peers.length) return h('p', 'No remote peers connected')
 
           return peers.map(peer => avatar(peer))
-        }),
+        })),
         h('p', [
           h('i.fa.fa-info-circle'),
-          'these are people on the same WiFi/ LAN as you right now. You might not know some of them yet, but you can click through to find out more about them and follow them if you like.'
+          'these are peers your\'re connecting to over the internet. You might be connected peers who you haven\'t followed (likely pubs) - this is because friends of yours might have gossiped about them, and you\'re just checking in to see if they have any news about any of your friends. If you don\'t like this, you can change it in ',
+          h('a', { href: '/settings' }, '/settings'),
+          ' under "replication"'
         ])
       ])
-
     }
   ]
 }

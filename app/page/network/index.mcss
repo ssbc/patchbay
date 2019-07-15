@@ -32,7 +32,7 @@ NetworkPage {
 
     section.subgroups {
       display: grid
-      grid-gap: 2rem
+      grid-gap: 4rem
 
       div.subgroup {
         h2 {

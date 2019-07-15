@@ -2,7 +2,10 @@ const { h, Value, resolve, onceTrue, when, computed } = require('mutant')
 // const { isInvite } = require('ssb-ref')
 
 function isInvite (code) {
-  return typeof code === 'string' && code.length > 32 && code.startsWith('inv:')
+  return typeof code === 'string' &&
+    code.length > 32 &&
+    code.startsWith('inv:') &&
+    code.endsWith('=')
   // TODO find actual peer-invite validator!
 }
 
@@ -27,12 +30,17 @@ module.exports = function InvitePeer ({ connection }) {
   }
 
   const body = h('InvitePeer', [
+    h('p', [
+      h('i.fa.fa-warning'),
+      ' BETA - peer invites are still being rolled out to pubs and tested.'
+    ]),
     h('div.use', [
-      h('input', {
+      h('textarea', {
         'placeholder': 'peer invite code',
         'ev-input': handleInput
       }),
-      h('div.actions', computed(
+      // MIX : I hate this, it's a mess. There's a state machine emerging, but I don't have time to build it right now
+      computed(
         [state.use.invite, state.use.opening, state.use.message, state.use.accepting],
         (invite, opening, message, accepting) => {
           if (opening || accepting) {
@@ -53,7 +61,7 @@ module.exports = function InvitePeer ({ connection }) {
                 : h('button', { disabled: 'disabled', title: 'not a valid invite code' }, 'use invite')
           ]
         }
-      )),
+      ),
       computed(state.use.result, result => {
         if (result === null) return
 
@@ -63,20 +71,34 @@ module.exports = function InvitePeer ({ connection }) {
       })
     ]),
     h('div.create', [
-      h('textarea.private', {
-        placeholder: 'private message to your friend',
-        'ev-input': (ev) => state.create.input.private.set(ev.target.value)
-      }),
-      h('textarea.reveal', {
-        placeholder: 'an introduction message for the community',
-        'ev-input': (ev) => state.create.input.reveal.set(ev.target.value)
-      }),
-      h('button', {
-        'ev-click': createInvite,
-        disabled: state.create.processing
-      }, 'create peer-invite'),
-      when(state.create.processing, state.create.time),
-      h('pre', state.create.result)
+      h('p', 'make a new peer invite code:'),
+      h('div.form', [
+        h('div.inputs', [
+          h('textarea.private', {
+            placeholder: 'private message your friend will see when they open this invite',
+            'ev-input': (ev) => state.create.input.private.set(ev.target.value)
+          }),
+          h('textarea.reveal', {
+            placeholder: 'an introduction message which the community will be able to read when this invite is accepted',
+            'ev-input': (ev) => state.create.input.reveal.set(ev.target.value)
+          })
+        ]),
+        h('button', {
+          'ev-click': createInvite,
+          disabled: state.create.processing
+        }, 'create peer-invite')
+      ]),
+      h('div.result', [
+        when(state.create.processing, [
+          'creating an peer invite takes some time.',
+          h('br'),
+          'time so far: ',
+          state.create.time
+        ]),
+        when(state.create.result, h('div.code', [
+          h('code', state.create.result)
+        ]))
+      ])
     ])
   ])
 
@@ -94,7 +116,7 @@ module.exports = function InvitePeer ({ connection }) {
           const secs = Math.floor((dt - mins * MINUTE) / SECOND)
           state.create.time.set(`${mins} mins, ${secs} seconds`)
         },
-        1e3
+        SECOND
       )
 
       const opts = {
@@ -125,9 +147,8 @@ module.exports = function InvitePeer ({ connection }) {
   function openInvite () {
     state.use.opening.set(true)
 
-    console.log('openInvite', resolve(state.use.invite))
     onceTrue(connection, server => {
-      server.peerInvites.openInvite(resolve(state.use.invite), (err, msg, opened) => {
+      server.peerInvites.openInvite(resolve(state.use.invite), (err, data) => {
         state.use.opening.set(false)
         if (err) {
           state.use.result.set(false)
@@ -135,9 +156,9 @@ module.exports = function InvitePeer ({ connection }) {
           return
         }
 
-        console.log(err, msg, opened) // NOTE no opened arriving ...
+        console.log(err, data) // NOTE no opened arriving ...
         // HACK
-        const m = opened || {
+        const m = data.opened || {
           private: 'kiaora gorgeous, welcome'
         }
         state.use.message.set(m)

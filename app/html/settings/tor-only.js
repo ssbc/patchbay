@@ -27,7 +27,7 @@ exports.create = function (api) {
     })
 
     return {
-      group: 'gossip',
+      group: 'replication',
       title: 'Tor only connections',
       body: h('TorOnly', [
         h('p', [
