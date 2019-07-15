@@ -2,14 +2,15 @@ const ahoy = require('ssb-ahoy')
 const StartMenus = require('./menu')
 
 const plugins = [
-  'ssb-server/plugins/master',
-  'ssb-server/plugins/unix-socket',
-  'ssb-server/plugins/no-auth',
-  'ssb-server/plugins/onion',
-  'ssb-server/plugins/local',
-  'ssb-server/plugins/logging',
+  'ssb-master',
+  'ssb-unix-socket',
+  'ssb-no-auth',
+  'ssb-onion',
+  'ssb-local',
+  'ssb-logging',
 
   'ssb-legacy-conn',
+  // 'ssb-conn', // TODO requires secret-stack@^6.2.0 , but ssb-server shrinkwrapped @6.1.2
   'ssb-replicate',
   'ssb-friends',
 
@@ -40,7 +41,7 @@ ahoy(
   {
     title: 'Patchbay',
     plugins,
-    // appDir: '../patchbay', // only used when ssb-ahoy is symlinked in!
+    appDir: '../patchbay', // only used when ssb-ahoy is symlinked in! // TODO recomment before publish
     uiPath: './ui.js'
   },
   (state) => {
