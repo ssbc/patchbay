@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const { h, computed, Value } = require('mutant')
+const { h, Value } = require('mutant')
 
 exports.gives = nest('app.html.modal')
 
@@ -15,27 +15,31 @@ exports.create = (api) => {
       if (typeof onClose === 'function') onClose()
     }
 
-    const lb = computed(isOpen, _isOpen => {
-      if (!_isOpen) return h('Modal -close')
-
-      return h('Modal -open',
-        {
-          className,
-          'ev-click': closeMe,
-          'ev-keydown': ev => {
-            if (ev.keyCode === 27) closeMe() // Escape
-          }
-        },
-        [
-          h('div.content', { 'ev-click': (ev) => ev.stopPropagation() }, [
-            content
-          ])
-        ]
-      )
-    })
+    const lb = h('Modal -closed',
+      {
+        className,
+        'ev-click': closeMe,
+        'ev-keydown': ev => {
+          if (ev.keyCode === 27) closeMe() // Escape
+        }
+      },
+      [
+        h('div.content', { 'ev-click': (ev) => ev.stopPropagation() }, [
+          content
+          // I think content must be in the DOM for any downstream mutant Observers to be updating
+        ])
+      ]
+    )
 
     isOpen(state => {
-      if (state !== true) return
+      if (state === true) {
+        lb.classList.remove('-closed')
+        lb.classList.add('-open')
+      } else {
+        lb.classList.remove('-open')
+        lb.classList.add('-closed')
+        return
+      }
 
       focus()
       function focus () {

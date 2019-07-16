@@ -1,0 +1,25 @@
+LocalPeers {
+  min-height: 9rem
+
+  div.peers {
+    min-height: 4rem
+  }
+  p {
+    i.fa {
+      margin-right: .5rem
+    }
+  }
+}
+
+RemotePeers {
+  min-height: 9rem
+
+  div.peers {
+    min-height: 4rem
+  }
+  p {
+    i.fa {
+      margin-right: .5rem
+    }
+  }
+}
