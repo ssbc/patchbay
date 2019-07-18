@@ -89,6 +89,11 @@ exports.create = function (api) {
 
     var { container } = api.app.html.scroller({ prepend: page })
     container.title = '/network'
+    container.keyboardScroll = function (n) {
+      if (isNaN(n)) return
+
+      state.activeGroup.set((state.activeGroup() + n) % state.groups.length)
+    }
     return container
   }
 }
