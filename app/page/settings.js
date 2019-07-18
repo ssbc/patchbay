@@ -25,28 +25,24 @@ exports.create = function (api) {
   }
 
   function settingsPage (location) {
-    const groups = groupSettings(api.app.html.settings())
-    const groupNames = Object.keys(groups)
-      .sort((a, b) => {
-        if (a === 'general') return -1
-        else if (b === 'general') return 1
-        else return a < b ? -1 : +1
-      })
-    const activeGroup = Value('general') // NOTE this assume this group exists!
+    const state = {
+      groups: groupSettings(api.app.html.settings()),
+      activeGroup: Value(0)
+    }
 
     var page = h('SettingsPage', { title: '/settings' }, [
-      h('div.container', computed(activeGroup, _activeGroup => {
+      h('div.container', computed(state.activeGroup, activeGroup => {
         return [
-          h('section.groups', groupNames.map(group => {
+          h('section.groups', state.groups.map((group, i) => {
             return h('div.group',
               {
-                'className': group === _activeGroup ? '-active' : '',
-                'ev-click': () => activeGroup.set(group)
+                'className': i === activeGroup ? '-active' : '',
+                'ev-click': () => state.activeGroup.set(i)
               },
-              group
+              group.name
             )
           })),
-          h('section.group-settings', groups[_activeGroup].map(Setting))
+          h('section.group-settings', state.groups[activeGroup].subgroups.map(Setting))
         ]
       }))
     ])
@@ -60,12 +56,17 @@ exports.create = function (api) {
 
     var { container } = api.app.html.scroller({ prepend: page })
     container.title = '/settings'
+    container.keyboardScroll = function (n) {
+      if (isNaN(n)) return
+
+      state.activeGroup.set((state.activeGroup() + n) % state.groups.length)
+    }
     return container
   }
 }
 
 function groupSettings (settings) {
-  return settings
+  const groupedByGroup = settings
     .reduce((acc, setting) => {
       if (!setting.title || !setting.body) throw new Error('setting sections require title, body')
 
@@ -75,4 +76,17 @@ function groupSettings (settings) {
 
       return acc
     }, {})
+
+  return Object.keys(groupedByGroup)
+    .map(name => {
+      return {
+        name,
+        subgroups: groupedByGroup[name]
+      }
+    })
+    .sort((a, b) => {
+      if (a === 'general') return -1
+      else if (b === 'general') return 1
+      else return a < b ? -1 : +1
+    })
 }
