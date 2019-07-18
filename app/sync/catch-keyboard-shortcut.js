@@ -40,6 +40,10 @@ function textFieldShortcuts (ev) {
       return
     case 27: // esc
       return ev.target.blur()
+    case 33: // PgUp
+      return ev.preventDefault()
+    case 34: // PgDn
+      return ev.preventDefault()
   }
 }
 
