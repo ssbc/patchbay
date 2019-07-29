@@ -4,7 +4,7 @@
   "description": "patchbay 2, built on patchcore",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm run rebuild",
+    "postinstall": "npm run rebuild && opencollective-postinstall",
     "rebuild": "electron-builder install-app-deps",
     "start": "electron index.js -- --title patchbay",
     "frameless": "ELECTRON_FRAME=false npm start",
@@ -71,6 +71,7 @@
     "noto-color-emoji": "^1.0.0",
     "open-dyslexic": "^1.0.3",
     "open-external": "^0.1.1",
+    "opencollective-postinstall": "^2.0.2",
     "patch-drafts": "0.0.6",
     "patch-history": "^1.0.0",
     "patch-inbox": "^1.3.2",
@@ -94,6 +95,7 @@
     "scuttle-blog": "^1.0.1",
     "scuttle-book": "^2.0.6",
     "scuttle-thread": "^1.0.2",
+    "secret-stack": "^6.2.1",
     "setimmediate": "^1.0.5",
     "ssb-about": "^2.0.1",
     "ssb-ahoy": "^1.1.2",
@@ -101,7 +103,7 @@
     "ssb-blob-files": "^1.1.6",
     "ssb-blobs": "^1.1.12",
     "ssb-chess-db": "^1.0.6",
-    "ssb-chess-mithril": "1.0.10",
+    "ssb-chess-mithril": "1.0.12",
     "ssb-config": "^3.3.0",
     "ssb-conn": "^0.2.7",
     "ssb-device-address": "^1.1.6",
@@ -168,5 +170,9 @@
       "artifactName": "${name}-Windows-${version}.${ext}",
       "installerIcon": "build/setup-icon.ico"
     }
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/patchbay"
   }
 }
