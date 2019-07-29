@@ -103,7 +103,7 @@
     "ssb-chess-db": "^1.0.6",
     "ssb-chess-mithril": "1.0.10",
     "ssb-config": "^3.3.0",
-    "ssb-conn": "^0.1.0",
+    "ssb-conn": "^0.2.7",
     "ssb-device-address": "^1.1.6",
     "ssb-ebt": "^5.6.6",
     "ssb-friend-pub": "^1.0.7",
