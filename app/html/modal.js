@@ -4,7 +4,7 @@ const { h, Value } = require('mutant')
 exports.gives = nest('app.html.modal')
 
 exports.create = (api) => {
-  return nest('app.html.modal', (content, { isOpen, onClose, className = '' } = {}) => {
+  return nest('app.html.modal', (content, { isOpen, onOpen, onClose, className = '' } = {}) => {
     if (typeof isOpen !== 'function') isOpen = Value(false)
 
     const openMe = () => {
@@ -15,7 +15,7 @@ exports.create = (api) => {
       if (typeof onClose === 'function') onClose()
     }
 
-    const lb = h('Modal -closed',
+    const modal = h('Modal -closed',
       {
         className,
         'ev-click': closeMe,
@@ -33,27 +33,29 @@ exports.create = (api) => {
 
     isOpen(state => {
       if (state === true) {
-        lb.classList.remove('-closed')
-        lb.classList.add('-open')
+        modal.classList.remove('-closed')
+        modal.classList.add('-open')
       } else {
-        lb.classList.remove('-open')
-        lb.classList.add('-closed')
+        modal.classList.remove('-open')
+        modal.classList.add('-closed')
         return
       }
 
+      if (typeof onOpen === 'function') onOpen()
       focus()
+
       function focus () {
-        if (!lb.isConnected) setTimeout(focus, 200)
+        if (!modal.isConnected) setTimeout(focus, 200)
         else {
-          const target = lb.querySelector('input') || lb.querySelector('textarea')
+          const target = modal.querySelector('input') || modal.querySelector('textarea')
           if (target) target.focus()
         }
       }
     })
 
-    lb.open = openMe
-    lb.close = closeMe
+    modal.open = openMe
+    modal.close = closeMe
 
-    return lb
+    return modal
   })
 }

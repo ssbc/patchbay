@@ -25,11 +25,13 @@ Modal {
   }
 
   -open {
-    display: grid
+    /* display: grid */
+    visibility: visible
   }
 
   -closed {
-    display: none
+    /* display: none */
+    visibility: hidden
   }
 
   -dark {
