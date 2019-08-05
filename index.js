@@ -9,8 +9,7 @@ const plugins = [
   'ssb-local',
   'ssb-logging',
 
-  'ssb-legacy-conn',
-  // 'ssb-conn', // TODO requires secret-stack@^6.2.0 , but ssb-server shrinkwrapped @6.1.2
+  'ssb-conn', // TODO need to re-enable local auto-gossip
   'ssb-replicate',
   'ssb-friends',
 

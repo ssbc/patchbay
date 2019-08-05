@@ -92,7 +92,11 @@ exports.create = function (api) {
     container.keyboardScroll = function (n) {
       if (isNaN(n)) return
 
-      state.activeGroup.set((state.activeGroup() + n) % state.groups.length)
+      var nextGroup = state.activeGroup() + n
+      if (nextGroup === -1) nextGroup = state.groups.length - 1
+      else nextGroup = nextGroup % state.groups.length
+
+      state.activeGroup.set(nextGroup)
     }
     return container
   }
