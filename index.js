@@ -6,7 +6,7 @@ const plugins = [
   'ssb-unix-socket',
   'ssb-no-auth',
   'ssb-onion',
-  'ssb-local',
+  'ssb-lan',
   'ssb-logging',
 
   'ssb-legacy-conn',

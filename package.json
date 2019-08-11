@@ -110,6 +110,7 @@
     "ssb-friends": "^4.1.4",
     "ssb-identities": "^2.1.0",
     "ssb-invite": "~2.0.4",
+    "ssb-lan": "^0.1.1",
     "ssb-legacy-conn": "^1.0.25",
     "ssb-local": "^1.0.0",
     "ssb-logging": "^1.0.0",
