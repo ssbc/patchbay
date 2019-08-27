@@ -102,7 +102,7 @@
     "ssb-blob-files": "^1.1.6",
     "ssb-blobs": "^1.1.12",
     "ssb-chess-db": "^1.0.6",
-    "ssb-chess-mithril": "1.0.12",
+    "ssb-chess-mithril": "1.0.13",
     "ssb-config": "^3.3.0",
     "ssb-device-address": "^1.1.6",
     "ssb-ebt": "^5.6.6",
