@@ -12,8 +12,17 @@ exports.create = function (api) {
   return nest('app.html.app', app)
 
   function app (initialTabs) {
+    var saveTabs = api.settings.sync.get('patchbay.saveTabs')
+    var _initialTabs
+
+    if (saveTabs) {
+      _initialTabs = api.settings.sync.get('patchbay.openTabs')
+    } else {
+      _initialTabs = api.settings.sync.get('patchbay.defaultTabs')
+    }
+
     return h('App', api.app.html.tabs({
-      initial: initialTabs || api.settings.sync.get('patchbay.defaultTabs')
+      initial: initialTabs || _initialTabs
     }))
   }
 }
