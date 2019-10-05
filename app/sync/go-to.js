@@ -8,7 +8,9 @@ exports.needs = nest({
   'history.obs.store': 'first',
   'history.sync.push': 'first',
   'router.async.normalise': 'first',
-  'router.async.router': 'first'
+  'router.async.router': 'first',
+  'settings.obs.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -58,6 +60,24 @@ exports.create = function (api) {
 
         page.id = page.id || locationId
         tabs.add(page, !openBackground, split)
+
+        // Save Tabs: If enabled then add it to default tabs.
+        const saveTabs = api.settings.obs.get('patchbay.saveTabs', false)
+        if (saveTabs()) {
+          const openTabs = api.settings.obs.get('patchbay.openTabs', [])
+          var _tabs = openTabs()
+
+          var newTab = Object.values(loc)[0]
+          if (loc.page) {
+            newTab = '/' + newTab
+          }
+
+          if (_tabs.indexOf(newTab) === -1) {
+            _tabs.push(newTab)
+
+            api.settings.sync.set({ patchbay: { openTabs: _tabs } })
+          }
+        }
 
         if (openBackground) {
           const history = api.history.obs.store()
