@@ -13,7 +13,9 @@ exports.needs = nest({
   'app.sync.goTo': 'first',
   'app.sync.locationId': 'first',
   'history.obs.store': 'first',
-  'history.sync.push': 'first'
+  'history.sync.push': 'first',
+  'settings.obs.get': 'first',
+  'settings.sync.set': 'first'
 })
 
 exports.create = function (api) {
@@ -44,6 +46,27 @@ exports.create = function (api) {
         return api.app.sync.locationId(loc) !== page.id
       })
       history.set(prunedHistory)
+
+      const defaultTabs = api.settings.obs.get('patchbay.defaultTabs', false)
+
+      const saveTabs = api.settings.obs.get('patchbay.saveTabs', false)
+      if (saveTabs()) {
+        const openTabs = api.settings.obs.get('patchbay.openTabs', [])
+        var _openTabs = openTabs()
+
+        var closedTab = JSON.parse(page.id)
+        var theTab = Object.values(closedTab)[0]
+
+        if (closedTab.page) {
+          theTab = '/' + theTab
+        }
+
+        var index = _openTabs.indexOf(theTab)
+        if (index !== -1) {
+          _openTabs.splice(index, 1)
+          api.settings.sync.set({ patchbay: { openTabs: _openTabs } })
+        }
+      }
     }
 
     const search = api.app.html.searchBar()
