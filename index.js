@@ -37,14 +37,12 @@ const plugins = [
   'ssb-peer-invites'
 ]
 
-ahoy(
-  {
-    title: 'Patchbay',
-    plugins,
-    // appDir: '../patchbay', // only used when ssb-ahoy is symlinked in!
-    uiPath: './ui.js'
-  },
-  (state) => {
+ahoy({
+  title: 'Patchbay',
+  plugins,
+  // appDir: '../patchbay', // only used when ssb-ahoy is symlinked in!
+  appPath: './ui.js',
+  onReady: (state) => {
     StartMenus(state)
   }
-)
+})
