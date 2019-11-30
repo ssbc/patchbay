@@ -1,4 +1,9 @@
 Markdown {
+  (video) {
+    max-width: 100%
+    object-fit: scale-down
+  }
+
   (a) {
     color: #3c1842
     text-decoration: underline
