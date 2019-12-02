@@ -66,7 +66,8 @@ This method runs the ssb-server as a standalone command-line driven server.
 The danger in this is that you don't install the right plugin versions, and the server won't necessarily be started with the right config
  (unless you add it to ~/.ssb/config etc).
 
-For this reason I wouldn't currently recommend this approach
+For this reason I wouldn't currently recommend this approach.
+Note that core devs aren't often running things this way, so if this is broken we wouldn't know, and might not be keen to fix it right now.
 
 Install a standalone ssb-server (your gossip server)
 ```sh
@@ -111,10 +112,10 @@ npm start
 
 Harder mode:
 ```sh
-sbot server
+ssb-server start
 
 # from the patchbay repo folder
-npm run dev
+npm run lite
 ```
 
 ## Development
