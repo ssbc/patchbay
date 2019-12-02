@@ -6,11 +6,10 @@ const plugins = [
   'ssb-unix-socket',
   'ssb-no-auth',
   'ssb-onion',
-  'ssb-local',
+  'ssb-lan',
   'ssb-logging',
 
-  'ssb-legacy-conn',
-  // 'ssb-conn', // TODO requires secret-stack@^6.2.0 , but ssb-server shrinkwrapped @6.1.2
+  'ssb-conn',
   'ssb-replicate',
   'ssb-friends',
 

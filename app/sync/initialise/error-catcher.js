@@ -15,6 +15,12 @@ exports.create = function (api) {
 
     var { container: errorPage, addError } = api.router.sync.router('/errors')
     window.addEventListener('error', ev => {
+      // HACK: Fix for ResizeObserver errors that are probably benign.
+      if (ev.message && ev.message.startsWith('ResizeObserver')) {
+        console.error('ResizeObserver (caught)')
+        return
+      }
+
       if (!tabs.has('/errors')) tabs.add(errorPage, true)
 
       addError(ev.error || ev)
