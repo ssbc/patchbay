@@ -95,6 +95,9 @@ Markdown {
     }
   }
 
+  (span.emoji) {
+    font-family: NotoColorEmoji;
+  }
 
   (img.emoji) {
     height: 1.2em

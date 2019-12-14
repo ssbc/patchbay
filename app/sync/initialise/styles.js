@@ -35,7 +35,7 @@ exports.create = function (api) {
     )
     document.head.appendChild(
       h('style', {
-        innerHTML: when(openDyslexicEnabled, '.App { font-family: OpenDyslexicRegular, arial, sans-serif, NotoColorEmoji; }', '')
+        innerHTML: when(openDyslexicEnabled, '.App { font-family: OpenDyslexicRegular, arial, sans-serif; }', '')
       })
     )
   }
