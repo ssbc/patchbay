@@ -118,7 +118,7 @@
     "ssb-logging": "^1.0.0",
     "ssb-master": "^1.0.3",
     "ssb-meme": "^1.0.4",
-    "ssb-mentions": "^0.5.1",
+    "ssb-mentions": "^0.5.0",
     "ssb-mutual": "^0.1.0",
     "ssb-no-auth": "^1.0.0",
     "ssb-onion": "^1.0.0",
