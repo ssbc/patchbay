@@ -155,7 +155,12 @@
     "appId": "org.ssbc.patchbay",
     "linux": {
       "category": "Network",
-      "target": "AppImage"
+      "target": "AppImage",
+      "arch": [
+        "x64",
+        "ia32",
+        "arm64"
+      ]
     },
     "appImage": {
       "artifactName": "${name}-Linux-${version}-${arch}.${ext}"
@@ -165,11 +170,26 @@
       "icon": "build/dmg-icon.icns"
     },
     "win": {
-      "publisherName": "Secure Scuttlebutt Consortium"
-    },
-    "nsis": {
-      "artifactName": "${name}-Windows-${version}.${ext}",
-      "installerIcon": "build/setup-icon.ico"
+      "publisherName": "Secure Scuttlebutt Consortium",
+      "target": [
+        {
+          "target": "nsis",
+          "artifactName": "${name}-Windows-${version}.${ext}",
+          "installerIcon": "build/setup-icon.ico",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32",
+            "arm64"
+          ]
+        }
+      ]
     }
   },
   "collective": {
