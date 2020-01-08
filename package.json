@@ -155,11 +155,15 @@
     "appId": "org.ssbc.patchbay",
     "linux": {
       "category": "Network",
-      "target": "AppImage",
-      "arch": [
-        "x64",
-        "ia32",
-        "arm64"
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "ia32",
+            "arm64"
+          ]
+        }
       ]
     },
     "appImage": {
@@ -183,6 +187,7 @@
         },
         {
           "target": "zip",
+          "artifactName": "${name}-Windows-${version}.${ext}",
           "arch": [
             "x64",
             "ia32",
