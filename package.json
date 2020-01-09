@@ -184,15 +184,6 @@
             "x64",
             "ia32"
           ]
-        },
-        {
-          "target": "zip",
-          "artifactName": "${name}-Windows-${version}.${ext}",
-          "arch": [
-            "x64",
-            "ia32",
-            "arm64"
-          ]
         }
       ]
     }
