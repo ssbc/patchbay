@@ -131,7 +131,7 @@
     "ssb-replicate": "^1.3.2",
     "ssb-search": "^1.1.2",
     "ssb-sort": "^1.1.0",
-    "ssb-suggest": "^1.0.6",
+    "ssb-suggest": "^1.1.0",
     "ssb-tangle": "^1.0.1",
     "ssb-unix-socket": "^1.0.0",
     "ssb-unread": "^1.0.8",
