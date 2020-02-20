@@ -100,7 +100,7 @@
     "ssb-about": "^2.0.1",
     "ssb-ahoy": "^3.0.0",
     "ssb-audio-schema": "^1.0.0",
-    "ssb-backlinks": "^0.7.3",
+    "ssb-backlinks": "^1.0.0",
     "ssb-blob-files": "^1.1.6",
     "ssb-blobs": "^1.1.12",
     "ssb-chess-db": "^1.0.6",
