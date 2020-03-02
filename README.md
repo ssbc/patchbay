@@ -52,7 +52,7 @@ brew install libtool automake autoconf
 This runs an embedded sbot with all the right plugins already installed.
 
 ```sh
-git clone https://github.com/ssbc/patchbay.git
+git clone https://github.com/ssbc/patchbay
 cd patchbay
 npm install
 ```
@@ -97,7 +97,7 @@ sbot invite.accept LONG_INVITE_CODE_MAYBE_IN_QUOTES
 
 Install Patchbay
 ```sh
-git clone https://github.com/ssbc/patchbay.git
+git clone https://github.com/ssbc/patchbay
 cd patchbay
 npm install
 ```
