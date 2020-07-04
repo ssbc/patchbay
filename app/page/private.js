@@ -21,7 +21,8 @@ exports.needs = nest({
   'message.html': {
     compose: 'first',
     render: 'first'
-  }
+  },
+  'sbot.pull.stream': 'first'
 })
 
 exports.create = function (api) {
@@ -91,6 +92,11 @@ exports.create = function (api) {
 
     const _opts = Object.assign({ query, limit: 100 }, opts)
 
-    return next(api.feed.pull.private, _opts, ['timestamp'])
+    // return next(api.feed.pull.private, _opts, ['timestamp'])
+
+    const createStream = (opts) => api.sbot.pull.stream(sbot => {
+      return sbot.private.read(opts)
+    })
+    return next(createStream, _opts, ['timestamp'])
   }
 }

@@ -2,6 +2,8 @@ const ahoy = require('ssb-ahoy')
 const StartMenus = require('./menu')
 
 const plugins = [
+  'ssb-private1',
+
   'ssb-master',
   'ssb-unix-socket',
   'ssb-no-auth',
@@ -22,6 +24,7 @@ const plugins = [
   'ssb-ebt',
   'ssb-friend-pub',
   'ssb-meme',
+  // 'ssb-tribes', // soon!
   'ssb-private',
   'ssb-query',
   'ssb-search',
@@ -32,8 +35,11 @@ const plugins = [
   'ssb-invite',
 
   'ssb-device-address', // for peer-invites
-  'ssb-identities', // for peer invites
-  'ssb-peer-invites'
+  'ssb-identities' // for peer invites
+  // 'ssb-peer-invites'
+  // TODO 2020-07-05
+  // PROBLEM: blocking some API which waits for all things to be done.
+  // ssb-peer-invites stalls out, result is ssb-friends is never "ready"
 ]
 
 ahoy({
