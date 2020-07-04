@@ -6,6 +6,7 @@ const addSuggest = require('suggest-box')
 const blobFiles = require('ssb-blob-files')
 const get = require('lodash/get')
 const datSharedFiles = require('dat-shared-files')
+const { isFeed } = require('ssb-ref')
 
 exports.gives = nest('message.html.compose')
 
@@ -276,6 +277,9 @@ exports.create = function (api) {
       if (!channel) delete content.channel
       if (!mentions.length) delete content.mentions
       if (content.recps && content.recps.length === 0) delete content.recps
+      else content.recps = content.recps.map(r => {
+        return r.link && isFeed(r.link) ? r.link : r
+      })
 
       try {
         if (typeof prepublish === 'function') {
