@@ -17,7 +17,7 @@ const plugins = [
   'ssb-friends',
 
   'ssb-blobs',
-  'ssb-ws',
+  'ssb-serve-blobs',
 
   'ssb-about',
   'ssb-backlinks',
