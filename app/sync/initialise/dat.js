@@ -1,5 +1,5 @@
 const nest = require('depnest')
-const datSharedFiles = require('dat-shared-files')
+// const datSharedFiles = require('dat-shared-files')
 
 exports.gives = nest('app.sync.initialise')
 
@@ -7,16 +7,17 @@ exports.create = function (api) {
   return nest('app.sync.initialise', datShare)
 
   function datShare () {
-    if (process.env.DAT === 'false') return
+    // TODO upgrade sodium-native inside dat-shared-files
+    // if (process.env.DAT === 'false') return
 
-    datSharedFiles.shareAll((err, links) => {
-      if (err) {
-        console.error(err)
+    // datSharedFiles.shareAll((err, links) => {
+    //   if (err) {
+    //     console.error(err)
 
-        return
-      }
+    //     return
+    //   }
 
-      links.forEach(link => console.log('Sharing: ' + link))
-    })
+    //   links.forEach(link => console.log('Sharing: ' + link))
+    // })
   }
 }

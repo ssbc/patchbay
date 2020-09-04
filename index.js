@@ -3,6 +3,7 @@ const StartMenus = require('./menu')
 
 const plugins = [
   'ssb-private1',
+  // 'ssb-tribes', // soon!
 
   'ssb-master',
   'ssb-unix-socket',
@@ -24,7 +25,6 @@ const plugins = [
   'ssb-ebt',
   'ssb-friend-pub',
   'ssb-meme',
-  // 'ssb-tribes', // soon!
   'ssb-private',
   'ssb-query',
   'ssb-search',

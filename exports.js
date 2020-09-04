@@ -26,7 +26,9 @@ const patchbay = {
 
 const plugins = {
   scry: require('patchbay-scry'),
-  darkCrystal: require('patchbay-dark-crystal'),
+  // darkCrystal: require('patchbay-dark-crystal'),
+  // TODO sodium-native needs updating
+  // NOTE dat-shared-files in same position
   poll: require('patchbay-poll'),
   inbox: require('patch-inbox'), // TODO needs work
   chess: require('ssb-chess-mithril'),
