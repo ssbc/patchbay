@@ -56,7 +56,7 @@
     "electron-spellchecker": "github:ssbc/electron-spellchecker-prebuilt",
     "electron-window-state": "^5.0.1",
     "font-awesome": "^4.7.0",
-    "highlight.js": "^9.13.1",
+    "highlight.js": "^10.1.2",
     "hypercrop": "^1.1.0",
     "hyperfile": "^2.0.0",
     "hyperlightbox": "^1.0.0",
