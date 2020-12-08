@@ -10,7 +10,7 @@ It was born our out of the observation that maintaining a large client apps can 
 Patchbay was designed to sidestep this by using some technology ([`depject`](https://github.com/dominictarr/depject)) to make parts easier to swap and extend.
 
 Patchbay now shares a common core library ([`patchcore`](https://github.com/ssbc/patchcore)) with Patchwork, and connects this in using the `depject`
-This is another experiment in sharing useful code and mainmtenance.
+This is another experiment in sharing useful code and maintenance.
 
 Current features boasted:
 - gatherings - a booking system
